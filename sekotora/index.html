@@ -60,7 +60,87 @@ const getQuery = (queryName) => {
 }
 </script>
 <script>
-//const getCards = ()
+const getCards = (cardsTextUrl) => {
+
+}
+const speech = function(text, ignoresTags, lang, voiceName)
+{
+  clearTimeout(speech.timeoutId);
+  speechSynthesis.cancel();
+  (function loop()
+  {
+    let voices = speechSynthesis.getVoices();
+    if(voices == 0)
+    {
+      speech.timeoutId = setTimeout(loop, 200);
+      return;
+    }
+    let ssu = new SpeechSynthesisUtterance();
+    ssu.text = (ignoresTags? text.replace(/<.*?>/g, ''): text);
+    if(lang) ssu.lang = lang;
+    for(let i = 0; i < voices.length; i++)
+    {
+      if(voices[i].voiceName == voiceName)
+      {
+        ssu.voice = voices[i];
+        break;
+      }
+    }
+    speechSynthesis.speak(ssu);
+  })();
+};
+const getQuiz = function(card)
+{
+  let randomNumbers = [];
+  while(true)
+  {
+    let hoge = 0;
+    card = card.replace(/\{(\**)([^{]*?)\}/g,
+      function(match, p1, p2, offset, string)
+      {
+        hoge++;
+        let altId = p1.length;
+        if(randomNumbers[altId] == undefined)
+        {
+          randomNumbers[altId] = Math.random();
+        }
+        let items = p2.split('|');
+        for(let i = 1; i < items.length; i++)
+        {
+          items[i] = items[i].replace(/~/g, items[i - 1].trim());
+        }
+        return '<b class="alt' + altId + '">' + items[Math.floor(randomNumbers[altId] * items.length)] + '</b>';
+      }
+    );
+    if(hoge == 0) break;
+  }
+  let question = card.replace(/\t.*$/, '');
+  let answer = card.replace(/^.*?\t/, '');
+  return {question: question, answer: answer};
+};
+const showQuiz = function(cards, cardIndex)
+{
+  quiz = getQuiz(cards[cardIndex]);
+  $('#question')
+    .html(quiz.question)
+    .show()
+    .on('click', function()
+    {
+      $('#question').hide();
+      $('#answer').show();
+      speech(quiz.answer, true, 'en-US', 'Google US English');
+    });
+  $('#answer')
+    .html(quiz.answer)
+    .hide()
+    .on('click', function()
+    {
+      $('#question').show();
+      $('#answer').hide();
+      speech(quiz.question, true, 'ja-JP', 'Google 日本語');
+    });
+  speech(quiz.question, true, 'ja-JP', 'Google 日本語');
+};
 </script>
 <script>
 {
@@ -207,84 +287,6 @@ for(let i = cards.length - 1; i >= 0; i--)
 */
 let cardIndex = 0;
 let quiz;
-const speech = function(text, ignoresTags, lang, voiceName)
-{
-  clearTimeout(speech.timeoutId);
-  speechSynthesis.cancel();
-  (function loop()
-  {
-    let voices = speechSynthesis.getVoices();
-    if(voices == 0)
-    {
-      speech.timeoutId = setTimeout(loop, 200);
-      return;
-    }
-    let ssu = new SpeechSynthesisUtterance();
-    ssu.text = (ignoresTags? text.replace(/<.*?>/g, ''): text);
-    if(lang) ssu.lang = lang;
-    for(let i = 0; i < voices.length; i++)
-    {
-      if(voices[i].voiceName == voiceName)
-      {
-        ssu.voice = voices[i];
-        break;
-      }
-    }
-    speechSynthesis.speak(ssu);
-  })();
-};
-const getQuiz = function(card)
-{
-  let randomNumbers = [];
-  while(true)
-  {
-    let hoge = 0;
-    card = card.replace(/\{(\**)([^{]*?)\}/g,
-      function(match, p1, p2, offset, string)
-      {
-        hoge++;
-        let altId = p1.length;
-        if(randomNumbers[altId] == undefined)
-        {
-          randomNumbers[altId] = Math.random();
-        }
-        let items = p2.split('|');
-        for(let i = 1; i < items.length; i++)
-        {
-          items[i] = items[i].replace(/~/g, items[i - 1].trim());
-        }
-        return '<b class="alt' + altId + '">' + items[Math.floor(randomNumbers[altId] * items.length)] + '</b>';
-      }
-    );
-    if(hoge == 0) break;
-  }
-  let question = card.replace(/\t.*$/, '');
-  let answer = card.replace(/^.*?\t/, '');
-  return {question: question, answer: answer};
-};
-const showQuiz = function(cards, cardIndex)
-{
-  quiz = getQuiz(cards[cardIndex]);
-  $('#question')
-    .html(quiz.question)
-    .show()
-    .on('click', function()
-    {
-      $('#question').hide();
-      $('#answer').show();
-      speech(quiz.answer, true, 'en-US', 'Google US English');
-    });
-  $('#answer')
-    .html(quiz.answer)
-    .hide()
-    .on('click', function()
-    {
-      $('#question').show();
-      $('#answer').hide();
-      speech(quiz.question, true, 'ja-JP', 'Google 日本語');
-    });
-  speech(quiz.question, true, 'ja-JP', 'Google 日本語');
-};
 
 
 
