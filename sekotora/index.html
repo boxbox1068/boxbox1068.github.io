@@ -52,9 +52,10 @@ b.alt4 {
 <script>
 const getQuery = (queryName) => {
   if (location.search) {
-    const match = location.search.match(/(\?|&)url=[^&]*/i);
+//    const match = location.search.match(/(\?|&)url=[^&]*/i);
+    const match = location.search.match(new RegExp('(\\?|&)' + queryName + '=[^&]*', 'i'));
     if (match) {
-      return match[0].substring(4);
+      return match[0].substring(queryName.length + 2);
     }
     else {
       return '';
