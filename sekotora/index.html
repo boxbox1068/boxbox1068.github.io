@@ -225,12 +225,10 @@ $(document).ready(function() {
   const replacementMap = new Map();
   let cardsText = document.querySelector('#cards').innerHTML;
 
-  /*
   const cardsTextUrl = getQuery('url');
   if (cardsTextUrl) {
-
+alert(cardsTextUrl);
   }
-  */
 
   cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
     replacementMap.set(p1, p2);
