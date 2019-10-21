@@ -122,7 +122,18 @@ b.alt4 {
 
 
 const replacementMap = new Map();
+
+
+
+const cardTextUrls = location.search.match(/(?<=(?|&)url=)[^&]*/i);
+if (cardTextUrls) alert(cardTextUrls[0]);
+
+
+
 let cardsText = document.querySelector('#cards').innerHTML;
+
+  
+  
 cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
   replacementMap.set(p1, p2);
   return `{${p2}}`;
