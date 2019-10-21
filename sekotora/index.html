@@ -55,7 +55,7 @@ const getQuery = (queryName) => {
 //    const match = location.search.match(/(\?|&)url=[^&]*/i);
     const match = location.search.match(new RegExp('(\\?|&)' + queryName + '=[^&]*', 'i'));
     if (match) {
-      return match[0].substring(queryName.length + 2);
+      return match[0].substring(queryName.length + 3);
     }
     else {
       return '';
