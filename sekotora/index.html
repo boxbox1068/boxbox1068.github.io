@@ -214,85 +214,102 @@ const showQuiz = function(cards, cardIndex)
 
 
 
-const replacementMap = new Map();
-let cardsText = document.querySelector('#cards').innerHTML;
-
-/*
-const cardsTextUrl = getQuery('url');
-if (cardsTextUrl) {
-
-}
-*/
-
-cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
-  replacementMap.set(p1, p2);
-  return `{${p2}}`;
-});
-cardsText = cardsText.replace(/\{=([^\n{}]+)\}/g, (match, p1, offset, string) => {
-  const replacement = replacementMap.get(p1);
-  if (replacement) {
-    return `{${replacement}}`;
-  }
-  else {
-    return string;
-  }
-});
-const hoge = new Map();
-const cards = cardsText.split('\n').filter(cardText => cardText.match(/\t/));
-
-/*
-alert(1);
-const cards = cardsText.split('\n').filter(cardText => cardText.match(/\t/));   //.map(cardText => {
-  const items = cardText.split(\t);
-  return new Map([
-    ['question', items[0]],
-    ['answer', items[1]],
-    ['category', items[2]]
-  ]);
-});
-alert(1);
-*/
-
-//const cards = cardsText.split('\n');
-
-
-
-/*
-const tempCards = document.querySelector('#cards').innerHTML.split('\n');
-
-//tempCards = cardsText.split('\n');
-
-const cards = [];
-for (const card of tempCards) {
-  cards.push(card);
-}
-*/
-
-
-
-
-
-for(let i = cards.length - 1; i >= 0; i--)
-{
-  if(cards[i].match(/^[^\t]+\t[^\t]+$/) == null) cards.splice(i, 1);
-}
-
-
-/*
-const cards = document.querySelector('#cards').innerHTML.split('\n');
-for(let i = cards.length - 1; i >= 0; i--)
-{
-  if(cards[i].match(/^[^\t]+\t[^\t]+$/) == null) cards.splice(i, 1);
-}
-*/
-let cardIndex = 0;
-let quiz;
 
 
 
 
 
 $(document).ready(function() {
+
+
+  const replacementMap = new Map();
+  let cardsText = document.querySelector('#cards').innerHTML;
+
+  /*
+  const cardsTextUrl = getQuery('url');
+  if (cardsTextUrl) {
+
+  }
+  */
+
+  cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
+    replacementMap.set(p1, p2);
+    return `{${p2}}`;
+  });
+  cardsText = cardsText.replace(/\{=([^\n{}]+)\}/g, (match, p1, offset, string) => {
+    const replacement = replacementMap.get(p1);
+    if (replacement) {
+      return `{${replacement}}`;
+    }
+    else {
+      return string;
+    }
+  });
+  const hoge = new Map();
+  const cards = cardsText.split('\n').filter(cardText => cardText.match(/\t/));
+
+  /*
+  alert(1);
+  const cards = cardsText.split('\n').filter(cardText => cardText.match(/\t/));   //.map(cardText => {
+    const items = cardText.split(\t);
+    return new Map([
+      ['question', items[0]],
+      ['answer', items[1]],
+      ['category', items[2]]
+    ]);
+  });
+  alert(1);
+  */
+
+  //const cards = cardsText.split('\n');
+
+
+
+  /*
+  const tempCards = document.querySelector('#cards').innerHTML.split('\n');
+
+  //tempCards = cardsText.split('\n');
+
+  const cards = [];
+  for (const card of tempCards) {
+    cards.push(card);
+  }
+  */
+
+
+
+
+
+  for(let i = cards.length - 1; i >= 0; i--)
+  {
+    if(cards[i].match(/^[^\t]+\t[^\t]+$/) == null) cards.splice(i, 1);
+  }
+
+
+  /*
+  const cards = document.querySelector('#cards').innerHTML.split('\n');
+  for(let i = cards.length - 1; i >= 0; i--)
+  {
+    if(cards[i].match(/^[^\t]+\t[^\t]+$/) == null) cards.splice(i, 1);
+  }
+  */
+  let cardIndex = 0;
+  let quiz;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   let startPos = {x: 0, y: 0};
   $('body').on('mousedown', function(e) {
     startPos = {x: e.offsetX, y: e.offsetY};
