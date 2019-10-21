@@ -222,7 +222,7 @@ const cardsTextUrl = getQuery('url');
 if (cardsTextUrl) {
   const d_el = document.querySelector('#cards');
 alert(d_el);
-  document.removeChild(d_el);
+  d_el.parentNode.removeChild(d_el);
 
   const element = document.createElement('script');
   element.type = 'text/plain';
