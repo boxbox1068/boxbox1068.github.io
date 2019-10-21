@@ -120,9 +120,10 @@ b.alt4 {
 
 if (location.search) {
   let fuga;
-  location.search.replace(/url=([^&]*)/i, (match, p1, offset, string) => {
+//  location.search.replace(/url=([^&]*)/i, (match, p1, offset, string) => {
+  location.search.replace(/.*/i, (match, p1, offset, string) => {
     fuga = p1;
-    alert(fuga);
+    alert('x:' + fuga);
   });
 }
 
