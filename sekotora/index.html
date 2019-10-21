@@ -119,10 +119,10 @@ b.alt4 {
 }
 
 if (location.search) {
-  let hoge;
+  let fuga;
   location.search.replace(/url=([^&]*)/i, (match, p1, p2, offset, string) => {
-    hoge = p2;
-    alert(hoge);
+    fuga = p2;
+    alert(fuga);
   });
 }
 
@@ -130,7 +130,7 @@ if (location.search) {
 
 const replacementMap = new Map();
 
-
+/*
 const search = location.search;
 alert(9);
 alert(location.search + '');
@@ -144,7 +144,7 @@ alert(search);
   }
 //if (cardTextUrls) alert(cardTextUrls[0]);
 }
-
+*/
 
 let cardsText = document.querySelector('#cards').innerHTML;
 
