@@ -227,7 +227,11 @@ $(document).ready(function() {
 
   const cardsTextUrl = getQuery('url');
   if (cardsTextUrl) {
-alert(cardsTextUrl);
+    const element = document.createElement('script');
+    element.type = 'text/plain';
+    element.src = cardsTextUrl;
+    element.id = 'cards';
+    document.body.appendChild(element);
   }
 
   cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
