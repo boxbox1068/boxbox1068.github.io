@@ -61,8 +61,6 @@ const getQuery = (queryName) => {
 </script>
 <script>
 {
-  alert(getQuery('url'));
-
   let startingOffsetX, startingOffsetY;
   const tap = () => {
     alert('・/');
@@ -135,6 +133,13 @@ const getQuery = (queryName) => {
 
 const replacementMap = new Map();
 let cardsText = document.querySelector('#cards').innerHTML;
+
+const cardsTextUrl = getQuery('url');
+if (cardsTextUrl) {
+
+}
+
+
 cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
   replacementMap.set(p1, p2);
   return `{${p2}}`;
@@ -281,16 +286,13 @@ const showQuiz = function(cards, cardIndex)
 
 
 
-$(document).ready(function()
-{
+$(document).ready(function() {
   let startPos = {x: 0, y: 0};
-  $('body').on('mousedown', function(e)
-  {
+  $('body').on('mousedown', function(e) {
     startPos = {x: e.offsetX, y: e.offsetY};
   });
 
-  $('body').on('mouseup', function(e)
-  {
+  $('body').on('mouseup', function(e) {
     let moveX = e.offsetX - startPos.x;
     let moveY = e.offsetY - startPos.y
     if(Math.abs(moveX) > Math.abs(moveY))
