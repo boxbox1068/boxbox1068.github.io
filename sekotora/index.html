@@ -50,7 +50,25 @@ b.alt4 {
   <div id="answer"></div>
 </div>
 <script>
+const getQuery = (queryName) => {
+  if (location.search) {
+    const match = location.search.match(/(\?|&)url=[^&]*/i);
+    if (match) {
+      return match[0].substring(4);
+    }
+    else {
+      return '';
+    }
+  }
+  else {
+    return '';
+  }
+}
+</script>
+<script>
 {
+  alert(getQuery('url'));
+
   let startingOffsetX, startingOffsetY;
   const tap = () => {
     alert('・/');
