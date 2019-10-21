@@ -217,20 +217,20 @@ const showQuiz = function(cards, cardIndex)
 
 
 
+const cardsTextUrl = getQuery('url');
+if (cardsTextUrl) {
+  const d_el = document.querySelector('#cards');
+  document.body.removeChild(d_el);
+
+  const element = document.createElement('script');
+  element.type = 'text/plain';
+  element.src = cardsTextUrl;
+  element.id = 'cards';
+  document.body.appendChild(element);
+}
 
 
 $(document).ready(function() {
-  const cardsTextUrl = getQuery('url');
-  if (cardsTextUrl) {
-    const d_el = document.querySelector('#cards');
-    document.body.removeChild(d_el);
-    
-    const element = document.createElement('script');
-    element.type = 'text/plain';
-    element.src = cardsTextUrl;
-    element.id = 'cards';
-    document.body.appendChild(element);
-  }
 
 
   const replacementMap = new Map();
