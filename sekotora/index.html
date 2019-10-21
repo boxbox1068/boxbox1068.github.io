@@ -128,7 +128,6 @@ if (location.search) {
 
 
 
-const replacementMap = new Map();
 
 /*
 const search = location.search;
@@ -137,7 +136,6 @@ alert(location.search + '');
 if (search) {
 //  const cardTextUrls = location.search.match(/(?<=url=)[^&]*/i);
 var cardTextUrls = location.search.match(/aa/i);
-
 alert(search);
   if (cardTextUrls) {
     alert(cardTextUrls);
@@ -146,10 +144,12 @@ alert(search);
 }
 */
 
-let cardsText = document.querySelector('#cards').innerHTML;
 
-  
-  
+
+
+
+const replacementMap = new Map();
+let cardsText = document.querySelector('#cards').innerHTML;
 cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
   replacementMap.set(p1, p2);
   return `{${p2}}`;
