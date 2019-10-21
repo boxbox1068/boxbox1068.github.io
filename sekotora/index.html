@@ -118,6 +118,14 @@ b.alt4 {
   }
 }
 
+if (location.search) {
+  let hoge;
+  location.search.replace(/(?|&)url=([^&]*)/i, (match, p1, p2, offset, string) => {
+    hoge = p2;
+    alert(hoge);
+  });
+
+}
 
 
 
