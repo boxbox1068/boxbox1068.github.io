@@ -114,7 +114,7 @@ b.alt4 {
     }, true);
   }
   if (bodyElement.ontouchstart !== undefined) {
-    alert(11);
+//    alert(11);
   }
 }
 
@@ -124,11 +124,14 @@ b.alt4 {
 const replacementMap = new Map();
 
 
-const cardTextUrls = location.search;
-alert(cardTextUrls);
-//const cardTextUrls = location.search.match(/(?<=url=)[^&]*/i);
+const search = location.search;
+if (search) {
+  const cardTextUrls = location.search.match(/(?<=url=)[^&]*/i);
+  if (cardTextUrls) {
+    alert(cardTextUrls);
+  }
 //if (cardTextUrls) alert(cardTextUrls[0]);
-
+}
 
 
 let cardsText = document.querySelector('#cards').innerHTML;
