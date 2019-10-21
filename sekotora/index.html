@@ -220,19 +220,22 @@ const showQuiz = function(cards, cardIndex)
 
 
 $(document).ready(function() {
-
-
-  const replacementMap = new Map();
-  let cardsText = document.querySelector('#cards').innerHTML;
-
   const cardsTextUrl = getQuery('url');
   if (cardsTextUrl) {
+    const d_el = document.querySelector('#cards');
+    document.body.removeChild(d_el);
+    
     const element = document.createElement('script');
     element.type = 'text/plain';
     element.src = cardsTextUrl;
     element.id = 'cards';
     document.body.appendChild(element);
   }
+
+
+  const replacementMap = new Map();
+  let cardsText = document.querySelector('#cards').innerHTML;
+
 
   cardsText = cardsText.replace(/\{([^\n{}=]+)=([^\n{}]*)\}/g, (match, p1, p2, offset, string) => {
     replacementMap.set(p1, p2);
