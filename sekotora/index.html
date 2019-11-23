@@ -54,8 +54,7 @@ const getQuery = (queryName) => {
   let query = '';
   if (location.search) {
     const match = location.search.match(new RegExp('(\\?|&)' + queryName + '=[^&]*', 'i'));
-alert(match);
-    if (match) query = match[0].substring(queryName.length + 3);
+    if (match) query = match[0].substring(queryName.length + 2);
   }
   return query;
 }
