@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <title>test</title>
 <div>
-alert(333);
+alert(32);
 <video id="test" autoplay muted playsinline></video>
 </div>
 <script>
@@ -36,6 +36,7 @@ media = navigator.mediaDevices.getUserMedia({
   video.srcObject = stream;
 });
 
+/*
 // canvas要素をつくる
 canvas        = document.createElement('canvas');
 canvas.id     = 'canvas';
@@ -53,4 +54,5 @@ function _canvasUpdate() {
   canvasCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
   requestAnimationFrame(_canvasUpdate);
 };
+*/
 </script>
