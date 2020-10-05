@@ -100,7 +100,7 @@ class Webcam {
     `;
     video.autoplay = true;
     video.muted = true;
-    video.playsinline = true;
+    video.setAttribute('playsinline', '');
     this._video = video;
   }
   start(callback) {
