@@ -14,7 +14,9 @@ video.id       = 'video';
 video.width    = cameraSize.w;
 video.height   = cameraSize.h;
 video.autoplay = true;
-document.querySelector('body').appendChild(video);
+video.muted = true;
+video.setAttribute('playsinline', '');
+  document.querySelector('body').appendChild(video);
 
 // video要素にWebカメラの映像を表示させる
 media = navigator.mediaDevices.getUserMedia({
@@ -26,4 +28,5 @@ media = navigator.mediaDevices.getUserMedia({
 }).then(function(stream) {
   video.srcObject = stream;
 });
+alert(9939024);
 </script>
