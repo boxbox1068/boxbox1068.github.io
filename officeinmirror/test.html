@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>test</title>
-<div></div>
+<div id="canvasPreview"></div>
 <script>
 const cameraSize = { w: 360, h: 240 };
 const canvasSize = { w: 360, h: 240 };
@@ -11,7 +11,7 @@ let media;
 let canvas;
 let canvasCtx;
 
-alert(1);
+alert(99);
 // video要素をつくる
 video          = document.createElement('video');
 video.id       = 'video';
@@ -20,7 +20,7 @@ video.height   = cameraSize.h;
 video.autoplay = true;
 video.muted = true;
 video.playsinline = true;
-document.querySelector('body').appendChild(video);
+//document.querySelector('body').appendChild(video);
 
 // video要素にWebカメラの映像を表示させる
 media = navigator.mediaDevices.getUserMedia({
