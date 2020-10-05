@@ -3,7 +3,9 @@
 <title>test</title>
 <div>
 alert(32);
-<video id="test" autoplay muted playsinline></video>
+<!--
+  <video id="test" autoplay muted playsinline></video>
+-->
 </div>
 <script>
 const cameraSize = { w: 360, h: 240 };
@@ -16,7 +18,6 @@ let canvasCtx;
 
 alert(1);
 // video要素をつくる
-/*
 video          = document.createElement('video');
 video.id       = 'video';
 video.width    = cameraSize.w;
@@ -25,7 +26,6 @@ video.autoplay = true;
 video.muted = true;
 video.playsinline = true;
 document.querySelector('body').appendChild(video);
-*/
 
 // video要素にWebカメラの映像を表示させる
 media = navigator.mediaDevices.getUserMedia({
