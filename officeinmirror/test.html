@@ -19,8 +19,8 @@ video.width    = cameraSize.w;
 video.height   = cameraSize.h;
 video.autoplay = true;
 video.muted = true;
-video.playsinline = true;
-//document.querySelector('body').appendChild(video);
+video.setAttribute('playsinline', '');
+document.querySelector('body').appendChild(video);
 
 // video要素にWebカメラの映像を表示させる
 media = navigator.mediaDevices.getUserMedia({
@@ -34,7 +34,8 @@ media = navigator.mediaDevices.getUserMedia({
 });
 
 // canvas要素をつくる
-canvas        = document.createElement('canvas');
+/*
+  canvas        = document.createElement('canvas');
 canvas.id     = 'canvas';
 canvas.width  = canvasSize.w;
 canvas.height = canvasSize.h;
@@ -50,4 +51,5 @@ function _canvasUpdate() {
   canvasCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
   requestAnimationFrame(_canvasUpdate);
 };
+*/
 </script>
