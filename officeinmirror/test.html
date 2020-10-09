@@ -3,7 +3,7 @@
 <title>test</title>
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/test.html', { scope: '/' })
+  navigator.serviceWorker.register('', { scope: '/' })
   .then(function(reg) {
     console.log('登録に成功しました。 Scope は ' + reg.scope);
   }).catch(function(error) {
