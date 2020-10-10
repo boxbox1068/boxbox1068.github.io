@@ -192,12 +192,10 @@ class Webcam {
       transform: ${flip ? 'scaleX(-1)' : ''};
       filter: ${grayscale ? 'grayscale(100%)' : ''};
     `;
-video.setAttribute('controls', null);
+video.controls = false;
     video.autoplay = true;
     video.muted = true;
     video.setAttribute('playsinline', null);
-video.controls = false;
-video.setAttribute('controls', false);
     this._video = video;
   }
   start(callback) {
