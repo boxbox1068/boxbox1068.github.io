@@ -1,33 +1,30 @@
 <!DOCTYPE html>
-<html manifest="cache.appcache">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <title>OfficeInMirror</title>
 <!--
-
+キャッシュ
 クエリの説明
 タッチへの対応
 日付の修正
 initial position
 initial scale
-
+タイムアウトの時間
+appcontainerのtouchのpreventdefaultの調整
+iphone 再生ボタン
 
 # Version History
 - 1.0.0 (Oct 4, 2020): Initial release.
 -->
 <style>
-html {
-  font-size: min(1rem, 3vmin);
-  font-family: sans-serif;
-  background-color: rgb(242,242,242);
-  user-select: none;
-}
 body > .content {
   display: none;
+}
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
 }
 </style>
 <div class="content" id="copyright_content">
@@ -93,6 +90,75 @@ class QueryParser {
   }
 }
 </script>
+<script id="app_container_class">
+class AppContainer {
+  constructor({backgroundColor, color} = {}) {
+    typeof backgroundColor == 'string' || (backgroundColor = '');
+    typeof color == 'string' || (color = '');
+    const body = document.createElement('div');
+    body.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+      color: ${color};
+      font-size: min(1rem, 3vmin);
+      font-family: sans-serif;
+      user-select: none;
+      touch-action: manipulation;
+    `;
+    body.oncontextmenu = e => {
+      e.preventDefault();
+    }
+    body.ontouchstart = e => {
+      e.touches.length > 1 && e.preventDefault();
+    };
+    body.ontouchmove = e => {
+      e.touches.length > 1 && e.preventDefault();
+    };
+    let lastWidth = body.clientWidth;
+    let lastHeight = body.clientHeight;
+    let onResizeTimeoutId = null;
+    const monitorSize = () => {
+      const currentWidth = body.clientWidth;
+      const currentHeight = body.clientHeight;
+      if (currentWidth != lastWidth || currentHeight != lastHeight) {
+        window.clearTimeout(onResizeTimeoutId);
+        onResizeTimeoutId = window.setTimeout(() => {
+          onResizeTimeoutId = null;
+          this.onResize(currentWidth, currentHeight);
+        }, 500);
+      }
+      lastWidth = currentWidth;
+      lastHeight = currentHeight;
+      window.setTimeout(monitorSize, 200);
+    };
+    monitorSize();
+    this._body = body;
+  }
+  set onResize(aHandler) {
+    if (typeof aHandler != 'function') return false;
+    this._onResize = aHandler;
+  }
+  get onResize() {
+    if (typeof this._onResize != 'function') return () => false;
+    return this._onResize;
+  }
+  get body() {
+    return this._body;
+  }
+  appendChildren(children) {
+    if (!(Array.isArray(children))) return false;
+    children.forEach(child => {
+      child instanceof HTMLElement && this._body.appendChild(child);
+    });
+  }
+}
+</script>  
 <script id="webcam_class">
 class Webcam {
   constructor({flip, grayscale} = {}) {
@@ -100,6 +166,9 @@ class Webcam {
     typeof grayscale == 'boolean' || (grayscale = false);
     const video = document.createElement('video');
     video.style.cssText = `
+
+
+
       transform: ${flip ? 'scaleX(-1)' : ''};
       filter: ${grayscale ? 'grayscale(100%)' : ''};
     `;
@@ -117,7 +186,6 @@ class Webcam {
     });
     userMedia.then(stream => {
       this._video.srcObject = stream;
-//      this._video.play();
       this._isStarted = true;
     });
   }
@@ -147,14 +215,13 @@ class Webcam {
 </script>
 <script id="magnifier_class">
 class Magnifier {
-  constructor({parent, fitMode, maxScale, fineness, backgroundColor} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
+  constructor({fitMode, maxScale, fineness, backgroundColor} = {}) {
     fitMode = Number.isInteger(fitMode) ? Math.max(0, Math.min(4, fitMode)) : 0; // 0: None; 1: Width; 2: Height; 3: Both; 4: Auto;
     maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(50, maxScale)) : 5;
     fineness = Number.isInteger(fineness) ? Math.max(1, Math.min(100, fineness)) : 10;
     typeof backgroundColor == 'string' || (backgroundColor = '');
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       position: absolute;
       top: 0;
       left: 0;
@@ -164,23 +231,27 @@ class Magnifier {
       box-sizing: border-box;
       background-color: ${backgroundColor};
     `;
-    const contentWrapper = document.createElement('div');
-    contentWrapper.style.cssText = `
+    const contentContainer = document.createElement('div');
+    contentContainer.style.cssText = `
       position: absolute;
+      width: 100%;
+      height: 100%;
     `;
-    parent.appendChild(base);
-    base.appendChild(contentWrapper);
-    this._base = base;
-    this._contentWrapper = contentWrapper;
+    body.appendChild(contentContainer);
+    this._body = body;
+    this._contentContainer = contentContainer;
     this._fitMode = fitMode;
     this._maxScale = maxScale;
     this._fineness = fineness;
-    this._content = null;
   }
-  append(content) {
-    this._content && this._contentWrapper.removeChild(this._content);
-    content instanceof HTMLElement || (content = document.createElement('div'));
-    this._contentWrapper.appendChild(content);
+  get body() {
+    return this._body;
+  }
+  setContent(child) {
+    if (this._contentContainer.children.length) {
+      this._contentContainer.children.forEach(child => child.remove());
+    }
+    this._contentContainer.appendChild(child);
     let fitToWidth, fitToHeight;
     if (this._fitMode == 1) { // 1: Width;
       [fitToWidth, fitToHeight] = [true, false];
@@ -189,53 +260,53 @@ class Magnifier {
     } else if (this._fitMode == 3) { // 3: Both;
       [fitToWidth, fitToHeight] = [true, true];
     } else if (this._fitMode == 4) { // 4: Auto;
-      const baseWidthToHeight = this._base.offsetWidth / Math.max(1, this._base.offsetHeight);
-      const contentWidthToHeight = content.offsetWidth / Math.max(1, content.offsetHeight);
-      fitToWidth = contentWidthToHeight > baseWidthToHeight;
+      const parentWidthToHeight = this._contentContainer.offsetWidth / Math.max(1, this._contentContainer.offsetHeight);
+      const childWidthToHeight = child.offsetWidth / Math.max(1, child.offsetHeight);
+      fitToWidth = childWidthToHeight > parentWidthToHeight;
       fitToHeight = !fitToWidth;
     }
-    fitToWidth && (content.style.width = `${this._base.offsetWidth}px`);
-    fitToHeight && (content.style.height = `${this._base.offsetHeight}px`);
-    this._content = content;
+    fitToWidth && (child.style.width = `${this._contentContainer.offsetWidth}px`);
+    fitToHeight && (child.style.height = `${this._contentContainer.offsetHeight}px`);
+    this._child = child;
     this._scale = 1;
-    this._offsetX = (this._base.offsetWidth - this._contentWrapper.offsetWidth) / 2;
-    this._offsetY = (this._base.offsetHeight - this._contentWrapper.offsetHeight) / 2;
+    this._offsetX = (this._contentContainer.offsetWidth - this._child.offsetWidth) / 2;
+    this._offsetY = (this._contentContainer.offsetHeight - this._child.offsetHeight) / 2;
     this._movementX = 0;
     this._movementY = 0;
     this.update();
   }
   update(anchor) {
-    if (!this._content) return false;
+    if (!this._child) return false;
     typeof anchor == 'boolean' || (anchor = false);
     if (!anchor) {
-      const baseWidth = this._base.offsetWidth;
-      const contentWidth = this._content.offsetWidth * this._scale;
-      if (contentWidth < baseWidth) {
+      const bodyWidth = this._body.offsetWidth;
+      const childWidth = this._child.offsetWidth * this._scale;
+      if (childWidth < bodyWidth) {
         this._movementX = 0;
       } else {
-        this._movementX = Math.max((baseWidth - contentWidth) / 2, Math.min((contentWidth - baseWidth) / 2, this._movementX));
+        this._movementX = Math.max((bodyWidth - childWidth) / 2, Math.min((childWidth - bodyWidth) / 2, this._movementX));
       }
-      const baseHeight = this._base.offsetHeight;
-      const contentHeight = this._content.offsetHeight * this._scale;
-      if (contentHeight < baseHeight) {
+      const bodyHeight = this._body.offsetHeight;
+      const childHeight = this._child.offsetHeight * this._scale;
+      if (childHeight < bodyHeight) {
         this._movementY = 0;
       } else {
-        this._movementY = Math.max((baseHeight - contentHeight) / 2, Math.min((contentHeight - baseHeight) / 2, this._movementY));
+        this._movementY = Math.max((bodyHeight - childHeight) / 2, Math.min((childHeight - bodyHeight) / 2, this._movementY));
       }
     }
-    this._contentWrapper.style.transform = `scale(${this._scale})`;
-    this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
-    this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
+    this._contentContainer.style.transform = `scale(${this._scale})`;
+    this._contentContainer.style.marginLeft = `${this._offsetX + this._movementX}px`;
+    this._contentContainer.style.marginTop = `${this._offsetY + this._movementY}px`;
   }
   magnify(amount) {
-    if (!this._content) return false;
+    if (!this._child) return false;
     Number.isFinite(amount) || (amount = 0);
     this._scale += amount * -0.01 / this._fineness;
     this._scale = Math.max(1, Math.min(this._maxScale, this._scale));
     this.update();
   }
   move(movementX, movementY, anchor) {
-    if (!this._content) return false;
+    if (!this._child) return false;
     Number.isFinite(movementX) || (movementX = 0);
     Number.isFinite(movementY) || (movementY = 0);
     typeof anchor == 'boolean' || (anchor = false);
@@ -247,16 +318,14 @@ class Magnifier {
 </script>
 <script id="shutter_class">
 class Shutter {
-  constructor({parent, text, showWait, startVisible, backgroundColor, color, transition} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
-    typeof text == 'string' || (text = '');
+  constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
     showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 30000;
     typeof startVisible == 'boolean' || (startVisible = false);
     typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
     typeof color == 'string' || (color = 'rgb(0,0,0)');
     transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       display: flex;
       visibility: ${startVisible ? 'visible' : 'hidden'};
       opacity: ${startVisible ? '1' : '0'};
@@ -274,17 +343,16 @@ class Shutter {
       transition: ${transition}ms;
       user-select: none;
     `;
-    const textWrapper = document.createElement('div');
-    textWrapper.innerHTML = text;
-    parent.appendChild(base);
-    base.appendChild(textWrapper);
-    this._base = base;
+    const contentContainer = document.createElement('div');
+    body.appendChild(contentContainer);
+    this._body = body;
+    this._contentContainer = contentContainer;
     this._showWait = showWait;
     this._showTimeoutId = null;
     this.isHidden && this.resetTimer();
   }
   get isHidden() {
-    return this._base.style.visibility == 'hidden';
+    return this._body.style.visibility == 'hidden';
   }
   set onShow(handler) {
     typeof handler == 'function' && (this._onShow = handler);
@@ -298,6 +366,13 @@ class Shutter {
   get onHide() {
     return this._onHide || (() => false);
   }
+  get body() {
+    return this._body;
+  }
+  setText(text) {
+    if (typeof text != 'string') return;
+    this._contentContainer.innerHTML = text;
+  }
   resetTimer() {
     if (this._showWait == 0) return false;
     window.clearTimeout(this._showTimeoutId);
@@ -307,13 +382,13 @@ class Shutter {
     }, this._showWait);
   }
   show() {
-    this._base.style.visibility = 'visible';
-    this._base.style.opacity = '1';
+    this._body.style.visibility = 'visible';
+    this._body.style.opacity = '1';
     this.onShow();
   }
   hide() {
-    this._base.style.opacity = '0';
-    this._base.style.visibility = 'hidden';
+    this._body.style.opacity = '0';
+    this._body.style.visibility = 'hidden';
     this.onHide();
     this.resetTimer();
   }
@@ -324,15 +399,14 @@ class Shutter {
 </script>
 <script id="notifier_class">
 class Notifier {
-  constructor({parent, alignCenter, alignBottom, backgroundColor, color, transition} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
+  constructor({alignCenter, alignBottom, backgroundColor, color, transition} = {}) {
     typeof alignCenter == 'boolean' || (alignCenter = false);
     typeof alignBottom == 'boolean' || (alignBottom = false);
     typeof backgroundColor == 'string' || (backgroundColor = 'rgba(0,0,0,.6)');
     typeof color == 'string' || (color = 'rgb(255,255,255)');
     transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       display: flex;
       opacity: 0;
       position: absolute;
@@ -341,8 +415,8 @@ class Notifier {
       left: 0;
       z-index: 2147483647;
       width: 100%;
-      height: 3rem;
-      padding: 0 1rem;
+      height: 3em;
+      padding: 0 1em;
       box-sizing: border-box;
       background-color: ${backgroundColor};
       color: ${color};
@@ -352,28 +426,29 @@ class Notifier {
       user-select: none;
       pointer-events: none;
     `;
-    parent.appendChild(base);
-    this._base = base;
+    this._body = body;
     this._transition = transition;
     this._text = '';
   }
+  get body() {
+    return this._body;
+  }
   notify(text) {
     typeof text == 'string' || (text = '');
-    this._base.style.opacity = text ? '1' : '0';
-    this._base.innerHTML = text;
+    this._body.style.opacity = text ? '1' : '0';
+    this._body.innerHTML = text;
   }
 }
 </script>
 <script id="controller_class">
 class Controller {
-  constructor({parent, enableKeyboard, enableMouse, enableTouch, inputWait} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
+  constructor({enableKeyboard, enableMouse, enableTouch, inputWait} = {}) {
     typeof enableKeyboard == 'boolean' || (enableKeyboard = true);
     typeof enableMouse == 'boolean' || (enableMouse = true);
     typeof enableTouch == 'boolean' || (enableTouch = true);
     inputWait = Number.isInteger(inputWait) ? Math.max(100, Math.min(1000, inputWait)) : 250;
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       position: absolute;
       top: 0;
       left: 0;
@@ -383,17 +458,16 @@ class Controller {
       box-sizing: border-box;
       outline: none;
     `;
-    parent.appendChild(base);
     if (enableKeyboard) {
-      base.tabIndex = 0;
-      base.focus();
-      base.onblur = e => {
+      body.tabIndex = 0;
+      body.focus();
+      body.onblur = e => {
         e.preventDefault();
         e.stopPropagation();
-        base.focus();
+        body.focus();
       };
-      base.onkeydown = e => {
-        if (base.style.display == 'none') return;
+      body.onkeydown = e => {
+        if (body.style.display == 'none') return;
         if (e.ctrlKey || e.altKey || e.metaKey) return;
         e.preventDefault();
         e.stopPropagation();
@@ -406,7 +480,7 @@ class Controller {
       let clickCount = 0;
       let isDragging = false;
       let lastButton = null;
-      base.onmousedown = e => {
+      body.onmousedown = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -421,7 +495,7 @@ class Controller {
         }
         isDragging = false;
       };
-      base.onmousemove = e => {
+      body.onmousemove = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -434,7 +508,7 @@ class Controller {
         clickCount = 0;
         isDragging && this.onDrag(e.movementX, e.movementY);
       };
-      base.onmouseup = e => {
+      body.onmouseup = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -458,7 +532,7 @@ class Controller {
           }, inputWait);
         }
       };
-      base.onwheel = e => {
+      body.onwheel = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -471,7 +545,7 @@ class Controller {
       let isDragging = false;
       let isScrolling = false;
       let lastTouch = null;
-      base.ontouchstart = e => {
+      body.ontouchstart = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -486,7 +560,7 @@ class Controller {
         isDragging = false;
         isScrolling = false;
       };
-      base.ontouchmove = e => {
+      body.ontouchmove = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -504,7 +578,7 @@ class Controller {
         }
         lastTouch = currentTouch;
       };
-      base.ontouchend = e => {
+      body.ontouchend = e => {
         e.preventDefault();
         e.stopPropagation();
         this.onAnyAction();
@@ -520,7 +594,7 @@ class Controller {
         }
       };
     }
-    this._base = base;
+    this._body = body;
     this._enableKeyboard = enableKeyboard;
   }
   set onDrag(handler) {
@@ -577,32 +651,34 @@ class Controller {
   get onAnyAction() {
     return this._onAnyAction || (() => false);
   }
+  get body() {
+    return this._body;
+  }
   pause() {
-    this._base.style.display == 'none';
+    this._body.style.display == 'none';
     if (this._enableKeyboard) {
-      this._base.blur();
-      this._base.tabIndex = -1;
+      this._body.blur();
+      this._body.tabIndex = -1;
     }
   }
   resume() {
-    this._base.style.display == 'block';
+    this._body.style.display == 'block';
     if (this._enableKeyboard) {
-      this._base.style.tabIndex = 0;
-      this._base.focus();
+      this._body.style.tabIndex = 0;
+      this._body.focus();
     }
   }
 }
 </script>
 <script id="menu_class">
 class Menu {
-  constructor({parent, alignRight, alignBottom, color, shadowColor} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
+  constructor({alignRight, alignBottom, color, shadowColor} = {}) {
     typeof alignRight == 'boolean' || (alignRight = false);
     typeof alignBottom == 'boolean' || (alignBottom = false);
     typeof color == 'string' || (color = 'rgb(255,255,255)');
     typeof shadowColor == 'string' || (shadowColor = 'rgb(0,0,0)');
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       display: flex;
       position: absolute;
       top: ${!alignBottom ? '0' : ''};
@@ -615,22 +691,25 @@ class Menu {
       box-sizing: border-box;
       color: ${color};
       font-weight: bold;
+      font-size: 1rem;
       justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
       align-items: center;
       pointer-events: none;
     `;
-    parent.appendChild(base);
-    this._base = base;
+    this._body = body;
     this._alignRight = alignRight;
     this._shadowColor = shadowColor;
+  }
+  get body() {
+    return this._body;
   }
   addItem(text, onClick) {
     typeof text == 'string' || (text = '');
     typeof onClick == 'function' || (onClick = () => false);
     const item = document.createElement('div');
     item.style.cssText = `
-      margin-right: ${this._alignRight ? '' : '1.5rem'};
-      margin-left: ${this._alignRight ? '1.5rem' : ''};
+      margin-right: ${this._alignRight ? '' : '1.5em'};
+      margin-left: ${this._alignRight ? '1.5em' : ''};
       text-shadow:
         0 -1px ${this._shadowColor}, 1px 0 ${this._shadowColor},
         0 1px ${this._shadowColor}, -1px 0 ${this._shadowColor},
@@ -641,23 +720,20 @@ class Menu {
     `;
     item.innerHTML = text || '*';
     item.onclick = e => onClick();
-    this._base.appendChild(item);
+    this._body.appendChild(item);
   }
 }
 </script>
 <script class="dialog_class">
 class Dialog {
-  constructor({parent, title, content, startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
-    parent instanceof HTMLElement || (parent = document.body);
-    content instanceof HTMLElement || (content = document.createElement('div'));
-    typeof title == 'string' || (title = '');
+  constructor({startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
     typeof startVisible == 'boolean' || (startVisible = false);
     typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
     typeof color == 'string' || (color = 'rgb(0,0,0)');
     curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
     transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
-    const base = document.createElement('div');
-    base.style.cssText = `
+    const body = document.createElement('div');
+    body.style.cssText = `
       display: flex;
       visibility: ${startVisible ? 'visible' : 'hidden'};
       opacity: ${startVisible ? '1' : '0'};
@@ -698,41 +774,38 @@ class Dialog {
       top: 0;
       left: 0;
       width: 100%;
-      height: 3rem;
+      height: 3em;
       box-sizing: border-box;
       font-weight: bold;
       justify-content: center;
       align-items: center;
       user-select: none;
     `;
-    titleBar.innerHTML = title;
-    const contentWrapper = document.createElement('div');
-    contentWrapper.style.cssText = `
+    const contentContainer = document.createElement('div');
+    contentContainer.style.cssText = `
       position: absolute;
-      bottom: 1rem;
+      bottom: 1em;
       left: 0;
       width: 100%;
-      height: calc(100% - 3rem - 1rem);
-      padding: 1rem 2rem;
+      height: calc(100% - 3em - 1em);
+      padding: 1em 2em;
       overflow-y: auto;
       box-sizing: border-box;
     `;
-    contentWrapper.appendChild(content);
     const closeButton = document.createElement('div');
     closeButton.style.cssText = `
       position: absolute;
-      top: .5rem;
-      right: 1rem;
+      top: .5em;
+      right: 1em;
       transform: rotate(45deg);
       font-weight: bold;
       user-select: none;
     `;
     closeButton.innerText = '+';
-    parent.appendChild(base);
-    base.appendChild(curtain);
-    base.appendChild(panel);
+    body.appendChild(curtain);
+    body.appendChild(panel);
     panel.appendChild(titleBar);
-    panel.appendChild(contentWrapper);
+    panel.appendChild(contentContainer);
     panel.appendChild(closeButton);
     curtain.onclick = e => {
       e.preventDefault();
@@ -748,11 +821,12 @@ class Dialog {
         this.hide();
       }
     };
-    this._base = base;
-    this._contentWrapper = contentWrapper;
+    this._body = body;
+    this._titleBar = titleBar;
+    this._contentContainer = contentContainer;
   }
   get isHidden() {
-    return this._base.style.visibility == 'hidden';
+    return this._body.style.visibility == 'hidden';
   }
   set onShow(handler) {
     typeof handler == 'function' && (this._onShow = handler);
@@ -766,31 +840,54 @@ class Dialog {
   get onHide() {
     return this._onHide || (() => false);
   }
+  get body() {
+    return this._body;
+  }
+  setTitle(title) {
+    if (typeof title != 'string') return false;
+    this._titleBar.innerHTML = title;
+  }
+  setContent(content) {
+    if (!(content instanceof HTMLElement)) return false;
+    this._contentContainer.children.length
+      && this._contentContainer.children.forEach(child => child.remove());
+    this._contentContainer.appendChild(content);
+  }
   show() {
     if (!this.isHidden) return;
-    this._base.style.visibility = 'visible';
-    this._base.style.opacity = '1';
+    this._body.style.visibility = 'visible';
+    this._body.style.opacity = '1';
     this.onShow();
   }
   hide() {
     if (this.isHidden) return;
-    this._base.style.opacity = '0';
-    this._base.style.visibility = 'hidden';
+    this._body.style.opacity = '0';
+    this._body.style.visibility = 'hidden';
     this.onHide();
   }
 }
 </script>
 <script id="main">
-document.body.oncontextmenu = e => false;
 window.onload = e => {
   'use strict';
   const queryParser = new QueryParser();
+
+  const appContainer = new AppContainer({
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(53,54,58)'
+  });
+  document.body.appendChild(appContainer.body);
+//appContainer.onResize = (w, h) => alert(`${w}, ${h}`);
+
+
+
+
   const webcam = new Webcam({
     flip: queryParser.getValue('flip', 'boolean', true),
     grayscale: queryParser.getValue('grayscale', 'boolean', false)
   });
   webcam.start(video => {
-    magnifier.append(video);
+    magnifier.setContent(video);
     controller.resume();
     shutter.hide();
   });
@@ -801,7 +898,6 @@ window.onload = e => {
     backgroundColor: queryParser.getValue('backgroundColor', '', '')
   });
   const shutter = new Shutter({
-    text: '<strong>OfficeInMirror</strong>',
     showWait: 5000,
     startVisible: true,
     backgroundColor: 'rgb(242,242,242)',
@@ -815,6 +911,7 @@ window.onload = e => {
     webcam.show();
     notifier.notify('');
   };
+  shutter.setText('<strong>OfficeInMirror</strong>');
   const notifier = new Notifier({
     alignCenter: false,
     alignBottom: true,
@@ -856,26 +953,35 @@ window.onload = e => {
   const menu = new Menu({alignRight: true});
   menu.addItem('&copy;', () => copyrightDialog.show());
   menu.addItem('?', () => helpDialog.show());
-  const copyrightContent = document.querySelector('#copyright_content');
-  copyrightContent.parentNode.removeChild(copyrightContent);
   const copyrightDialog = new Dialog({
-    title: 'Copyright and License',
-    content: copyrightContent,
-    backgroundColor: 'rgb(242,242,242)',
-    color: 'rgb(53,54,58)'}
-  );
-  copyrightDialog.onShow = () => controller.pause();
-  copyrightDialog.onHide = () => controller.resume();
-  const helpContent = document.querySelector('#help_content');
-  helpContent.parentNode.removeChild(helpContent);
-  const helpDialog = new Dialog({
-    title: 'Help',
-    content: helpContent,
     backgroundColor: 'rgb(242,242,242)',
     color: 'rgb(53,54,58)'
   });
+  copyrightDialog.setTitle('<strong>Copyright & License</strong>');
+  const copyrightContent = document.querySelector('#copyright_content');
+  copyrightContent.remove();
+  copyrightDialog.setContent(copyrightContent);
+  copyrightDialog.onShow = () => controller.pause();
+  copyrightDialog.onHide = () => controller.resume();
+  const helpDialog = new Dialog({
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(53,54,58)'
+  });
+  helpDialog.setTitle('<strong>Help</strong>');
+  const helpContent = document.querySelector('#help_content');
+  helpContent.remove();
+  helpDialog.setContent(helpContent);
   helpDialog.onShow = () => controller.pause();
   helpDialog.onHide = () => controller.resume();
+  appContainer.appendChildren([
+    magnifier.body,
+    shutter.body,
+    notifier.body,
+    controller.body,
+    menu.body,
+    copyrightDialog.body,
+    helpDialog.body
+  ]);
 };
 </script>
 
