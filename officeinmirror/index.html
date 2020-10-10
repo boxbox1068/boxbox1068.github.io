@@ -24,30 +24,7 @@ body > .content {
   display: none;
 }
 video::-webkit-media-controls {
-  display: none !important;
-}
-/* This used to work for the parent element of button divs */
-/* But it does not work with newer browsers, the below doesn't hide the play button parent div */
-
-*::-webkit-media-controls-panel {
-  display: none!important;
-  -webkit-appearance: none;
-}
-
-/* Old shadow dom for play button */
-
-*::-webkit-media-controls-play-button {
-  display: none!important;
-  -webkit-appearance: none;
-}
-
-/* New shadow dom for play button */
-
-/* This one works! */
-
-*::-webkit-media-controls-start-playback-button {
-  display: none!important;
-  -webkit-appearance: none;
+  display: none;
 }
 </style>
 <div class="content" id="copyright_content">
@@ -195,6 +172,7 @@ class Webcam {
       transform: ${flip ? 'scaleX(-1)' : ''};
       filter: ${grayscale ? 'grayscale(100%)' : ''};
     `;
+video.setAttribute('controls', null);
     video.autoplay = true;
     video.muted = true;
     video.setAttribute('playsinline', null);
@@ -714,7 +692,7 @@ class Menu {
       box-sizing: border-box;
       color: ${color};
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.5rem;
       justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
       align-items: center;
       pointer-events: none;
