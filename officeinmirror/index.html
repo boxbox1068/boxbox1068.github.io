@@ -23,6 +23,11 @@ iphone 再生ボタン
 body > .content {
   display: none;
 }
+  
+audio::-webkit-media-controls-overlay-play-button, video::-webkit-media-controls-overlay-play-button {
+    display: none;
+}  
+  
 /* This used to work for the parent element of button divs */
 /* But it does not work with newer browsers, the below doesn't hide the play button parent div */
 
