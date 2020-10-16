@@ -3,9 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title>OfficeInMirror</title>
+<title>Office in Mirror</title>
 <!--
-  サービスワーカー？
 クエリの説明
 タッチへの対応
 日付の修正
@@ -13,10 +12,10 @@
 appcontainerのtouchのpreventdefaultの調整
 
 # Version History
-- 1.0.0 (Oct 4, 2020): Initial release.
+- 0.0.0 (Oct 4, 2020): Initial release.
 -->
 <div class="content" id="copyright-content">
-  <h1>OfficeInMirror Version 1.0.0</h1>
+  <h1>Office in Mirror - Version 0.0.0</h1>
   <p>
     <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></div>
     <div>Released under the MIT license</div>
@@ -94,7 +93,7 @@ class AppContainer {
       box-sizing: border-box;
       background-color: ${backgroundColor};
       color: ${color};
-      font-size: min(1rem, 3vmin);
+      font-size: min(1rem, 5vmin);
       font-family: serif;
       user-select: none;
       touch-action: manipulation;
@@ -917,9 +916,10 @@ window.addEventListener('load', e => {
   };
   const shutterContent = document.createElement('div');
   shutterContent.style.cssText =`
+    text-align: center;
     transform: scaleX(-1);
   `;
-  shutterContent.innerHTML = '<strong>OfficeInMirror</strong>';
+  shutterContent.innerHTML = '<strong>Office in Mirror</strong>';
   shutter.setContent(shutterContent);
   const notifier = new Notifier({
     alignCenter: false,
