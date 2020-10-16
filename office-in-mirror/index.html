@@ -16,7 +16,7 @@ appcontainerのtouchのpreventdefaultの調整
 - 1.0.0 (Oct 4, 2020): Initial release.
 -->
 <div class="content" id="copyright-content">
-  <h1>OfficeInMirror Version 0.1.0</h1>
+  <h1>OfficeInMirror Version 1.0.0</h1>
   <p>
     <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></div>
     <div>Released under the MIT license</div>
@@ -856,7 +856,7 @@ class Dialog {
 class ServiceWorkerRegistrator {
   constructor({} = {}) {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      navigator.serviceWorker.register('./service-worker.js').then(registration => {
         this._registration = registration;
       }).catch(err => {
         this._registration = null;
