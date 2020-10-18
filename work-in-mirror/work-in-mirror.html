@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Work in Mirror</title>
+<!--
+クエリの説明
+タッチへの対応
+日付の修正
+タイムアウトの時間
+appcontainerのtouchのpreventdefaultの調整
+
+# Version History
+- 0.0.0 (Oct X, 2020): Initial release.
+-->
+<script>
+if (location.protocol == 'https:') {
+  document.write(`
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <link rel="apple-touch-icon" href="icons/icon-180x180.png">
+  `);
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+<div class="content" id="copyright-content">
+  <h1>Work in Mirror: Version 0.0.0</h1>
+  <p>
+    <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></div>
+    <div>Released under the MIT license</div>
+    <div><a href="https://opensource.org/licenses/mit-license.php">https://opensource.org/licenses/mit-license.php</a></div>
+  </p>
+</div>
+<div class="content" id="help-content">
+  <h2>Use a Mouse</h2>
+  <p>
+    <ul>
+      <li><strong>Click</strong> to pause and resume video.</li>
+      <li><strong>Double-Click</strong> to hide and show video.</li>
+      <li><strong>Wheel Up/Down</strong> to enlarge and reduce video.</li>
+      <li><strong>Drag</strong> to shift video.</li>
+    </ul>
+  </p>
+  <h2>Use a Keyboard</h2>
+  <p>
+    <ul>
+      <li>Press <strong>Space</strong> to pause and resume video.</li>
+      <li>Press <strong>Enter</strong> to hide video.</li>
+      <li>Press <strong>Esc</strong> to show video.</li>
+      <li>Press <strong>PageUp/PageDown</strong> to enlarge and reduce video.</li>
+      <li>Press <strong>Up/Down/Left/Right</strong> to shift video.</li>
+    </ul>
+  </p>
+</div>
+<script id="query-parser-class">
+class QueryParser {
+  constructor({} = {}) {
+    const values = {};
+    const queryString = location.search.slice(1);
+    queryString.split('&').forEach(parameter => {
+      let name, value;
+      if (!(parameter.match(/=/))) {
+        name = parameter.toLowerCase().trim();
+        value = 'true';
+      } else {
+        name = parameter.match(/^[^=]*/)[0].toLowerCase().trim();
+        value = decodeURIComponent(parameter.match(/=.*$/)[0].slice(1).trim());
+      }
+      name && (values[name] = value);
+    });
+    this._values = values;
+  }
+  getValue(name, type, defaultValue) {
+    typeof name == 'string' || (name = '');
+    typeof type == 'string' || (type = '');
+    let value = this._values[name.toLowerCase().trim()];
+    if (type == 'number') {
+      value = Number(value);
+      Number.isFinite(value) || (value = undefined);
+    } else if (type == 'boolean') {
+      value = String(value).toLowerCase().trim();
+      value = value.match(/\s*(true|false)\s*/i) ? value == 'true' : undefined;
+    }
+    value === undefined && (value = defaultValue);
+    return value;
+  }
+}
+</script>
+<script id="app-container-class">
+class AppContainer {
+  constructor({backgroundColor, color} = {}) {
+    typeof backgroundColor == 'string' || (backgroundColor = '');
+    typeof color == 'string' || (color = '');
+    const body = document.createElement('div');
+    body.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+      color: ${color};
+      font-size: min(1rem, 5vmin);
+      font-family: sans-serif;
+      user-select: none;
+      touch-action: manipulation;
+    `;
+    body.addEventListener('contextmenu', e => {
+      e.preventDefault();
+    });
+    body.addEventListener('touchstart', e => {
+      e.touches.length > 1 && e.preventDefault();
+    });
+    body.addEventListener('touchmove', e => {
+      e.touches.length > 1 && e.preventDefault();
+    });
+    let lastWidth = body.clientWidth;
+    let lastHeight = body.clientHeight;
+    let onResizeTimeoutId = null;
+    const monitorSize = () => {
+      const currentWidth = body.clientWidth;
+      const currentHeight = body.clientHeight;
+      if (currentWidth != lastWidth || currentHeight != lastHeight) {
+        clearTimeout(onResizeTimeoutId);
+        onResizeTimeoutId = setTimeout(() => {
+          onResizeTimeoutId = null;
+          this.onResize(currentWidth, currentHeight);
+        }, 500);
+      }
+      lastWidth = currentWidth;
+      lastHeight = currentHeight;
+      setTimeout(monitorSize, 200);
+    };
+    monitorSize();
+    this._body = body;
+  }
+  set onResize(handler) {
+    if (typeof handler != 'function') return false;
+    this._onResize = h
+    andler;
+  }
+  get onResize() {
+    if (typeof this._onResize != 'function') return () => false;
+    return this._onResize;
+  }
+  get body() {
+    return this._body;
+  }
+  appendChildren(children) {
+    if (!(Array.isArray(children))) return false;
+    children.forEach(child => {
+      child instanceof HTMLElement && this._body.appendChild(child);
+    });
+  }
+}
+</script>  
+<script id="webcam-class">
+class Webcam {
+  constructor({flip, grayscale} = {}) {
+    typeof flip == 'boolean' || (flip = false);
+    typeof grayscale == 'boolean' || (grayscale = false);
+    const video = document.createElement('video');
+    video.style.cssText = `
+      transform: ${flip ? 'scaleX(-1)' : ''};
+      filter: ${grayscale ? 'grayscale(100%)' : ''};
+    `;
+    video.autoplay = true;
+    video.muted = true;
+    video.setAttribute('playsinline', null);
+    this._video = video;
+  }
+  start(callback) {
+    if (typeof callback != 'function') return false;
+    this._video.addEventListener('loadedmetadata', e => callback(this._video));
+    const userMedia = navigator.mediaDevices.getUserMedia({
+      video: {facingMode: 'user'},
+      audio: false
+    });
+    userMedia.then(stream => {
+      this._video.srcObject = stream;
+      this._isStarted = true;
+    });
+  }
+  hide() {
+    if (!this._isStarted) return false;
+    this._video.pause();
+    this._video.srcObject.getTracks().forEach(track => track.enabled = false);
+  }
+  show() {
+    if (!this._isStarted) return false;
+    this._video.play();
+    this._video.srcObject.getTracks().forEach(track => track.enabled = true);
+  }
+  pause() {
+    if (!this._isStarted) return false;
+    this._video.pause()
+  }
+  play() {
+    if (!this._isStarted) return false;
+    this._video.play();
+  }
+  togglePlay() {
+    if (!this._isStarted) return false;
+    this._video.paused ? this._video.play() : this._video.pause();
+  }
+}
+</script>
+<script id="magnifier-class">
+class Magnifier {
+  constructor({fitMode, maxScale, fineness, backgroundColor} = {}) {
+    fitMode = Number.isInteger(fitMode) ? Math.max(0, Math.min(4, fitMode)) : 0; // 0: None; 1: Width; 2: Height; 3: Both; 4: Auto;
+    maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(50, maxScale)) : 5;
+    fineness = Number.isInteger(fineness) ? Math.max(1, Math.min(100, fineness)) : 10;
+    typeof backgroundColor == 'string' || (backgroundColor = '');
+    const body = document.createElement('div');
+    body.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+    `;
+    const contentWrapper = document.createElement('div');
+    contentWrapper.style.cssText = `
+      position: absolute;
+    `;
+    body.appendChild(contentWrapper);
+    this._body = body;
+    this._contentWrapper = contentWrapper;
+    this._content = null;
+    this._fitMode = fitMode;
+    this._maxScale = maxScale;
+    this._fineness = fineness;
+  }
+  get body() {
+    return this._body;
+  }
+  setContent(content) {
+    if (!(content instanceof HTMLElement)) return false;
+    if (this._contentWrapper.children.length) {
+      this._contentWrapper.children.forEach(child => child.remove());
+    }
+    this._contentWrapper.appendChild(content);
+    let fitToWidth, fitToHeight;
+    if (this._fitMode == 1) { // 1: Width;
+      [fitToWidth, fitToHeight] = [true, false];
+    } else if (this._fitMode == 2) { // 2: Height;
+      [fitToWidth, fitToHeight] = [false, true];
+    } else if (this._fitMode == 3) { // 3: Both;
+      [fitToWidth, fitToHeight] = [true, true];
+    } else if (this._fitMode == 4) { // 4: Auto;
+      const bodyWidthToHeight = this._body.offsetWidth / Math.max(1, this._body.offsetHeight);
+      const contentWidthToHeight = content.offsetWidth / Math.max(1, content.offsetHeight);
+      fitToWidth = contentWidthToHeight > bodyWidthToHeight;
+      fitToHeight = !fitToWidth;
+    }
+    fitToWidth && (content.style.width = `${this._body.offsetWidth}px`);
+    fitToHeight && (content.style.height = `${this._body.offsetHeight}px`);
+    this._content = content;
+    this._scale = 1;
+    this._offsetX = (this._body.offsetWidth - this._content.offsetWidth) / 2;
+    this._offsetY = (this._body.offsetHeight - this._content.offsetHeight) / 2;
+    this._movementX = 0;
+    this._movementY = 0;
+    this.update();
+  }
+  update(anchor) {
+    if (!this._content) return false;
+    typeof anchor == 'boolean' || (anchor = false);
+    if (!anchor) {
+      const bodyWidth = this._body.offsetWidth;
+      const contentWidth = this._content.offsetWidth * this._scale;
+      if (contentWidth < bodyWidth) {
+        this._movementX = 0;
+      } else {
+        this._movementX = Math.max((bodyWidth - contentWidth) / 2, Math.min((contentWidth - bodyWidth) / 2, this._movementX));
+      }
+      const bodyHeight = this._body.offsetHeight;
+      const contentHeight = this._content.offsetHeight * this._scale;
+      if (contentHeight < bodyHeight) {
+        this._movementY = 0;
+      } else {
+        this._movementY = Math.max((bodyHeight - contentHeight) / 2, Math.min((contentHeight - bodyHeight) / 2, this._movementY));
+      }
+    }
+    this._contentWrapper.style.transform = `scale(${this._scale})`;
+    this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
+    this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
+  }
+  magnify(amount) {
+    if (!this._content) return false;
+    Number.isFinite(amount) || (amount = 0);
+    this._scale += amount * -0.01 / this._fineness;
+    this._scale = Math.max(1, Math.min(this._maxScale, this._scale));
+    this.update();
+  }
+  move(movementX, movementY, anchor) {
+    if (!this._content) return false;
+    Number.isFinite(movementX) || (movementX = 0);
+    Number.isFinite(movementY) || (movementY = 0);
+    typeof anchor == 'boolean' || (anchor = false);
+    this._movementX += movementX;
+    this._movementY += movementY;
+    this.update(anchor);
+  }
+}
+</script>
+<script id="shutter-class">
+class Shutter {
+  constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
+    showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 30000;
+    typeof startVisible == 'boolean' || (startVisible = false);
+    typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
+    typeof color == 'string' || (color = 'rgb(0,0,0)');
+    transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+    const body = document.createElement('div');
+    body.style.cssText = `
+      display: flex;
+      visibility: ${startVisible ? 'visible' : 'hidden'};
+      opacity: ${startVisible ? '1' : '0'};
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2147483647;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+      color: ${color};
+      justify-content: center;
+      align-items: center;
+      transition: ${transition}ms;
+      user-select: none;
+    `;
+    const contentWrapper = document.createElement('div');
+    body.appendChild(contentWrapper);
+    this._body = body;
+    this._contentWrapper = contentWrapper;
+    this._showWait = showWait;
+    this._showTimeoutId = null;
+    this.isHidden && this.resetTimer();
+  }
+  get isHidden() {
+    return this._body.style.visibility == 'hidden';
+  }
+  set onShow(handler) {
+    typeof handler == 'function' && (this._onShow = handler);
+  }
+  get onShow() {
+    return this._onShow || (() => false);
+  }
+  set onHide(handler) {
+    typeof handler == 'function' && (this._onHide = handler);
+  }
+  get onHide() {
+    return this._onHide || (() => false);
+  }
+  get body() {
+    return this._body;
+  }
+  setContent(content) {
+    if (!content instanceof HTMLElement) return;
+    this._contentWrapper.appendChild(content);
+  }
+  resetTimer() {
+    if (this._showWait == 0) return false;
+    clearTimeout(this._showTimeoutId);
+    this._showTimeoutId = setTimeout(() => {
+      this._showTimeoutId = null;
+      this.show();
+    }, this._showWait);
+  }
+  show() {
+    this._body.style.visibility = 'visible';
+    this._body.style.opacity = '1';
+    this.onShow();
+  }
+  hide() {
+    this._body.style.opacity = '0';
+    this._body.style.visibility = 'hidden';
+    this.onHide();
+    this.resetTimer();
+  }
+  toggleHide() {
+    this.isHidden ? this.show() : this.hide();
+  }
+}
+</script>
+<script id="notifier-class">
+class Notifier {
+  constructor({alignCenter, alignBottom, backgroundColor, color, transition} = {}) {
+    typeof alignCenter == 'boolean' || (alignCenter = false);
+    typeof alignBottom == 'boolean' || (alignBottom = false);
+    typeof backgroundColor == 'string' || (backgroundColor = 'rgba(0,0,0,.6)');
+    typeof color == 'string' || (color = 'rgb(255,255,255)');
+    transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+    const body = document.createElement('div');
+    body.style.cssText = `
+      display: flex;
+      opacity: 0;
+      position: absolute;
+      top: ${alignBottom ? '' : '0'};
+      bottom: ${alignBottom ? '0' : ''};
+      left: 0;
+      z-index: 2147483647;
+      width: 100%;
+      height: 3em;
+      padding: 0 1em;
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+      color: ${color};
+      justify-content: ${alignCenter ? 'center' : ''};
+      align-items: center;
+      transition: ${transition}ms;
+      user-select: none;
+      pointer-events: none;
+    `;
+    this._body = body;
+    this._transition = transition;
+    this._text = '';
+  }
+  get body() {
+    return this._body;
+  }
+  notify(text) {
+    typeof text == 'string' || (text = '');
+    this._body.style.opacity = text ? '1' : '0';
+    this._body.innerHTML = text;
+  }
+}
+</script>
+<script id="controller-class">
+class Controller {
+  constructor({enableKeyboard, enableMouse, enableTouch, inputWait} = {}) {
+    typeof enableKeyboard == 'boolean' || (enableKeyboard = true);
+    typeof enableMouse == 'boolean' || (enableMouse = true);
+    typeof enableTouch == 'boolean' || (enableTouch = true);
+    inputWait = Number.isInteger(inputWait) ? Math.max(100, Math.min(1000, inputWait)) : 250;
+    const body = document.createElement('div');
+    body.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2147483647;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      outline: none;
+    `;
+    if (enableKeyboard) {
+      body.tabIndex = 0;
+      body.focus();
+      body.addEventListener('blur', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        body.focus();
+      });
+      body.addEventListener('keydown', e => {
+        if (body.style.display == 'none') return;
+        if (e.ctrlKey || e.altKey || e.metaKey) return;
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        this.onKeyDown(e.keyCode);
+      });
+    }
+    if (enableMouse) {
+      let clickTimeoutId = null;
+      let clickCount = 0;
+      let isDragging = false;
+      let lastButton = null;
+      body.addEventListener('mousedown', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        clearTimeout(clickTimeoutId);
+        clickTimeoutId = null;
+        if (e.button == lastButton) {
+          clickCount++;
+        } else {
+          clickCount = 1;
+          lastButton = e.button;
+          isDragging && this.onDrop();
+        }
+        isDragging = false;
+      });
+      body.addEventListener('mousemove', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        if (e.buttons & 1) { // 1: Primary button
+          clickCount == 1 && (isDragging = true);
+        } else {
+          isDragging && this.onDrop();
+          isDragging = false;
+        }
+        clickCount = 0;
+        isDragging && this.onDrag(e.movementX, e.movementY);
+      });
+      body.addEventListener('mouseup', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        if (isDragging) {
+          if (e.button == 0) { // 0: Main button
+            this.onDrop();
+            isDragging = false;
+          }
+        } else {
+          clickTimeoutId = setTimeout(() => {
+            clickTimeoutId = null;
+            if (lastButton == 0) { // 0: Main button
+              clickCount == 1 && this.onClick();
+              clickCount == 2 && this.onDoubleClick();
+            } else if (lastButton == 1) { // 1: Auxiliary button
+              clickCount == 1 && this.onMiddleClick();
+            } else if (lastButton == 2) {
+              clickCount == 1 && this.onRightClick(); // 2: Secondary button
+            }
+            clickCount = 0;
+          }, inputWait);
+        }
+      });
+      body.addEventListener('wheel', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        this.onScroll(e.deltaY);
+      });
+    }
+    if (enableTouch) {
+      let tapTimeoutId = null;
+      let touchCount = 0;
+      let isDragging = false;
+      let isScrolling = false;
+      let lastTouch = null;
+      body.addEventListener('touchstart', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        clearTimeout(tapTimeoutId);
+        if (e.touches.length == 1) {
+          touchCount++;
+          lastTouch = e.touches[0];
+        } else {
+          touchCount = 0;
+          isDragging && this.onDrop();
+        }
+        isDragging = false;
+        isScrolling = false;
+      });
+      body.addEventListener('touchmove', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        touchCount == 1 && (isDragging = true);
+        touchCount == 2 && (isScrolling = true);
+        touchCount = 0;
+        let currentTouch = e.touches[0];
+        if (isDragging) {
+          let movementX = currentTouch.screenX - lastTouch.screenX;
+          let movementY = currentTouch.screenY - lastTouch.screenY;
+          this.onDrag(movementX, movementY);
+        } else if (isScrolling) {
+          let deltaY = (lastTouch.screenY - currentTouch.screenY) * 10;
+          this.onScroll(deltaY);
+        }
+        lastTouch = currentTouch;
+      });
+      body.addEventListener('touchend', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.onAnyAction();
+        if (isDragging) {
+          this.onDrop();
+        } else {
+          tapTimeoutId = setTimeout(() => {
+            tapTimeoutId = null;
+            touchCount == 1 && this.onClick();
+            touchCount == 2 && this.onDoubleClick();
+            touchCount = 0;
+          }, inputWait);
+        }
+      });
+    }
+    this._body = body;
+    this._enableKeyboard = enableKeyboard;
+  }
+  set onDrag(handler) {
+    typeof handler == 'function' && (this._onDrag = handler);
+  }
+  get onDrag() {
+    return this._onDrag || (() => false);
+  }
+  set onDrop(handler) {
+    typeof handler == 'function' && (this._onDrop = handler);
+  }
+  get onDrop() {
+    return this._onDrop || (() => false);
+  }
+  set onClick(handler) {
+    typeof handler == 'function' && (this._onClick = handler);
+  }
+  get onClick() {
+    return this._onClick || (() => false);
+  }
+  set onDoubleClick(handler) {
+    typeof handler == 'function' && (this._onDoubleClick = handler);
+  }
+  get onDoubleClick() {
+    return this._onDoubleClick || (() => false);
+  }
+  set onMiddleClick(handler) {
+    typeof handler == 'function' && (this._onMiddleClick = handler);
+  }
+  get onMiddleClick() {
+    return this._onMiddleClick || (() => false);
+  }
+  set onRightClick(handler) {
+    typeof handler == 'function' && (this._onRightClick = handler);
+  }
+  get onRightClick() {
+    return this._onRightClick || (() => false);
+  }
+  set onScroll(handler) {
+    typeof handler == 'function' && (this._onScroll = handler);
+  }
+  get onScroll() {
+    return this._onScroll || (() => false);
+  }
+  set onKeyDown(handler) {
+    typeof handler == 'function' && (this._onKeyDown = handler);
+  }
+  get onKeyDown() {
+    return this._onKeyDown || (() => false);
+  }
+  set onAnyAction(handler) {
+    typeof handler == 'function' && (this._onAnyAction = handler);
+  }
+  get onAnyAction() {
+    return this._onAnyAction || (() => false);
+  }
+  get body() {
+    return this._body;
+  }
+  pause() {
+    this._body.style.display == 'none';
+    if (this._enableKeyboard) {
+      this._body.blur();
+      this._body.tabIndex = -1;
+    }
+  }
+  resume() {
+    this._body.style.display == 'block';
+    if (this._enableKeyboard) {
+      this._body.style.tabIndex = 0;
+      this._body.focus();
+    }
+  }
+}
+</script>
+<script id="menu-class">
+class Menu {
+  constructor({alignRight, alignBottom, color, shadowColor} = {}) {
+    typeof alignRight == 'boolean' || (alignRight = false);
+    typeof alignBottom == 'boolean' || (alignBottom = false);
+    typeof color == 'string' || (color = 'rgb(255,255,255)');
+    typeof shadowColor == 'string' || (shadowColor = 'rgb(0,0,0)');
+    const body = document.createElement('div');
+    body.style.cssText = `
+      display: flex;
+      position: absolute;
+      top: ${!alignBottom ? '0' : ''};
+      bottom: ${alignBottom ? '0' : ''};
+      left: 0;
+      z-index: 2147483647;
+      width: 100%;
+      height: 3rem;
+      padding: 0 1.5rem;
+      box-sizing: border-box;
+      color: ${color};
+      font-weight: bold;
+      font-size: 1.5rem;
+      justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
+      align-items: center;
+      pointer-events: none;
+    `;
+    this._body = body;
+    this._alignRight = alignRight;
+    this._shadowColor = shadowColor;
+  }
+  get body() {
+    return this._body;
+  }
+  addItem(text, onClick) {
+    typeof text == 'string' || (text = '');
+    typeof onClick == 'function' || (onClick = () => false);
+    const item = document.createElement('div');
+    item.style.cssText = `
+      margin-right: ${this._alignRight ? '' : '1.5em'};
+      margin-left: ${this._alignRight ? '1.5em' : ''};
+      text-shadow:
+        0 -1px ${this._shadowColor}, 1px 0 ${this._shadowColor},
+        0 1px ${this._shadowColor}, -1px 0 ${this._shadowColor},
+        -1px -1px ${this._shadowColor}, 1px -1px ${this._shadowColor},
+        1px 1px ${this._shadowColor}, -1px 1px ${this._shadowColor};
+      user-select: none;
+      pointer-events: auto;
+    `;
+    item.innerHTML = text || '*';
+    item.addEventListener('click', e => onClick());
+    this._body.appendChild(item);
+  }
+}
+</script>
+<script class="dialog-class">
+class Dialog {
+  constructor({startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
+    typeof startVisible == 'boolean' || (startVisible = false);
+    typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
+    typeof color == 'string' || (color = 'rgb(0,0,0)');
+    curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
+    transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
+    const body = document.createElement('div');
+    body.style.cssText = `
+      display: flex;
+      visibility: ${startVisible ? 'visible' : 'hidden'};
+      opacity: ${startVisible ? '1' : '0'};
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2147483647;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      justify-content: center;
+      align-items: center;
+      transition: ${transition}ms;
+    `;
+    const curtain = document.createElement('div');
+    curtain.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      background-color: rgba(0,0,0,${curtainOpacity});
+    `;
+    const panel = document.createElement('div');
+    panel.style.cssText = `
+      position: relative;
+      width: calc(100% - 20vmin);
+      height: calc(100% - 20vmin);
+      box-sizing: border-box;
+      background-color: ${backgroundColor};
+      color: ${color};
+    `;
+    const titleBar = document.createElement('div');
+    titleBar.style.cssText = `
+      display: flex;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3em;
+      box-sizing: border-box;
+      font-weight: bold;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    `;
+    const contentWrapper = document.createElement('div');
+    contentWrapper.style.cssText = `
+      position: absolute;
+      bottom: 1em;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 3em - 1em);
+      padding: 1em 2em;
+      overflow-y: auto;
+      box-sizing: border-box;
+    `;
+    const closeButton = document.createElement('div');
+    closeButton.style.cssText = `
+      position: absolute;
+      top: .5em;
+      right: 1em;
+      font-weight: bold;
+      user-select: none;
+    `;
+    closeButton.innerHTML = '&#x2715';
+    body.appendChild(curtain);
+    body.appendChild(panel);
+    panel.appendChild(titleBar);
+    panel.appendChild(contentWrapper);
+    panel.appendChild(closeButton);
+    curtain.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.button == 0) { // 0: Main button
+        this.hide();
+      }
+    });
+    closeButton.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.button == 0) { // 0: Main button
+        this.hide();
+      }
+    });
+    this._body = body;
+    this._titleBar = titleBar;
+    this._contentWrapper = contentWrapper;
+  }
+  get isHidden() {
+    return this._body.style.visibility == 'hidden';
+  }
+  set onShow(handler) {
+    typeof handler == 'function' && (this._onShow = handler);
+  }
+  get onShow() {
+    return this._onShow || (() => false);
+  }
+  set onHide(handler) {
+    typeof handler == 'function' && (this._onHide = handler);
+  }
+  get onHide() {
+    return this._onHide || (() => false);
+  }
+  get body() {
+    return this._body;
+  }
+  setTitle(title) {
+    if (typeof title != 'string') return false;
+    this._titleBar.innerHTML = title;
+  }
+  setContent(content) {
+    if (!(content instanceof HTMLElement)) return false;
+    this._contentWrapper.children.length
+      && this._contentWrapper.children.forEach(child => child.remove());
+    this._contentWrapper.appendChild(content);
+  }
+  show() {
+    if (!this.isHidden) return;
+    this._body.style.visibility = 'visible';
+    this._body.style.opacity = '1';
+    this.onShow();
+  }
+  hide() {
+    if (this.isHidden) return;
+    this._body.style.opacity = '0';
+    this._body.style.visibility = 'hidden';
+    this.onHide();
+  }
+}
+</script>
+<script id="main">
+addEventListener('load', e => {
+  'use strict';
+  const queryParser = new QueryParser();
+
+  const appContainer = new AppContainer({
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(53,54,58)'
+  });
+  document.body.appendChild(appContainer.body);
+//appContainer.onResize = (w, h) => alert(`${w}, ${h}`);
+
+
+
+
+  const webcam = new Webcam({
+    flip: queryParser.getValue('flip', 'boolean', true),
+    grayscale: queryParser.getValue('grayscale', 'boolean', false)
+  });
+  webcam.start(video => {
+    magnifier.setContent(video);
+    controller.resume();
+    shutter.hide();
+  });
+  const magnifier = new Magnifier({
+    fitMode: queryParser.getValue('autoFit', 'boolean', true) ? 4 : 0,
+    maxScale: queryParser.getValue('maxScale', 'number', 5),
+    fineness: queryParser.getValue('fineness', 'number', 10),
+    backgroundColor: queryParser.getValue('backgroundColor', '', '')
+  });
+  const shutter = new Shutter({
+    showWait: 5000,
+    startVisible: true,
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(158,158,158)'}
+  );
+  shutter.onShow = () => {
+    webcam.hide();
+    notifier.notify('<span><strong>Double-Click</strong> or press <strong>Esc</strong> to resume...</span>');
+  };
+  shutter.onHide = () => {
+    webcam.show();
+    notifier.notify('');
+  };
+  const shutterContent = document.createElement('div');
+  shutterContent.style.cssText =`
+    text-align: center;
+    transform: scaleX(-1);
+  `;
+  shutterContent.innerHTML = '<strong>Work in Mirror</strong>';
+  shutter.setContent(shutterContent);
+  const notifier = new Notifier({
+    alignCenter: false,
+    alignBottom: true,
+    backgroundColor: 'rgb(53,54,58)',
+    color: 'rgb(255,255,255)'}
+  );
+  const controller = new Controller({
+    enableKeyboard: true,
+    inputWait: queryParser.getValue('inputWait', 'number', 250)
+  });
+  controller.pause();
+  controller.onScroll = deltaY => {shutter.isHidden && magnifier.magnify(deltaY)};
+  controller.onDrag = (movementX, movementY) => shutter.isHidden && magnifier.move(movementX, movementY, true);
+  controller.onDrop = () => magnifier.update();
+  controller.onClick = () => shutter.isHidden && webcam.togglePlay();
+  controller.onDoubleClick = () => shutter.toggleHide();
+  controller.onKeyDown = keyCode => {
+    if (keyCode == 0x20) { // 0x20: VK_SPACE
+      webcam.togglePlay();
+    } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
+      shutter.show();
+    } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
+      shutter.hide();
+    } else if (keyCode == 0x21 && shutter.isHidden) { // 0x21: VK_PRIOR
+      magnifier.magnify(-100);
+    } else if (keyCode == 0x22 && shutter.isHidden) { // 0x22: VK_NEXT
+      magnifier.magnify(100);
+    } else if (keyCode == 0x26 && shutter.isHidden) { // 0x26: VK_UP
+      magnifier.move(0, -25);
+    } else if (keyCode == 0x28 && shutter.isHidden) { // 0x28: VK_DOWN
+      magnifier.move(0, 25);
+    } else if (keyCode == 0x25 && shutter.isHidden) { // 0x25: VK_LEFT
+      magnifier.move(-25, 0);
+    } else if (keyCode == 0x27 && shutter.isHidden) { // 0x27: VK_RIGHT
+      magnifier.move(25, 0);
+    }
+  };
+  controller.onAnyAction = () => shutter.isHidden && shutter.resetTimer();
+  const menu = new Menu({alignRight: true});
+  menu.addItem('&#x21BB;', () => {
+    if (navigator.onLine) {
+      if (location.protocol == 'https:') {
+        navigator.serviceWorker.getRegistration('./')
+          .then(registration => registration.unregister());
+      }
+    }
+    location.reload();
+  });
+  menu.addItem('&copy;', () => copyrightDialog.show());
+  menu.addItem('?', () => helpDialog.show());
+  const copyrightDialog = new Dialog({
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(53,54,58)'
+  });
+  copyrightDialog.setTitle('<strong>Copyright & License</strong>');
+  const copyrightContent = document.querySelector('#copyright-content');
+  copyrightContent.remove();
+  copyrightDialog.setContent(copyrightContent);
+  copyrightDialog.onShow = () => controller.pause();
+  copyrightDialog.onHide = () => controller.resume();
+  const helpDialog = new Dialog({
+    backgroundColor: 'rgb(242,242,242)',
+    color: 'rgb(53,54,58)'
+  });
+  helpDialog.setTitle('<strong>Help</strong>');
+  const helpContent = document.querySelector('#help-content');
+  helpContent.remove();
+  helpDialog.setContent(helpContent);
+  helpDialog.onShow = () => controller.pause();
+  helpDialog.onHide = () => controller.resume();
+  appContainer.appendChildren([
+    magnifier.body,
+    shutter.body,
+    notifier.body,
+    controller.body,
+    menu.body,
+    copyrightDialog.body,
+    helpDialog.body
+  ]);
+});
+</script>
+
