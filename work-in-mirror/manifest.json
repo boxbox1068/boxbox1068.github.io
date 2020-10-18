@@ -1,6 +1,6 @@
 {
   "name": "Work in Mirror",
-  "short_name": "WiM",
+  "short_name": "test",
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(30,30,30)",
