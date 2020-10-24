@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Anytime Mirror / いつでもミラー</title>
+<!--
+# Version History
+- 1.0 (Oct X, 2020): Initial release.
+-->
+<script>'use strict';</script>
+<script>
+  {
+    const lang = navigator.language == 'ja' ? 'ja' : 'en';
+    document.querySelector('html').setAttribute('lang', lang);
+    const style = document.createElement('style');
+    style.innerText = `
+      html:not([lang="en"]) [lang="en"],
+      html:not([lang="ja"]) [lang="ja"] {
+        display: none;
+      }
+    `;
+    document.head.appendChild(style);
+    document.title = {
+      en: 'Anytime Mirror',
+      ja: 'いつでもミラー'
+    }[document.documentElement.lang];
+  }
+</script>
+<script>
+  if ('serviceWorker' in navigator && location.protocol == 'https:') {
+    navigator.serviceWorker.register('./service-worker.js');
+    document.write({
+      en: '<link rel="manifest" href="./manifest-en.json">',
+      ja: '<link rel="manifest" href="./manifest-ja.json">'
+    }[document.documentElement.lang]);
+    document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+  }
+</script>
+<div id="copyright-content">
+  <h1>
+    <span lang="en">Anytime Mirror - Version 0.0</span>
+    <span lang="ja">いつでもミラー - Version 0.0</span>
+  </h1>
+  <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068/">@shikaku1068</a></div>
+  <div>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license.</a></div>
+</div>
+<div id="help-content">
+  <h2>操作方法</h2>
+  <h3>
+    <span lang="en">Use a Touchscreen</span>
+    <span lang="ja">タッチスクリーンによる操作</span>
+  </h3>
+  <ul>
+    <li>
+      <span lang="en"><strong>Tap</strong> to pause or resume the video.</span>
+      <span lang="ja"><strong>タップ</strong>：映像を一時停止／再開する。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Double-Tap</strong> to stop or replay the video.</span>
+      <span lang="ja"><strong>ダブルタップ</strong>：映像を中断／再生する。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Swipe</strong> to shift the video.</span>
+      <span lang="ja"><strong>スワイプ</strong>：映像の位置をずらす。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Double-Tap and Swipe Up/Down</strong> to enlarge or reduce the video.</span>
+      <span lang="ja"><strong>ダブルタップ＋上下にスワイプ</strong>：映像を拡大／縮小する。</span>
+    </li>
+  </ul>
+  <h3>
+    <span lang="en">Use a Mouse</span>
+    <span lang="ja">マウスによる操作</span>
+  </h3>
+  <ul>
+    <li>
+      <span lang="en"><strong>Click</strong> to pause or resume the video.</span>
+      <span lang="ja"><strong>クリック</strong>：映像を一時停止／再開する。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Double-Click</strong> to stop or replay the video.</span>
+      <span lang="ja"><strong>ダブルクリック</strong>：映像を中断／再生する。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Drag</strong> to shift the video.</span>
+      <span lang="ja"><strong>ドラッグ</strong>：映像の位置をずらす。</span>
+    </li>
+    <li>
+      <span lang="en"><strong>Wheel Up/Down</strong> to enlarge or reduce the video.</span>
+      <span lang="ja"><strong>ホイールを回す</strong>：映像を拡大／縮小する。</span>
+    </li>
+  </ul>
+  <h3>
+    <span lang="en">Use a Keyboard</span>
+    <span lang="ja">キーボードによる操作</span>
+  </h3>
+  <ul>
+    <li>
+      <span lang="en">Press <strong>Space</strong> to pause or resume the video.</span>
+      <span lang="ja"><strong>スペースキー</strong>：映像を一時停止／再開する。</span>
+    </li>
+    <li>
+      <span lang="en">Press <strong>Enter</strong> to stop the video.</span>
+      <span lang="ja"><strong>エンターキー</strong>：映像を中断する。</span>
+    </li>
+    <li>
+      <span lang="en">Press <strong>Esc</strong> to replay the video.</span>
+      <span lang="ja"><strong>エスケープキー</strong>：映像を再生する。</span>
+    </li>
+    <li>
+      <span lang="en">Press <strong>Up/Down/Left/Right</strong> to shift the video.</span>
+      <span lang="ja"><strong>上下左右キー</strong>：映像の位置をずらす。</span>
+    </li>
+    <li>
+      <span lang="en">Press <strong>PageUp/PageDown</strong> to enlarge or reduce the video.</span>
+      <span lang="ja"><strong>ページアップ／ページダウンキー</strong>：映像を拡大／縮小する。</span>
+    </li>
+  </ul>
+</div>
+<script>
+  onload = () => {
+    const queryParser = new QueryParser();
+    const appContainer = new AppContainer({
+      backgroundColor: 'rgb(242,242,242)',
+      color: 'rgb(53,54,58)'
+    });
+    appContainer.onResize = () => magnifier.update(false, true);
+    const magnifier = new Magnifier({
+      fitMode: queryParser.getValue('autoFit', 'boolean', true) ? 4 : 0,
+      maxScale: queryParser.getValue('maxScale', 'number', 5),
+      fineness: queryParser.getValue('fineness', 'number', 10),
+      backgroundColor: queryParser.getValue('backgroundColor', '', '')
+    });
+    const shutter = new Shutter({
+      showWait: queryParser.getValue('shutterWait', 'number', 30000),
+      startVisible: true,
+      backgroundColor: 'rgb(242,242,242)',
+      color: 'rgb(158,158,158)'}
+    );
+    shutter.onShow = () => {
+      webcam.hide();
+      notifier.notify(`
+        <span lang="en">Double-Tap/Click or press Esc to replay...</span>
+        <span lang="ja">ダブルタップ／クリック又はエスケープキーで再生...</span>
+      `);
+    };
+    shutter.onHide = () => {
+      webcam.show();
+      notifier.notify('');
+    };
+    const shutterContent = document.createElement('div');
+    shutterContent.style.cssText =`
+      text-align: center;
+      transform: scaleX(-1);
+    `;
+    shutterContent.innerHTML = `
+      <strong>
+        <span lang="en">Anytime Mirror</span>
+        <span lang="ja">いつでもミラー</span>
+      </strong>
+    `;
+    shutter.setContent(shutterContent);
+    const notifier = new Notifier({
+      alignCenter: false,
+      alignBottom: true,
+      backgroundColor: 'rgb(53,54,58)',
+      color: 'rgb(255,255,255)'}
+    );
+    const controller = new Controller({
+      enableKeyboard: true,
+      inputWait: queryParser.getValue('inputWait', 'number', 250)
+    });
+    controller.isEnabled = false;
+    controller.onScroll = deltaY => {shutter.isHidden && magnifier.magnify(deltaY)};
+    controller.onDrag = (movementX, movementY) => shutter.isHidden && magnifier.move(movementX, movementY, true);
+    controller.onDrop = () => magnifier.update();
+    controller.onClick = () => shutter.isHidden && webcam.togglePlay();
+    controller.onDoubleClick = () => shutter.toggleHide();
+    controller.onKeyDown = keyCode => {
+      if (keyCode == 0x20) { // 0x20: VK_SPACE
+        webcam.togglePlay();
+      } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
+        shutter.show();
+      } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
+        shutter.hide();
+      } else if (keyCode == 0x21 && shutter.isHidden) { // 0x21: VK_PRIOR
+        magnifier.magnify(-100);
+      } else if (keyCode == 0x22 && shutter.isHidden) { // 0x22: VK_NEXT
+        magnifier.magnify(100);
+      } else if (keyCode == 0x26 && shutter.isHidden) { // 0x26: VK_UP
+        magnifier.move(0, -25);
+      } else if (keyCode == 0x28 && shutter.isHidden) { // 0x28: VK_DOWN
+        magnifier.move(0, 25);
+      } else if (keyCode == 0x25 && shutter.isHidden) { // 0x25: VK_LEFT
+        magnifier.move(-25, 0);
+      } else if (keyCode == 0x27 && shutter.isHidden) { // 0x27: VK_RIGHT
+        magnifier.move(25, 0);
+      }
+    };
+    controller.onAnyAction = () => shutter.isHidden && shutter.resetTimer();
+    const menu = new Menu({alignRight: true});
+    menu.isEnabled = false;
+    menu.addItem('&#x21BB;', () => {
+      if (navigator.onLine) {
+        if ('serviceWorker' in navigator && location.protocol == 'https:') {
+          navigator.serviceWorker.getRegistration('./')
+          .then(registration => registration.unregister());
+        }
+      }
+      location.reload();
+    });
+    menu.addItem('&copy;', () => copyrightDialog.show());
+    menu.addItem('?', () => helpDialog.show());
+    const copyrightDialog = new Dialog({
+      backgroundColor: 'rgb(242,242,242)',
+      color: 'rgb(53,54,58)'
+    });
+    copyrightDialog.setTitle(`
+      <strong>
+        <span lang="en">Copyright</span>
+        <span lang="ja">コピーライト</span>
+      </strong>
+    `);
+    const copyrightContent = document.querySelector('#copyright-content');
+    copyrightContent.remove();
+    copyrightDialog.setContent(copyrightContent);
+    copyrightDialog.onShow = () => controller.isEnabled = false;
+    copyrightDialog.onHide = () => controller.isEnabled = true;
+    const helpDialog = new Dialog({
+      backgroundColor: 'rgb(242,242,242)',
+      color: 'rgb(53,54,58)'
+    });
+    helpDialog.setTitle(`
+      <strong>
+        <span lang="en">Help</span>
+        <span lang="ja">ヘルプ</span>
+      </strong>
+    `);
+    const helpContent = document.querySelector('#help-content');
+    helpContent.remove();
+    helpDialog.setContent(helpContent);
+    helpDialog.onShow = () => controller.isEnabled = false;
+    helpDialog.onHide = () => controller.isEnabled = true;
+    appContainer.appendChildren([
+      magnifier.body,
+      shutter.body,
+      notifier.body,
+      controller.body,
+      menu.body,
+      copyrightDialog.body,
+      helpDialog.body
+    ]);
+    document.body.appendChild(appContainer.body);
+    const webcam = new Webcam({
+      flip: queryParser.getValue('flip', 'boolean', true),
+      grayscale: queryParser.getValue('grayscale', 'boolean', false)
+    });
+    webcam.start(video => {
+      magnifier.setContent(video);
+      menu.isEnabled = true;
+      controller.isEnabled = true;
+      shutter.hide();
+    });
+  };
+  class QueryParser {
+    constructor({} = {}) {
+      const values = {};
+      const queryString = location.search.slice(1);
+      queryString.split('&').forEach(parameter => {
+        let name, value;
+        if (parameter.match(/=/)) {
+          name = parameter.match(/^[^=]*/)[0].toLowerCase().trim();
+          value = decodeURIComponent(parameter.match(/=.*$/)[0].slice(1).trim());
+        } else {
+          name = parameter.toLowerCase().trim();
+          value = 'true';
+        }
+        name && (values[name] = value);
+      });
+      this._values = values;
+    }
+    getValue(name, type, defaultValue) {
+      typeof name == 'string' || (name = '');
+      typeof type == 'string' || (type = '');
+      let value = this._values[name.toLowerCase().trim()];
+      if (type == 'number') {
+        value = Number(value);
+        Number.isFinite(value) || (value = undefined);
+      } else if (type == 'boolean') {
+        value = String(value).toLowerCase().trim();
+        value = value.match(/\s*(true|false)\s*/i) ? value == 'true' : undefined;
+      }
+      value === undefined && (value = defaultValue);
+      return value;
+    }
+  }
+  class AppContainer {
+    constructor({backgroundColor, color} = {}) {
+      typeof backgroundColor == 'string' || (backgroundColor = '');
+      typeof color == 'string' || (color = '');
+      const body = document.createElement('div');
+      body.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        background-color: ${backgroundColor};
+        color: ${color};
+        font-size: min(1rem, 5vmin);
+        font-family: sans-serif;
+        user-select: none;
+        touch-action: manipulation;
+      `;
+      body.addEventListener('contextmenu', e => {
+        e.preventDefault();
+      });
+      body.addEventListener('touchstart', e => {
+        e.touches.length > 1 && e.preventDefault();
+      });
+      body.addEventListener('touchmove', e => {
+        e.touches.length > 1 && e.preventDefault();
+      });
+      let lastWidth = body.clientWidth;
+      let lastHeight = body.clientHeight;
+      let onResizeTimeoutId = null;
+      const loop = () => {
+        const currentWidth = body.clientWidth;
+        const currentHeight = body.clientHeight;
+        if (currentWidth != lastWidth || currentHeight != lastHeight) {
+          clearTimeout(onResizeTimeoutId);
+          onResizeTimeoutId = setTimeout(() => {
+            onResizeTimeoutId = null;
+            this._onResize && this._onResize(currentWidth, currentHeight);
+          }, 500);
+        }
+        lastWidth = currentWidth;
+        lastHeight = currentHeight;
+        setTimeout(loop, 200);
+      };
+      loop();
+      this._body = body;
+      this._onResize = null;
+    }
+    set onResize(handler) {
+      if (typeof handler != 'function') return false;
+      this._onResize = handler;
+    }
+    get body() {
+      return this._body;
+    }
+    appendChildren(children) {
+      if (! Array.isArray(children)) return false;
+      children.forEach(child => {
+        child instanceof HTMLElement && this._body.appendChild(child);
+      });
+    }
+  }
+  class Magnifier {
+    constructor({fitMode, maxScale, fineness, backgroundColor} = {}) {
+      Number.isInteger(fitMode) || (fitMode = 0); // 1: Width; 2: Height; 3: Both; 4: Auto; Else: None
+      maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(50, maxScale)) : 5;
+      fineness = Number.isInteger(fineness) ? Math.max(1, Math.min(100, fineness)) : 10;
+      typeof backgroundColor == 'string' || (backgroundColor = '');
+      const body = document.createElement('div');
+      body.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+        background-color: ${backgroundColor};
+      `;
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.cssText = `
+        position: absolute;
+      `;
+      body.appendChild(contentWrapper);
+      this._body = body;
+      this._contentWrapper = contentWrapper;
+      this._content = null;
+      this._fitMode = fitMode;
+      this._maxScale = maxScale;
+      this._fineness = fineness;
+    }
+    get body() {
+      return this._body;
+    }
+    setContent(content) {
+      if (! content instanceof HTMLElement) return false;
+      if (this._contentWrapper.children.length) {
+        this._contentWrapper.children.forEach(child => child.remove());
+      }
+      this._contentWrapper.appendChild(content);
+      this._content = content;
+      this.update(false, true);
+    }
+    update(anchor, reset) {
+      if (! this._content) return false;
+      typeof anchor == 'boolean' || (anchor = false);
+      typeof reset == 'boolean' || (reset = false);
+      if (reset) {
+        const bodyWidth = this._body.offsetWidth;
+        const bodyHeight = this._body.offsetHeight;
+        const contentWidth = this._content.offsetWidth;
+        const contentHeight = this._content.offsetHeight;
+        let [fitToWidth, fitToHeight] = [false, false];
+        if (this._fitMode == 1) { // 1: Width
+          [fitToWidth, fitToHeight] = [true, false];
+        } else if (this._fitMode == 2) { // 2: Height
+          [fitToWidth, fitToHeight] = [false, true];
+        } else if (this._fitMode == 3) { // 3: Both
+          [fitToWidth, fitToHeight] = [true, true];
+        } else if (this._fitMode == 4) { // 4: Auto
+          const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
+          const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
+          fitToWidth = contentWidthToHeight > bodyWidthToHeight;
+          fitToHeight = ! fitToWidth;
+        }
+        this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
+        this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
+        this._scale = 1;
+        this._offsetX = (this._body.offsetWidth - this._content.offsetWidth) / 2;
+        this._offsetY = (this._body.offsetHeight - this._content.offsetHeight) / 2;
+        this._movementX = 0;
+        this._movementY = 0;
+      }
+      if (! anchor) {
+        const bodyWidth = this._body.offsetWidth;
+        const contentWidth = this._content.offsetWidth * this._scale;
+        if (contentWidth < bodyWidth) {
+          this._movementX = 0;
+        } else {
+          const minMovementX = (bodyWidth - contentWidth) / 2;
+          const maxMovementX = (contentWidth - bodyWidth) / 2;
+          this._movementX = Math.max(minMovementX, Math.min(maxMovementX, this._movementX));
+        }
+        const bodyHeight = this._body.offsetHeight;
+        const contentHeight = this._content.offsetHeight * this._scale;
+        if (contentHeight < bodyHeight) {
+          this._movementY = 0;
+        } else {
+          const minMovementY = (bodyHeight - contentHeight) / 2;
+          const maxMovementY = (contentHeight - bodyHeight) / 2;
+          this._movementY = Math.max(minMovementY, Math.min(maxMovementY, this._movementY));
+        }
+      }
+      this._contentWrapper.style.transform = `scale(${this._scale})`;
+      this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
+      this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
+    }
+    magnify(amount) {
+      if (! this._content) return false;
+      Number.isFinite(amount) || (amount = 0);
+      this._scale += amount * -0.01 / this._fineness;
+      this._scale = Math.max(1, Math.min(this._maxScale, this._scale));
+      this.update();
+    }
+    move(movementX, movementY, anchor) {
+      if (! this._content) return false;
+      Number.isFinite(movementX) || (movementX = 0);
+      Number.isFinite(movementY) || (movementY = 0);
+      typeof anchor == 'boolean' || (anchor = false);
+      this._movementX += movementX;
+      this._movementY += movementY;
+      this.update(anchor);
+    }
+  }
+  class Shutter {
+    constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
+      showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 30000;
+      typeof startVisible == 'boolean' || (startVisible = false);
+      typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
+      typeof color == 'string' || (color = 'rgb(0,0,0)');
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+      const body = document.createElement('div');
+      body.style.cssText = `
+        display: flex;
+        visibility: ${startVisible ? 'visible' : 'hidden'};
+        opacity: ${startVisible ? '1' : '0'};
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2147483647;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        background-color: ${backgroundColor};
+        color: ${color};
+        justify-content: center;
+        align-items: center;
+        transition: ${transition}ms;
+        user-select: none;
+      `;
+      const contentWrapper = document.createElement('div');
+      body.appendChild(contentWrapper);
+      this._body = body;
+      this._contentWrapper = contentWrapper;
+      this._showWait = showWait;
+      this._showTimeoutId = null;
+      this.isHidden && this.resetTimer();
+    }
+    get isHidden() {
+      return this._body.style.visibility == 'hidden';
+    }
+    set onShow(handler) {
+      typeof handler == 'function' && (this._onShow = handler);
+    }
+    get onShow() {
+      return this._onShow || (() => false);
+    }
+    set onHide(handler) {
+      typeof handler == 'function' && (this._onHide = handler);
+    }
+    get onHide() {
+      return this._onHide || (() => false);
+    }
+    get body() {
+      return this._body;
+    }
+    setContent(content) {
+      if (! content instanceof HTMLElement) return;
+      this._contentWrapper.appendChild(content);
+    }
+    resetTimer() {
+      if (this._showWait == 0) return false;
+      clearTimeout(this._showTimeoutId);
+      this._showTimeoutId = setTimeout(() => {
+        this._showTimeoutId = null;
+        this.show();
+      }, this._showWait);
+    }
+    show() {
+      this._body.style.visibility = 'visible';
+      this._body.style.opacity = '1';
+      this.onShow();
+    }
+    hide() {
+      this._body.style.opacity = '0';
+      this._body.style.visibility = 'hidden';
+      this.onHide();
+      this.resetTimer();
+    }
+    toggleHide() {
+      this.isHidden ? this.show() : this.hide();
+    }
+  }
+  class Notifier {
+    constructor({alignCenter, alignBottom, backgroundColor, color, transition} = {}) {
+      typeof alignCenter == 'boolean' || (alignCenter = false);
+      typeof alignBottom == 'boolean' || (alignBottom = false);
+      typeof backgroundColor == 'string' || (backgroundColor = 'rgba(0,0,0,.6)');
+      typeof color == 'string' || (color = 'rgb(255,255,255)');
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+      const body = document.createElement('div');
+      body.style.cssText = `
+        display: flex;
+        opacity: 0;
+        position: absolute;
+        top: ${alignBottom ? '' : '0'};
+        bottom: ${alignBottom ? '0' : ''};
+        left: 0;
+        z-index: 2147483647;
+        width: 100%;
+        height: 3em;
+        padding: 0 1em;
+        box-sizing: border-box;
+        background-color: ${backgroundColor};
+        color: ${color};
+        justify-content: ${alignCenter ? 'center' : ''};
+        align-items: center;
+        transition: ${transition}ms;
+        user-select: none;
+        pointer-events: none;
+      `;
+      this._body = body;
+      this._transition = transition;
+      this._text = '';
+    }
+    get body() {
+      return this._body;
+    }
+    notify(text) {
+      typeof text == 'string' || (text = '');
+      this._body.style.opacity = text ? '1' : '0';
+      this._body.innerHTML = text;
+    }
+  }
+  class Controller {
+    constructor({enableKeyboard, enableMouse, enableTouch, inputWait} = {}) {
+      typeof enableKeyboard == 'boolean' || (enableKeyboard = true);
+      typeof enableMouse == 'boolean' || (enableMouse = true);
+      typeof enableTouch == 'boolean' || (enableTouch = true);
+      inputWait = Number.isInteger(inputWait) ? Math.max(100, Math.min(1000, inputWait)) : 250;
+      const body = document.createElement('div');
+      body.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2147483647;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        outline: none;
+      `;
+      if (enableKeyboard) {
+        body.tabIndex = 0;
+        body.focus();
+        body.addEventListener('blur', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          body.focus();
+        });
+        body.addEventListener('keydown', e => {
+          if (body.style.display == 'none') return;
+          if (e.ctrlKey || e.altKey || e.metaKey) return;
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          this.onKeyDown(e.keyCode);
+        });
+      }
+      if (enableMouse) {
+        let clickTimeoutId = null;
+        let clickCount = 0;
+        let isDragging = false;
+        let lastButton = null;
+        body.addEventListener('mousedown', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          clearTimeout(clickTimeoutId);
+          clickTimeoutId = null;
+          if (e.button == lastButton) {
+            clickCount++;
+          } else {
+            clickCount = 1;
+            lastButton = e.button;
+            isDragging && this.onDrop();
+          }
+          isDragging = false;
+        });
+        body.addEventListener('mousemove', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          if (e.buttons & 1) { // 1: Primary button
+            clickCount == 1 && (isDragging = true);
+          } else {
+            isDragging && this.onDrop();
+            isDragging = false;
+          }
+          clickCount = 0;
+          isDragging && this.onDrag(e.movementX, e.movementY);
+        });
+        body.addEventListener('mouseup', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          if (isDragging) {
+            if (e.button == 0) { // 0: Main button
+              this.onDrop();
+              isDragging = false;
+            }
+          } else {
+            clickTimeoutId = setTimeout(() => {
+              clickTimeoutId = null;
+              if (lastButton == 0) { // 0: Main button
+                clickCount == 1 && this.onClick();
+                clickCount == 2 && this.onDoubleClick();
+              } else if (lastButton == 1) { // 1: Auxiliary button
+                clickCount == 1 && this.onMiddleClick();
+              } else if (lastButton == 2) {
+                clickCount == 1 && this.onRightClick(); // 2: Secondary button
+              }
+              clickCount = 0;
+            }, inputWait);
+          }
+        });
+        body.addEventListener('wheel', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          this.onScroll(e.deltaY);
+        });
+      }
+      if (enableTouch) {
+        let tapTimeoutId = null;
+        let touchCount = 0;
+        let isDragging = false;
+        let isScrolling = false;
+        let lastTouch = null;
+        body.addEventListener('touchstart', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          clearTimeout(tapTimeoutId);
+          if (e.touches.length == 1) {
+            touchCount++;
+            lastTouch = e.touches[0];
+          } else {
+            touchCount = 0;
+            isDragging && this.onDrop();
+          }
+          isDragging = false;
+          isScrolling = false;
+        });
+        body.addEventListener('touchmove', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          touchCount == 1 && (isDragging = true);
+          touchCount == 2 && (isScrolling = true);
+          touchCount = 0;
+          let currentTouch = e.touches[0];
+          if (isDragging) {
+            let movementX = currentTouch.screenX - lastTouch.screenX;
+            let movementY = currentTouch.screenY - lastTouch.screenY;
+            this.onDrag(movementX, movementY);
+          } else if (isScrolling) {
+            let deltaY = (lastTouch.screenY - currentTouch.screenY) * 10;
+            this.onScroll(deltaY);
+          }
+          lastTouch = currentTouch;
+        });
+        body.addEventListener('touchend', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.onAnyAction();
+          if (isDragging) {
+            this.onDrop();
+          } else {
+            tapTimeoutId = setTimeout(() => {
+              tapTimeoutId = null;
+              touchCount == 1 && this.onClick();
+              touchCount == 2 && this.onDoubleClick();
+              touchCount = 0;
+            }, inputWait);
+          }
+        });
+      }
+      this._body = body;
+      this._enableKeyboard = enableKeyboard;
+    }
+    set onDrag(handler) {
+      typeof handler == 'function' && (this._onDrag = handler);
+    }
+    get onDrag() {
+      return this._onDrag || (() => false);
+    }
+    set onDrop(handler) {
+      typeof handler == 'function' && (this._onDrop = handler);
+    }
+    get onDrop() {
+      return this._onDrop || (() => false);
+    }
+    set onClick(handler) {
+      typeof handler == 'function' && (this._onClick = handler);
+    }
+    get onClick() {
+      return this._onClick || (() => false);
+    }
+    set onDoubleClick(handler) {
+      typeof handler == 'function' && (this._onDoubleClick = handler);
+    }
+    get onDoubleClick() {
+      return this._onDoubleClick || (() => false);
+    }
+    set onMiddleClick(handler) {
+      typeof handler == 'function' && (this._onMiddleClick = handler);
+    }
+    get onMiddleClick() {
+      return this._onMiddleClick || (() => false);
+    }
+    set onRightClick(handler) {
+      typeof handler == 'function' && (this._onRightClick = handler);
+    }
+    get onRightClick() {
+      return this._onRightClick || (() => false);
+    }
+    set onScroll(handler) {
+      typeof handler == 'function' && (this._onScroll = handler);
+    }
+    get onScroll() {
+      return this._onScroll || (() => false);
+    }
+    set onKeyDown(handler) {
+      typeof handler == 'function' && (this._onKeyDown = handler);
+    }
+    get onKeyDown() {
+      return this._onKeyDown || (() => false);
+    }
+    set onAnyAction(handler) {
+      typeof handler == 'function' && (this._onAnyAction = handler);
+    }
+    get onAnyAction() {
+      return this._onAnyAction || (() => false);
+    }
+    get body() {
+      return this._body;
+    }
+    get isEnabled() {
+      return this._body.style.display == 'block';
+    }
+    set isEnabled(boolean) {
+      if (typeof boolean != 'boolean') return;
+      if (boolean) {
+        this._body.style.display = 'block';
+        if (this._enableKeyboad) {
+          this._body.style.tabIndex = 0;
+          this._body.focus();
+        }
+      } else {
+        this._body.style.display = 'none';
+        if (this._enableKeyboad) {
+          this._body.blur();
+          this._body.tabIndex = -1;
+        }
+      }
+    }
+  }
+  class Menu {
+    constructor({alignRight, alignBottom, color, shadowColor} = {}) {
+      typeof alignRight == 'boolean' || (alignRight = false);
+      typeof alignBottom == 'boolean' || (alignBottom = false);
+      typeof color == 'string' || (color = 'rgb(255,255,255)');
+      typeof shadowColor == 'string' || (shadowColor = 'rgb(0,0,0)');
+      const body = document.createElement('div');
+      body.style.cssText = `
+        display: flex;
+        position: absolute;
+        top: ${!alignBottom ? '0' : ''};
+        bottom: ${alignBottom ? '0' : ''};
+        left: 0;
+        z-index: 2147483647;
+        width: 100%;
+        height: 3rem;
+        padding: 0 1.5rem;
+        box-sizing: border-box;
+        color: ${color};
+        font-weight: bold;
+        font-size: 1.5rem;
+        justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
+        align-items: center;
+        pointer-events: none;
+      `;
+      this._body = body;
+      this._alignRight = alignRight;
+      this._shadowColor = shadowColor;
+      this._isEnabled = true;
+    }
+    get body() {
+      return this._body;
+    }
+    get isEnabled() {
+      return this._isEnabled;
+    }
+    set isEnabled(boolean) {
+      typeof boolean == 'boolean' && (this._isEnabled = boolean);
+    }
+    addItem(text, onClick) {
+      typeof text == 'string' || (text = '');
+      typeof onClick == 'function' || (onClick = () => false);
+      const item = document.createElement('div');
+      item.style.cssText = `
+        margin-right: ${this._alignRight ? '' : '1.5em'};
+        margin-left: ${this._alignRight ? '1.5em' : ''};
+        text-shadow:
+          0 -1px ${this._shadowColor}, 1px 0 ${this._shadowColor},
+          0 1px ${this._shadowColor}, -1px 0 ${this._shadowColor},
+          -1px -1px ${this._shadowColor}, 1px -1px ${this._shadowColor},
+          1px 1px ${this._shadowColor}, -1px 1px ${this._shadowColor};
+        user-select: none;
+        pointer-events: auto;
+      `;
+      item.innerHTML = text || '*';
+      item.addEventListener('click', e => {
+        if (! this._isEnabled) return;
+        onClick();
+      });
+      this._body.appendChild(item);
+    }
+  }
+  class Dialog {
+    constructor({startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
+      typeof startVisible == 'boolean' || (startVisible = false);
+      typeof backgroundColor == 'string' || (backgroundColor = 'rgb(255,255,255)');
+      typeof color == 'string' || (color = 'rgb(0,0,0)');
+      curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
+      const body = document.createElement('div');
+      body.style.cssText = `
+        display: flex;
+        visibility: ${startVisible ? 'visible' : 'hidden'};
+        opacity: ${startVisible ? '1' : '0'};
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2147483647;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        transition: ${transition}ms;
+      `;
+      const curtain = document.createElement('div');
+      curtain.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        background-color: rgba(0,0,0,${curtainOpacity});
+      `;
+      const panel = document.createElement('div');
+      panel.style.cssText = `
+        position: relative;
+        width: calc(100% - 20vmin);
+        height: calc(100% - 20vmin);
+        box-sizing: border-box;
+        background-color: ${backgroundColor};
+        color: ${color};
+      `;
+      const titleBar = document.createElement('div');
+      titleBar.style.cssText = `
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3em;
+        box-sizing: border-box;
+        font-weight: bold;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+      `;
+      const contentWrapper = document.createElement('div');
+      contentWrapper.style.cssText = `
+        position: absolute;
+        bottom: 1em;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 3em - 1em);
+        padding: 1em 2em;
+        overflow-y: auto;
+        box-sizing: border-box;
+      `;
+      const closeButton = document.createElement('div');
+      closeButton.style.cssText = `
+        position: absolute;
+        top: .5em;
+        right: 1em;
+        font-weight: bold;
+        user-select: none;
+      `;
+      closeButton.innerHTML = '&#x2715';
+      body.appendChild(curtain);
+      body.appendChild(panel);
+      panel.appendChild(titleBar);
+      panel.appendChild(contentWrapper);
+      panel.appendChild(closeButton);
+      curtain.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.button == 0) { // 0: Main button
+          this.hide();
+        }
+      });
+      closeButton.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.button == 0) { // 0: Main button
+          this.hide();
+        }
+      });
+      this._body = body;
+      this._titleBar = titleBar;
+      this._contentWrapper = contentWrapper;
+    }
+    get isHidden() {
+      return this._body.style.visibility == 'hidden';
+    }
+    set onShow(handler) {
+      typeof handler == 'function' && (this._onShow = handler);
+    }
+    get onShow() {
+      return this._onShow || (() => false);
+    }
+    set onHide(handler) {
+      typeof handler == 'function' && (this._onHide = handler);
+    }
+    get onHide() {
+      return this._onHide || (() => false);
+    }
+    get body() {
+      return this._body;
+    }
+    setTitle(title) {
+      if (typeof title != 'string') return false;
+      this._titleBar.innerHTML = title;
+    }
+    setContent(content) {
+      if (! content instanceof HTMLElement) return false;
+      this._contentWrapper.children.length
+        && this._contentWrapper.children.forEach(child => child.remove());
+      this._contentWrapper.appendChild(content);
+    }
+    show() {
+      if (! this.isHidden) return;
+      this._body.style.visibility = 'visible';
+      this._body.style.opacity = '1';
+      this.onShow();
+    }
+    hide() {
+      if (this.isHidden) return;
+      this._body.style.opacity = '0';
+      this._body.style.visibility = 'hidden';
+      this.onHide();
+    }
+  }
+  class Webcam {
+    constructor({flip, grayscale} = {}) {
+      typeof flip == 'boolean' || (flip = false);
+      typeof grayscale == 'boolean' || (grayscale = false);
+      const video = document.createElement('video');
+      video.style.cssText = `
+        transform: ${flip ? 'scaleX(-1)' : ''};
+        filter: ${grayscale ? 'grayscale(100%)' : ''};
+      `;
+      video.autoplay = true;
+      video.muted = true;
+      video.setAttribute('playsinline', null);
+      this._video = video;
+    }
+    start(callback) {
+      if (typeof callback != 'function') return false;
+      this._video.addEventListener('loadedmetadata', e => callback(this._video));
+      navigator.mediaDevices.getUserMedia({
+        video: {facingMode: 'user'},
+        audio: false
+      }).then(stream => {
+        this._video.srcObject = stream;
+        this._isStarted = true;
+      });
+    }
+    hide() {
+      if (! this._isStarted) return false;
+      this._video.pause();
+      this._video.srcObject.getTracks().forEach(track => track.enabled = false);
+    }
+    show() {
+      if (! this._isStarted) return false;
+      this._video.play();
+      this._video.srcObject.getTracks().forEach(track => track.enabled = true);
+    }
+    pause() {
+      if (! this._isStarted) return false;
+      this._video.pause()
+    }
+    play() {
+      if (! this._isStarted) return false;
+      this._video.play();
+    }
+    togglePlay() {
+      if (! this._isStarted) return false;
+      this._video.paused ? this._video.play() : this._video.pause();
+    }
+  }
+</script>
