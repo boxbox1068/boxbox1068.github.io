@@ -1,10 +1,11 @@
 {
-  "name": "いつでもミラー",
-  "short_name": "いつでもミラー",
+  "lang": "en",
+  "name": "Anytime Mirror",
+  "short_name": "AnytimeMirror",
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(53,54,58)",
-  "description": "身だしなみ用のシンプルな鏡のアプリ。",
+  "description": "A simple mirror app for appearance check.",
   "icons": [{
     "src": "./icons/icon-192x192.png",
     "sizes": "192x192",
