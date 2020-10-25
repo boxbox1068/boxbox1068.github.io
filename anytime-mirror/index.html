@@ -125,7 +125,7 @@
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-    appContainer.onFocus = () => magnifier.update(false);
+    appContainer.onBlur = () => magnifier.update(false);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
@@ -335,10 +335,10 @@
       body.addEventListener('touchmove', e => {
         e.touches.length > 1 && e.preventDefault();
       });
-      body.addEventListener('focus', e => {
+      addEventListener('focus', e => {
         this._onFocus && this._onFocus();
       });
-      body.addEventListener('blur', e => {
+      addEventListener('blur', e => {
         this._onBlur && this._onBlur();
       });
       let lastWidth = body.clientWidth;
