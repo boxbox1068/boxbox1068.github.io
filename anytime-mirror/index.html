@@ -6,35 +6,33 @@
 # Version History
 - 1.0 (Oct X, 2020): Initial release.
 -->
-<script>'use strict';</script>
 <script>
+  'use strict';
   {
-    const lang = navigator.language == 'ja' ? 'ja' : 'en';
+    const lang = navigator.language.match(/^ja(-JP)?$/i) ? 'ja' : 'en';
     document.querySelector('html').setAttribute('lang', lang);
-    const style = document.createElement('style');
-    style.innerText = `
-      html:not([lang="en"]) [lang="en"],
-      html:not([lang="ja"]) [lang="ja"] {
-        display: none;
-      }
-    `;
-    document.head.appendChild(style);
     document.title = {
       en: 'Anytime Mirror',
       ja: 'いつでもミラー'
-    }[document.documentElement.lang];
+    }[lang];
+    if (navigator.onLine && location.protocol == 'https:') {
+      navigator.serviceWorker.getRegistration().then(registration => {
+        if (registration) return;
+        navigator.serviceWorker.register('./service-worker.js');
+      });
+      document.write({
+        en: '<link rel="manifest" href="./manifest.json">',
+        ja: '<link rel="manifest" href="./manifest-ja.json">'
+      }[lang]);
+      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+    }
   }
 </script>
-<script>
-  if ('serviceWorker' in navigator && location.protocol == 'https:') {
-    navigator.serviceWorker.register('./service-worker.js');
-    document.write({
-      en: '<link rel="manifest" href="./manifest-en.json">',
-      ja: '<link rel="manifest" href="./manifest-ja.json">'
-    }[document.documentElement.lang]);
-    document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+<style>
+  html:not([lang="en"]) [lang="en"], html:not([lang="ja"]) [lang="ja"] {
+    display: none;
   }
-</script>
+</style>
 <div id="copyright-content">
   <h1>
     <span lang="en">Anytime Mirror - Version 0.0</span>
@@ -44,19 +42,22 @@
   <div>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license.</a></div>
 </div>
 <div id="help-content">
-  <h2>操作方法</h2>
+  <h2>
+    <span lang="en">How to Control</span>
+    <span lang="ja">操作方法</span>
+  </h2>
   <h3>
     <span lang="en">Use a Touchscreen</span>
     <span lang="ja">タッチスクリーンによる操作</span>
   </h3>
   <ul>
     <li>
-      <span lang="en"><strong>Tap</strong> to pause or resume the video.</span>
+      <span lang="en"><strong>Tap</strong> to pause or unpause the video.</span>
       <span lang="ja"><strong>タップ</strong>：映像を一時停止／再開する。</span>
     </li>
     <li>
-      <span lang="en"><strong>Double-Tap</strong> to stop or replay the video.</span>
-      <span lang="ja"><strong>ダブルタップ</strong>：映像を中断／再生する。</span>
+      <span lang="en"><strong>Double-Tap</strong> to hide or show the video.</span>
+      <span lang="ja"><strong>ダブルタップ</strong>：映像を隠す／再表示する。</span>
     </li>
     <li>
       <span lang="en"><strong>Swipe</strong> to shift the video.</span>
@@ -73,12 +74,12 @@
   </h3>
   <ul>
     <li>
-      <span lang="en"><strong>Click</strong> to pause or resume the video.</span>
+      <span lang="en"><strong>Click</strong> to pause or unpause the video.</span>
       <span lang="ja"><strong>クリック</strong>：映像を一時停止／再開する。</span>
     </li>
     <li>
-      <span lang="en"><strong>Double-Click</strong> to stop or replay the video.</span>
-      <span lang="ja"><strong>ダブルクリック</strong>：映像を中断／再生する。</span>
+      <span lang="en"><strong>Double-Click</strong> to hide or show the video.</span>
+      <span lang="ja"><strong>ダブルクリック</strong>：映像を隠す／再表示する。</span>
     </li>
     <li>
       <span lang="en"><strong>Drag</strong> to shift the video.</span>
@@ -95,16 +96,16 @@
   </h3>
   <ul>
     <li>
-      <span lang="en">Press <strong>Space</strong> to pause or resume the video.</span>
+      <span lang="en">Press <strong>Space</strong> to pause or unpause the video.</span>
       <span lang="ja"><strong>スペースキー</strong>：映像を一時停止／再開する。</span>
     </li>
     <li>
-      <span lang="en">Press <strong>Enter</strong> to stop the video.</span>
-      <span lang="ja"><strong>エンターキー</strong>：映像を中断する。</span>
+      <span lang="en">Press <strong>Enter</strong> to hide the video.</span>
+      <span lang="ja"><strong>エンターキー</strong>：映像を隠す。</span>
     </li>
     <li>
-      <span lang="en">Press <strong>Esc</strong> to replay the video.</span>
-      <span lang="ja"><strong>エスケープキー</strong>：映像を再生する。</span>
+      <span lang="en">Press <strong>Esc</strong> to show the video.</span>
+      <span lang="ja"><strong>エスケープキー</strong>：映像を再表示する。</span>
     </li>
     <li>
       <span lang="en">Press <strong>Up/Down/Left/Right</strong> to shift the video.</span>
@@ -117,38 +118,40 @@
   </ul>
 </div>
 <script>
-  onload = () => {
+  onload = e => main();
+  const main = () => {
     const queryParser = new QueryParser();
     const appContainer = new AppContainer({
-      backgroundColor: 'rgb(242,242,242)',
-      color: 'rgb(53,54,58)'
+      backgroundColor: 'rgb(53,54,58)',
+      color: 'rgb(242,242,242)'
     });
+    appContainer.onBlur = () => magnifier.update(false);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
-      fitMode: queryParser.getValue('autoFit', 'boolean', true) ? 4 : 0,
-      maxScale: queryParser.getValue('maxScale', 'number', 5),
-      fineness: queryParser.getValue('fineness', 'number', 10),
-      backgroundColor: queryParser.getValue('backgroundColor', '', '')
+      fitMode: queryParser.getValue('fitMode', 'integer', 2),
+      maxScale: queryParser.getValue('maxScale', 'integer', 5),
+      fineness: queryParser.getValue('fineness', 'integer', 10),
+      backgroundColor: queryParser.getValue('backgroundColor', 'string', '')
     });
     const shutter = new Shutter({
-      showWait: queryParser.getValue('shutterWait', 'number', 30000),
+      showWait: queryParser.getValue('shutterWait', 'integer', 30000),
       startVisible: true,
       backgroundColor: 'rgb(242,242,242)',
       color: 'rgb(158,158,158)'}
     );
     shutter.onShow = () => {
-      webcam.hide();
+      webcam.stop();
       notifier.notify(`
-        <span lang="en">Double-Tap/Click or press Esc to replay...</span>
-        <span lang="ja">ダブルタップ／クリック又はエスケープキーで再生...</span>
+        <span lang="en">Double-Tap/Click or press Esc to show...</span>
+        <span lang="ja">ダブルタップ、ダブルクリック又はエスケープキーで再表示...</span>
       `);
     };
     shutter.onHide = () => {
-      webcam.show();
+      webcam.restart();
       notifier.notify('');
     };
     const shutterContent = document.createElement('div');
-    shutterContent.style.cssText =`
+    shutterContent.style.cssText = `
       text-align: center;
       transform: scaleX(-1);
     `;
@@ -166,50 +169,57 @@
       color: 'rgb(255,255,255)'}
     );
     const controller = new Controller({
-      enableKeyboard: true,
-      inputWait: queryParser.getValue('inputWait', 'number', 250)
+      inputWait: queryParser.getValue('inputWait', 'integer', 250)
     });
     controller.isEnabled = false;
-    controller.onScroll = deltaY => {shutter.isHidden && magnifier.magnify(deltaY)};
-    controller.onDrag = (movementX, movementY) => shutter.isHidden && magnifier.move(movementX, movementY, true);
+    controller.onScroll = deltaY => {
+      shutter.isHidden && magnifier.magnify(deltaY)
+    };
+    controller.onDrag = (movementX, movementY) => {
+      shutter.isHidden && magnifier.move(movementX, movementY, true);
+    };
     controller.onDrop = () => magnifier.update();
-    controller.onClick = () => shutter.isHidden && webcam.togglePlay();
+    controller.onClick = () => {
+      shutter.isHidden && webcam.togglePause();
+    };
     controller.onDoubleClick = () => shutter.toggleHide();
     controller.onKeyDown = keyCode => {
       if (keyCode == 0x20) { // 0x20: VK_SPACE
-        webcam.togglePlay();
+        webcam.togglePause();
       } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
         shutter.show();
       } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
         shutter.hide();
-      } else if (keyCode == 0x21 && shutter.isHidden) { // 0x21: VK_PRIOR
-        magnifier.magnify(-100);
-      } else if (keyCode == 0x22 && shutter.isHidden) { // 0x22: VK_NEXT
-        magnifier.magnify(100);
-      } else if (keyCode == 0x26 && shutter.isHidden) { // 0x26: VK_UP
-        magnifier.move(0, -25);
-      } else if (keyCode == 0x28 && shutter.isHidden) { // 0x28: VK_DOWN
-        magnifier.move(0, 25);
-      } else if (keyCode == 0x25 && shutter.isHidden) { // 0x25: VK_LEFT
-        magnifier.move(-25, 0);
-      } else if (keyCode == 0x27 && shutter.isHidden) { // 0x27: VK_RIGHT
-        magnifier.move(25, 0);
+      } else if (keyCode == 0x21) { // 0x21: VK_PRIOR
+        shutter.isHidden && magnifier.magnify(-100);
+      } else if (keyCode == 0x22) { // 0x22: VK_NEXT
+        shutter.isHidden && magnifier.magnify(100);
+      } else if (keyCode == 0x26) { // 0x26: VK_UP
+        shutter.isHidden && magnifier.move(0, -25);
+      } else if (keyCode == 0x28) { // 0x28: VK_DOWN
+        shutter.isHidden && magnifier.move(0, 25);
+      } else if (keyCode == 0x25) { // 0x25: VK_LEFT
+        shutter.isHidden && magnifier.move(-25, 0);
+      } else if (keyCode == 0x27) { // 0x27: VK_RIGHT
+        shutter.isHidden && magnifier.move(25, 0);
       }
     };
-    controller.onAnyAction = () => shutter.isHidden && shutter.resetTimer();
+    controller.onAnyAction = () => {
+      shutter.isHidden && shutter.resetTimer();
+    };
     const menu = new Menu({alignRight: true});
     menu.isEnabled = false;
-    menu.addItem('&#x21BB;', () => {
-      if (navigator.onLine) {
-        if ('serviceWorker' in navigator && location.protocol == 'https:') {
-          navigator.serviceWorker.getRegistration('./')
-          .then(registration => registration.unregister());
-        }
-      }
-      location.reload();
-    });
-    menu.addItem('&copy;', () => copyrightDialog.show());
+    if (location.protocol == 'https:') {
+      menu.addItem('&#x21BB;', () => {
+        if (! navigator.onLine) return;
+        navigator.serviceWorker.getRegistration().then(registration => {
+          registration && registration.unregister();
+          location.reload();
+        });
+      });
+    }
     menu.addItem('?', () => helpDialog.show());
+    menu.addItem('&copy;', () => copyrightDialog.show());
     const copyrightDialog = new Dialog({
       backgroundColor: 'rgb(242,242,242)',
       color: 'rgb(53,54,58)'
@@ -285,6 +295,9 @@
       if (type == 'number') {
         value = Number(value);
         Number.isFinite(value) || (value = undefined);
+      } else if (type == 'integer') {
+        value = Number(value);
+        Number.isInteger(value) || (value = undefined);
       } else if (type == 'boolean') {
         value = String(value).toLowerCase().trim();
         value = value.match(/\s*(true|false)\s*/i) ? value == 'true' : undefined;
@@ -322,6 +335,9 @@
       body.addEventListener('touchmove', e => {
         e.touches.length > 1 && e.preventDefault();
       });
+      body.addEventListener('blur', e => {
+        this._onBlur && this._onBlur();
+      });
       let lastWidth = body.clientWidth;
       let lastHeight = body.clientHeight;
       let onResizeTimeoutId = null;
@@ -341,7 +357,12 @@
       };
       loop();
       this._body = body;
+      this._onBlur = null;
       this._onResize = null;
+    }
+    set onBlur(handler) {
+      if (typeof handler != 'function') return false;
+      this._onBlur = handler;
     }
     set onResize(handler) {
       if (typeof handler != 'function') return false;
@@ -359,7 +380,7 @@
   }
   class Magnifier {
     constructor({fitMode, maxScale, fineness, backgroundColor} = {}) {
-      Number.isInteger(fitMode) || (fitMode = 0); // 1: Width; 2: Height; 3: Both; 4: Auto; Else: None
+      Number.isInteger(fitMode) || (fitMode = 0); // 0: None; 1: Contain; 2: Cover; 3: Fill; 4: Width; 5: Height; 
       maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(50, maxScale)) : 5;
       fineness = Number.isInteger(fineness) ? Math.max(1, Math.min(100, fineness)) : 10;
       typeof backgroundColor == 'string' || (backgroundColor = '');
@@ -408,17 +429,20 @@
         const contentWidth = this._content.offsetWidth;
         const contentHeight = this._content.offsetHeight;
         let [fitToWidth, fitToHeight] = [false, false];
-        if (this._fitMode == 1) { // 1: Width
-          [fitToWidth, fitToHeight] = [true, false];
-        } else if (this._fitMode == 2) { // 2: Height
-          [fitToWidth, fitToHeight] = [false, true];
-        } else if (this._fitMode == 3) { // 3: Both
-          [fitToWidth, fitToHeight] = [true, true];
-        } else if (this._fitMode == 4) { // 4: Auto
-          const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
-          const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
+        const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
+        const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
+        if (this._fitMode == 1) { // 1: Contain
           fitToWidth = contentWidthToHeight > bodyWidthToHeight;
           fitToHeight = ! fitToWidth;
+        } else if (this._fitMode == 2) { // 2: Cover
+          fitToWidth = contentWidthToHeight < bodyWidthToHeight;
+          fitToHeight = ! fitToWidth;
+        } else if (this._fitMode == 3) { // 3: Fill
+          [fitToWidth, fitToHeight] = [true, true];
+        } else if (this._fitMode == 4) { // 4: Width
+          [fitToWidth, fitToHeight] = [true, false];
+        } else if (this._fitMode == 5) { // 5: Height
+          [fitToWidth, fitToHeight] = [false, true];
         }
         this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
         this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
@@ -565,7 +589,7 @@
         left: 0;
         z-index: 2147483647;
         width: 100%;
-        height: 3em;
+        height: 4em;
         padding: 0 1em;
         box-sizing: border-box;
         background-color: ${backgroundColor};
@@ -1049,12 +1073,12 @@
         this._isStarted = true;
       });
     }
-    hide() {
+    stop() {
       if (! this._isStarted) return false;
       this._video.pause();
       this._video.srcObject.getTracks().forEach(track => track.enabled = false);
     }
-    show() {
+    restart() {
       if (! this._isStarted) return false;
       this._video.play();
       this._video.srcObject.getTracks().forEach(track => track.enabled = true);
@@ -1063,11 +1087,11 @@
       if (! this._isStarted) return false;
       this._video.pause()
     }
-    play() {
+    unpause() {
       if (! this._isStarted) return false;
       this._video.play();
     }
-    togglePlay() {
+    togglePause() {
       if (! this._isStarted) return false;
       this._video.paused ? this._video.play() : this._video.pause();
     }
