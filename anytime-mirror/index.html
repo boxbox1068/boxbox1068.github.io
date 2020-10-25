@@ -125,7 +125,7 @@
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-    appContainer.onBlur = () => magnifier.update(false);
+    appContainer.onFocus = () => magnifier.update(false);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
