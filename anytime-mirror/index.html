@@ -125,7 +125,7 @@
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-    appContainer.onBlur = () => magnifier.update(false);
+    appContainer.onFocus = () => magnifier.update(false);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
@@ -209,6 +209,8 @@
     };
     const menu = new Menu({alignRight: true});
     menu.isEnabled = false;
+    menu.addItem('&copy;', () => copyrightDialog.show());
+    menu.addItem('?', () => helpDialog.show());
     if (location.protocol == 'https:') {
       menu.addItem('&#x21BB;', () => {
         if (! navigator.onLine) return;
@@ -218,8 +220,6 @@
         });
       });
     }
-    menu.addItem('?', () => helpDialog.show());
-    menu.addItem('&copy;', () => copyrightDialog.show());
     const copyrightDialog = new Dialog({
       backgroundColor: 'rgb(242,242,242)',
       color: 'rgb(53,54,58)'
@@ -335,6 +335,9 @@
       body.addEventListener('touchmove', e => {
         e.touches.length > 1 && e.preventDefault();
       });
+      body.addEventListener('focus', e => {
+        this._onFocus && this._onFocus();
+      });
       body.addEventListener('blur', e => {
         this._onBlur && this._onBlur();
       });
@@ -357,8 +360,13 @@
       };
       loop();
       this._body = body;
+      this._onFocus = null;
       this._onBlur = null;
       this._onResize = null;
+    }
+    set onFocus(handler) {
+      if (typeof handler != 'function') return false;
+      this._onFocus = handler;
     }
     set onBlur(handler) {
       if (typeof handler != 'function') return false;
