@@ -338,10 +338,16 @@ appContainer.onBlur = () => alert(1);
       body.addEventListener('touchmove', e => {
         e.touches.length > 1 && e.preventDefault();
       });
-      addEventListener('pageshow', e => {
+/*
+      window.addEventListener('pageshow', e => {
         this._onFocus && this._onFocus();
       });
-      addEventListener('pagehide', e => {
+      window.addEventListener('pagehide', e => {
+        this._onBlur && this._onBlur();
+      });
+*/
+
+      document.addEventListener('visibilitychange', e => {
         this._onBlur && this._onBlur();
       });
       let lastWidth = body.clientWidth;
@@ -352,14 +358,14 @@ appContainer.onBlur = () => alert(1);
         const currentHeight = body.clientHeight;
         if (currentWidth != lastWidth || currentHeight != lastHeight) {
           clearTimeout(onResizeTimeoutId);
-          onResizeTimeoutId = setTimeout(() => {
+          onResizeTimeoutId = window.setTimeout(() => {
             onResizeTimeoutId = null;
             this._onResize && this._onResize(currentWidth, currentHeight);
           }, 500);
         }
         lastWidth = currentWidth;
         lastHeight = currentHeight;
-        setTimeout(loop, 200);
+        window.setTimeout(loop, 200);
       };
       loop();
       this._body = body;
@@ -630,7 +636,7 @@ overflow: hidden;
     resetTimer() {
       if (this._showWait == 0) return false;
       clearTimeout(this._showTimeoutId);
-      this._showTimeoutId = setTimeout(() => {
+      this._showTimeoutId = window.setTimeout(() => {
         this._showTimeoutId = null;
         this.show();
       }, this._showWait);
@@ -770,7 +776,7 @@ overflow: hidden;
               isDragging = false;
             }
           } else {
-            clickTimeoutId = setTimeout(() => {
+            clickTimeoutId = window.setTimeout(() => {
               clickTimeoutId = null;
               if (lastButton == 0) { // 0: Main button
                 if (clickCount == 1) this._onClick();
@@ -837,7 +843,7 @@ overflow: hidden;
           if (isDragging) {
             this._onDrop();
           } else {
-            tapTimeoutId = setTimeout(() => {
+            tapTimeoutId = window.setTimeout(() => {
               tapTimeoutId = null;
               if (touchCount == 1) this._onClick();
               if (touchCount == 2) this._onDoubleClick();
