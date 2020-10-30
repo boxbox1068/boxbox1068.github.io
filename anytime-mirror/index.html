@@ -350,6 +350,9 @@ javascript:(()=>{v=prompt();location.href='https://shikaku1068.github.io/anytime
 window.addEventListener('pagehide', () => {
   this._onVisibilityChange();
 });
+window.addEventListener('pageshow', () => {
+  this._onVisibilityChange();
+});
       const monitorResize = (lastWidth, lastHeight) => {
         const currentWidth = body.clientWidth;
         const currentHeight = body.clientHeight;
