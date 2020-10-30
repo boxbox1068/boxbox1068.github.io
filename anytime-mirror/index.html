@@ -8,6 +8,7 @@
 -->
 <script>
   'use strict';
+alert(111);
   {
     const lang = navigator.language.match(/^ja(-JP)?$/i) ? 'ja' : 'en';
     document.querySelector('html').setAttribute('lang', lang);
@@ -340,7 +341,7 @@ appContainer.onBlur = () => alert(1);
       addEventListener('pageshow', e => {
         this._onFocus && this._onFocus();
       });
-      body.addEventListener('pageout', e => {
+      addEventListener('pageout', e => {
         this._onBlur && this._onBlur();
       });
       let lastWidth = body.clientWidth;
