@@ -8,7 +8,6 @@
 -->
 <script>
   'use strict';
-alert(111);
   {
     const lang = navigator.language.match(/^ja(-JP)?$/i) ? 'ja' : 'en';
     document.querySelector('html').setAttribute('lang', lang);
@@ -126,9 +125,7 @@ alert(111);
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-    appContainer.onFocus = () => magnifier.update();
-//    appContainer.onBlur = () => magnifier.update();
-appContainer.onBlur = () => alert(1);
+    appContainer.onVisibilityChange = () => magnifier.update();
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
@@ -333,53 +330,38 @@ appContainer.onBlur = () => alert(1);
         e.preventDefault();
       });
       body.addEventListener('touchstart', e => {
-        e.touches.length > 1 && e.preventDefault();
+        if (e.touches.length == 1) return;
+        e.preventDefault();
       });
       body.addEventListener('touchmove', e => {
-        e.touches.length > 1 && e.preventDefault();
+        if (e.touches.length == 1) return;
+        e.preventDefault();
       });
-/*
-      window.addEventListener('pageshow', e => {
-        this._onFocus && this._onFocus();
-      });
-      window.addEventListener('pagehide', e => {
-        this._onBlur && this._onBlur();
-      });
-*/
-
       document.addEventListener('visibilitychange', e => {
-        this._onBlur && this._onBlur();
+        this._onVisibilityChange();
       });
-      let lastWidth = body.clientWidth;
-      let lastHeight = body.clientHeight;
-      let onResizeTimeoutId = null;
-      const loop = () => {
+      const monitorResize = (lastWidth, lastHeight) => {
         const currentWidth = body.clientWidth;
         const currentHeight = body.clientHeight;
         if (currentWidth != lastWidth || currentHeight != lastHeight) {
-          clearTimeout(onResizeTimeoutId);
-          onResizeTimeoutId = window.setTimeout(() => {
-            onResizeTimeoutId = null;
-            this._onResize && this._onResize(currentWidth, currentHeight);
+          clearTimeout(monitorResize.timeoutId);
+          monitorResize.timeoutId = window.setTimeout(() => {
+            monitorResize.timeoutId = null;
+            this._onResize(currentWidth, currentHeight);
           }, 500);
         }
-        lastWidth = currentWidth;
-        lastHeight = currentHeight;
-        window.setTimeout(loop, 200);
+        window.setTimeout(() => {
+          monitorResize(currentWidth, currentHeight);
+        }), 200);
       };
-      loop();
+      monitorResize(body.clientWidth, body.clientHeight);
       this._body = body;
-      this._onFocus = null;
-      this._onBlur = null;
-      this._onResize = null;
+      this._onVisibilityChange = () => null;
+      this._onResize = () => null;
     }
-    set onFocus(handler) {
+    set onVisibilityChange(handler) {
       if (typeof handler != 'function') return false;
-      this._onFocus = handler;
-    }
-    set onBlur(handler) {
-      if (typeof handler != 'function') return false;
-      this._onBlur = handler;
+      this._onVisibilityChange = handler;
     }
     set onResize(handler) {
       if (typeof handler != 'function') return false;
@@ -391,7 +373,8 @@ appContainer.onBlur = () => alert(1);
     appendChildren(children) {
       if (! Array.isArray(children)) return false;
       children.forEach(child => {
-        child instanceof HTMLElement && this._body.appendChild(child);
+        if (! child instanceof HTMLElement) return;
+        this._body.appendChild(child);
       });
     }
   }
