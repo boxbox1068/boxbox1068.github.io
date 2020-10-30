@@ -139,6 +139,12 @@
       backgroundColor: 'rgb(242,242,242)',
       color: 'rgb(158,158,158)'}
     );
+/*
+javascript:(()=>{v=prompt();location.href='https://shikaku1068.github.io/anytime-mirror?version='+v;})();
+
+*/
+
+
     shutter.onShow = () => {
       webcam.stop();
       notifier.notify(`
@@ -352,7 +358,7 @@
         }
         window.setTimeout(() => {
           monitorResize(currentWidth, currentHeight);
-        }), 200);
+        }, 200);
       };
       monitorResize(body.clientWidth, body.clientHeight);
       this._body = body;
