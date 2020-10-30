@@ -125,7 +125,8 @@
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-    appContainer.onVisibilityChange = () => magnifier.update();
+//    appContainer.onVisibilityChange = () => magnifier.update();
+appContainer.onVisibilityChange = () => alert(89);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
