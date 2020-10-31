@@ -8,6 +8,7 @@
 -->
 <script>
   'use strict';
+alert(1);
   {
     const lang = navigator.language.match(/^ja(-JP)?$/i) ? 'ja' : 'en';
     document.querySelector('html').setAttribute('lang', lang);
@@ -346,12 +347,15 @@ javascript:(()=>{v=prompt();location.href='https://shikaku1068.github.io/anytime
       });
       document.addEventListener('visibilitychange', e => {
         this._onVisibilityChange();
+alert('vc');
       });
 window.addEventListener('pagehide', () => {
   this._onVisibilityChange();
+alert('ph');
 });
 window.addEventListener('pageshow', () => {
   this._onVisibilityChange();
+alert('ps');
 });
       const monitorResize = (lastWidth, lastHeight) => {
         const currentWidth = body.clientWidth;
@@ -410,12 +414,16 @@ window.addEventListener('pageshow', () => {
       `;
       const contentWrapper = document.createElement('div');
       contentWrapper.style.cssText = `
+display: flex;
         position: absolute;
-/*
-width: 100%;
-height: 100%;
+max-width: 100%;
+max-height: 100%;
 overflow: hidden;
-*/
+box-sizing: border-box;
+
+justify-content: center;
+align-items: center;
+
       `;
       body.appendChild(contentWrapper);
       this._body = body;
@@ -438,7 +446,6 @@ overflow: hidden;
       this.update(false, true);
     }
 
-/*
     update(anchor, reset) {
       if (! this._content) return false;
       typeof anchor == 'boolean' || (anchor = false);
@@ -467,14 +474,14 @@ overflow: hidden;
         this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
         this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
         this._scale = 1;
-        this._offsetX = (this._body.offsetWidth - this._content.offsetWidth) / 2;
-        this._offsetY = (this._body.offsetHeight - this._content.offsetHeight) / 2;
+        this._offsetX = (this._body.offsetWidth - this._contentWrapper.offsetWidth) / 2;
+        this._offsetY = (this._body.offsetHeight - this._contentWrapper.offsetHeight) / 2;
         this._movementX = 0;
         this._movementY = 0;
       }
       if (! anchor) {
         const bodyWidth = this._body.offsetWidth;
-        const contentWidth = this._content.offsetWidth * this._scale;
+        const contentWidth = this._contentWrapper.offsetWidth * this._scale;
         if (contentWidth < bodyWidth) {
           this._movementX = 0;
         } else {
@@ -483,65 +490,7 @@ overflow: hidden;
           this._movementX = Math.max(minMovementX, Math.min(maxMovementX, this._movementX));
         }
         const bodyHeight = this._body.offsetHeight;
-        const contentHeight = this._content.offsetHeight * this._scale;
-        if (contentHeight < bodyHeight) {
-          this._movementY = 0;
-        } else {
-          const minMovementY = (bodyHeight - contentHeight) / 2;
-          const maxMovementY = (contentHeight - bodyHeight) / 2;
-          this._movementY = Math.max(minMovementY, Math.min(maxMovementY, this._movementY));
-        }
-      }
-      this._contentWrapper.style.transform = `scale(${this._scale})`;
-      this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
-      this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
-    }
-*/
-    update(anchor, reset) {
-      if (! this._content) return false;
-      typeof anchor == 'boolean' || (anchor = false);
-      typeof reset == 'boolean' || (reset = false);
-      if (reset) {
-        const bodyWidth = this._body.offsetWidth;
-        const bodyHeight = this._body.offsetHeight;
-        const contentWidth = this._content.offsetWidth;
-        const contentHeight = this._content.offsetHeight;
-        let [fitToWidth, fitToHeight] = [false, false];
-        const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
-        const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
-        if (this._fitMode == 1) { // 1: Contain
-          fitToWidth = contentWidthToHeight > bodyWidthToHeight;
-          fitToHeight = ! fitToWidth;
-        } else if (this._fitMode == 2) { // 2: Cover
-          fitToWidth = contentWidthToHeight < bodyWidthToHeight;
-          fitToHeight = ! fitToWidth;
-        } else if (this._fitMode == 3) { // 3: Fill
-          [fitToWidth, fitToHeight] = [true, true];
-        } else if (this._fitMode == 4) { // 4: Width
-          [fitToWidth, fitToHeight] = [true, false];
-        } else if (this._fitMode == 5) { // 5: Height
-          [fitToWidth, fitToHeight] = [false, true];
-        }
-        this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
-        this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
-        this._scale = 1;
-        this._offsetX = (this._body.offsetWidth - this._content.offsetWidth) / 2;
-        this._offsetY = (this._body.offsetHeight - this._content.offsetHeight) / 2;
-        this._movementX = 0;
-        this._movementY = 0;
-      }
-      if (! anchor) {
-        const bodyWidth = this._body.offsetWidth;
-        const contentWidth = this._content.offsetWidth * this._scale;
-        if (contentWidth < bodyWidth) {
-          this._movementX = 0;
-        } else {
-          const minMovementX = (bodyWidth - contentWidth) / 2;
-          const maxMovementX = (contentWidth - bodyWidth) / 2;
-          this._movementX = Math.max(minMovementX, Math.min(maxMovementX, this._movementX));
-        }
-        const bodyHeight = this._body.offsetHeight;
-        const contentHeight = this._content.offsetHeight * this._scale;
+        const contentHeight = this._contentWrapper.offsetHeight * this._scale;
         if (contentHeight < bodyHeight) {
           this._movementY = 0;
         } else {
