@@ -118,15 +118,13 @@
   </ul>
 </div>
 <script>
-  onload = e => main();
+  window.onload = e => main();
   const main = () => {
     const queryParser = new QueryParser();
     const appContainer = new AppContainer({
       backgroundColor: 'rgb(53,54,58)',
       color: 'rgb(242,242,242)'
     });
-//    appContainer.onVisibilityChange = () => magnifier.update();
-appContainer.onVisibilityChange = () => alert(89);
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
@@ -344,15 +342,6 @@ javascript:(()=>{v=prompt();location.href='https://shikaku1068.github.io/anytime
         if (e.touches.length == 1) return;
         e.preventDefault();
       });
-      document.addEventListener('visibilitychange', e => {
-        this._onVisibilityChange();
-      });
-window.addEventListener('pagehide', () => {
-  this._onVisibilityChange();
-});
-window.addEventListener('pageshow', () => {
-  this._onVisibilityChange();
-});
       const monitorResize = (lastWidth, lastHeight) => {
         const currentWidth = body.clientWidth;
         const currentHeight = body.clientHeight;
@@ -371,10 +360,6 @@ window.addEventListener('pageshow', () => {
       this._body = body;
       this._onVisibilityChange = () => null;
       this._onResize = () => null;
-    }
-    set onVisibilityChange(handler) {
-      if (typeof handler != 'function') return false;
-      this._onVisibilityChange = handler;
     }
     set onResize(handler) {
       if (typeof handler != 'function') return false;
@@ -702,14 +687,27 @@ overflow: hidden;
       const body = document.createElement('div');
       body.style.cssText = `
         position: absolute;
+/*
         top: 0;
         left: 0;
+*/
+        top: 5px;
+        left: 5px;
+
         z-index: 2147483647;
+/*
         width: 100%;
         height: 100%;
+*/
+        width: calc(100% - 5px * 2);
+        height: calc(100% - 5px * 2);
+
         box-sizing: border-box;
         outline: none;
       `;
+
+body.style.backgroundColor = 'red';
+
       if (enableKeyboard) {
         body.tabIndex = 0;
         body.focus();
