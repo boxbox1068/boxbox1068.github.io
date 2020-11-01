@@ -25,13 +25,13 @@
         ja: '<link rel="manifest" href="./manifest-ja.json">'
       }[lang]);
       document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
-
-document.write('<meta name="apple-mobile-web-app-status-bar-style" content="black">');
-
     }
   }
 </script>
 <style>
+  html {
+    background-color: red;
+  }
   html:not([lang="en"]) [lang="en"], html:not([lang="ja"]) [lang="ja"] {
     display: none;
   }
