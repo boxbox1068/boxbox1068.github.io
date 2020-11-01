@@ -29,9 +29,6 @@
   }
 </script>
 <style>
-  html {
-    background-color: red;
-  }
   html:not([lang="en"]) [lang="en"], html:not([lang="ja"]) [lang="ja"] {
     display: none;
   }
@@ -123,10 +120,13 @@
 <script>
   window.onload = e => main();
   const main = () => {
+    document.documentElement.style.backgroundColor = THEME_BG_COLOR;
+    const THEME_BG_COLOR = 'rgb(53,54,58)';
+    const THEME_COLOR = 'rgb(242,242,242)';
     const queryParser = new QueryParser();
     const appContainer = new AppContainer({
-      backgroundColor: 'rgb(53,54,58)',
-      color: 'rgb(242,242,242)'
+      backgroundColor: THEME_BG_COLOR,
+      color: THEME_COLOR
     });
     appContainer.onVisibilityChange = () => magnifier.update();
     appContainer.onResize = () => magnifier.update(false, true);
@@ -170,9 +170,9 @@
     const notifier = new Notifier({
       alignCenter: false,
       alignBottom: true,
-      backgroundColor: 'rgb(53,54,58)',
-      color: 'rgb(255,255,255)'}
-    );
+      backgroundColor: THEME_BG_COLOR,
+      color: THEME_COLOR
+    });
     const controller = new Controller({
       inputWait: queryParser.getValue('inputWait', 'integer', 250)
     });
