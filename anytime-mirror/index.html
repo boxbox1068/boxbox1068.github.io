@@ -338,15 +338,27 @@
       body.addEventListener('contextmenu', e => {
         e.preventDefault();
       });
+
+
+let isOnEdge;
       body.addEventListener('touchstart', e => {
         const touch = e.touches[e.touches.length - 1];
-        const isOnEdge =
+        isOnEdge =
           touch.clientX < 20 ||
           touch.clientX > body.offsetWidth - 20 ||
           touch.clientY < 20 ||
           touch.clientY > body.offsetHeight - 20;
         if (isOnEdge) e.stopPropagation();
       }, {capture: true});
+body.addEventListener('touchmove', e => {
+  if (isOnEdge) e.stopPropagation();
+}, {capture: true});
+body.addEventListener('touchend', e => {
+  if (isOnEdge) e.stopPropagation();
+}, {capture: true});
+
+
+
       body.addEventListener('touchstart', e => {
         if (e.touches.length == 1) return;
         e.preventDefault();
