@@ -346,6 +346,7 @@
           touch.clientY < 20 ||
           touch.clientY > body.offsetHeight - 20;
         if (isOnEdge) e.stopPropagation();
+if (isOnEdge) alert(1);
       }, {capture: true});
       body.addEventListener('touchstart', e => {
         if (e.touches.length == 1) return;
