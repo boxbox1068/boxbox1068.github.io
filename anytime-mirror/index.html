@@ -29,6 +29,9 @@
   }
 </script>
 <style>
+  html {
+    background-color: black;
+  }
   html:not([lang="en"]) [lang="en"], html:not([lang="ja"]) [lang="ja"] {
     display: none;
   }
@@ -122,7 +125,6 @@
   const main = () => {
     const THEME_BG_COLOR = 'rgb(53,54,58)';
     const THEME_COLOR = 'rgb(242,242,242)';
-    document.documentElement.style.backgroundColor = THEME_BG_COLOR;
     const queryParser = new QueryParser();
     const appContainer = new AppContainer({
       backgroundColor: THEME_BG_COLOR,
@@ -132,8 +134,8 @@
     appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
-      surplusWidth: 5,
-      surplusHeight: 5,
+      surplusWidth: 7,
+      surplusHeight: 7,
       maxScale: queryParser.getValue('maxScale', 'integer', 5),
       fineness: queryParser.getValue('fineness', 'integer', 10),
       backgroundColor: queryParser.getValue('backgroundColor', 'string', '')
