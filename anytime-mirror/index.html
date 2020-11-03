@@ -2,30 +2,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Anytime Mirror / いつでもミラー</title>
-<!--
-# Version History
-- 1.0 (Nov X, 2020): Initial release.
--->
 <script>
   'use strict';
-  {
-    const lang = navigator.language.match(/^ja(-JP)?$/i) ? 'ja' : 'en';
-    document.querySelector('html').setAttribute('lang', lang);
-    document.title = {
-      en: 'Anytime Mirror',
-      ja: 'いつでもミラー'
-    }[lang];
-    if (navigator.onLine && location.protocol == 'https:') {
-      navigator.serviceWorker.getRegistration().then(registration => {
-        if (registration) return;
-        navigator.serviceWorker.register('./service-worker.js');
-      });
-      document.write({
-        en: '<link rel="manifest" href="./manifest.json">',
-        ja: '<link rel="manifest" href="./manifest-ja.json">'
-      }[lang]);
-      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
-    }
+  document.documentElement.lang = /^ja(-JP)?$/i.test(navigator.language) ? 'ja' : 'en';
+  document.title = {
+    en: 'Anytime Mirror',
+    ja: 'いつでもミラー'
+  }[document.documentElement.lang];
+  if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js');
+    document.write({
+      en: '<link rel="manifest" href="./manifest.json">',
+      ja: '<link rel="manifest" href="./manifest-ja.json">'
+    }[document.documentElement.lang]);
+    document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
   }
 </script>
 <style>
@@ -35,248 +25,288 @@
   html:not([lang="en"]) [lang="en"], html:not([lang="ja"]) [lang="ja"] {
     display: none;
   }
+  .hidden {
+    display: none;
+  }
 </style>
-<div id="copyright-content">
-  <h1>
-    <span lang="en">Anytime Mirror - Version 0.0</span>
-    <span lang="ja">いつでもミラー - Version 0.0</span>
-  </h1>
-  <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068/">@shikaku1068</a></div>
-  <div>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</div>
-</div>
-<div id="help-content">
-  <h2>
-    <span lang="en">How to Control</span>
-    <span lang="ja">操作方法</span>
-  </h2>
-  <h3>
-    <span lang="en">Use a Touchscreen</span>
-    <span lang="ja">タッチスクリーンによる操作</span>
-  </h3>
-  <ul>
-    <li>
-      <span lang="en"><strong>Tap</strong> to pause or unpause the video.</span>
-      <span lang="ja"><strong>タップ</strong>：映像を一時停止／再開する。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Double-Tap</strong> to hide or show the video.</span>
-      <span lang="ja"><strong>ダブルタップ</strong>：映像を隠す／再表示する。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Swipe</strong> to shift the video.</span>
-      <span lang="ja"><strong>スワイプ</strong>：映像の位置をずらす。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Double-Tap and Swipe Up/Down</strong> to enlarge or reduce the video.</span>
-      <span lang="ja"><strong>ダブルタップ＋上下にスワイプ</strong>：映像を拡大／縮小する。</span>
-    </li>
-  </ul>
-  <h3>
-    <span lang="en">Use a Mouse</span>
-    <span lang="ja">マウスによる操作</span>
-  </h3>
-  <ul>
-    <li>
-      <span lang="en"><strong>Click</strong> to pause or unpause the video.</span>
-      <span lang="ja"><strong>クリック</strong>：映像を一時停止／再開する。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Double-Click</strong> to hide or show the video.</span>
-      <span lang="ja"><strong>ダブルクリック</strong>：映像を隠す／再表示する。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Drag</strong> to shift the video.</span>
-      <span lang="ja"><strong>ドラッグ</strong>：映像の位置をずらす。</span>
-    </li>
-    <li>
-      <span lang="en"><strong>Wheel Up/Down</strong> to enlarge or reduce the video.</span>
-      <span lang="ja"><strong>ホイールを回す</strong>：映像を拡大／縮小する。</span>
-    </li>
-  </ul>
-  <h3>
-    <span lang="en">Use a Keyboard</span>
-    <span lang="ja">キーボードによる操作</span>
-  </h3>
-  <ul>
-    <li>
-      <span lang="en">Press <strong>Space</strong> to pause or unpause the video.</span>
-      <span lang="ja"><strong>スペースキー</strong>：映像を一時停止／再開する。</span>
-    </li>
-    <li>
-      <span lang="en">Press <strong>Enter</strong> to hide the video.</span>
-      <span lang="ja"><strong>エンターキー</strong>：映像を隠す。</span>
-    </li>
-    <li>
-      <span lang="en">Press <strong>Esc</strong> to show the video.</span>
-      <span lang="ja"><strong>エスケープキー</strong>：映像を再表示する。</span>
-    </li>
-    <li>
-      <span lang="en">Press <strong>Up/Down/Left/Right</strong> to shift the video.</span>
-      <span lang="ja"><strong>上下左右キー</strong>：映像の位置をずらす。</span>
-    </li>
-    <li>
-      <span lang="en">Press <strong>PageUp/PageDown</strong> to enlarge or reduce the video.</span>
-      <span lang="ja"><strong>ページアップ／ページダウンキー</strong>：映像を拡大／縮小する。</span>
-    </li>
-  </ul>
+<div class="hidden">
+  <div id="about-this-app-content">
+    <h1>
+      <span lang="en">Anytime Mirror - Version 0.0</span>
+      <span lang="ja">いつでもミラー - Version 0.0</span>
+    </h1>
+    <div>Copyright 2020 しかく<a href="https://twitter.com/shikaku1068/">@shikaku1068</a></div>
+    <div>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</div>
+    <h2>
+      <span lang="en">Update History</span>
+      <span lang="ja">更新履歴</span>
+    </h2>
+    <dl>
+      <dt>1.0</dt>
+      <dd>Nov X, 2020</dd>
+      <dd>Initial release.</dd>
+    </dl>
+  </div>
+  <div id="help-content">
+    <h2>
+      <span lang="en">How to Control</span>
+      <span lang="ja">操作方法</span>
+    </h2>
+    <h3>
+      <span lang="en">Use a Touchscreen</span>
+      <span lang="ja">タッチスクリーンによる操作</span>
+    </h3>
+    <ul>
+      <li>
+        <span lang="en"><strong>Tap</strong> to pause or unpause the video.</span>
+        <span lang="ja"><strong>タップ</strong>：映像を一時停止／再開する。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Double-Tap</strong> to hide or show the video.</span>
+        <span lang="ja"><strong>ダブルタップ</strong>：映像を隠す／再表示する。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Swipe</strong> to shift the video.</span>
+        <span lang="ja"><strong>スワイプ</strong>：映像の位置をずらす。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Double-Tap and Swipe Up/Down</strong> to enlarge or reduce the video.</span>
+        <span lang="ja"><strong>ダブルタップ＋上下にスワイプ</strong>：映像を拡大／縮小する。</span>
+      </li>
+    </ul>
+    <h3>
+      <span lang="en">Use a Mouse</span>
+      <span lang="ja">マウスによる操作</span>
+    </h3>
+    <ul>
+      <li>
+        <span lang="en"><strong>Click</strong> to pause or unpause the video.</span>
+        <span lang="ja"><strong>クリック</strong>：映像を一時停止／再開する。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Double-Click</strong> to hide or show the video.</span>
+        <span lang="ja"><strong>ダブルクリック</strong>：映像を隠す／再表示する。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Drag</strong> to shift the video.</span>
+        <span lang="ja"><strong>ドラッグ</strong>：映像の位置をずらす。</span>
+      </li>
+      <li>
+        <span lang="en"><strong>Wheel Up/Down</strong> to enlarge or reduce the video.</span>
+        <span lang="ja"><strong>ホイールを回す</strong>：映像を拡大／縮小する。</span>
+      </li>
+    </ul>
+    <h3>
+      <span lang="en">Use a Keyboard</span>
+      <span lang="ja">キーボードによる操作</span>
+    </h3>
+    <ul>
+      <li>
+        <span lang="en">Press <strong>Space</strong> to pause or unpause the video.</span>
+        <span lang="ja"><strong>スペースキー</strong>：映像を一時停止／再開する。</span>
+      </li>
+      <li>
+        <span lang="en">Press <strong>Enter</strong> to hide the video.</span>
+        <span lang="ja"><strong>エンターキー</strong>：映像を隠す。</span>
+      </li>
+      <li>
+        <span lang="en">Press <strong>Esc</strong> to show the video.</span>
+        <span lang="ja"><strong>エスケープキー</strong>：映像を再表示する。</span>
+      </li>
+      <li>
+        <span lang="en">Press <strong>Up/Down/Left/Right</strong> to shift the video.</span>
+        <span lang="ja"><strong>上下左右キー</strong>：映像の位置をずらす。</span>
+      </li>
+      <li>
+        <span lang="en">Press <strong>PageUp/PageDown</strong> to enlarge or reduce the video.</span>
+        <span lang="ja"><strong>ページアップ／ページダウンキー</strong>：映像を拡大／縮小する。</span>
+      </li>
+    </ul>
+  </div>
 </div>
 <script>
   window.onload = e => main();
   const main = () => {
-    const THEME_BG_COLOR = 'rgb(53,54,58)';
-    const THEME_COLOR = 'rgb(242,242,242)';
+    const THEME_A_BG_COLOR = 'rgb(53,54,58)';
+    const THEME_A_FONT_COLOR = 'rgb(242,242,242)';
+    const THEME_B_BG_COLOR = 'rgb(242,242,242)';
+    const THEME_B_FONT_COLOR = 'rgb(158,158,158)';
+    const THEME_C_BG_COLOR = 'rgb(242,242,242)';
+    const THEME_C_FONT_COLOR = 'rgb(53,54,58)';
     const queryParser = new QueryParser();
-    const appContainer = new AppContainer({
-      backgroundColor: THEME_BG_COLOR,
-      color: THEME_COLOR
-    });
-    appContainer.onVisibilityChange = () => magnifier.update();
-    appContainer.onResize = () => magnifier.update(false, true);
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'integer', 2),
-      surplusWidth: 7,
-      surplusHeight: 7,
+      surplusWidth: 8,
+      surplusHeight: 8,
       maxScale: queryParser.getValue('maxScale', 'integer', 5),
       fineness: queryParser.getValue('fineness', 'integer', 10),
       backgroundColor: queryParser.getValue('backgroundColor', 'string', '')
     });
-    const shutter = new Shutter({
-      showWait: queryParser.getValue('shutterWait', 'integer', 30000),
-      startVisible: true,
-      backgroundColor: 'rgb(242,242,242)',
-      color: 'rgb(158,158,158)'}
-    );
-    shutter.onShow = () => {
-      webcam.stop();
-      notifier.notify(`
-        <span lang="en">Double-Tap/Click or press Esc to show...</span>
-        <span lang="ja">ダブルタップ、ダブルクリック又はエスケープキーで再表示...</span>
-      `);
-    };
-    shutter.onHide = () => {
-      webcam.restart();
-      notifier.notify('');
-    };
-    const shutterContent = document.createElement('div');
-    shutterContent.style.cssText = `
-      text-align: center;
-      transform: scaleX(-1);
-    `;
-    shutterContent.innerHTML = `
-      <strong>
-        <span lang="en">Anytime Mirror</span>
-        <span lang="ja">いつでもミラー</span>
-      </strong>
-    `;
-    shutter.setContent(shutterContent);
+    const shutter = (() => {
+      const obj = new Shutter({
+        showWait: queryParser.getValue('shutterWait', 'integer', 30000),
+        startVisible: true,
+        backgroundColor: THEME_B_BG_COLOR,
+        color: THEME_B_FONT_COLOR
+      });
+      obj.setContent((() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          text-align: center;
+          transform: scaleX(-1);
+        `;
+        elm.innerHTML = `
+          <strong>
+            <span lang="en">Anytime Mirror</span>
+            <span lang="ja">いつでもミラー</span>
+          </strong>
+        `;
+        return elm;
+      })());
+      obj.onShow = () => {
+        webcam.stop();
+        notifier.notify(`
+          <span lang="en">Double-Tap/Click or press Esc to show...</span>
+          <span lang="ja">ダブルタップ、ダブルクリック又はエスケープキーで再表示...</span>
+        `);
+      };
+      obj.onHide = () => {
+        magnifier.update();
+        webcam.restart();
+        notifier.notify('');
+      };
+      return obj;
+    })();
     const notifier = new Notifier({
       alignCenter: false,
       alignBottom: true,
-      backgroundColor: THEME_BG_COLOR,
-      color: THEME_COLOR
+      backgroundColor: THEME_A_BG_COLOR,
+      color: THEME_A_FONT_COLOR
     });
-    const controller = new Controller({
-      inputWait: queryParser.getValue('inputWait', 'integer', 250)
-    });
-    controller.isEnabled = false;
-    controller.onScroll = deltaY => {
-      shutter.isHidden && magnifier.magnify(deltaY)
-    };
-    controller.onDrag = (movementX, movementY) => {
-      shutter.isHidden && magnifier.move(movementX, movementY, true);
-    };
-    controller.onDrop = () => magnifier.update();
-    controller.onClick = () => {
-      shutter.isHidden && webcam.togglePause();
-    };
-    controller.onDoubleClick = () => shutter.toggleHide();
-    controller.onKeyDown = keyCode => {
-      if (keyCode == 0x20) { // 0x20: VK_SPACE
-        webcam.togglePause();
-      } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
-        shutter.show();
-      } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
-        shutter.hide();
-      } else if (keyCode == 0x21) { // 0x21: VK_PRIOR
-        shutter.isHidden && magnifier.magnify(-100);
-      } else if (keyCode == 0x22) { // 0x22: VK_NEXT
-        shutter.isHidden && magnifier.magnify(100);
-      } else if (keyCode == 0x26) { // 0x26: VK_UP
-        shutter.isHidden && magnifier.move(0, -25);
-      } else if (keyCode == 0x28) { // 0x28: VK_DOWN
-        shutter.isHidden && magnifier.move(0, 25);
-      } else if (keyCode == 0x25) { // 0x25: VK_LEFT
-        shutter.isHidden && magnifier.move(-25, 0);
-      } else if (keyCode == 0x27) { // 0x27: VK_RIGHT
-        shutter.isHidden && magnifier.move(25, 0);
-      }
-    };
-    controller.onAnyAction = () => {
-      shutter.isHidden && shutter.resetTimer();
-    };
-    const menu = new Menu({alignRight: true});
-    menu.isEnabled = false;
-    menu.addItem('&copy;', () => copyrightDialog.show());
-    menu.addItem('?', () => helpDialog.show());
-    if (location.protocol == 'https:') {
-      menu.addItem('&#x21BB;', () => {
-        if (! navigator.onLine) return;
-        navigator.serviceWorker.getRegistration().then(registration => {
-          registration && registration.unregister();
-          location.reload();
-        });
+    const controller = (() => {
+      const obj = new Controller({
+        inputWait: queryParser.getValue('inputWait', 'integer', 250)
       });
-    }
-    const copyrightDialog = new Dialog({
-      backgroundColor: 'rgb(242,242,242)',
-      color: 'rgb(53,54,58)'
-    });
-    copyrightDialog.setTitle(`
-      <strong>
-        <span lang="en">Copyright</span>
-        <span lang="ja">コピーライト</span>
-      </strong>
-    `);
-    const copyrightContent = document.querySelector('#copyright-content');
-    copyrightContent.remove();
-    copyrightDialog.setContent(copyrightContent);
-    copyrightDialog.onShow = () => controller.isEnabled = false;
-    copyrightDialog.onHide = () => controller.isEnabled = true;
-    const helpDialog = new Dialog({
-      backgroundColor: 'rgb(242,242,242)',
-      color: 'rgb(53,54,58)'
-    });
-    helpDialog.setTitle(`
-      <strong>
-        <span lang="en">Help</span>
-        <span lang="ja">ヘルプ</span>
-      </strong>
-    `);
-    const helpContent = document.querySelector('#help-content');
-    helpContent.remove();
-    helpDialog.setContent(helpContent);
-    helpDialog.onShow = () => controller.isEnabled = false;
-    helpDialog.onHide = () => controller.isEnabled = true;
-    appContainer.appendChildren([
-      magnifier.body,
-      shutter.body,
-      notifier.body,
-      controller.body,
-      menu.body,
-      copyrightDialog.body,
-      helpDialog.body
-    ]);
+      obj.isEnabled = false;
+      obj.onClick = () => {
+        if (shutter.isHidden) webcam.togglePause();
+      };
+      obj.onDoubleClick = () => shutter.toggleHide();
+      obj.onDrag = (movementX, movementY) => {
+        if (shutter.isHidden) magnifier.move(movementX, movementY, true);
+      };
+      obj.onDrop = () => {
+        if (shutter.isHidden) magnifier.update();
+      }
+      obj.onScroll = deltaY => {
+        if (shutter.isHidden) magnifier.magnify(deltaY)
+      };
+      obj.onKeyDown = keyCode => {
+        if (keyCode == 0x20) { // 0x20: VK_SPACE
+          if (shutter.isHidden) webcam.togglePause();
+        } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
+          shutter.show();
+        } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
+          shutter.hide();
+        } else if (keyCode == 0x26) { // 0x26: VK_UP
+          if (shutter.isHidden) magnifier.move(0, -25);
+        } else if (keyCode == 0x28) { // 0x28: VK_DOWN
+          if (shutter.isHidden) magnifier.move(0, 25);
+        } else if (keyCode == 0x25) { // 0x25: VK_LEFT
+          if (shutter.isHidden) magnifier.move(-25, 0);
+        } else if (keyCode == 0x27) { // 0x27: VK_RIGHT
+          if (shutter.isHidden) magnifier.move(25, 0);
+        } else if (keyCode == 0x21) { // 0x21: VK_PRIOR
+          if (shutter.isHidden) magnifier.magnify(-100);
+        } else if (keyCode == 0x22) { // 0x22: VK_NEXT
+          if (shutter.isHidden) magnifier.magnify(100);
+        }
+      };
+      obj.onAnyAction = () => {
+        if (shutter.isHidden) shutter.resetTimer();
+      };
+      return obj;
+    })();
+    const menu = (() => {
+      const obj = new Menu({alignRight: true});
+      obj.isEnabled = false;
+      obj.addItem('&#x2139;', () => aboutThisAppDialog.show());
+      obj.addItem('?', () => helpDialog.show());
+      if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+        obj.addItem('&#x27f3;', () => {
+          if (! navigator.onLine) return;
+          navigator.serviceWorker.getRegistration().then(registration => {
+            registration && registration.unregister();
+            location.reload();
+          });
+        });
+      }
+      return obj;
+    })();
+    const aboutThisAppDialog = (() => {
+      const obj = new Dialog({
+        backgroundColor: THEME_C_BG_COLOR,
+        color: THEME_C_FONT_COLOR
+      });
+      obj.setTitle(`
+        <strong>
+          <span lang="en">About This App</span>
+          <span lang="ja">このアプリについて</span>
+        </strong>
+      `);
+      obj.setContent(document.querySelector('#about-this-app-content'));
+      obj.onShow = () => controller.isEnabled = false;
+      obj.onHide = () => controller.isEnabled = true;
+      return obj;
+    })();
+    const helpDialog = (() => {
+      const obj = new Dialog({
+        backgroundColor: THEME_C_BG_COLOR,
+        color: THEME_C_FONT_COLOR
+      });
+      obj.setTitle(`
+        <strong>
+          <span lang="en">Help</span>
+          <span lang="ja">ヘルプ</span>
+        </strong>
+      `);
+      obj.setContent(document.querySelector('#help-content'));
+      obj.onShow = () => controller.isEnabled = false;
+      obj.onHide = () => controller.isEnabled = true;
+      return obj;
+    })();
+    const appContainer = (() => {
+      const obj = new AppContainer({
+        backgroundColor: THEME_A_BG_COLOR,
+        color: THEME_A_FONT_COLOR
+      });
+      obj.onVisibilityChange = () => magnifier.update();
+      obj.onResize = () => magnifier.update(false, true);
+      obj.appendChildren([
+        magnifier.body,
+        shutter.body,
+        notifier.body,
+        controller.body,
+        menu.body,
+        aboutThisAppDialog.body,
+        helpDialog.body
+      ]);
+      return obj;
+    })();
     document.body.appendChild(appContainer.body);
-    const webcam = new Webcam({
-      flip: queryParser.getValue('flip', 'boolean', true),
-      grayscale: queryParser.getValue('grayscale', 'boolean', false)
-    });
-    webcam.start(video => {
-      magnifier.setContent(video);
-      menu.isEnabled = true;
-      controller.isEnabled = true;
-      shutter.hide();
-    });
+    const webcam = (() => {
+      const obj = new Webcam({
+        flip: queryParser.getValue('flip', 'boolean', true),
+        grayscale: queryParser.getValue('grayscale', 'boolean', false)
+      });
+      obj.start(video => {
+        magnifier.setContent(video);
+        menu.isEnabled = true;
+        controller.isEnabled = true;
+        shutter.hide();
+      });
+      return obj;
+    })();
   };
   class QueryParser {
     constructor({} = {}) {
@@ -314,9 +344,7 @@
     }
   }
   class AppContainer {
-    constructor({edgeWidth, edgeHeight, backgroundColor, color} = {}) {
-      edgeWidth = Number.isInteger(edgeWidth) ? Math.max(0, edgeWidth) : 20;
-      edgeHeight = Number.isInteger(edgeHeight) ? Math.max(0, edgeHeight) : 20;
+    constructor({backgroundColor, color} = {}) {
       typeof backgroundColor == 'string' || (backgroundColor = '');
       typeof color == 'string' || (color = '');
       const body = document.createElement('div');
@@ -338,27 +366,6 @@
       body.addEventListener('contextmenu', e => {
         e.preventDefault();
       });
-
-
-let isOnEdge;
-      body.addEventListener('touchstart', e => {
-        const touch = e.touches[e.touches.length - 1];
-        isOnEdge =
-          touch.clientX < 20 ||
-          touch.clientX > body.offsetWidth - 20 ||
-          touch.clientY < 20 ||
-          touch.clientY > body.offsetHeight - 20;
-        if (isOnEdge) e.stopPropagation();
-      }, {capture: true});
-body.addEventListener('touchmove', e => {
-  if (isOnEdge) e.stopPropagation();
-}, {capture: true});
-body.addEventListener('touchend', e => {
-  if (isOnEdge) e.stopPropagation();
-}, {capture: true});
-
-
-
       body.addEventListener('touchstart', e => {
         if (e.touches.length == 1) return;
         e.preventDefault();
