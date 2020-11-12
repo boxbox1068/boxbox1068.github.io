@@ -437,6 +437,8 @@
         } else if (this._fitMode == 'heightfirst') {
           [fitToWidth, fitToHeight] = [false, true];
         }
+        this._contentWrapper.style.width = fitToWidth ? `${bodyWidth}px` : '';
+        this._contentWrapper.style.height = fitToHeight ? `${bodyHeight}px` : '';
         this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
         this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
         this._scale = 1;
