@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel=”icon” href=“./icon/favicon.ico”>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
 <title>Anytime Mirror/いつでもミラー</title>
 <script>'use strict';</script>
 <script>
@@ -19,8 +19,6 @@
     const queryParser = new QueryParser();
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'string', 'cover'),
-      surplusWidth: 8,
-      surplusHeight: 8,
       maxScale: queryParser.getValue('maxScale', 'integer', 5),
       scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10),
       backgroundColor: queryParser.getValue('backgroundColor', 'string', themeColors.background1)
@@ -113,7 +111,7 @@
       return obj;
     })();
     const menu = (() => {
-      const obj = new Menu({alignRight: false});
+      const obj = new Menu();
       obj.isEnabled = false;
       obj.addItem('&#x24d8;', () => aboutThisAppDialog.show());
       obj.addItem('?', () => helpDialog.show());
@@ -304,13 +302,11 @@
     }
   }
   class Magnifier {
-    constructor({fitMode, surplusWidth, surplusHeight, maxScale, scaleUnit, backgroundColor} = {}) {
+    constructor({fitMode, maxScale, scaleUnit, backgroundColor} = {}) {
       fitMode = typeof fitMode == 'string' ? fitMode.toLowerCase().trim() : 'none';
-      surplusWidth = Number.isInteger(surplusWidth) ? Math.max(0, surplusWidth) : 0;
-      surplusHeight = Number.isInteger(surplusHeight) ? Math.max(0, surplusHeight) : 0;
       maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(10, maxScale)) : 5;
       scaleUnit = Number.isInteger(scaleUnit) ? Math.max(1, Math.min(100, scaleUnit)) : 10;
-      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : rgb(0,0,0);
       const body = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
@@ -325,41 +321,94 @@
         `;
         return elm;
       })();
-      const lense = (() => {
+      const contentWrapper = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: center;
+          align-items: center;
           position: absolute;
           max-width: 100%;
           max-height: 100%;
-          overflow: hidden;
           box-sizing: border-box;
-          justify-content: center;
-          align-items: center;
+          background: rgb(255,255,255);
         `;
         return elm;
       })();
-      body.appendChild(lense);
+      body.appendChild(contentWrapper);
       this._body = body;
-      this._lense = lense;
+      this._contentWrapper = contentWrapper;
       this._content = null;
       this._fitMode = fitMode;
-      this._surplusWidth = surplusWidth;
-      this._surplusHeight = surplusHeight;
       this._maxScale = maxScale;
       this._scaleUnit = scaleUnit;
+      this._backgroundColor = backgroundColor;
     }
     get body() {
       return this._body;
     }
     set content(content) {
       if (! content instanceof HTMLElement) return;
-      if (this._lense.children.length) {
-        this._lense.children.forEach(child => child.remove());
+      if (this._contentWrapper.children.length) {
+        this._contentWrapper.children.forEach(child => child.remove());
       }
-      const contentWrapper = document.createElement('div');
-      contentWrapper.appendChild(content);
-      this._lense.appendChild(contentWrapper);
+      const contentCoverUpper = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: -100%;
+          left: -100%;
+          width: 200%;
+          height: 100%;
+          box-sizing: border-box;
+          background-color: ${this._backgroundColor};
+        `;
+        return elm;
+      })();
+      const contentCoverRight = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: -100%;
+          left: 100%;
+          width: 100%;
+          height: 200%;
+          box-sizing: border-box;
+          background-color: ${this._backgroundColor};
+        `;
+        return elm;
+      })();
+      const contentCoverLower = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 200%;
+          height: 100%;
+          box-sizing: border-box;
+          background-color: ${this._backgroundColor};
+        `;
+        return elm;
+      })();
+      const contentCoverLeft = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 200%;
+          box-sizing: border-box;
+          background-color: ${this._backgroundColor};
+        `;
+        return elm;
+      })();
+      this._contentWrapper.appendChild(content);
+      this._contentWrapper.appendChild(contentCoverUpper);
+      this._contentWrapper.appendChild(contentCoverRight);
+      this._contentWrapper.appendChild(contentCoverLower);
+      this._contentWrapper.appendChild(contentCoverLeft);
       this._content = content;
       this.update(false, true);
     }
@@ -383,22 +432,22 @@
           fitToHeight = ! fitToWidth;
         } else if (this._fitMode == 'fill') {
           [fitToWidth, fitToHeight] = [true, true];
-        } else if (this._fitMode == 'width') {
+        } else if (this._fitMode == 'widthfirst') {
           [fitToWidth, fitToHeight] = [true, false];
-        } else if (this._fitMode == 'height') {
+        } else if (this._fitMode == 'heightfirst') {
           [fitToWidth, fitToHeight] = [false, true];
         }
-        this._content.style.width = fitToWidth ? `${bodyWidth + this._surplusWidth}px` : '';
-        this._content.style.height = fitToHeight ? `${bodyHeight + this._surplusHeight}px` : '';
+        this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
+        this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
         this._scale = 1;
-        this._offsetX = (this._body.offsetWidth - this._lense.offsetWidth) / 2;
-        this._offsetY = (this._body.offsetHeight - this._lense.offsetHeight) / 2;
+        this._offsetX = (this._body.offsetWidth - this._contentWrapper.offsetWidth) / 2;
+        this._offsetY = (this._body.offsetHeight - this._contentWrapper.offsetHeight) / 2;
         this._movementX = 0;
         this._movementY = 0;
       }
       if (! anchor) {
         const bodyWidth = this._body.offsetWidth;
-        const contentWidth = this._lense.offsetWidth * this._scale;
+        const contentWidth = this._contentWrapper.offsetWidth * this._scale;
         if (contentWidth < bodyWidth) {
           this._movementX = 0;
         } else {
@@ -407,7 +456,7 @@
           this._movementX = Math.max(minMovementX, Math.min(maxMovementX, this._movementX));
         }
         const bodyHeight = this._body.offsetHeight;
-        const contentHeight = this._lense.offsetHeight * this._scale;
+        const contentHeight = this._contentWrapper.offsetHeight * this._scale;
         if (contentHeight < bodyHeight) {
           this._movementY = 0;
         } else {
@@ -416,9 +465,9 @@
           this._movementY = Math.max(minMovementY, Math.min(maxMovementY, this._movementY));
         }
       }
-      this._lense.style.transform = `scale(${this._scale})`;
-      this._lense.style.marginLeft = `${this._offsetX + this._movementX}px`;
-      this._lense.style.marginTop = `${this._offsetY + this._movementY}px`;
+      this._contentWrapper.style.transform = `scale(${this._scale})`;
+      this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
+      this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
     }
     magnify(amount) {
       amount = Number.isFinite(amount) ? amount : 0;
@@ -437,6 +486,7 @@
       this.update(anchor);
     }
   }
+
   class Shutter {
     constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
       showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 60000;
@@ -448,19 +498,19 @@
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: center;
+          align-items: center;
           visibility: ${startVisible ? 'visible' : 'hidden'};
           opacity: ${startVisible ? '1' : '0'};
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 2147483647;
+          z-index: 100;
           width: 100%;
           height: 100%;
           box-sizing: border-box;
           background-color: ${backgroundColor};
           color: ${color};
-          justify-content: center;
-          align-items: center;
           transition: ${transition}ms;
           user-select: none;
         `;
@@ -532,20 +582,20 @@
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: ${alignCenter ? 'center' : ''};
+          align-items: center;
           opacity: 0;
           position: absolute;
           top: ${alignBottom ? '' : '0'};
           bottom: ${alignBottom ? '0' : ''};
           left: 0;
-          z-index: 2147483647;
+          z-index: 100;
           width: 100%;
           height: 4em;
           padding: 0 1em;
           box-sizing: border-box;
           background-color: ${backgroundColor};
           color: ${color};
-          justify-content: ${alignCenter ? 'center' : ''};
-          align-items: center;
           transition: ${transition}ms;
           user-select: none;
           pointer-events: none;
@@ -577,7 +627,7 @@
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 2147483647;
+          z-index: 100;
           width: 100%;
           height: 100%;
           box-sizing: border-box;
@@ -799,24 +849,24 @@
       alignRight = typeof alignRight == 'boolean' ? alignRight : false;
       alignBottom = typeof alignBottom == 'boolean' ? alignBottom : false;
       color = typeof color == 'string' ? color : 'rgb(255,255,255)';
-      shadowColor = typeof shadowColor == 'string' ? shadowColor : 'rgb(0,0,0)';
+      shadowColor = typeof shadowColor == 'string' ? shadowColor : 'rgb(53,54,58)';
       const body = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
+          align-items: center;
           position: absolute;
-          top: ${!alignBottom ? '0' : ''};
+          top: ${alignBottom ? '' : '0'};
           bottom: ${alignBottom ? '0' : ''};
           left: 0;
-          z-index: 2147483647;
+          z-index: 100;
           width: 100%;
           height: 3rem;
           padding: 0 1.5rem;
           box-sizing: border-box;
           color: ${color};
           font-size: 1.5rem;
-          justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
-          align-items: center;
           pointer-events: none;
         `;
         return elm;
@@ -873,17 +923,18 @@
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: center;
+          align-items: center;
           visibility: ${startVisible ? 'visible' : 'hidden'};
           opacity: ${startVisible ? '1' : '0'};
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 2147483647;
+          z-index: 100;
           width: 100%;
           height: 100%;
           box-sizing: border-box;
-          justify-content: center;
-          align-items: center;
+          overflow-wrap: break-word;
           transition: ${transition}ms;
         `;
         return elm;
@@ -922,6 +973,8 @@
         const elm = document.createElement('div');
         elm.style.cssText = `
           display: flex;
+          justify-content: center;
+          align-items: center;
           position: absolute;
           top: 0;
           left: 0;
@@ -929,8 +982,6 @@
           height: 3em;
           box-sizing: border-box;
           font-weight: bold;
-          justify-content: center;
-          align-items: center;
           user-select: none;
         `;
         return elm;
@@ -1068,31 +1119,24 @@
   }
 </script>
 <script>
-  {
-    document.documentElement.setAttribute(
-      'data-device', /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc'
-    );
-    const lang = (() => {
-      const queryParser = new QueryParser();
-      const key = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
-      return {
-        en: 'en',
-        ja: 'ja'
-      }[key] || 'en';
-    })();
-    document.documentElement.setAttribute('lang', lang);
-    document.title = {
-      en: 'Anytime Mirror',
-      ja: 'いつでもミラー'
-    }[lang];
-    if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-      document.write({
-        en: '<link rel="manifest" href="./manifest.json">',
-        ja: '<link rel="manifest" href="./manifest-ja.json">'
-      }[lang]);
-      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
-      navigator.serviceWorker.register('./service-worker.js');
-    }
+  document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+  document.documentElement.lang = (() => {
+    const queryParser = new QueryParser();
+    const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
+    const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
+    return lang;
+  })();
+  document.title = {
+    en: 'Anytime Mirror',
+    ja: 'いつでもミラー'
+  }[document.documentElement.lang];
+  if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+    document.write({
+      en: '<link rel="manifest" href="./manifest.json">',
+      ja: '<link rel="manifest" href="./manifest-ja.json">'
+    }[document.documentElement.lang]);
+    document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+    navigator.serviceWorker.register('./service-worker.js');
   }
   window.onload = e => main();
 </script>
@@ -1117,7 +1161,7 @@
       <span class="ja">いつでもミラー - Version 0.0</span>
     </h1>
     <p><a href="https://shikaku1068.github.io/anytime-mirror">https://shikaku1068.github.io/anytime-mirror</a></p>
-    <p>Copyright 2020 しかく@shikaku1068</p>
+    <p>Copyright 2020 <span lang="ja">&#12375;&#12363;&#12367;</span>@shikaku1068</p>
     <p>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</p>
   </div>
   <div id="help-content">
@@ -1126,8 +1170,8 @@
       <span class="ja">特徴</span>
     </h2>
     <p>
-      <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenace. Since it is a web app which works on different kinds of devices via the internet, you can use it on your any device at hand, anytime when necessary. It can also be installed to your device and used offline.</span>
-      <span class="ja">いつでもミラーは、身だしなみチェック用のバーチャルミラーアプリです。ネットを介して様々な端末上で動作するウェブアプリなので、必要なときにいつでも、手元にあるお好きな端末で使用できます。端末にインストールしてオフラインで使用することもできます。</span>
+      <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenance. Since it is a web app which works on different kinds of devices via the internet, you can use it on your any device at hand, anytime when necessary. It can also be installed to your device and used offline.</span>
+      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。ネットを介して様々な端末上で動作するウェブアプリなので、必要なときにいつでも、手元にあるお好きな端末で使用できます。端末にインストールしてオフラインで使用することもできます。</span>
     </p>
     <p>
       <span class="en">As a side note, although the app makes use of a webcam on your device, the video from it will never be sent out to the internet.</span>
@@ -1295,30 +1339,30 @@
       <span class="ja">使用できるパラメータ</span>
     </h3>
     <dl>
-      <dt><strong>fitMode</strong>=none/contain/cover/fill/width/height</dt>
+      <dt><strong>fitMode</strong>=none/contain/cover/widthFirst/heightFirst</dt>
       <dd>
         <span class="en">Specify how the initial size of the video is determined. The default value is "cover".</span>
-        <span class="ja">映像の初期サイズがどのように決まるかを指定します。初期値は"cover"です。</span>
+        <span class="ja">映像の初期サイズがどのように決まるかを指定します。既定値は"cover"です。</span>
       </dd>
       <dt><strong>grayscale</strong>=true/false</dt>
       <dd>
         <span class="en">Specify whether the video is shown in grayscale. The default value is "false".</span>
-        <span class="ja">映像を白黒で表示するかどうかを指定します。初期値は"false"です。</span>
+        <span class="ja">映像を白黒で表示するかどうかを指定します。既定値は"false"です。</span>
       </dd>
       <dt><strong>flip</strong>=true/false</dt>
       <dd>
         <span class="en">Specify whether the video is shown flipped horizontally. The default value is "true".</span>
-        <span class="ja">映像を左右反転で表示するかどうかを指定します。初期値は"true"です。</span>
+        <span class="ja">映像を左右反転で表示するかどうかを指定します。既定値は"true"です。</span>
       </dd>
       <dt><strong>backgroundColor</strong>=black/#d00000/rgb(254,205,47)...</dt>
       <dd>
         <span class="en">Specify the color of the background behind the video. The default value is "rgb(27,120,182)".</span>
-        <span class="ja">映像の裏の背景色を指定します。初期値は"rgb(27,120,182)"です。</span>
+        <span class="ja">映像の裏の背景色を指定します。既定値は"rgb(27,120,182)"です。</span>
       </dd>
       <dt><strong>hideWait</strong>=0-3600</dt>
       <dd>
         <span class="en">Specify the wait time (seconds) until the video is hidden. The value "0" means the video will not automatically be hidden. The default value is "60".</span>
-        <span class="ja">映像が隠れるまでの待ち時間を指定します。値が"0"のときは自動的には映像は隠れません。初期値は"60"です。</span>
+        <span class="ja">映像が隠れるまでの待ち時間を指定します。値が"0"のときは自動的には映像は隠れません。既定値は"60"です。</span>
       </dd>
     </dl>
     <h2>
@@ -1335,11 +1379,11 @@
     </h3>
     <p>
       <span class="en">Once you access the website of the app, the files which composes the app are cached automatically in your device and become able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
-      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすると、より簡単にアプリを使用できるようになります。</span>
+      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを使用できるようになります。</span>
     </p>
     <p>
       <span class="en">Some browsers like Safari for iOS or Chrome for Windows support adding a shortcut icon of a website to the OS home (desktop) screen. By using this function, the app comes to act as if it were a native app.</span>
-      <span class="ja">iOS版SafariやWindows版Chromeなどいくつかのブラウザでは、OSのホーム（デスクトップ）画面にウェブサイトのショートカットアイコンを追加する機能があります。この機能を使用することにより、アプリは一見ネイティブアプリのように振舞うようになります。</span>
+      <span class="ja">iOS版SafariやWindows版Chromeなどいくつかのブラウザでは、OSのホーム（デスクトップ）画面にウェブサイトのショートカットアイコンを追加する機能があります。この機能を使用すると、アプリは一見ネイティブアプリのように動作するようになります。</span>
     </p>
     <h3>
       <span class="en">Download the HTML File</span>
@@ -1347,7 +1391,7 @@
     </h3>
     <p>
       <span class="en">All the major code of the app is written in a single HTML file. So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
-      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイルに記述されています。そのため、単にHTMLファイルをダウンロードしてローカルファイルとして開くことでも、アプリをオフラインで使用することができます。</span>
+      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くという方法でも、アプリをオフラインで使用することができます。</span>
     </p>
     <h3>
       <span class="en">Contact Info</span>
@@ -1357,7 +1401,7 @@
       <span class="en">If you have any inquiries about the app, please contact me via Twitter.</span>
       <span class="ja">アプリについてのお問い合わせはTwitterでお送りください。</span>
     </p>
-    <p>しかく<a href="https://twitter.com/shikaku1068/">@shikaku1068</a></p>
+    <p><span lang="ja">&#12375;&#12363;&#12367;</span><a href="https://twitter.com/shikaku1068/">@shikaku1068</a></p>
   </div>
   <div id="update-history-content">
     <h2>
@@ -1372,7 +1416,7 @@
       </dd>
       <dd>
         <span class="en">Initial release.</span>
-        <span class="ja">初期リリース。</span>
+        <span class="ja">最初のリリース。</span>
       </dd>
     </dl>
   </div>
