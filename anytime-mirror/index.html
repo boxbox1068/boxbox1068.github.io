@@ -184,6 +184,8 @@
         menu.isEnabled = true;
         controller.isEnabled = true;
         shutter.hide();
+      }, error => {
+        window.alert(`${error.name}: ${error.message}`);
       });
       return obj;
     })();
@@ -330,8 +332,8 @@
           position: absolute;
           max-width: 100%;
           max-height: 100%;
+          overflow: hidden;
           box-sizing: border-box;
-          background: rgb(255,255,255);
         `;
         return elm;
       })();
@@ -349,66 +351,11 @@
     }
     set content(content) {
       if (! content instanceof HTMLElement) return;
+      if (! /^(iframe|video|embed|img)$/i.test(content.tagName)) return;
       if (this._contentWrapper.children.length) {
         this._contentWrapper.children.forEach(child => child.remove());
       }
-      const contentCoverUpper = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
-          position: absolute;
-          top: -100%;
-          left: -100%;
-          width: 200%;
-          height: 100%;
-          box-sizing: border-box;
-          background-color: ${this._backgroundColor};
-        `;
-        return elm;
-      })();
-      const contentCoverRight = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
-          position: absolute;
-          top: -100%;
-          left: 100%;
-          width: 100%;
-          height: 200%;
-          box-sizing: border-box;
-          background-color: ${this._backgroundColor};
-        `;
-        return elm;
-      })();
-      const contentCoverLower = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
-          position: absolute;
-          top: 100%;
-          left: 0;
-          width: 200%;
-          height: 100%;
-          box-sizing: border-box;
-          background-color: ${this._backgroundColor};
-        `;
-        return elm;
-      })();
-      const contentCoverLeft = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 200%;
-          box-sizing: border-box;
-          background-color: ${this._backgroundColor};
-        `;
-        return elm;
-      })();
       this._contentWrapper.appendChild(content);
-      this._contentWrapper.appendChild(contentCoverUpper);
-      this._contentWrapper.appendChild(contentCoverRight);
-      this._contentWrapper.appendChild(contentCoverLower);
-      this._contentWrapper.appendChild(contentCoverLeft);
       this._content = content;
       this.update(false, true);
     }
@@ -417,30 +364,42 @@
       reset = typeof reset == 'boolean' ? reset : false;
       if (! this._content) return false;
       if (reset) {
-        const bodyWidth = this._body.offsetWidth;
-        const bodyHeight = this._body.offsetHeight;
+        this._content.style.width = '';
+        this._content.style.height = '';
+        this._content.style.objectFit = '';
         const contentWidth = this._content.offsetWidth;
         const contentHeight = this._content.offsetHeight;
-        let [fitToWidth, fitToHeight] = [false, false];
-        const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
         const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
+        const bodyWidth = this._body.offsetWidth;
+        const bodyHeight = this._body.offsetHeight;
+        const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
         if (this._fitMode == 'contain') {
-          fitToWidth = contentWidthToHeight > bodyWidthToHeight;
-          fitToHeight = ! fitToWidth;
+          if (contentWidthToHeight > bodyWidthToHeight) {
+            this._content.style.width = `${bodyWidth}px`;
+          } else {
+            this._content.style.height = `${bodyHeight}px`;
+          }
+          this._content.style.objectFit = 'contain';
         } else if (this._fitMode == 'cover') {
-          fitToWidth = contentWidthToHeight < bodyWidthToHeight;
-          fitToHeight = ! fitToWidth;
-        } else if (this._fitMode == 'fill') {
-          [fitToWidth, fitToHeight] = [true, true];
+          if (contentWidthToHeight < bodyWidthToHeight) {
+            this._content.style.width = `${bodyWidth}px`;
+          } else {
+            this._content.style.height = `${bodyHeight}px`;
+          }
+          this._content.style.objectFit = 'cover';
         } else if (this._fitMode == 'widthfirst') {
-          [fitToWidth, fitToHeight] = [true, false];
+          this._content.style.width = `${bodyWidth}px`;
+          this._content.style.objectFit = 'cover';
         } else if (this._fitMode == 'heightfirst') {
-          [fitToWidth, fitToHeight] = [false, true];
+          this._content.style.height = `${bodyHeight}px`;
+          this._content.style.objectFit = 'cover';
+        } else if (this._fitMode == 'fill') {
+          this._content.style.width = `${bodyWidth}px`;
+          this._content.style.height = `${bodyHeight}px`;
+          this._content.style.objectFit = 'fill';
+        } else {
+          this._content.style.objectFit = 'none';
         }
-        this._contentWrapper.style.width = fitToWidth ? `${bodyWidth}px` : '';
-        this._contentWrapper.style.height = fitToHeight ? `${bodyHeight}px` : '';
-        this._content.style.width = fitToWidth ? `${bodyWidth}px` : '';
-        this._content.style.height = fitToHeight ? `${bodyHeight}px` : '';
         this._scale = 1;
         this._offsetX = (this._body.offsetWidth - this._contentWrapper.offsetWidth) / 2;
         this._offsetY = (this._body.offsetHeight - this._contentWrapper.offsetHeight) / 2;
@@ -488,7 +447,6 @@
       this.update(anchor);
     }
   }
-
   class Shutter {
     constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
       showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 60000;
@@ -1085,8 +1043,9 @@
       })();
       this._video = video;
     }
-    start(callback) {
+    start(callback, errorCallback) {
       if (typeof callback != 'function') return false;
+      errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
       this._video.addEventListener('loadedmetadata', e => callback(this._video));
       navigator.mediaDevices.getUserMedia({
         video: {facingMode: 'user'},
@@ -1094,6 +1053,8 @@
       }).then(stream => {
         this._video.srcObject = stream;
         this._isStarted = true;
+      }).catch(error => {
+        errorCallback(error);
       });
     }
     stop() {
@@ -1121,26 +1082,28 @@
   }
 </script>
 <script>
-  document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
-  document.documentElement.lang = (() => {
-    const queryParser = new QueryParser();
-    const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
-    const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
-    return lang;
+  (() => {
+    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+    document.documentElement.lang = (() => {
+      const queryParser = new QueryParser();
+      const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
+      const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
+      return lang;
+    })();
+    document.title = {
+      en: 'Anytime Mirror',
+      ja: 'いつでもミラー'
+    }[document.documentElement.lang];
+    if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+      document.write({
+        en: '<link rel="manifest" href="./manifest.json">',
+        ja: '<link rel="manifest" href="./manifest-ja.json">'
+      }[document.documentElement.lang]);
+      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+      navigator.serviceWorker.register('./service-worker.js');
+    }
+    window.onload = e => main();
   })();
-  document.title = {
-    en: 'Anytime Mirror',
-    ja: 'いつでもミラー'
-  }[document.documentElement.lang];
-  if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-    document.write({
-      en: '<link rel="manifest" href="./manifest.json">',
-      ja: '<link rel="manifest" href="./manifest-ja.json">'
-    }[document.documentElement.lang]);
-    document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
-    navigator.serviceWorker.register('./service-worker.js');
-  }
-  window.onload = e => main();
 </script>
 <style>
   html {
@@ -1341,7 +1304,7 @@
       <span class="ja">使用できるパラメータ</span>
     </h3>
     <dl>
-      <dt><strong>fitMode</strong>=none/contain/cover/widthFirst/heightFirst</dt>
+      <dt><strong>fitMode</strong>=none/contain/cover/widthFirst/heightFirst/fill</dt>
       <dd>
         <span class="en">Specify how the initial size of the video is determined. The default value is "cover".</span>
         <span class="ja">映像の初期サイズがどのように決まるかを指定します。既定値は"cover"です。</span>
@@ -1393,7 +1356,7 @@
     </h3>
     <p>
       <span class="en">All the major code of the app is written in a single HTML file. So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
-      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くという方法でも、アプリをオフラインで使用することができます。</span>
+      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くことでも、アプリをオフラインで使用することができます。</span>
     </p>
     <h3>
       <span class="en">Contact Info</span>
