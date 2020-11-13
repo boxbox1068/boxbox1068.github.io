@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
+<title>Anytime Mirror/いつでもミラー</title>
+<script>'use strict';</script>
+<script>
+  const main = () => {
+    const themeColors = {
+      background1: 'rgb(27,120,182)',
+      font1: 'rgb(255,255,255)',
+      background2: 'rgb(242,242,242)',
+      font2: 'rgb(158,158,158)',
+      background3: 'rgb(53,54,58)',
+      font3: 'rgb(255,255,255)',
+      background4: 'rgb(242,242,242)',
+      font4: 'rgb(53,54,58)'
+    };
+    const queryParser = new QueryParser();
+    const magnifier = new Magnifier({
+      fitMode: queryParser.getValue('fitMode', 'string', 'cover'),
+      maxScale: queryParser.getValue('maxScale', 'integer', 5),
+      scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10),
+      backgroundColor: queryParser.getValue('backgroundColor', 'string', themeColors.background1)
+    });
+    const shutter = (() => {
+      const obj = new Shutter({
+        showWait: queryParser.getValue('hideWait', 'integer', 60) * 1000,
+        startVisible: true,
+        backgroundColor: themeColors.background2,
+        color: themeColors.font2
+      });
+      obj.content = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          text-align: center;
+          transform: scaleX(-1);
+        `;
+        elm.innerHTML = `
+          <strong>
+            <span class="en">Anytime Mirror</span>
+            <span class="ja">いつでもミラー</span>
+          </strong>
+        `;
+        return elm;
+      })();
+      obj.onShow = () => {
+        webcam.stop();
+        notifier.notify(`
+          <span class="en pc">Double-Click or press Esc to reshow...</span>
+          <span class="en sd">Double-Tap to reshow...</span>
+          <span class="ja pc">ダブルクリック又はエスケープキーで再表示...</span>
+          <span class="ja sd">ダブルタップで再表示...</span>
+        `);
+      };
+      obj.onHide = () => {
+        magnifier.update();
+        webcam.restart();
+        notifier.notify('');
+      };
+      return obj;
+    })();
+    const notifier = new Notifier({
+      alignCenter: false,
+      alignBottom: true,
+      backgroundColor: themeColors.background3,
+      color: themeColors.font3
+    });
+    const controller = (() => {
+      const obj = new Controller({
+        inputWait: queryParser.getValue('inputWait', 'integer', 250)
+      });
+      obj.isEnabled = false;
+      obj.onClick = () => {
+        if (shutter.isHidden) webcam.togglePause();
+      };
+      obj.onDoubleClick = () => shutter.toggleHide();
+      obj.onDrag = (movementX, movementY) => {
+        if (shutter.isHidden) magnifier.move(movementX, movementY, true);
+      };
+      obj.onDrop = () => {
+        if (shutter.isHidden) magnifier.update();
+      }
+      obj.onScroll = deltaY => {
+        if (shutter.isHidden) magnifier.magnify(deltaY)
+      };
+      obj.onKeyDown = keyCode => {
+        if (keyCode == 0x20) { // 0x20: VK_SPACE
+          if (shutter.isHidden) webcam.togglePause();
+        } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
+          shutter.show();
+        } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
+          shutter.hide();
+        } else if (keyCode == 0x26) { // 0x26: VK_UP
+          if (shutter.isHidden) magnifier.move(0, -25);
+        } else if (keyCode == 0x28) { // 0x28: VK_DOWN
+          if (shutter.isHidden) magnifier.move(0, 25);
+        } else if (keyCode == 0x25) { // 0x25: VK_LEFT
+          if (shutter.isHidden) magnifier.move(-25, 0);
+        } else if (keyCode == 0x27) { // 0x27: VK_RIGHT
+          if (shutter.isHidden) magnifier.move(25, 0);
+        } else if (keyCode == 0x21) { // 0x21: VK_PRIOR
+          if (shutter.isHidden) magnifier.magnify(-100);
+        } else if (keyCode == 0x22) { // 0x22: VK_NEXT
+          if (shutter.isHidden) magnifier.magnify(100);
+        }
+      };
+      obj.onAnyAction = () => {
+        if (shutter.isHidden) shutter.resetShowTimer();
+      };
+      return obj;
+    })();
+    const menu = (() => {
+      const obj = new Menu();
+      obj.addItem('&#x24d8;', () => aboutThisAppDialog.show());
+      obj.addItem('?', () => helpDialog.show());
+      if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+        obj.addItem('&#x21bb;', () => {
+          if (! navigator.onLine) return;
+          navigator.serviceWorker.getRegistration().then(registration => {
+            registration && registration.unregister();
+            location.reload();
+          });
+        });
+      }
+      return obj;
+    })();
+    const aboutThisAppDialog = (() => {
+      const obj = new Dialog({
+        backgroundColor: themeColors.background4,
+        color: themeColors.font4
+      });
+      obj.title = `
+        <strong>
+          <span class="en">About This App</span>
+          <span class="ja">このアプリについて</span>
+        </strong>
+      `;
+      obj.content = document.querySelector('#about-this-app-content');
+      obj.onShow = () => controller.isEnabled = false;
+      obj.onHide = () => controller.isEnabled = true;
+      return obj;
+    })();
+    const helpDialog = (() => {
+      const obj = new Dialog({
+        backgroundColor: themeColors.background4,
+        color: themeColors.font4
+      });
+      obj.title = `
+        <strong>
+          <span class="en">Help</span>
+          <span class="ja">ヘルプ</span>
+        </strong>
+      `;
+      obj.content = document.querySelector('#help-content');
+      obj.onShow = () => controller.isEnabled = false;
+      obj.onHide = () => controller.isEnabled = true;
+      return obj;
+    })();
+    const appContainer = (() => {
+      const obj = new AppContainer();
+      obj.onVisibilityChange = () => magnifier.update();
+      obj.onResize = () => magnifier.update(false, true);
+      obj.appendChildren([
+        magnifier.body,
+        shutter.body,
+        notifier.body,
+        controller.body,
+        menu.body,
+        aboutThisAppDialog.body,
+        helpDialog.body
+      ]);
+      return obj;
+    })();
+    document.body.appendChild(appContainer.body);
+    const webcam = new Webcam({
+      flip: queryParser.getValue('flip', 'boolean', true),
+      grayscale: queryParser.getValue('grayscale', 'boolean', false)
+    });
+    webcam.start(video => {
+      magnifier.content = video;
+      controller.isEnabled = true;
+      shutter.hide();
+    }, error => {
+      window.alert(`${error.name}: ${error.message}`);
+    });
+  };
+  class QueryParser {
+    constructor({} = {}) {
+      const values = {};
+      const queryString = decodeURIComponent(location.search.slice(1));
+      queryString.split('&').forEach(parameter => {
+        let key, value;
+        if (parameter.match(/=/)) {
+          key = parameter.match(/^[^=]*/)[0].toLowerCase().trim();
+          value = parameter.match(/=.*$/)[0].slice(1).trim();
+        } else {
+          key = parameter.toLowerCase().trim();
+          value = 'true';
+        }
+        if (key) values[key] = value;
+      });
+      this._values = values;
+    }
+    getValue(key, type, defaultValue) {
+      key = typeof key == 'string' ? key : '';
+      type = typeof type == 'string' ? type : '';
+      let value = this._values[key.toLowerCase().trim()];
+      if (type == 'number') {
+        value = Number(value);
+        if (! Number.isFinite(value)) value = null;
+      } else if (type == 'integer') {
+        value = Number(value);
+        if (! Number.isInteger(value)) value = null;
+      } else if (type == 'boolean') {
+        if (/^\s*true\s*$/i.test(value)) {
+          value = true;
+        } else if (/^\s*false\s*$/i.test(value)) {
+          value = false;
+        } else {
+          value = null;
+        }
+      }
+      if (value == null) value = defaultValue;
+      return value;
+    }
+  }
+  class AppContainer {
+    constructor({backgroundColor, color} = {}) {
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
+      color = typeof color == 'string' ? color : '';
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+          background-color: ${backgroundColor};
+          color: ${color};
+          font-size: min(1rem, 5vmin);
+          font-family: sans-serif;
+          user-select: none;
+          touch-action: manipulation;
+        `;
+        elm.addEventListener('contextmenu', e => {
+          e.preventDefault();
+        });
+        elm.addEventListener('touchstart', e => {
+          if (e.touches.length == 1) return;
+          e.preventDefault();
+        }, {capture: true});
+        elm.addEventListener('touchmove', e => {
+          if (e.touches.length == 1) return;
+          e.preventDefault();
+        }, {capture: true});
+        return elm;
+      })();
+      document.addEventListener('visibilitychange', e => {
+        this._onVisibilityChange();
+      });
+      const monitorResize = (lastWidth, lastHeight, countDown) => {
+        const currentWidth = body.clientWidth;
+        const currentHeight = body.clientHeight;
+        if (currentWidth != lastWidth || currentHeight != lastHeight) {
+          countDown = 5;
+        } else if (countDown-- && countDown == 0) {
+          this._onResize(currentWidth, currentHeight);
+        }
+        window.setTimeout(() => {
+          monitorResize(currentWidth, currentHeight, countDown);
+        }, 200);
+      };
+      monitorResize(body.clientWidth, body.clientHeight, 0);
+      this._body = body;
+      this._onVisibilityChange = () => {};
+      this._onResize = () => {};
+    }
+    get body() {
+      return this._body;
+    }
+    set onVisibilityChange(handler) {
+      if (typeof handler != 'function') return false;
+      this._onVisibilityChange = handler;
+    }
+    set onResize(handler) {
+      if (typeof handler != 'function') return false;
+      this._onResize = handler;
+    }
+    appendChildren(children) {
+      if (! Array.isArray(children)) return false;
+      children.forEach(child => {
+        if (! child instanceof HTMLElement) return;
+        this._body.appendChild(child);
+      });
+    }
+  }
+  class Magnifier {
+    constructor({fitMode, maxScale, scaleUnit, backgroundColor} = {}) {
+      fitMode = typeof fitMode == 'string' ? fitMode.toLowerCase().trim() : 'none';
+      maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(10, maxScale)) : 5;
+      scaleUnit = Number.isInteger(scaleUnit) ? Math.max(1, Math.min(100, scaleUnit)) : 10;
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : rgb(0,0,0);
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+          background-color: ${backgroundColor};
+        `;
+        return elm;
+      })();
+      const contentWrapper = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          max-width: 100%;
+          max-height: 100%;
+          overflow: hidden;
+          box-sizing: border-box;
+        `;
+        return elm;
+      })();
+      body.appendChild(contentWrapper);
+      this._body = body;
+      this._contentWrapper = contentWrapper;
+      this._content = null;
+      this._fitMode = fitMode;
+      this._maxScale = maxScale;
+      this._scaleUnit = scaleUnit;
+      this._backgroundColor = backgroundColor;
+    }
+    get body() {
+      return this._body;
+    }
+    set content(content) {
+      if (! content instanceof HTMLElement) return;
+      if (! /^(iframe|video|embed|img)$/i.test(content.tagName)) return;
+      if (this._contentWrapper.children.length) {
+        this._contentWrapper.children.forEach(child => child.remove());
+      }
+      this._contentWrapper.appendChild(content);
+      this._content = content;
+      this.update(false, true);
+    }
+    update(anchor, reset) {
+      anchor = typeof anchor == 'boolean' ? anchor : false;
+      reset = typeof reset == 'boolean' ? reset : false;
+      if (! this._content) return false;
+      if (reset) {
+        this._content.style.width = '';
+        this._content.style.height = '';
+        this._content.style.objectFit = '';
+        const contentWidth = this._content.offsetWidth;
+        const contentHeight = this._content.offsetHeight;
+        const contentWidthToHeight = contentWidth / Math.max(1, contentHeight);
+        const bodyWidth = this._body.offsetWidth;
+        const bodyHeight = this._body.offsetHeight;
+        const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
+        if (this._fitMode == 'contain') {
+          if (contentWidthToHeight > bodyWidthToHeight) {
+            this._content.style.width = `${bodyWidth}px`;
+          } else {
+            this._content.style.height = `${bodyHeight}px`;
+          }
+          this._content.style.objectFit = 'contain';
+        } else if (this._fitMode == 'cover') {
+          if (contentWidthToHeight < bodyWidthToHeight) {
+            this._content.style.width = `${bodyWidth}px`;
+          } else {
+            this._content.style.height = `${bodyHeight}px`;
+          }
+          this._content.style.objectFit = 'cover';
+        } else if (this._fitMode == 'fittowidth') {
+          this._content.style.width = `${bodyWidth}px`;
+          this._content.style.objectFit = 'cover';
+        } else if (this._fitMode == 'fittoheight') {
+          this._content.style.height = `${bodyHeight}px`;
+          this._content.style.objectFit = 'cover';
+        } else if (this._fitMode == 'scaledown') {
+          if (contentWidthToHeight > bodyWidthToHeight && contentWidth > bodyWidth) {
+            this._content.style.width = `${bodyWidth}px`;
+            this._content.style.objectFit = 'cover';
+          } else if (contentWidthToHeight < bodyWidthToHeight && contentHeight > bodyHeight) {
+            this._content.style.height = `${bodyHeight}px`;
+            this._content.style.objectFit = 'cover';
+          } else {
+            this._content.style.objectFit = 'none';
+          }
+        } else if (this._fitMode == 'fill') {
+          this._content.style.width = `${bodyWidth}px`;
+          this._content.style.height = `${bodyHeight}px`;
+          this._content.style.objectFit = 'fill';
+        } else {
+          this._content.style.objectFit = 'none';
+        }
+        this._scale = 1;
+        this._offsetX = (this._body.offsetWidth - this._contentWrapper.offsetWidth) / 2;
+        this._offsetY = (this._body.offsetHeight - this._contentWrapper.offsetHeight) / 2;
+        this._movementX = 0;
+        this._movementY = 0;
+      }
+      if (! anchor) {
+        const bodyWidth = this._body.offsetWidth;
+        const contentWidth = this._contentWrapper.offsetWidth * this._scale;
+        if (contentWidth < bodyWidth) {
+          this._movementX = 0;
+        } else {
+          const minMovementX = (bodyWidth - contentWidth) / 2;
+          const maxMovementX = (contentWidth - bodyWidth) / 2;
+          this._movementX = Math.max(minMovementX, Math.min(maxMovementX, this._movementX));
+        }
+        const bodyHeight = this._body.offsetHeight;
+        const contentHeight = this._contentWrapper.offsetHeight * this._scale;
+        if (contentHeight < bodyHeight) {
+          this._movementY = 0;
+        } else {
+          const minMovementY = (bodyHeight - contentHeight) / 2;
+          const maxMovementY = (contentHeight - bodyHeight) / 2;
+          this._movementY = Math.max(minMovementY, Math.min(maxMovementY, this._movementY));
+        }
+      }
+      this._contentWrapper.style.transform = `scale(${this._scale})`;
+      this._contentWrapper.style.marginLeft = `${this._offsetX + this._movementX}px`;
+      this._contentWrapper.style.marginTop = `${this._offsetY + this._movementY}px`;
+    }
+    magnify(amount) {
+      amount = Number.isFinite(amount) ? amount : 0;
+      if (! this._content) return false;
+      this._scale += amount * -0.01 / this._scaleUnit;
+      this._scale = Math.max(1, Math.min(this._maxScale, this._scale));
+      this.update();
+    }
+    move(movementX, movementY, anchor) {
+      movementX = Number.isFinite(movementX) ? movementX : 0;
+      movementY = Number.isFinite(movementY) ? movementY : 0;
+      anchor = typeof anchor == 'boolean' ? anchor : false;
+      if (! this._content) return false;
+      this._movementX += movementX;
+      this._movementY += movementY;
+      this.update(anchor);
+    }
+  }
+  class Shutter {
+    constructor({showWait, startVisible, backgroundColor, color, transition} = {}) {
+      showWait = Number.isInteger(showWait) ? Math.max(0, Math.min(3600000, showWait)) : 60000;
+      startVisible = typeof startVisible == 'boolean' ? startVisible : false;
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : 'rgb(255,255,255)';
+      color = typeof color == 'string' ? color : 'rgb(0,0,0)';
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          visibility: ${startVisible ? 'visible' : 'hidden'};
+          opacity: ${startVisible ? '1' : '0'};
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 100;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          background-color: ${backgroundColor};
+          color: ${color};
+          transition: ${transition}ms;
+          user-select: none;
+        `;
+        return elm;
+      })();
+      const contentWrapper = document.createElement('div');
+      body.appendChild(contentWrapper);
+      this._body = body;
+      this._contentWrapper = contentWrapper;
+      this._showWait = showWait;
+      this._showTimeoutId = null;
+      this._onShow = () => {};
+      this._onHide = () => {};
+      this.resetShowTimer();
+    }
+    get body() {
+      return this._body;
+    }
+    get isHidden() {
+      return this._body.style.visibility == 'hidden';
+    }
+    set content(content) {
+      if (! content instanceof HTMLElement) return;
+      if (this._contentWrapper.children.length) {
+        this._contentWrapper.children.forEach(child => child.remove());
+      }
+      this._contentWrapper.appendChild(content);
+    }
+    set onShow(handler) {
+      if (typeof handler != 'function') return;
+      this._onShow = handler;
+    }
+    set onHide(handler) {
+      if (typeof handler != 'function') return;
+      this._onHide = handler;
+    }
+    resetShowTimer() {
+      window.clearTimeout(this._showTimeoutId);
+      if (! this.isHidden) return false;
+      if (this._showWait == 0) return false;
+      this._showTimeoutId = window.setTimeout(() => {
+        this._showTimeoutId = null;
+        this.show();
+      }, this._showWait);
+    }
+    show() {
+      this._body.style.visibility = 'visible';
+      this._body.style.opacity = '1';
+      this._onShow();
+    }
+    hide() {
+      this._body.style.opacity = '0';
+      this._body.style.visibility = 'hidden';
+      this._onHide();
+      this.resetShowTimer();
+    }
+    toggleHide() {
+      this.isHidden ? this.show() : this.hide();
+    }
+  }
+  class Notifier {
+    constructor({alignCenter, alignBottom, backgroundColor, color, transition} = {}) {
+      alignCenter = typeof alignCenter == 'boolean' ? alignCenter : false;
+      alignBottom = typeof alignBottom == 'boolean' ? alignBottom : false;
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : 'rgba(0,0,0,.6)';
+      color = typeof color == 'string' ? color : 'rgb(255,255,255)';
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: ${alignCenter ? 'center' : ''};
+          align-items: center;
+          opacity: 0;
+          position: absolute;
+          top: ${alignBottom ? '' : '0'};
+          bottom: ${alignBottom ? '0' : ''};
+          left: 0;
+          z-index: 100;
+          width: 100%;
+          height: 4em;
+          padding: 0 1em;
+          box-sizing: border-box;
+          background-color: ${backgroundColor};
+          color: ${color};
+          transition: ${transition}ms;
+          user-select: none;
+          pointer-events: none;
+        `;
+        return elm;
+      })();
+      this._body = body;
+      this._transition = transition;
+      this._text = '';
+    }
+    get body() {
+      return this._body;
+    }
+    notify(text) {
+      text = typeof text == 'string' ? text : '';
+      this._body.style.opacity = text ? '1' : '0';
+      this._body.innerHTML = text;
+    }
+  }
+  class Controller {
+    constructor({enableKeyboard, enableMouse, enableTouch, inputWait} = {}) {
+      enableKeyboard = typeof enableKeyboard == 'boolean' ? enableKeyboard : true;
+      enableMouse = typeof enableMouse == 'boolean' ? enableMouse : true;
+      enableTouch = typeof enableTouch == 'boolean' ? enableTouch : true;
+      inputWait = Number.isInteger(inputWait) ? Math.max(100, Math.min(1000, inputWait)) : 250;
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 100;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          outline: none;
+        `;
+        return elm;
+      })();
+      if (enableKeyboard) {
+        body.tabIndex = 0;
+        body.focus();
+        body.addEventListener('blur', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          body.focus();
+        });
+        body.addEventListener('keydown', e => {
+          if (body.style.display == 'none') return;
+          if (e.ctrlKey || e.altKey || e.metaKey) return;
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          this._onKeyDown(e.keyCode);
+        });
+      }
+      if (enableMouse) {
+        let clickTimeoutId = null;
+        let clickCount = 0;
+        let isDragging = false;
+        let lastButton = null;
+        body.addEventListener('mousedown', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          window.clearTimeout(clickTimeoutId);
+          clickTimeoutId = null;
+          if (e.button == lastButton) {
+            clickCount++;
+          } else {
+            clickCount = 1;
+            lastButton = e.button;
+            if (isDragging) this._onDrop();
+          }
+          isDragging = false;
+        });
+        body.addEventListener('mousemove', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          if (e.buttons & 1) { // 1: Primary button
+            if (clickCount >= 1) isDragging = true;
+          } else {
+            if (isDragging) this._onDrop();
+            isDragging = false;
+          }
+          clickCount = 0;
+          if (isDragging) {
+            this._onDrag(e.movementX, e.movementY);
+          }
+        });
+        body.addEventListener('mouseup', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          if (isDragging) {
+            if (e.button == 0) { // 0: Main button
+              this._onDrop();
+              isDragging = false;
+            }
+          } else {
+            clickTimeoutId = window.setTimeout(() => {
+              clickTimeoutId = null;
+              if (lastButton == 0) { // 0: Main button
+                if (clickCount == 1) this._onClick();
+                if (clickCount == 2) this._onDoubleClick();
+              } else if (lastButton == 1) { // 1: Auxiliary button
+                if (clickCount == 1) this._onMiddleClick();
+              } else if (lastButton == 2) { // 2: Secondary button
+                if (clickCount == 1) this._onRightClick();
+              }
+              clickCount = 0;
+            }, inputWait);
+          }
+        });
+        body.addEventListener('wheel', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          this._onScroll(e.deltaY);
+        });
+      }
+      if (enableTouch) {
+        let tapTimeoutId = null;
+        let touchCount = 0;
+        let isDragging = false;
+        let isScrolling = false;
+        let lastTouch = null;
+        body.addEventListener('touchstart', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          window.clearTimeout(tapTimeoutId);
+          if (e.touches.length == 1) {
+            touchCount++;
+            lastTouch = e.touches[0];
+          } else {
+            touchCount = 0;
+            if (isDragging) this._onDrop();
+          }
+          isDragging = false;
+          isScrolling = false;
+        });
+        body.addEventListener('touchmove', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          if (touchCount == 1) isDragging = true;
+          if (touchCount >= 2) isScrolling = true;
+          touchCount = 0;
+          let currentTouch = e.touches[0];
+          if (isDragging) {
+            let movementX = currentTouch.screenX - lastTouch.screenX;
+            let movementY = currentTouch.screenY - lastTouch.screenY;
+            this._onDrag(movementX, movementY);
+          } else if (isScrolling) {
+            let deltaY = (lastTouch.screenY - currentTouch.screenY) * 10;
+            this._onScroll(deltaY);
+          }
+          lastTouch = currentTouch;
+        });
+        body.addEventListener('touchend', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this._onAnyAction();
+          if (isDragging) {
+            this._onDrop();
+          } else {
+            tapTimeoutId = window.setTimeout(() => {
+              tapTimeoutId = null;
+              if (touchCount == 1) this._onClick();
+              if (touchCount == 2) this._onDoubleClick();
+              touchCount = 0;
+            }, inputWait);
+          }
+        });
+      }
+      this._body = body;
+      this._onDrag = () => {};
+      this._onDrop = () => {};
+      this._onClick = () => {};
+      this._onDoubleClick = () => {};
+      this._onMiddleClick = () => {};
+      this._onRightClick = () => {};
+      this._onScroll = () => {};
+      this._onKeyDown = () => {};
+      this._onAnyAction = () => {};
+      this._enableKeyboard = enableKeyboard;
+    }
+    get body() {
+      return this._body;
+    }
+    get isEnabled() {
+      return this._body.style.display == 'block';
+    }
+    set isEnabled(boolean) {
+      if (typeof boolean != 'boolean') return;
+      if (boolean) {
+        this._body.style.display = 'block';
+        if (this._enableKeyboard) {
+          this._body.style.tabIndex = 0;
+          this._body.focus();
+        }
+      } else {
+        this._body.style.display = 'none';
+        if (this._enableKeyboard) {
+          this._body.blur();
+          this._body.tabIndex = -1;
+        }
+      }
+    }
+    set onDrag(handler) {
+      if (typeof handler != 'function') return;
+      this._onDrag = handler;
+    }
+    set onDrop(handler) {
+      if (typeof handler != 'function') return;
+      this._onDrop = handler;
+    }
+    set onClick(handler) {
+      if (typeof handler != 'function') return;
+      this._onClick = handler;
+    }
+    set onDoubleClick(handler) {
+      if (typeof handler != 'function') return;
+      this._onDoubleClick = handler;
+    }
+    set onMiddleClick(handler) {
+      if (typeof handler != 'function') return;
+      this._onMiddleClick = handler;
+    }
+    set onRightClick(handler) {
+      if (typeof handler != 'function') return;
+      this._onRightClick = handler;
+    }
+    set onScroll(handler) {
+      if (typeof handler != 'function') return;
+      this._onScroll = handler;
+    }
+    set onKeyDown(handler) {
+      if (typeof handler != 'function') return;
+      this._onKeyDown = handler;
+    }
+    set onAnyAction(handler) {
+      if (typeof handler != 'function') return;
+      this._onAnyAction = handler;
+    }
+  }
+  class Menu {
+    constructor({alignRight, alignBottom, color, shadowColor} = {}) {
+      alignRight = typeof alignRight == 'boolean' ? alignRight : false;
+      alignBottom = typeof alignBottom == 'boolean' ? alignBottom : false;
+      color = typeof color == 'string' ? color : 'rgb(255,255,255)';
+      shadowColor = typeof shadowColor == 'string' ? shadowColor : 'rgb(53,54,58)';
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
+          align-items: center;
+          position: absolute;
+          top: ${alignBottom ? '' : '0'};
+          bottom: ${alignBottom ? '0' : ''};
+          left: 0;
+          z-index: 100;
+          width: 100%;
+          height: 3rem;
+          padding: 0 1.5rem;
+          box-sizing: border-box;
+          color: ${color};
+          font-size: 1.5rem;
+          pointer-events: none;
+        `;
+        return elm;
+      })();
+      this._body = body;
+      this._alignRight = alignRight;
+      this._shadowColor = shadowColor;
+      this._isEnabled = true;
+    }
+    get body() {
+      return this._body;
+    }
+    get isEnabled() {
+      return this._isEnabled;
+    }
+    set isEnabled(boolean) {
+      if (typeof boolean != 'boolean') return;
+      this._isEnabled = boolean;
+    }
+    addItem(text, onClick) {
+      text = typeof text == 'string' ? text : '';
+      onClick = typeof onClick == 'function' ? onClick : () => {};
+      const item = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          margin-right: ${this._alignRight ? '' : '1.5em'};
+          margin-left: ${this._alignRight ? '1.5em' : ''};
+          text-shadow:
+            0 -1px ${this._shadowColor}, 1px 0 ${this._shadowColor},
+            0 1px ${this._shadowColor}, -1px 0 ${this._shadowColor},
+            -1px -1px ${this._shadowColor}, 1px -1px ${this._shadowColor},
+            1px 1px ${this._shadowColor}, -1px 1px ${this._shadowColor};
+          cursor: pointer;
+          user-select: none;
+          pointer-events: auto;
+        `;
+        elm.innerHTML = text || '*';
+        elm.addEventListener('click', e => {
+          if (! this._isEnabled) return;
+          onClick();
+        });
+        return elm;
+      })();
+      this._body.appendChild(item);
+    }
+  }
+  class Dialog {
+    constructor({startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
+      startVisible = typeof startVisible == 'boolean' ? startVisible : false;
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : 'rgb(255,255,255)';
+      color = typeof color == 'string' ? color : 'rgb(0,0,0)';
+      curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
+      transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
+      const body = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          visibility: ${startVisible ? 'visible' : 'hidden'};
+          opacity: ${startVisible ? '1' : '0'};
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 100;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          overflow-wrap: break-word;
+          transition: ${transition}ms;
+        `;
+        return elm;
+      })();
+      const curtain = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          box-sizing: border-box;
+          background-color: rgba(0,0,0,${curtainOpacity});
+        `;
+        elm.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.button == 0) this.hide(); // 0: Main button
+        });
+        return elm;
+      })();
+      const panel = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: relative;
+          width: calc(100% - 20vmin);
+          height: calc(100% - 20vmin);
+          box-sizing: border-box;
+          background-color: ${backgroundColor};
+          color: ${color};
+        `;
+        return elm;
+      })();
+      const titleBar = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 3em;
+          box-sizing: border-box;
+          font-weight: bold;
+          user-select: none;
+        `;
+        return elm;
+      })();
+      const contentWrapper = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          bottom: 1em;
+          left: 0;
+          width: 100%;
+          height: calc(100% - 3em - 1em);
+          padding: 1em 2em;
+          overflow-y: auto;
+          box-sizing: border-box;
+        `;
+        return elm;
+      })();
+      const closeButton = (() => {
+        const elm = document.createElement('div');
+        elm.style.cssText = `
+          position: absolute;
+          top: .5em;
+          right: 1em;
+          font-weight: bold;
+          user-select: none;
+        `;
+        elm.innerHTML = '&#x2715';
+        elm.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.button == 0) this.hide(); // 0: Main button
+        });
+        return elm;
+      })();
+      body.appendChild(curtain);
+      body.appendChild(panel);
+      panel.appendChild(titleBar);
+      panel.appendChild(contentWrapper);
+      panel.appendChild(closeButton);
+      this._body = body;
+      this._titleBar = titleBar;
+      this._contentWrapper = contentWrapper;
+      this._onShow = () => {};
+      this._onHide = () => {};
+    }
+    get body() {
+      return this._body;
+    }
+    get isHidden() {
+      return this._body.style.visibility == 'hidden';
+    }
+    set title(title) {
+      if (typeof title != 'string') return;
+      this._titleBar.innerHTML = title;
+    }
+    set content(content) {
+      if (! content instanceof HTMLElement) return;
+      if (this._contentWrapper.children.length) {
+        this._contentWrapper.children.forEach(child => child.remove());
+      }
+      this._contentWrapper.appendChild(content);
+    }
+    set onShow(handler) {
+      if (typeof handler != 'function') return;
+      this._onShow = handler;
+    }
+    set onHide(handler) {
+      if (typeof handler != 'function') return;
+      this._onHide = handler;
+    }
+    show() {
+      if (! this.isHidden) return;
+      this._body.style.visibility = 'visible';
+      this._body.style.opacity = '1';
+      this._onShow();
+    }
+    hide() {
+      if (this.isHidden) return;
+      this._body.style.opacity = '0';
+      this._body.style.visibility = 'hidden';
+      this._onHide();
+    }
+  }
+  class Webcam {
+    constructor({flip, grayscale} = {}) {
+      flip = typeof flip == 'boolean' ? flip : false;
+      grayscale = typeof grayscale == 'boolean' ? grayscale : false;
+      const video = (() => {
+        const elm = document.createElement('video');
+        elm.style.cssText = `
+          transform: ${flip ? 'scaleX(-1)' : ''};
+          filter: ${grayscale ? 'grayscale(100%)' : ''};
+        `;
+        elm.autoplay = true;
+        elm.muted = true;
+        elm.setAttribute('playsinline', null);
+        return elm;
+      })();
+      this._video = video;
+    }
+    start(callback, errorCallback) {
+      if (typeof callback != 'function') return false;
+      errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
+      this._video.addEventListener('loadedmetadata', e => callback(this._video));
+      navigator.mediaDevices.getUserMedia({
+        video: {facingMode: 'user'},
+        audio: false
+      }).then(stream => {
+        this._video.srcObject = stream;
+        this._isStarted = true;
+      }).catch(error => {
+        errorCallback(error);
+      });
+    }
+    stop() {
+      if (! this._isStarted) return false;
+      this._video.pause();
+      this._video.srcObject.getTracks().forEach(track => track.enabled = false);
+    }
+    restart() {
+      if (! this._isStarted) return false;
+      this._video.play();
+      this._video.srcObject.getTracks().forEach(track => track.enabled = true);
+    }
+    pause() {
+      if (! this._isStarted) return false;
+      this._video.pause()
+    }
+    unpause() {
+      if (! this._isStarted) return false;
+      this._video.play();
+    }
+    togglePause() {
+      if (! this._isStarted) return false;
+      this._video.paused ? this._video.play() : this._video.pause();
+    }
+  }
+</script>
+<script>
+  (() => {
+    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+    document.documentElement.lang = (() => {
+      const queryParser = new QueryParser();
+      const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
+      const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
+      return lang;
+    })();
+    document.title = {
+      en: 'Anytime Mirror',
+      ja: 'いつでもミラー'
+    }[document.documentElement.lang];
+    if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+      document.write({
+        en: '<link rel="manifest" href="./manifest.json">',
+        ja: '<link rel="manifest" href="./manifest-ja.json">'
+      }[document.documentElement.lang]);
+      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+      navigator.serviceWorker.register('./service-worker.js');
+    }
+    window.onload = e => main();
+  })();
+</script>
+<style>
+  html {
+    background-color: rgb(17,119,184);
+  }
+  html:not([lang="en"]) .en, html:not([lang="ja"]) .ja {
+    display: none;
+  }
+  html:not([data-device="pc"]) .pc, html:not([data-device="sd"]) .sd {
+    display: none;
+  }
+  .hidden {
+    display: none;
+  }
+</style>
+<div class="hidden">
+  <div id="about-this-app-content">
+    <h1>
+      <span class="en">Anytime Mirror - Version 0.0</span>
+      <span class="ja">いつでもミラー - Version 0.0</span>
+    </h1>
+    <p><a href="https://shikaku1068.github.io/anytime-mirror">https://shikaku1068.github.io/anytime-mirror</a></p>
+    <p>Copyright 2020 <span lang="ja">&#12375;&#12363;&#12367;</span>@shikaku1068</p>
+    <p>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</p>
+  </div>
+  <div id="help-content">
+    <h2>
+      <span class="en">Features</span>
+      <span class="ja">特徴</span>
+    </h2>
+    <p>
+      <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenance. Since it is a web app which works on different kinds of devices via the internet, you can use it on your any device at hand, anytime when necessary. It can also be installed to your device and used offline.</span>
+      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。ネットを介して様々な端末上で動作するウェブアプリなので、必要なときにいつでも、手元にあるお好きな端末で使用できます。端末にインストールしてオフラインで使用することもできます。</span>
+    </p>
+    <p>
+      <span class="en">As a side note, although the app makes use of a webcam on your device, the video from it will never be sent out to the internet.</span>
+      <span class="ja">なお、アプリは端末のウェブカメラを使用しますが、映像がネットに送信されることはありません。</span>
+    </p>
+    <h2>
+      <span class="en">How to Control</span>
+      <span class="ja">操作方法</span>
+    </h2>
+    <p>
+      <span class="en">You can control the app with either a touchscreen, a mouse or a keyboard.</span>
+      <span class="ja">アプリはタッチスクリーン、マウス、キーボードのどれでも操作できます。</span>
+    </p>
+    <h3>
+      <span class="en">With a Touchscreen</span>
+      <span class="ja">タッチスクリーンによる操作</span>
+    </h3>
+    <dl>
+      <dt>
+        <span class="en"><strong>Tap</strong></span>
+        <span class="ja"><strong>タップ</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Pause or unpause the video.</span>
+        <span class="ja">映像を一時停止／再開する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Double Tap</strong></span>
+        <span class="ja"><strong>ダブルタップ</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Hide or reshow the video.</span>
+        <span class="ja">映像を隠す／再表示する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Double Tap and Swipe Up/Down</strong></span>
+        <span class="ja"><strong>ダブルタップ＋上下にスワイプ</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Scale up or down the video.</span>
+        <span class="ja">映像を拡大／縮小する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Swipe</strong></span>
+        <span class="ja"><strong>スワイプ</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Shift the video.</span>
+        <span class="ja">映像の位置をずらす。</span>
+      </dd>
+    </dl>
+    <h3>
+      <span class="en">With a Mouse</span>
+      <span class="ja">マウスによる操作</span>
+    </h3>
+    <dl>
+      <dt>
+        <span class="en"><strong>Click</strong></span>
+        <span class="ja"><strong>クリック</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Pause or unpause the video.</span>
+        <span class="ja">映像を一時停止／再開する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Double Click</strong></span>
+        <span class="ja"><strong>ダブルクリック</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Hide or reshow the video.</span>
+        <span class="ja">映像を隠す／再表示する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Wheel Up/Down</strong></span>
+        <span class="ja"><strong>ホイールを回す</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Scale up or down the video.</span>
+        <span class="ja">映像を拡大／縮小する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Drag</strong></span>
+        <span class="ja"><strong>ドラッグ</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Shift the video.</span>
+        <span class="ja">映像の位置をずらす。</span>
+      </dd>
+    </dl>
+    <h3>
+      <span class="en">With a Keyboard</span>
+      <span class="ja">キーボードによる操作</span>
+    </h3>
+    <dl>
+      <dt>
+        <span class="en"><strong>Space Key</strong></span>
+        <span class="ja"><strong>Spaceキー</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Pause or unpause the video.</span>
+        <span class="ja">映像を一時停止／再開する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Enter Key</strong></span>
+        <span class="ja"><strong>Enterキー</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Hide the video.</span>
+        <span class="ja">映像を隠す。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Esc Key</strong></span>
+        <span class="ja"><strong>Escキー</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Reshow the video.</span>
+        <span class="ja">映像を再表示する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>PageUp/PageDown Key</strong></span>
+        <span class="ja"><strong>PageUp／PageDownキー</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Scale up or down the video.</span>
+        <span class="ja">映像を拡大／縮小する。</span>
+      </dd>
+      <dt>
+        <span class="en"><strong>Up/Down/Left/Right Key</strong></span>
+        <span class="ja"><strong>Up／Down／Left／Rightキー</strong></span>
+      </dt>
+      <dd>
+        <span class="en">Shift the video.</span>
+        <span class="ja">映像の位置をずらす。</span>
+      </dd>
+    </dl>
+    <h2>
+      <span class="en">How to Change Settings</span>
+      <span class="ja">設定変更方法</span>
+    </h2>
+    <p>
+      <span class="en">Some settings can be changed by adding query parameters to the URL of the app.</span>
+      <span class="ja">アプリのURLにクエリ形式のパラメータを付与することで、いくつかの項目を設定変更できます。</span>
+    </p>
+    <h3>
+      <span class="en">Format</span>
+      <span class="ja">書式</span>
+    </h3>
+    <p>
+      <span class="en">(App's URL)<strong>?</strong>(Key1)<strong>=</strong>(Value1)<strong>&</strong>(Key2)<strong>=</strong>(Value2)<strong>&</strong>(Key3)<strong>=</strong>(Value3)...</span>
+      <span class="ja">(アプリのURL)<strong>?</strong>(キー1)<strong>=</strong>(値1)<strong>&</strong>(キー2)<strong>=</strong>(値2)<strong>&</strong>(キー3)<strong>=</strong>(値3)...</span>
+    </p>
+    <p>
+      <span class="en">* The number of parameters (pairs of a key and a value) doesn't matter.</span>
+      <span class="ja">※パラメータ（キーと値の組み合わせ）の数はいくつでも構いません。</span>
+    </p>
+    <h4>
+      <span class="en">Example</span>
+      <span class="ja">例</span>
+    </h4>
+    <p>
+      <a href="https://shikaku1068.github.io/anytime-mirror?fitMode=contain&grayscale=true">https://shikaku1068.github.io/anytime-mirror?fitMode=contain&grayscale=true</a>
+    </p>
+    <h3>
+      <span class="en">Available Parameters</span>
+      <span class="ja">使用できるパラメータ</span>
+    </h3>
+    <dl>
+      <dt><strong>fitMode</strong>=none/contain/cover/fitToWidth/fitToHeight/scaleDown/fill</dt>
+      <dd>
+        <span class="en">Specify how the initial size of the video is determined. The default value is "cover".</span>
+        <span class="ja">映像の初期サイズがどのように決まるかを指定します。既定値は"cover"です。</span>
+      </dd>
+      <dt><strong>grayscale</strong>=true/false</dt>
+      <dd>
+        <span class="en">Specify whether the video is shown in grayscale. The default value is "false".</span>
+        <span class="ja">映像を白黒で表示するかどうかを指定します。既定値は"false"です。</span>
+      </dd>
+      <dt><strong>flip</strong>=true/false</dt>
+      <dd>
+        <span class="en">Specify whether the video is shown flipped horizontally. The default value is "true".</span>
+        <span class="ja">映像を左右反転で表示するかどうかを指定します。既定値は"true"です。</span>
+      </dd>
+      <dt><strong>backgroundColor</strong>=black/#d00000/rgb(254,205,47)...</dt>
+      <dd>
+        <span class="en">Specify the color of the background behind the video. The default value is "rgb(27,120,182)".</span>
+        <span class="ja">映像の裏の背景色を指定します。既定値は"rgb(27,120,182)"です。</span>
+      </dd>
+      <dt><strong>hideWait</strong>=0-3600</dt>
+      <dd>
+        <span class="en">Specify the wait time (seconds) until the video is hidden. The value "0" means the video will not automatically be hidden. The default value is "60".</span>
+        <span class="ja">映像が隠れるまでの待ち時間を指定します。値が"0"のときは自動的には映像は隠れません。既定値は"60"です。</span>
+      </dd>
+    </dl>
+    <h2>
+      <span class="en">How to Install</span>
+      <span class="ja">インストール方法</span>
+    </h2>
+    <p>
+      <span class="en">The app can also be installed to your device and used offline. There are 2 ways for installing: to bookmark its website on your browser and to download its HTML file.</span>
+      <span class="ja">アプリは端末にインストールしてオフラインで使用することもできます。ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りのインストール方法があります。</span>
+    </p>
+    <h3>
+      <span class="en">Bookmark the Website</span>
+      <span class="ja">サイトをブックマークする</span>
+    </h3>
+    <p>
+      <span class="en">Once you access the website of the app, the files which composes the app are cached automatically in your device and become able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
+      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを使用できるようになります。</span>
+    </p>
+    <p>
+      <span class="en">Some browsers like Safari for iOS or Chrome for Windows support adding a shortcut icon of a website to the OS home (desktop) screen. By using this function, the app comes to act as if it were a native app.</span>
+      <span class="ja">iOS版SafariやWindows版Chromeなどいくつかのブラウザでは、OSのホーム（デスクトップ）画面にウェブサイトのショートカットアイコンを追加する機能があります。この機能を使用すると、アプリは一見ネイティブアプリのように動作するようになります。</span>
+    </p>
+    <h3>
+      <span class="en">Download the HTML File</span>
+      <span class="ja">HTMLファイルをダウンロードする</span>
+    </h3>
+    <p>
+      <span class="en">All the major code of the app is written in a single HTML file (index.html). So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
+      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くことでも、アプリをオフラインで使用することができます。</span>
+    </p>
+    <h3>
+      <span class="en">Contact Info</span>
+      <span class="ja">お問い合わせ</span>
+    </h3>
+    <p>
+      <span class="en">If you have any inquiries about the app, please contact me via Twitter.</span>
+      <span class="ja">アプリについてのお問い合わせはTwitterでお送りください。</span>
+    </p>
+    <p><span lang="ja">&#12375;&#12363;&#12367;</span><a href="https://twitter.com/shikaku1068/">@shikaku1068</a></p>
+  </div>
+  <div id="update-history-content">
+    <h2>
+      <span class="en">Version History</span>
+      <span class="ja">バージョン履歴</span>
+    </h2>
+    <dl>
+      <dt>1.0</dt>
+      <dd>
+        <span class="en">Nov X, 2020</span>
+        <span class="ja">2020年11月X日</span>
+      </dd>
+      <dd>
+        <span class="en">Initial release.</span>
+        <span class="ja">最初のリリース。</span>
+      </dd>
+    </dl>
+  </div>
+</div>
