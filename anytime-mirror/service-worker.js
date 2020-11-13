@@ -1,13 +1,13 @@
 'use strict';
-const CACHE_NAME = 'v1';
-const CACHE_LIST = [
+const cacheName = 'v1';
+const cacheList = [
   `./`,
   `./index.html`
 ];
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(CACHE_LIST);
+    caches.open(cacheName).then(cache => {
+      return cache.addAll(cacheList);
     })
   );
 });
