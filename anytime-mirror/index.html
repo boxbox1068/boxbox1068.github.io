@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
 <title>Anytime Mirror/いつでもミラー</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
+<meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>'use strict';</script>
 <script>
   const main = () => {
@@ -112,7 +114,6 @@
     })();
     const menu = (() => {
       const obj = new Menu();
-      obj.isEnabled = false;
       obj.addItem('&#x24d8;', () => aboutThisAppDialog.show());
       obj.addItem('?', () => helpDialog.show());
       if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
@@ -174,21 +175,17 @@
       return obj;
     })();
     document.body.appendChild(appContainer.body);
-    const webcam = (() => {
-      const obj = new Webcam({
-        flip: queryParser.getValue('flip', 'boolean', true),
-        grayscale: queryParser.getValue('grayscale', 'boolean', false)
-      });
-      obj.start(video => {
-        magnifier.content = video;
-        menu.isEnabled = true;
-        controller.isEnabled = true;
-        shutter.hide();
-      }, error => {
-        window.alert(`${error.name}: ${error.message}`);
-      });
-      return obj;
-    })();
+    const webcam = new Webcam({
+      flip: queryParser.getValue('flip', 'boolean', true),
+      grayscale: queryParser.getValue('grayscale', 'boolean', false)
+    });
+    webcam.start(video => {
+      magnifier.content = video;
+      controller.isEnabled = true;
+      shutter.hide();
+    }, error => {
+      window.alert(`${error.name}: ${error.message}`);
+    });
   };
   class QueryParser {
     constructor({} = {}) {
@@ -387,12 +384,22 @@
             this._content.style.height = `${bodyHeight}px`;
           }
           this._content.style.objectFit = 'cover';
-        } else if (this._fitMode == 'widthfirst') {
+        } else if (this._fitMode == 'fittowidth') {
           this._content.style.width = `${bodyWidth}px`;
           this._content.style.objectFit = 'cover';
-        } else if (this._fitMode == 'heightfirst') {
+        } else if (this._fitMode == 'fittoheight') {
           this._content.style.height = `${bodyHeight}px`;
           this._content.style.objectFit = 'cover';
+        } else if (this._fitMode == 'scaledown') {
+          if (contentWidthToHeight > bodyWidthToHeight && contentWidth > bodyWidth) {
+            this._content.style.width = `${bodyWidth}px`;
+            this._content.style.objectFit = 'cover';
+          } else if (contentWidthToHeight < bodyWidthToHeight && contentHeight > bodyHeight) {
+            this._content.style.height = `${bodyHeight}px`;
+            this._content.style.objectFit = 'cover';
+          } else {
+            this._content.style.objectFit = 'none';
+          }
         } else if (this._fitMode == 'fill') {
           this._content.style.width = `${bodyWidth}px`;
           this._content.style.height = `${bodyHeight}px`;
@@ -859,6 +866,7 @@
             0 1px ${this._shadowColor}, -1px 0 ${this._shadowColor},
             -1px -1px ${this._shadowColor}, 1px -1px ${this._shadowColor},
             1px 1px ${this._shadowColor}, -1px 1px ${this._shadowColor};
+          cursor: pointer;
           user-select: none;
           pointer-events: auto;
         `;
@@ -1115,11 +1123,8 @@
   html:not([data-device="pc"]) .pc, html:not([data-device="sd"]) .sd {
     display: none;
   }
-  .hidden {
-    display: none;
-  }
 </style>
-<div class="hidden">
+<div hidden>
   <div id="about-this-app-content">
     <h1>
       <span class="en">Anytime Mirror - Version 0.0</span>
@@ -1304,7 +1309,7 @@
       <span class="ja">使用できるパラメータ</span>
     </h3>
     <dl>
-      <dt><strong>fitMode</strong>=none/contain/cover/widthFirst/heightFirst/fill</dt>
+      <dt><strong>fitMode</strong>=none/contain/cover/fitToWidth/fitToHeight/scaleDown/fill</dt>
       <dd>
         <span class="en">Specify how the initial size of the video is determined. The default value is "cover".</span>
         <span class="ja">映像の初期サイズがどのように決まるかを指定します。既定値は"cover"です。</span>
@@ -1355,7 +1360,7 @@
       <span class="ja">HTMLファイルをダウンロードする</span>
     </h3>
     <p>
-      <span class="en">All the major code of the app is written in a single HTML file. So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
+      <span class="en">All the major code of the app is written in a single HTML file (index.html). So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
       <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くことでも、アプリをオフラインで使用することができます。</span>
     </p>
     <h3>

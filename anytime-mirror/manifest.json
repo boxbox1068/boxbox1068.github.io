@@ -5,7 +5,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(53,54,58)",
-  "description": "A simple mirror app for appearance check.",
+  "description": "A virtual mirror app for personal maintenance.",
   "icons": [{
     "src": "./icons/icon-192x192.png",
     "sizes": "192x192",
