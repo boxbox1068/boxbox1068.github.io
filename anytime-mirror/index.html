@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>Anytime Mirror/いつでもミラー</title>
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
-<meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
+<title>Anytime Mirror/いつでもミラー</title>
+<meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
+<link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
 <script>
   'use strict';
   const main = () => {
@@ -1088,9 +1089,6 @@
       this._video.paused ? this._video.play() : this._video.pause();
     }
   }
-</script>
-<script>
-  'use strict';
   (() => {
     document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
     document.documentElement.lang = (() => {
