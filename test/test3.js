@@ -1,0 +1,3 @@
+const $ = [
+  'hogehoge', 'bbb', 'ccc'
+];
