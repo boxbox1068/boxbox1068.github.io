@@ -1,3 +1,1 @@
-const $ = [
-  'aaa', 'bbb', 'ccc'
-];
+
