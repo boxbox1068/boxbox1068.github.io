@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<title>Anytime Mirror/いつでもミラー</title>
+<meta name="author" content="しかく@shikaku1068">
+<meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURT+j3SiKxjuf2Vi89CWGwh99ukar5FS48DOW0SuOySKBvlCz7EOn4Dea1Uyv6C6SzZNmFMMAAAAtSURBVBjTZcC3AcAgAMAwJ/T+/7fsRgShCEPYQham8PiFJVThCE34hCh0IckFGfwHgYmRG/MAAAAASUVORK5CYII=">
+<link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
-<title>Anytime Mirror/いつでもミラー</title>
-<meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
-<link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror">
-<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABgUExURSyQyzKV0ESo4Tyg2jaZ1Eeq4zib1kuu50es5TSX0jqe2EKm3z6i3ECk3U2w6R98uSGAvSmLxi+Tzk+y6yaHw1W58SSEwVO37yuNyCOCv1G07SB+uyeJxVm99Ve781e78vJfVigAAABRSURBVDjLpca1EYQAAADBe8Xdvf8uiRmCC9ho2QT7zXEpnWAQzIJGkAsCQSj4Cd6CRJAJUsFHEAv+gq8gErwEteC5UVAJVkEr6AWToBQsgkKc9sU6I9h4SHMAAAAASUVORK5CYII=">
 <script>
   'use strict';
   const main = () => {
@@ -185,7 +186,10 @@
       controller.isEnabled = true;
       shutter.hide();
     }, error => {
-      window.alert(`${error.name}: ${error.message}`);
+      window.alert({
+        en: 'Webcam cannot be found.',
+        ja: 'ウェブカメラが見つかりません。'
+      }[document.documentElement.lang]);
     });
   };
   class QueryParser {
@@ -1055,15 +1059,19 @@
     start(callback, errorCallback) {
       if (typeof callback != 'function') return false;
       errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
-      this._video.addEventListener('loadedmetadata', e => callback(this._video));
+      if (! navigator.mediaDevices) {
+        errorCallback();
+        return false;
+      }
       navigator.mediaDevices.getUserMedia({
         video: {facingMode: 'user'},
         audio: false
       }).then(stream => {
+        this._video.addEventListener('loadedmetadata', e => callback(this._video));
         this._video.srcObject = stream;
         this._isStarted = true;
       }).catch(error => {
-        errorCallback(error);
+        errorCallback();
       });
     }
     stop() {
