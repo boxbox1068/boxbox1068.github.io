@@ -5,8 +5,8 @@
 <meta name="description" content="A virtual mirror app for personal maintenance./身だしなみチェック用のバーチャルミラーアプリ。">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
-<script>'use strict';</script>
 <script>
+  'use strict';
   const main = () => {
     const themeColors = {
       background1: 'rgb(27,120,182)',
@@ -1090,6 +1090,7 @@
   }
 </script>
 <script>
+  'use strict';
   (() => {
     document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
     document.documentElement.lang = (() => {
@@ -1103,11 +1104,11 @@
       ja: 'いつでもミラー'
     }[document.documentElement.lang];
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-      document.write({
+      document.head.insertAdjacentHTML('beforeend', {
         en: '<link rel="manifest" href="./manifest.json">',
         ja: '<link rel="manifest" href="./manifest-ja.json">'
       }[document.documentElement.lang]);
-      document.write('<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+      document.head.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
       navigator.serviceWorker.register('./service-worker.js');
     }
     window.onload = e => main();
