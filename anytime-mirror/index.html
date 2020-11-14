@@ -9,6 +9,28 @@
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>
   'use strict';
+  window.addEventListener('load', e => {
+    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+    document.documentElement.lang = (() => {
+      const queryParser = new QueryParser();
+      const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
+      const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
+      return lang;
+    })();
+    document.title = {
+      en: 'Anytime Mirror',
+      ja: 'いつでもミラー'
+    }[document.documentElement.lang];
+    if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
+      document.head.insertAdjacentHTML('beforeend', {
+        en: '<link rel="manifest" href="./manifest.json">',
+        ja: '<link rel="manifest" href="./manifest-ja.json">'
+      }[document.documentElement.lang]);
+      document.head.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+      navigator.serviceWorker.register('./service-worker.js');
+    }
+    main();
+  });
   const main = () => {
     const themeColors = {
       background1: 'rgb(27,120,182)',
@@ -1097,28 +1119,6 @@
       this._video.paused ? this._video.play() : this._video.pause();
     }
   }
-  (() => {
-    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
-    document.documentElement.lang = (() => {
-      const queryParser = new QueryParser();
-      const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
-      const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
-      return lang;
-    })();
-    document.title = {
-      en: 'Anytime Mirror',
-      ja: 'いつでもミラー'
-    }[document.documentElement.lang];
-    if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-      document.head.insertAdjacentHTML('beforeend', {
-        en: '<link rel="manifest" href="./manifest.json">',
-        ja: '<link rel="manifest" href="./manifest-ja.json">'
-      }[document.documentElement.lang]);
-      document.head.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
-      navigator.serviceWorker.register('./service-worker.js');
-    }
-    window.onload = e => main();
-  })();
 </script>
 <style>
   html {
