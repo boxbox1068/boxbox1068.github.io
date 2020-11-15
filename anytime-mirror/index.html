@@ -960,8 +960,8 @@
               return;
             }
             isRightAfterTap = true;
-            window.setTimeout(() => isRightAfterTap = false, 350);
-          });
+            window.setTimeout(() => isRightAfterTap = false, 500);
+          }, {capture: true});
         }
         return elm;
       })();
