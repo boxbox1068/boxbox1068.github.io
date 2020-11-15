@@ -209,12 +209,12 @@
       shutter.hide();
     }, error => {
       window.alert({
-        en: 'Error:\nCannot access webcam. Please check the settings of your browser or try another browser.',
-        ja: 'エラー：\nウェブカメラにアクセスできません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
+        en: 'Error: Cannot access webcam. Please check the settings of your browser or try another browser.',
+        ja: 'エラー：ウェブカメラにアクセスできません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
       }[document.documentElement.lang]);
       notifier.notify(`
-        <span class="en">Error: Could not access webcam.</span>
-        <span class="ja">エラー：ウェブカメラにアクセスできませんでした。</span>
+        <span class="en">Error: Cannot access webcam.</span>
+        <span class="ja">エラー：ウェブカメラにアクセスできません。</span>
       `);
     });
   };
