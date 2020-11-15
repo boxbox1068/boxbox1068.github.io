@@ -927,12 +927,13 @@
     }
   }
   class Dialog {
-    constructor({startVisible, backgroundColor, color, curtainOpacity, transition} = {}) {
+    constructor({startVisible, backgroundColor, color, curtainOpacity, transition, preventDoubleTap} = {}) {
       startVisible = typeof startVisible == 'boolean' ? startVisible : false;
       backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : 'rgb(255,255,255)';
       color = typeof color == 'string' ? color : 'rgb(0,0,0)';
       curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
       transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
+      preventDoubleTap = typeof preventDoubleTap == 'boolean' ? preventDoubleTap : true;
       const body = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
@@ -951,6 +952,17 @@
           overflow-wrap: break-word;
           transition: ${transition}ms;
         `;
+        if (preventDoubleTap) {
+          let isRightAfterTap = false;
+          elm.addEventListener('touchend', e => {
+            if (isRightAfterTap) {
+              e.preventDefault();
+              return;
+            }
+            isRightAfterTap = true;
+            window.setTimeout(() => isRightAfterTap = false, 350);
+          });
+        }
         return elm;
       })();
       const curtain = (() => {
