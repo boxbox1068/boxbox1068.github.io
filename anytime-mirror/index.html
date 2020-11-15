@@ -9,7 +9,7 @@
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>
   'use strict';
-  window.addEventListener('load', e => {
+  window.addEventListener('DOMContentLoaded', e => {
     document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
     document.documentElement.lang = (() => {
       const queryParser = new QueryParser();
@@ -163,8 +163,8 @@
         </strong>
       `;
       obj.content = document.querySelector('#about-this-app-content');
-      obj.onShow = () => controller.isEnabled = false;
-      obj.onHide = () => controller.isEnabled = true;
+      obj.onShow = () => controller.pauseKeyboard();
+      obj.onHide = () => controller.restartKeyboard();
       return obj;
     })();
     const helpDialog = (() => {
@@ -179,8 +179,8 @@
         </strong>
       `;
       obj.content = document.querySelector('#help-content');
-      obj.onShow = () => controller.isEnabled = false;
-      obj.onHide = () => controller.isEnabled = true;
+      obj.onShow = () => controller.pauseKeyboard();
+      obj.onHide = () => controller.restartKeyboard();
       return obj;
     })();
     const appContainer = (() => {
@@ -209,9 +209,13 @@
       shutter.hide();
     }, error => {
       window.alert({
-        en: 'Cannot access webcam.',
-        ja: 'ウェブカメラにアクセスできません。'
+        en: 'Error:\nCannot access webcam. Please check the settings of your browser or try another browser.',
+        ja: 'エラー：\nウェブカメラにアクセスできません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
       }[document.documentElement.lang]);
+      notifier.notify(`
+        <span class="en">Error: Could not access webcam.</span>
+        <span class="ja">エラー：ウェブカメラにアクセスできませんでした。</span>
+      `);
     });
   };
   class QueryParser {
@@ -642,6 +646,7 @@
           if (e.ctrlKey || e.altKey || e.metaKey) return;
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           this._onKeyDown(e.keyCode);
         });
@@ -654,6 +659,7 @@
         body.addEventListener('mousedown', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           window.clearTimeout(clickTimeoutId);
           clickTimeoutId = null;
@@ -669,6 +675,7 @@
         body.addEventListener('mousemove', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           if (e.buttons & 1) { // 1: Primary button
             if (clickCount >= 1) isDragging = true;
@@ -684,6 +691,7 @@
         body.addEventListener('mouseup', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           if (isDragging) {
             if (e.button == 0) { // 0: Main button
@@ -708,6 +716,7 @@
         body.addEventListener('wheel', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           this._onScroll(e.deltaY);
         });
@@ -721,6 +730,7 @@
         body.addEventListener('touchstart', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           window.clearTimeout(tapTimeoutId);
           if (e.touches.length == 1) {
@@ -736,6 +746,7 @@
         body.addEventListener('touchmove', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           if (touchCount == 1) isDragging = true;
           if (touchCount >= 2) isScrolling = true;
@@ -754,6 +765,7 @@
         body.addEventListener('touchend', e => {
           e.preventDefault();
           e.stopPropagation();
+          if (! this._isEnabled) return;
           this._onAnyAction();
           if (isDragging) {
             this._onDrop();
@@ -777,28 +789,23 @@
       this._onScroll = () => {};
       this._onKeyDown = () => {};
       this._onAnyAction = () => {};
+      this._isEnabled = true;
       this._enableKeyboard = enableKeyboard;
     }
     get body() {
       return this._body;
     }
     get isEnabled() {
-      return this._body.style.display == 'block';
+      return this._isEnabled;
     }
     set isEnabled(boolean) {
       if (typeof boolean != 'boolean') return;
       if (boolean) {
-        this._body.style.display = 'block';
-        if (this._enableKeyboard) {
-          this._body.style.tabIndex = 0;
-          this._body.focus();
-        }
+        this._isEnabled = true;
+        this.restartKeyboard();
       } else {
-        this._body.style.display = 'none';
-        if (this._enableKeyboard) {
-          this._body.blur();
-          this._body.tabIndex = -1;
-        }
+        this._isEnabled = false;
+        this.pauseKeyboard();
       }
     }
     set onDrag(handler) {
@@ -836,6 +843,18 @@
     set onAnyAction(handler) {
       if (typeof handler != 'function') return;
       this._onAnyAction = handler;
+    }
+    pauseKeyboard() {
+      if (this._enableKeyboard) {
+        this._body.blur();
+        this._body.tabIndex = -1;
+      }
+    }
+    restartKeyboard() {
+      if (this._enableKeyboard) {
+        this._body.style.tabIndex = 0;
+        this._body.focus();
+      }
     }
   }
   class Menu {
@@ -1002,6 +1021,7 @@
           top: .5em;
           right: 1em;
           font-weight: bold;
+          cursor: pointer;
           user-select: none;
         `;
         elm.innerHTML = '&#x2715';
