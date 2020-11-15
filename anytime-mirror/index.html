@@ -5,7 +5,7 @@
 <meta name="description" content="A simple virtual mirror app for personal maintenance./身だしなみチェック用のシンプルなバーチャルミラーアプリ。">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURT+j3SiKxjuf2Vi89CWGwh99ukar5FS48DOW0SuOySKBvlCz7EOn4Dea1Uyv6C6SzZNmFMMAAAAtSURBVBjTZcC3AcAgAMAwJ/T+/7fsRgShCEPYQham8PiFJVThCE34hCh0IckFGfwHgYmRG/MAAAAASUVORK5CYII=">
 <link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>
   'use strict';
@@ -276,6 +276,7 @@
           color: ${color};
           font-size: min(1rem, 5vmin);
           font-family: sans-serif;
+          -webkit-user-select: none;
           user-select: none;
           touch-action: manipulation;
         `;
@@ -510,6 +511,7 @@
           background-color: ${backgroundColor};
           color: ${color};
           transition: ${transition}ms;
+          -webkit-user-select: none;
           user-select: none;
         `;
         return elm;
@@ -595,6 +597,7 @@
           background-color: ${backgroundColor};
           color: ${color};
           transition: ${transition}ms;
+          -webkit-user-select: none;
           user-select: none;
           pointer-events: none;
         `;
@@ -913,6 +916,7 @@
             -1px -1px ${this._shadowColor}, 1px -1px ${this._shadowColor},
             1px 1px ${this._shadowColor}, -1px 1px ${this._shadowColor};
           cursor: pointer;
+          -webkit-user-select: none;
           user-select: none;
           pointer-events: auto;
         `;
@@ -927,13 +931,13 @@
     }
   }
   class Dialog {
-    constructor({startVisible, backgroundColor, color, curtainOpacity, transition, preventDoubleTap} = {}) {
+    constructor({startVisible, backgroundColor, color, curtainOpacity, transition, disableDoubleTap} = {}) {
       startVisible = typeof startVisible == 'boolean' ? startVisible : false;
       backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : 'rgb(255,255,255)';
       color = typeof color == 'string' ? color : 'rgb(0,0,0)';
       curtainOpacity = Number.isFinite(curtainOpacity) ? Math.max(0, Math.min(1, curtainOpacity)) : 0.7;
       transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
-      preventDoubleTap = typeof preventDoubleTap == 'boolean' ? preventDoubleTap : true;
+      disableDoubleTap = typeof disableDoubleTap == 'boolean' ? disableDoubleTap : true;
       const body = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
@@ -952,7 +956,7 @@
           overflow-wrap: break-word;
           transition: ${transition}ms;
         `;
-        if (preventDoubleTap) {
+        if (disableDoubleTap) {
           let isRightAfterTap = false;
           elm.addEventListener('touchend', e => {
             if (isRightAfterTap) {
@@ -1008,6 +1012,7 @@
           height: 3em;
           box-sizing: border-box;
           font-weight: bold;
+          -webkit-user-select: none;
           user-select: none;
         `;
         return elm;
@@ -1034,6 +1039,7 @@
           right: 1em;
           font-weight: bold;
           cursor: pointer;
+          -webkit-user-select: none;
           user-select: none;
         `;
         elm.innerHTML = '&#x2715';
