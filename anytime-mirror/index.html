@@ -2,9 +2,9 @@
 <meta charset="utf-8">
 <title>Anytime Mirror/いつでもミラー</title>
 <meta name="author" content="しかく@shikaku1068">
-<meta name="description" content="A simple virtual mirror app for personal maintenance./身だしなみチェック用のシンプルなバーチャルミラーアプリ。">
+<meta name="description" content="A simple virtual mirror app for personal maintenance. Compatible with various devices./身だしなみチェック用のシンプルなバーチャルミラーアプリ。様々な端末に対応。">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURT+j3SiKxjuf2Vi89CWGwh99ukar5FS48DOW0SuOySKBvlCz7EOn4Dea1Uyv6C6SzZNmFMMAAAAtSURBVBjTZcC3AcAgAMAwJ/T+/7fsRgShCEPYQham8PiFJVThCE34hCh0IckFGfwHgYmRG/MAAAAASUVORK5CYII=">
-<link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror">
+<link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror/">
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>
@@ -71,7 +71,7 @@
         return elm;
       })();
       obj.onShow = () => {
-        webcam.stop();
+        camera.stop();
         notifier.notify(`
           <span class="en pc">Double-Click or press Esc to reshow...</span>
           <span class="en sd">Double-Tap to reshow...</span>
@@ -81,7 +81,7 @@
       };
       obj.onHide = () => {
         magnifier.update();
-        webcam.restart();
+        camera.restart();
         notifier.notify('');
       };
       return obj;
@@ -98,7 +98,7 @@
       });
       obj.isEnabled = false;
       obj.onClick = () => {
-        if (shutter.isHidden) webcam.togglePause();
+        if (shutter.isHidden) camera.togglePause();
       };
       obj.onDoubleClick = () => shutter.toggleHide();
       obj.onDrag = (movementX, movementY) => {
@@ -112,7 +112,7 @@
       };
       obj.onKeyDown = keyCode => {
         if (keyCode == 0x20) { // 0x20: VK_SPACE
-          if (shutter.isHidden) webcam.togglePause();
+          if (shutter.isHidden) camera.togglePause();
         } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
           shutter.show();
         } else  if (keyCode == 0x1B) { // 0x1B: VK_ESCAPE
@@ -199,22 +199,22 @@
       return obj;
     })();
     document.body.appendChild(appContainer.body);
-    const webcam = new Webcam({
+    const camera = new Camera({
       flip: queryParser.getValue('flip', 'boolean', true),
       grayscale: queryParser.getValue('grayscale', 'boolean', false)
     });
-    webcam.start(video => {
+    camera.start(video => {
       magnifier.content = video;
       controller.isEnabled = true;
       shutter.hide();
     }, error => {
       window.alert({
-        en: 'Error: Cannot access webcam. Please check the settings of your browser or try another browser.',
-        ja: 'エラー：ウェブカメラにアクセスできません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
+        en: 'Error: Cannot use camera. Please check the settings of your browser or try another browser.',
+        ja: 'エラー：カメラを使用できません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
       }[document.documentElement.lang]);
       notifier.notify(`
-        <span class="en">Error: Cannot access webcam.</span>
-        <span class="ja">エラー：ウェブカメラにアクセスできません。</span>
+        <span class="en">Error: Cannot use camera.</span>
+        <span class="ja">エラー：カメラを使用できません。</span>
       `);
     });
   };
@@ -1099,7 +1099,7 @@
       this._onHide();
     }
   }
-  class Webcam {
+  class Camera {
     constructor({flip, grayscale} = {}) {
       flip = typeof flip == 'boolean' ? flip : false;
       grayscale = typeof grayscale == 'boolean' ? grayscale : false;
@@ -1176,9 +1176,17 @@
       <span class="ja">いつでもミラー</span>
     </h1>
     <p>Version 0.0</p>
-    <p><a href="https://shikaku1068.github.io/anytime-mirror">https://shikaku1068.github.io/anytime-mirror</a></p>
+    <p><a href="https://shikaku1068.github.io/anytime-mirror/">https://shikaku1068.github.io/anytime-mirror/</a></p>
     <p>Copyright 2020 <span lang="ja">&#12375;&#12363;&#12367;</span>@shikaku1068</p>
     <p>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</p>
+    <h2>
+      <span class="en">Acknowledgements</span>
+      <span class="ja">謝辞</span>
+    </h2>
+    <p>
+      <span class="en">I am deeply grateful to my American friend, Steven, who politely fixed my English sentences in this app.</span>
+      <span class="ja">アプリ内の英語を丁寧に直してくれたアメリカ人の友人スティーブンに感謝します。</span>
+    </p>
   </div>
   <div id="help-content">
     <h2>
@@ -1186,12 +1194,12 @@
       <span class="ja">特徴</span>
     </h2>
     <p>
-      <span class="en"><strong>Anytime Mirror</strong> is a simple virtual mirror app for personal maintenance. Since it is a web app which works on different kinds of browsers via the internet, you can use it on your any device at hand, anytime when necessary. It can also be installed to your device and used offline.</span>
-      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のシンプルなバーチャルミラーアプリです。ネットを介して様々なブラウザで動作するウェブアプリなので、必要なときにいつでも、手元にあるお好きな端末で使用できます。端末にインストールしてオフラインで使用することもできます。</span>
+      <span class="en"><strong>Anytime Mirror</strong> is a simple virtual mirror app for personal maintenance. It is a web based app which works on various devices, anytime when necessary. It can also be installed on your device and used offline.</span>
+      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のシンプルなバーチャルミラーアプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末にインストールしてオフラインで利用することも可能です。</span>
     </p>
     <p>
-      <span class="en">As a side note, although the app accesses a webcam on your device, the video from it will never be sent out to the internet.</span>
-      <span class="ja">なお、アプリは端末のウェブカメラにアクセスしますが、映像がネットに送信されることはありません。</span>
+      <span class="en">As a side note, although the app makes use of a camera on your device, the video from it will never be sent out to the internet.</span>
+      <span class="ja">なお、アプリは端末のカメラを使用しますが、映像がネットに送信されることはありません。</span>
     </p>
     <h2>
       <span class="en">How to Control</span>
@@ -1348,7 +1356,7 @@
       <span class="ja">例</span>
     </h4>
     <p>
-      <a href="https://shikaku1068.github.io/anytime-mirror?fitMode=contain&grayscale=true">https://shikaku1068.github.io/anytime-mirror?fitMode=contain&grayscale=true</a>
+      <a href="https://shikaku1068.github.io/anytime-mirror/?fitMode=contain&grayscale=true">https://shikaku1068.github.io/anytime-mirror/?fitMode=contain&grayscale=true</a>
     </p>
     <h3>
       <span class="en">Available Parameters</span>
@@ -1386,7 +1394,7 @@
       <span class="ja">インストール方法</span>
     </h2>
     <p>
-      <span class="en">The app can also be installed to your device and used offline. There are 2 ways for installing: to bookmark its website on your browser and to download its HTML file.</span>
+      <span class="en">The app can be installed on your device and used offline. There are 2 ways for installing: to bookmark its website on your browser or to download its HTML file.</span>
       <span class="ja">アプリは端末にインストールしてオフラインで使用することもできます。ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りのインストール方法があります。</span>
     </p>
     <h3>
@@ -1394,7 +1402,7 @@
       <span class="ja">サイトをブックマークする</span>
     </h3>
     <p>
-      <span class="en">Once you access the website of the app, the files which composes the app are cached automatically in your device and become able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
+      <span class="en">Once you access the website of the app, the files used by the app are cached automatically on your device and are able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
       <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを使用できるようになります。</span>
     </p>
     <p>
