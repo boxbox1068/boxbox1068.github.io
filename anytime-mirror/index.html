@@ -10,13 +10,14 @@
 <script>
   'use strict';
   window.addEventListener('DOMContentLoaded', e => {
-    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+    const queryParser = new QueryParser();
     document.documentElement.lang = (() => {
-      const queryParser = new QueryParser();
       const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
       const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
       return lang;
     })();
+    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
+    document.documentElement.style.backgroundColor = queryParser.getValue('backgroundColor', 'string', 'rgb(17,119,184)');
     document.title = {
       en: 'Anytime Mirror',
       ja: 'いつでもミラー'
@@ -46,8 +47,7 @@
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'string', 'cover'),
       maxScale: queryParser.getValue('maxScale', 'integer', 5),
-      scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10),
-      backgroundColor: queryParser.getValue('backgroundColor', 'string', themeColors.background1)
+      scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10)
     });
     const shutter = (() => {
       const obj = new Shutter({
@@ -337,7 +337,7 @@
       fitMode = typeof fitMode == 'string' ? fitMode.toLowerCase().trim() : 'none';
       maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(10, maxScale)) : 5;
       scaleUnit = Number.isInteger(scaleUnit) ? Math.max(1, Math.min(100, scaleUnit)) : 10;
-      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : rgb(0,0,0);
+      backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
       const body = (() => {
         const elm = document.createElement('div');
         elm.style.cssText = `
@@ -1159,9 +1159,6 @@
   }
 </script>
 <style>
-  html {
-    background-color: rgb(17,119,184);
-  }
   html:not([lang="en"]) .en, html:not([lang="ja"]) .ja {
     display: none;
   }
@@ -1169,7 +1166,13 @@
     display: none;
   }
 </style>
-<div hidden>
+<div>
+  <p>Notice: JavaScript is required for this content.</p>
+  <script>
+    document.currentScript.parentNode.remove();
+  </script>
+</div>
+<div style="display: none;">
   <div id="about-the-app-content">
     <h1>
       <span class="en">Anytime Mirror</span>
@@ -1195,8 +1198,8 @@
       <span class="ja">特徴</span>
     </h2>
     <p>
-      <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenance. It is a web based app which works on various devices, anytime when necessary. It can also be installed on your device and used offline.</span>
-      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末にインストールしてオフラインで利用することも可能です。</span>
+      <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenance. It is a web based app which works on various devices, so you can use it anytime when necessary. It can also be installed on your device and used offline.</span>
+      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末へのインストールでオフライン利用も可能です。</span>
     </p>
     <p>
       <span class="en">As a side note, although the app makes use of a camera on your device, the video from it will never be sent out to the internet.</span>
@@ -1381,7 +1384,7 @@
       </dd>
       <dt><strong>backgroundColor</strong>=black/#d00000/rgb(254,205,47)...</dt>
       <dd>
-        <span class="en">Specify the color of the background behind the video. The default value is "rgb(27,120,182)".</span>
+        <span class="en">Specify the color of the background behind the video. The default value is "rgb(17,119,184)".</span>
         <span class="ja">映像の裏の背景色を指定します。既定値は"rgb(27,120,182)"です。</span>
       </dd>
       <dt><strong>hideWait</strong>=0-3600</dt>
@@ -1396,7 +1399,7 @@
     </h2>
     <p>
       <span class="en">The app can be installed on your device and used offline. There are 2 ways for installing: to bookmark its website on your browser or to download its HTML file.</span>
-      <span class="ja">アプリは端末にインストールしてオフラインで使用することもできます。ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りのインストール方法があります。</span>
+      <span class="ja">アプリは端末へのインストールでオフライン利用が可能です。ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りのインストール方法があります。</span>
     </p>
     <h3>
       <span class="en">Bookmark the Website</span>
@@ -1404,7 +1407,7 @@
     </h3>
     <p>
       <span class="en">Once you access the website of the app, the files used by the app are cached automatically on your device and are able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
-      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを使用できるようになります。</span>
+      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを利用できるようになります。</span>
     </p>
     <p>
       <span class="en">Some browsers like Safari for iOS or Chrome for Windows support adding a shortcut icon of a website to the OS home (desktop) screen. By using this function, the app comes to act as if it were a native app.</span>
@@ -1416,7 +1419,7 @@
     </h3>
     <p>
       <span class="en">All the major code of the app is written in a single HTML file (index.html). So you can also simply download the HTML file to your device and open it as a local file to use it offline.</span>
-      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くことでも、アプリをオフラインで使用することができます。</span>
+      <span class="ja">アプリの主要なコードはすべて単一のHTMLファイル（index.html）に記述されています。そのため、単にHTMLファイルを端末にダウンロードしてローカル環境で開くことでも、アプリをオフラインで利用できます。</span>
     </p>
     <h2>
       <span class="en">Contact Info</span>
