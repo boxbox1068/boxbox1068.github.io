@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>Anytime Mirror/いつでもミラー</title>
-<meta name="author" content="しかく@shikaku1068">
+<meta name="author" content="@shikaku1068">
 <meta name="description" content="A virtual mirror app for personal maintenance. Compatible with various devices./身だしなみチェック用のバーチャルミラーアプリ。様々な端末に対応。">
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAwUExURT+j3SiKxjuf2Vi89CWGwh99ukar5FS48DOW0SuOySKBvlCz7EOn4Dea1Uyv6C6SzZNmFMMAAAAtSURBVBjTZcC3AcAgAMAwJ/T+/7fsRgShCEPYQham8PiFJVThCE34hCh0IckFGfwHgYmRG/MAAAAASUVORK5CYII=">
 <link rel="canonical" href="https://shikaku1068.github.io/anytime-mirror/">
@@ -9,68 +9,60 @@
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <script>
   'use strict';
-  window.addEventListener('DOMContentLoaded', e => {
+  window.addEventListener('DOMContentLoaded', e => main());
+  const main = () => {
     const queryParser = new QueryParser();
-    document.documentElement.lang = (() => {
-      const candidateLang = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
-      const lang = {en: 'en', ja: 'ja'}[candidateLang] || 'en';
-      return lang;
+    const lang = (() => {
+      let v = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
+      v = ['en', 'ja'].includes(v) ? v : 'en';
+      return v;
     })();
-    document.documentElement.dataset.device = /(iPhone|iPad|iPod|Android)/i.test(navigator.userAgent) ? 'sd' : 'pc';
-    document.documentElement.style.backgroundColor = queryParser.getValue('backgroundColor', 'string', 'rgb(17,119,184)');
+    ((o = document.documentElement) => {
+      o.lang = lang;
+      o.dataset.device = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'sd' : 'pc';
+      o.style.backgroundColor = queryParser.getValue('backgroundColor', 'string', 'rgb(17,119,184)');
+    })();
     document.title = {
       en: 'Anytime Mirror',
       ja: 'いつでもミラー'
-    }[document.documentElement.lang];
+    }[lang];
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-      document.head.insertAdjacentHTML('beforeend', {
-        en: '<link rel="manifest" href="./manifest.json">',
-        ja: '<link rel="manifest" href="./manifest-ja.json">'
-      }[document.documentElement.lang]);
-      document.head.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
       navigator.serviceWorker.register('./service-worker.js');
+      ((o = document.head) => {
+        o.insertAdjacentHTML('beforeend', {
+          en: '<link rel="manifest" href="./manifest.json">',
+          ja: '<link rel="manifest" href="./manifest-ja.json">'
+        }[lang]);
+        o.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
+      })();
     }
-    main();
-  });
-  const main = () => {
-    const themeColors = {
-      background1: 'rgb(27,120,182)',
-      font1: 'rgb(255,255,255)',
-      background2: 'rgb(242,242,242)',
-      font2: 'rgb(158,158,158)',
-      background3: 'rgb(53,54,58)',
-      font3: 'rgb(255,255,255)',
-      background4: 'rgb(242,242,242)',
-      font4: 'rgb(53,54,58)'
-    };
-    const queryParser = new QueryParser();
     const magnifier = new Magnifier({
       fitMode: queryParser.getValue('fitMode', 'string', 'cover'),
       maxScale: queryParser.getValue('maxScale', 'integer', 5),
       scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10)
     });
     const shutter = (() => {
-      const obj = new Shutter({
+      const o = new Shutter({
         showWait: queryParser.getValue('hideWait', 'integer', 60) * 1000,
         startVisible: true,
-        backgroundColor: themeColors.background2,
-        color: themeColors.font2
+        backgroundColor: 'rgb(242,242,242)',
+        color: 'rgb(158,158,158)'
       });
-      obj.content = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+      o.content = (() => {
+        const o = document.createElement('div');
+        o.style.cssText = `
           text-align: center;
           transform: scaleX(-1);
         `;
-        elm.innerHTML = `
+        o.innerHTML = `
           <strong>
             <span class="en">Anytime Mirror</span>
             <span class="ja">いつでもミラー</span>
           </strong>
         `;
-        return elm;
+        return o;
       })();
-      obj.onShow = () => {
+      o.onShow = () => {
         camera.stop();
         notifier.notify(`
           <span class="en pc">Double-Click or press Esc to reshow...</span>
@@ -79,38 +71,38 @@
           <span class="ja sd">ダブルタップで再表示...</span>
         `);
       };
-      obj.onHide = () => {
+      o.onHide = () => {
         magnifier.update();
         camera.restart();
         notifier.notify('');
       };
-      return obj;
+      return o;
     })();
     const notifier = new Notifier({
       alignCenter: false,
       alignBottom: true,
-      backgroundColor: themeColors.background3,
-      color: themeColors.font3
+      backgroundColor: 'rgb(53,54,58)',
+      color: 'rgb(255,255,255)'
     });
     const controller = (() => {
-      const obj = new Controller({
+      const o = new Controller({
         inputWait: queryParser.getValue('inputWait', 'integer', 250)
       });
-      obj.isEnabled = false;
-      obj.onClick = () => {
+      o.isEnabled = false;
+      o.onClick = () => {
         if (shutter.isHidden) camera.togglePause();
       };
-      obj.onDoubleClick = () => shutter.toggleHide();
-      obj.onDrag = (movementX, movementY) => {
+      o.onDoubleClick = () => shutter.toggleHide();
+      o.onDrag = (movementX, movementY) => {
         if (shutter.isHidden) magnifier.move(movementX, movementY, true);
       };
-      obj.onDrop = () => {
+      o.onDrop = () => {
         if (shutter.isHidden) magnifier.update();
       }
-      obj.onScroll = deltaY => {
+      o.onScroll = deltaY => {
         if (shutter.isHidden) magnifier.magnify(deltaY)
       };
-      obj.onKeyDown = keyCode => {
+      o.onKeyDown = keyCode => {
         if (keyCode == 0x20) { // 0x20: VK_SPACE
           if (shutter.isHidden) camera.togglePause();
         } else if (keyCode == 0x0D) { // 0x0D: VK_RETURN
@@ -131,17 +123,17 @@
           if (shutter.isHidden) magnifier.magnify(100);
         }
       };
-      obj.onAnyAction = () => {
+      o.onAnyAction = () => {
         if (shutter.isHidden) shutter.resetShowTimer();
       };
-      return obj;
+      return o;
     })();
     const menu = (() => {
-      const obj = new Menu();
-      obj.addItem('&#x24d8;', () => aboutTheAppDialog.show());
-      obj.addItem('?', () => helpDialog.show());
+      const o = new Menu();
+      o.addItem('&#x24d8;', () => aboutTheAppDialog.show());
+      o.addItem('?', () => helpDialog.show());
       if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
-        obj.addItem('&#x21bb;', () => {
+        o.addItem('&#x21bb;', () => {
           if (! navigator.onLine) return;
           navigator.serviceWorker.getRegistration().then(registration => {
             registration && registration.unregister();
@@ -149,45 +141,45 @@
           });
         });
       }
-      return obj;
+      return o;
     })();
     const aboutTheAppDialog = (() => {
-      const obj = new Dialog({
-        backgroundColor: themeColors.background4,
-        color: themeColors.font4
+      const o = new Dialog({
+        backgroundColor: 'rgb(242,242,242)',
+        color: 'rgb(53,54,58)'
       });
-      obj.title = `
+      o.title = `
         <strong>
           <span class="en">About The App</span>
           <span class="ja">アプリについて</span>
         </strong>
       `;
-      obj.content = document.querySelector('#about-the-app-content');
-      obj.onShow = () => controller.pauseKeyboard();
-      obj.onHide = () => controller.restartKeyboard();
-      return obj;
+      o.content = document.querySelector('#about-the-app-content');
+      o.onShow = () => controller.pauseKeyboard();
+      o.onHide = () => controller.restartKeyboard();
+      return o;
     })();
     const helpDialog = (() => {
-      const obj = new Dialog({
-        backgroundColor: themeColors.background4,
-        color: themeColors.font4
+      const o = new Dialog({
+        backgroundColor: 'rgb(242,242,242)',
+        color: 'rgb(53,54,58)'
       });
-      obj.title = `
+      o.title = `
         <strong>
           <span class="en">Help</span>
           <span class="ja">ヘルプ</span>
         </strong>
       `;
-      obj.content = document.querySelector('#help-content');
-      obj.onShow = () => controller.pauseKeyboard();
-      obj.onHide = () => controller.restartKeyboard();
-      return obj;
+      o.content = document.querySelector('#help-content');
+      o.onShow = () => controller.pauseKeyboard();
+      o.onHide = () => controller.restartKeyboard();
+      return o;
     })();
     const appContainer = (() => {
-      const obj = new AppContainer();
-      obj.onVisibilityChange = () => magnifier.update();
-      obj.onResize = () => magnifier.update(false, true);
-      obj.appendChildren([
+      const o = new AppContainer();
+      o.onVisibilityChange = () => magnifier.update();
+      o.onResize = () => magnifier.update(false, true);
+      o.appendChildren([
         magnifier.body,
         shutter.body,
         notifier.body,
@@ -196,7 +188,7 @@
         aboutTheAppDialog.body,
         helpDialog.body
       ]);
-      return obj;
+      return o;
     })();
     document.body.appendChild(appContainer.body);
     const camera = new Camera({
@@ -211,7 +203,7 @@
       window.alert({
         en: 'Error: Cannot use camera. Please check the settings of your browser or try another browser.',
         ja: 'エラー：カメラを使用できません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
-      }[document.documentElement.lang]);
+      }[lang]);
       notifier.notify(`
         <span class="en">Error: Cannot use camera.</span>
         <span class="ja">エラー：カメラを使用できません。</span>
@@ -263,8 +255,8 @@
       backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
       color = typeof color == 'string' ? color : '';
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           top: 0;
           left: 0;
@@ -280,18 +272,18 @@
           user-select: none;
           touch-action: none;
         `;
-        elm.addEventListener('contextmenu', e => {
+        o.addEventListener('contextmenu', e => {
           e.preventDefault();
         });
-        elm.addEventListener('touchstart', e => {
+        o.addEventListener('touchstart', e => {
           if (e.touches.length == 1) return;
           e.preventDefault();
         }, {capture: true, passive: false});
-        elm.addEventListener('touchmove', e => {
+        o.addEventListener('touchmove', e => {
           if (e.touches.length == 1) return;
           e.preventDefault();
         }, {capture: true, passive: false});
-        return elm;
+        return o;
       })();
       document.addEventListener('visibilitychange', e => {
         this._onVisibilityChange();
@@ -339,8 +331,8 @@
       scaleUnit = Number.isInteger(scaleUnit) ? Math.max(1, Math.min(100, scaleUnit)) : 10;
       backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           top: 0;
           left: 0;
@@ -350,11 +342,11 @@
           box-sizing: border-box;
           background-color: ${backgroundColor};
         `;
-        return elm;
+        return o;
       })();
       const contentWrapper = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: center;
           align-items: center;
@@ -364,7 +356,7 @@
           overflow: hidden;
           box-sizing: border-box;
         `;
-        return elm;
+        return o;
       })();
       body.appendChild(contentWrapper);
       this._body = body;
@@ -494,8 +486,8 @@
       color = typeof color == 'string' ? color : 'rgb(0,0,0)';
       transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: center;
           align-items: center;
@@ -514,7 +506,7 @@
           -webkit-user-select: none;
           user-select: none;
         `;
-        return elm;
+        return o;
       })();
       const contentWrapper = document.createElement('div');
       body.appendChild(contentWrapper);
@@ -579,8 +571,8 @@
       color = typeof color == 'string' ? color : 'rgb(255,255,255)';
       transition = Number.isInteger(transition) ? Math.max(0, Math.min(2000, transition)) : 500;
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: ${alignCenter ? 'center' : ''};
           align-items: center;
@@ -601,7 +593,7 @@
           user-select: none;
           pointer-events: none;
         `;
-        return elm;
+        return o;
       })();
       this._body = body;
       this._transition = transition;
@@ -623,8 +615,8 @@
       enableTouch = typeof enableTouch == 'boolean' ? enableTouch : true;
       inputWait = Number.isInteger(inputWait) ? Math.max(100, Math.min(1000, inputWait)) : 250;
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           top: 0;
           left: 0;
@@ -634,7 +626,7 @@
           box-sizing: border-box;
           outline: none;
         `;
-        return elm;
+        return o;
       })();
       if (enableKeyboard) {
         body.tabIndex = 0;
@@ -867,8 +859,8 @@
       color = typeof color == 'string' ? color : 'rgb(255,255,255)';
       shadowColor = typeof shadowColor == 'string' ? shadowColor : 'rgb(53,54,58)';
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: ${alignRight ? 'flex-end' : 'flex-start'};
           align-items: center;
@@ -885,7 +877,7 @@
           font-size: 1.5rem;
           pointer-events: none;
         `;
-        return elm;
+        return o;
       })();
       this._body = body;
       this._alignRight = alignRight;
@@ -906,8 +898,8 @@
       text = typeof text == 'string' ? text : '';
       onClick = typeof onClick == 'function' ? onClick : () => {};
       const item = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           margin-right: ${this._alignRight ? '' : '1.5em'};
           margin-left: ${this._alignRight ? '1.5em' : ''};
           text-shadow:
@@ -920,12 +912,12 @@
           user-select: none;
           pointer-events: auto;
         `;
-        elm.innerHTML = text || '*';
-        elm.addEventListener('click', e => {
+        o.innerHTML = text || '*';
+        o.addEventListener('click', e => {
           if (! this._isEnabled) return;
           onClick();
         });
-        return elm;
+        return o;
       })();
       this._body.appendChild(item);
     }
@@ -939,8 +931,8 @@
       transition = Number.isInteger(transition) ? Math.max(0, Math.min(3000, transition)) : 500;
       disableDoubleTap = typeof disableDoubleTap == 'boolean' ? disableDoubleTap : true;
       const body = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: center;
           align-items: center;
@@ -958,7 +950,7 @@
         `;
         if (disableDoubleTap) {
           let isRightAfterTap = false;
-          elm.addEventListener('touchend', e => {
+          o.addEventListener('touchend', e => {
             if (isRightAfterTap) {
               e.preventDefault();
               return;
@@ -967,11 +959,11 @@
             window.setTimeout(() => isRightAfterTap = false, 500);
           }, {capture: true, passive: false});
         }
-        return elm;
+        return o;
       })();
       const curtain = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           top: 0;
           left: 0;
@@ -980,16 +972,16 @@
           box-sizing: border-box;
           background-color: rgba(0,0,0,${curtainOpacity});
         `;
-        elm.addEventListener('click', e => {
+        o.addEventListener('click', e => {
           e.preventDefault();
           e.stopPropagation();
           if (e.button == 0) this.hide(); // 0: Main button
         });
-        return elm;
+        return o;
       })();
       const panel = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: relative;
           width: calc(100% - 20vmin);
           height: calc(100% - 20vmin);
@@ -997,11 +989,11 @@
           background-color: ${backgroundColor};
           color: ${color};
         `;
-        return elm;
+        return o;
       })();
       const titleBar = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           display: flex;
           justify-content: center;
           align-items: center;
@@ -1015,11 +1007,11 @@
           -webkit-user-select: none;
           user-select: none;
         `;
-        return elm;
+        return o;
       })();
       const contentWrapper = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           bottom: 1em;
           left: 0;
@@ -1029,11 +1021,11 @@
           overflow-y: auto;
           box-sizing: border-box;
         `;
-        return elm;
+        return o;
       })();
       const closeButton = (() => {
-        const elm = document.createElement('div');
-        elm.style.cssText = `
+        const o = document.createElement('div');
+        o.style.cssText = `
           position: absolute;
           top: .5em;
           right: 1em;
@@ -1042,13 +1034,13 @@
           -webkit-user-select: none;
           user-select: none;
         `;
-        elm.innerHTML = '&#x2715';
-        elm.addEventListener('click', e => {
+        o.innerHTML = '&#x2715';
+        o.addEventListener('click', e => {
           e.preventDefault();
           e.stopPropagation();
           if (e.button == 0) this.hide(); // 0: Main button
         });
-        return elm;
+        return o;
       })();
       body.appendChild(curtain);
       body.appendChild(panel);
@@ -1104,15 +1096,15 @@
       flip = typeof flip == 'boolean' ? flip : false;
       grayscale = typeof grayscale == 'boolean' ? grayscale : false;
       const video = (() => {
-        const elm = document.createElement('video');
-        elm.style.cssText = `
+        const o = document.createElement('video');
+        o.style.cssText = `
           transform: ${flip ? 'scaleX(-1)' : ''};
           filter: ${grayscale ? 'grayscale(100%)' : ''};
         `;
-        elm.autoplay = true;
-        elm.muted = true;
-        elm.setAttribute('playsinline', null);
-        return elm;
+        o.autoplay = true;
+        o.muted = true;
+        o.setAttribute('playsinline', null);
+        return o;
       })();
       this._video = video;
     }
@@ -1167,7 +1159,7 @@
   }
 </style>
 <div>
-  <p>Error: JavaScript is required to open this app./エラー：このアプリを開くにはJavaScriptが必要です。</p>
+  <p>JavaScript is required for this app./このアプリにはJavaScriptが必要です。</p>
   <script>
     document.currentScript.parentNode.remove();
   </script>
@@ -1180,8 +1172,16 @@
     </h1>
     <p>Version 1.0</p>
     <p><a href="https://shikaku1068.github.io/anytime-mirror/">https://shikaku1068.github.io/anytime-mirror/</a></p>
-    <p>Copyright 2020 <span lang="ja">&#12375;&#12363;&#12367;</span>@shikaku1068</p>
+    <p>Copyright 2020 @shikaku1068</p>
     <p>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</p>
+    <h2>
+      <span class="en">Disclaimer</span>
+      <span class="ja">免責事項</span>
+    </h2>
+    <p>
+      <span class="en">I am not responsible for any harm or loss that you suffer in relation to any use you make of the app.</span>
+      <span class="ja">本アプリを使用したことによるいかなる損害・損失に対しても、作者は一切の責任を負いません。</span>
+    </p>
     <h2>
       <span class="en">Acknowledgements</span>
       <span class="ja">謝辞</span>
@@ -1399,7 +1399,7 @@
     </h2>
     <p>
       <span class="en">The app can be installed on your device and used offline. There are 2 ways for installing: to bookmark its website on your browser or to download its HTML file.</span>
-      <span class="ja">アプリは端末へのインストールでオフライン利用が可能です。ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りのインストール方法があります。</span>
+      <span class="ja">アプリは端末へのインストールでオフライン利用が可能です。インストールには、ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りの方法があります。</span>
     </p>
     <h3>
       <span class="en">Bookmark the Website</span>
@@ -1429,7 +1429,7 @@
       <span class="en">If you have any inquiries about the app, please contact me via Twitter.</span>
       <span class="ja">アプリについてのお問い合わせはTwitterでお送りください。</span>
     </p>
-    <p><span lang="ja">&#12375;&#12363;&#12367;</span><a href="https://twitter.com/shikaku1068/">@shikaku1068</a></p>
+    <p>&#12375;&#12363;&#12367;<a href="https://twitter.com/shikaku1068/">@shikaku1068</a></p>
   </div>
   <div id="update-history-content">
     <h2>
