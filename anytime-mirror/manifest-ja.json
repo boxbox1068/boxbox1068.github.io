@@ -4,7 +4,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(53,54,58)",
-  "description": "身だしなみチェック用のバーチャルミラーアプリ。",
+  "description": "身だしなみチェック用のバーチャルミラーアプリ。様々な端末に対応。",
   "icons": [{
     "src": "./icons/icon-192x192.png",
     "sizes": "192x192",

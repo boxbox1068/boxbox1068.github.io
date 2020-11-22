@@ -203,7 +203,7 @@
       shutter.hide();
     }, error => {
       window.alert({
-        en: 'Error: Cannot use camera. Please check the settings of your browser or try another browser.',
+        en: 'Error: Cannot use camera. Please change the settings of your browser or try another browser.',
         ja: 'エラー：カメラを使用できません。ブラウザの設定を見直すか、別のブラウザをお試しください。'
       }[lang]);
       notifier.notify(`
@@ -1166,7 +1166,7 @@
   </script>
   <p>
     <span class="en">JavaScript is required for this app.</span>
-    <span class="ja">このアプリにはJavaScriptが必要です。</span>
+    <span class="ja">このアプリを開くにはJavaScriptが必要です。</span>
   </p>
   <div id="about-the-app-content">
     <h1>
@@ -1184,8 +1184,8 @@
     <dl>
       <dt>1.0</dt>
       <dd>
-        <span class="en">Nov 22, 2020</span>
-        <span class="ja">2020年11月22日</span>
+        <span class="en">Nov 23, 2020</span>
+        <span class="ja">2020年11月23日</span>
       </dd>
       <dd>
         <span class="en">Initial release.</span>
@@ -1197,8 +1197,8 @@
       <span class="ja">免責事項</span>
     </h2>
     <p>
-      <span class="en">I am not responsible for any harm or loss that you may suffer in relation to any use you make of the app.</span>
-      <span class="ja">本アプリを使用したことによって生じるいかなる損害・損失に対しても、作者は一切の責任を負いません。</span>
+      <span class="en">Use of the app is at your own risk. I am not responsible for any harm or loss that you may suffer relating to any use of the app.</span>
+      <span class="ja">アプリは自己責任でご利用ください。アプリの利用によって生じるいかなる損害・損失に対しても、作者は一切の責任を負いません。</span>
     </p>
     <h2>
       <span class="en">Acknowledgements</span>
@@ -1217,7 +1217,7 @@
     </h2>
     <p>
       <span class="en"><strong>Anytime Mirror</strong> is a virtual mirror app for personal maintenance. It is a web based app which works on various devices, so you can use it anytime when necessary. It can also be installed on your device and used offline.</span>
-      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末へのインストールでオフライン利用も可能です。</span>
+      <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用のバーチャルミラーアプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末にインストールしてオフライン利用することも可能です。</span>
     </p>
     <p>
       <span class="en">As a side note, although the app makes use of a camera on your device, the video from it will never be sent out to the internet.</span>
@@ -1388,7 +1388,7 @@
       <dt><strong>fitMode</strong>=none/contain/cover/fitToWidth/fitToHeight/scaleDown/fill</dt>
       <dd>
         <span class="en">Specify how the initial size of the video is determined. The default value is "cover".</span>
-        <span class="ja">映像の初期サイズがどのように決まるかを指定します。既定値は"cover"です。</span>
+        <span class="ja">映像の初期サイズをどのように決めるかを指定します。既定値は"cover"です。</span>
       </dd>
       <dt><strong>grayscale</strong>=true/false</dt>
       <dd>
@@ -1403,12 +1403,12 @@
       <dt><strong>backgroundColor</strong>=black/%23d00000/rgb(254,205,47)...</dt>
       <dd>
         <span class="en">Specify the color of the background behind the video. The default value is "rgb(17,119,184)".</span>
-        <span class="ja">映像の裏の背景色を指定します。既定値は"rgb(27,120,182)"です。</span>
+        <span class="ja">映像の裏の背景色を指定します。既定値は"rgb(17,119,184)"です。</span>
       </dd>
       <dt><strong>hideWait</strong>=0-3600</dt>
       <dd>
         <span class="en">Specify the wait time (seconds) until the video is hidden. The value "0" means the video will not automatically be hidden. The default value is "60".</span>
-        <span class="ja">映像が隠れるまでの待ち時間を指定します。値が"0"のときは自動的には映像は隠れません。既定値は"60"です。</span>
+        <span class="ja">映像を隠すまでの待ち時間を指定します。値が"0"のときは自動的には映像を隠しません。既定値は"60"です。</span>
       </dd>
     </dl>
     <h2>
@@ -1417,7 +1417,7 @@
     </h2>
     <p>
       <span class="en">The app can be installed on your device and used offline. There are 2 ways for installing: to bookmark its website on your browser or to download its HTML file.</span>
-      <span class="ja">アプリは端末へのインストールでオフライン利用が可能です。インストールには、ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りの方法があります。</span>
+      <span class="ja">アプリは端末にインストールしてオフライン利用することが可能です。インストールには、ブラウザでサイトをブックマークするか、HTMLファイルをダウンロードするかの2通りの方法があります。</span>
     </p>
     <h3>
       <span class="en">Bookmark the Website</span>
@@ -1425,7 +1425,7 @@
     </h3>
     <p>
       <span class="en">Once you access the website of the app, the files used by the app are cached automatically on your device and are able to be opened even offline, as long as service workers are supported in your browser. Bookmarking the website can make using the app easier.</span>
-      <span class="ja">一度アプリのサイトにアクセスすると、アプリを構成するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトをブックマークすることで、より簡単にアプリを利用できるようになります。</span>
+      <span class="ja">一度アプリのサイトにアクセスすると、アプリで使用するファイルが自動的に端末内にキャッシュされ、オフラインでも開けるようになります。ただしブラウザがサービスワーカー機能に対応している必要があります。サイトのブックマークによって、より簡単にアプリを利用できるようになります。</span>
     </p>
     <p>
       <span class="en">Some browsers like Safari for iOS or Chrome for Windows support adding a shortcut icon of a website to the OS home (desktop) screen. By using this function, the app comes to act as if it were a native app.</span>

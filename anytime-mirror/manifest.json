@@ -5,7 +5,7 @@
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(53,54,58)",
-  "description": "A virtual mirror app for personal maintenance.",
+  "description": "A virtual mirror app for personal maintenance. Compatible with various devices.",
   "icons": [{
     "src": "./icons/icon-192x192.png",
     "sizes": "192x192",
