@@ -1,0 +1,11 @@
+{
+  "appName": {
+    "message": "Anytime Mirror"
+  },
+  "appShortName": {
+    "message": "AnytimeMirror"
+  },
+  "appDescription": {
+    "message": "A virtual mirror app for personal maintenance."
+  }
+}
