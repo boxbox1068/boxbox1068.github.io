@@ -1,11 +1,12 @@
 {
-  "lang": "en",
   "name": "Anytime Mirror",
   "short_name": "AnytimeMirror",
+  "description": "A virtual mirror app for personal maintenance.",
+  "categories": ["utilities"],
   "start_url": ".",
   "display": "standalone",
   "background_color": "rgb(53,54,58)",
-  "description": "A virtual mirror app for personal maintenance. Compatible with various devices.",
+  "lang": "en",
   "icons": [{
     "src": "./icons/icon-192x192.png",
     "sizes": "192x192",
