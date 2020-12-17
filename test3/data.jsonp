@@ -1,4 +1,4 @@
-callback({
+$({
   "templates": [
     {
       "name": "animals_jp",
@@ -15,8 +15,8 @@ callback({
       "side2": "{My|My sister's|My mother's}* hobby is {collecting pens|driving a car|reading a book}**."
     },
     {
-      "side1": "私は{$animals_jp}が好きです。",
-      "side2": "I like {$animals_en}."
+      "side1": "私は{%animals_jp}が好きです。",
+      "side2": "I like {%animals_en}."
     }
   ]
 });
