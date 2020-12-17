@@ -1,0 +1,22 @@
+callback({
+  "templates": [
+    {
+      "name": "animals_jp",
+      "content": "犬|猫|ハムスター|ゾウ"
+    }
+    {
+      "name": "animals_en",
+      "content": "dog|cat|hamster|elephant"
+    }
+  ],
+  "cards": [
+    {
+      "side1": "{私の|姉の|お母さんの}*趣味は{文具収集|ドライブ|読書}**です。",
+      "side2": "{My|My sister's|My mother's}* hobby is {collecting pens|driving a car|reading a book}**."
+    }
+    {
+      "side1": "私は{$animals_jp}が好きです。",
+      "side2": "I like {$animals_en}."
+    }
+  ]
+});
