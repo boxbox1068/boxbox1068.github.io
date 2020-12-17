@@ -1,11 +1,11 @@
 $({
   "templates": [
     {
-      "name": "animals_jp",
+      "name": "動物",
       "content": "犬|猫|ハムスター|ゾウ"
     },
     {
-      "name": "animals_en",
+      "name": "animals",
       "content": "dog|cat|hamster|elephant"
     }
   ],
@@ -15,8 +15,8 @@ $({
       "side2": "{My|My sister's|My mother's}* hobby is {collecting pens|driving a car|reading a book}**."
     },
     {
-      "side1": "私は{%animals_jp}が好きです。",
-      "side2": "I like {%animals_en}."
+      "side1": "私は{%動物%}が好きです。",
+      "side2": "I like {%animals%}."
     }
   ]
 });
