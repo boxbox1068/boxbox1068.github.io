@@ -1,4 +1,6 @@
 $({
+  "title": "TEST",
+  "author": "shikaku1068",
   "templates": [
     {
       "name": "動物",
