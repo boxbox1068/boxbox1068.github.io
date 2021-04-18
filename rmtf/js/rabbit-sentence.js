@@ -1,10 +1,10 @@
 class RabbitSentence {
-  constructor({src, replacers, randomSeed} = {}) {
+  constructor({src, variables, randomSeed} = {}) {
     src = typeof src == 'string' ? src : '';
-    replacers = typeof replacers == 'object' ? replacers : {};
+    variables = typeof variables == 'object' ? variables : {};
     randomSeed = Number.isInteger(randomSeed) && randomSeed != 0 ? randomSeed : 886751;
-    for (const key in replacers) {
-      src = src.replace(new RegExp(`%${key}%`, 'ig'), replacers[key]);
+    for (const name in variables) {
+      src = src.replace(new RegExp(`%${name}%`, 'ig'), variables[name]);
     }
     this._src = src;
     this._randomSeed = randomSeed;
