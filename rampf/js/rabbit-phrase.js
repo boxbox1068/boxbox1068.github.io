@@ -32,7 +32,7 @@ class RabbitPhrase {
     this._branchItems = [];
     let text = '';
     let html = '';
-    let totalPatterns = 1;
+    let patternNumbers = [];
     this._src.replace(/(.*?)(\^+)\{((\\}|.)*?)\}|(.*)/g, (match, p1, p2, p3, p4, p5, offset, string) => {
       if (p5 === undefined) {
         const branchNumber = p2.length - 1;
@@ -42,7 +42,7 @@ class RabbitPhrase {
         this._branchItems[branchNumber] = branchItem;
         text += `${p1}${branchItem}`;
         html += `${p1}<span class="branch" id="branch_${branchNumber}">${branchItem}</span>`;
-        totalPatterns *= items.length;
+        patternNumbers[branchNumber] = items.length;
       } else {
         text += p5;
         html += p5;
@@ -50,7 +50,11 @@ class RabbitPhrase {
     });
     this._text = text;
     this._html = html;
-    this._totalPatterns = totalPatterns;
+    let totalPatternNumber = 1;
+    for (let i = 0; i < patternNumbers.length; i++) {
+      if (patternNumbers[i]) totalPatternNumber *= patternNumbers[i];
+    }
+    this._totalPatternNumber = totalPatternNumber;
   }
   get src() {
     return this._src;
@@ -67,7 +71,7 @@ class RabbitPhrase {
   get html() {
     return this._html;
   }
-  get totalPatterns() {
-    return this._totalPatterns;
+  get totalPatternNumber() {
+    return this._totalPatternNumber;
   }
 }
