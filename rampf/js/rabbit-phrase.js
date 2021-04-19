@@ -38,7 +38,6 @@ class RabbitPhrase {
         const branchNumber = p2.length - 1;
         const items = p3.split('|');
         const index = this._xorshift(this._seed, branchNumber) % items.length;
-alert(index);
         const branchItem = items[index];
         this._branchItems[branchNumber] = branchItem;
         text += `${p1}${branchItem}`;
