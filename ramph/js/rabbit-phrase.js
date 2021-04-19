@@ -1,4 +1,4 @@
-class RabbitSentence {
+class RabbitPhrase {
   constructor({src, variables, randomSeed} = {}) {
     src = typeof src == 'string' ? src : '';
     variables = typeof variables == 'object' ? variables : {};
@@ -8,7 +8,7 @@ class RabbitSentence {
     }
     this._src = src;
     this._randomSeed = randomSeed;
-    this._parseSentence();
+    this._parsePhrase();
   }
   _xorshift(seed, count) {
     let x = 123456789;
@@ -24,7 +24,7 @@ class RabbitSentence {
     }
     return Math.abs(w);
   }
-  _parseSentence() {
+  _parsePhrase() {
     this._branchItems = [];
     let text = '';
     let html = '';
