@@ -1,4 +1,5 @@
 window.addEventListener('load', e => {
+alert(0);
   for (element of document.querySelectorAll('.1068_add_copy_button')) {
 alert(1);
     const button = document.createElement('button');
