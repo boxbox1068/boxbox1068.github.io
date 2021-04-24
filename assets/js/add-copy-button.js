@@ -3,7 +3,7 @@ window.addEventListener('load', e => {
     const button = document.createElement('button');
     button.innerHTML = 'Copy text to clipboard';
     button.addEventListener('click', () => {
-      const text = element.innerText;
+      const text = element.innerText.trim();
       navigator.clipboard.writeText(text).then(() => {
         window.alert('Copy succeeded.\n----\n'+text);
       }).catch(e => {
