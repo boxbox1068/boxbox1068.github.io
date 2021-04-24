@@ -1,6 +1,5 @@
 window.addEventListener('load', e => {
   for (const element of document.querySelectorAll('.s1068_add_copy_button')) {
-alert(1);
     const button = document.createElement('button');
     button.innerHTML = 'Copy text to clipboard';
     button.addEventListener('click', () => {
@@ -8,10 +7,11 @@ alert(1);
       navigator.clipboard.writeText(text).then(() => {
         window.alert('Copy succeeded.');
       }).catch(e => {
-        window.prompt('Copy failed. Please copy the text below alternatively.', text);
+        window.prompt('Copy failed. Please manually copy the text below instead.', text);
       });
     });
-alert(button);
-    element.after(button);
+    const div = document.createElement('div');
+    div.appendChild(button);
+    element.after(div);
   }
 });
