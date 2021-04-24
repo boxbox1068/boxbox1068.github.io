@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  for (element of document.querySelector('.1068_add_copy_button')) {
+  for (element of document.querySelectorAll('.1068_add_copy_button')) {
     const button = document.createElement('button');
     button.innerText('Copy text to clipboard');
     button.addEventListener('click', () => {
