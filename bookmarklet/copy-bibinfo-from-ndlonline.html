@@ -24,7 +24,7 @@
 <h4>コピーの対象項目と書式</h4>
 <blockquote>%国立国会図書館書誌ID%\t%タイトル%\t%著者%\t%掲載誌名%\t%巻号・年月日%\t%請求記号%</blockquote>
 <h4>コピー内容の例</h4>
-<blockquote>029204319&#9;座談会 学校づくりの本質的な喜びが未来をつくる&#9;三田 一則/乾 久美子/谷口 直英/長澤 悟&#9;Z11-336&#9;近代建築&#9;72(8):2018.8</blockquote>
+<blockquote><pre>029204319	座談会 学校づくりの本質的な喜びが未来をつくる	三田 一則/乾 久美子/谷口 直英/長澤 悟	Z11-336	近代建築	72(8):2018.8</pre></blockquote>
 <h4>コード本体</h4>
 <pre class="s1068_add_copy_button">
   <code>javascript:(()=>{TEMPLATE='%国立国会図書館書誌ID%\t%タイトル%\t%著者%\t%請求記号%\t%掲載誌名%\t%巻号・年月日%';SEPARATOR='/';NA_NOTATION='-';if(!/^https:\/\/ndlonline.ndl.go.jp\/#!\/detail\//i.test(location.href)){alert('NDLオンラインの書誌詳細画面でのみ使用できます。');return;}data={};label='';for(dt of document.querySelectorAll('.labelCell')){label=dt.innerText||label;dd=dt.nextElementSibling;if(dd&&dd.tagName=='DD')data[label]=(data[label]?data[label]+SEPARATOR:'')+dd.innerText.trim();}span = document.querySelector('.permanentLink');if(span)data['URL']=span.innerText.trim().replace(/^.+(?=https:)/i,'');output=TEMPLATE;for(label in data){output=output.replace(new RegExp('%'+label+'%','ig'), data[label]);}output=output.replace(/%.*?%/g,NA_NOTATION);output=output.replace(new RegExp('&percent;','ig'),'%');navigator.clipboard.writeText(output).then(()=>{alert('次の文字列をクリップボードにコピーしました。\n----\n'+output);}).catch(e=>{prompt('クリップボードへのコピーに失敗しました。次の文字列を手動でコピーしてください。',output);});})();</code>
