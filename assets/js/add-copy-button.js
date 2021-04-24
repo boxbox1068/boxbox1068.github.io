@@ -5,7 +5,7 @@ window.addEventListener('load', e => {
     button.addEventListener('click', () => {
       const text = element.innerText;
       navigator.clipboard.writeText(text).then(() => {
-        window.alert('Copy succeeded.');
+        window.alert('Copy succeeded.\n----\n'+text);
       }).catch(e => {
         window.prompt('Copy failed. Please manually copy the text below instead.', text);
       });
