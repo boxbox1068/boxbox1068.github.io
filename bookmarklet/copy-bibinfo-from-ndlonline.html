@@ -30,12 +30,12 @@
 </pre>
 <h3>レポートの参考文献を書く時などに使えるコード</h3>
 <h4>コピーの対象項目と書式</h4>
-<blockquote>%著者%『%タイトル%』%出版事項%，%出版年月日等%（当館請求記号：%請求記号%）</blockquote>
+<blockquote>%著者%『%タイトル%』%出版事項%，%出版年月日等%</blockquote>
 <h4>コピーされる内容の例</h4>
-<blockquote>平松良雄 著『坑内通気の理論と計算』東京 : 丸善出版，1953（当館請求記号：561.7-H488k）</blockquote>
+<blockquote>平松良雄 著『坑内通気の理論と計算』東京 : 丸善出版，1953</blockquote>
 <h4>コード</h4>
 <pre class="s1068_add_copy_button">
-  <code>javascript:(()=>{TEMPLATE='%著者%『%タイトル%』%出版事項%，%出版年月日等%（当館請求記号：%請求記号%）';SEPARATOR='/';NA_NOTATION='-';if(!/^https:\/\/ndlonline.ndl.go.jp\/#!\/detail\//i.test(location.href)){alert('NDLオンラインの書誌詳細画面でのみ使用できます。');return;}data={};label='';for(dt of document.querySelectorAll('.labelCell')){label=dt.innerText||label;dd=dt.nextElementSibling;if(dd&&dd.tagName=='DD')data[label]=(data[label]?data[label]+SEPARATOR:'')+dd.innerText.trim();}span = document.querySelector('.permanentLink');if(span)data['URL']=span.innerText.trim().replace(/^.+(?=https:)/i,'');output=TEMPLATE;for(label in data){output=output.replace(new RegExp('%'+label+'%','ig'), data[label]);}output=output.replace(/%.*?%/g,NA_NOTATION);output=output.replace(new RegExp('&percent;','ig'),'%');navigator.clipboard.writeText(output).then(()=>{alert('次の文字列をクリップボードにコピーしました。\n----\n'+output);}).catch(e=>{prompt('クリップボードへのコピーに失敗しました。次の文字列を手動でコピーしてください。',output);});})();</code>
+  <code>javascript:(()=>{TEMPLATE='%著者%『%タイトル%』%出版事項%，%出版年月日等%';SEPARATOR='/';NA_NOTATION='-';if(!/^https:\/\/ndlonline.ndl.go.jp\/#!\/detail\//i.test(location.href)){alert('NDLオンラインの書誌詳細画面でのみ使用できます。');return;}data={};label='';for(dt of document.querySelectorAll('.labelCell')){label=dt.innerText||label;dd=dt.nextElementSibling;if(dd&&dd.tagName=='DD')data[label]=(data[label]?data[label]+SEPARATOR:'')+dd.innerText.trim();}span = document.querySelector('.permanentLink');if(span)data['URL']=span.innerText.trim().replace(/^.+(?=https:)/i,'');output=TEMPLATE;for(label in data){output=output.replace(new RegExp('%'+label+'%','ig'), data[label]);}output=output.replace(/%.*?%/g,NA_NOTATION);output=output.replace(new RegExp('&percent;','ig'),'%');navigator.clipboard.writeText(output).then(()=>{alert('次の文字列をクリップボードにコピーしました。\n----\n'+output);}).catch(e=>{prompt('クリップボードへのコピーに失敗しました。次の文字列を手動でコピーしてください。',output);});})();</code>
 </pre>
 <h2>ブックマークレットのカスタマイズ方法</h2>
 <h3>コピーする項目と書式</h3>
