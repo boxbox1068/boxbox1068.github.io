@@ -10,6 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
         window.prompt('Copy failed. Please copy the text below alternatively.', text);
       });
     });
+alert(button);
     element.after(button);
   }
 });
