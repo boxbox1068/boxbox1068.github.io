@@ -17,5 +17,6 @@ window.addEventListener('DOMContentLoaded', e => {
     div.appendChild(button);
     const pre = code.parentElement;
     pre.after(div);
+    code.style.whiteSpace = 'nowrap';
   }
 });
