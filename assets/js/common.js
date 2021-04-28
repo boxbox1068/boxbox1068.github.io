@@ -9,8 +9,22 @@ window.addEventListener('DOMContentLoaded', e => {
 const addFormatDetectionMeta = () => {
   const meta = document.createElement('meta');
   meta.setAttribute('name', 'format-detection');
-  meta.setAttribute('content', 'telephone=no,address=no,email=no');
+  meta.setAttribute('content', 'telephone=no');
   document.head.append(meta);
+/*
+
+var meta = document.createElement("meta");  
+meta.setAttribute("name", "format-detection");  
+meta.setAttribute("content","telephone=no");  
+document.getElementsByTagName("head")[0].appendChild(meta);  
+
+
+*/
+
+
+
+
+
 };
 const addHeader = () => {
   const logo = (() => {
