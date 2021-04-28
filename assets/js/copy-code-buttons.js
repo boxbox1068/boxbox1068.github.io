@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', e => {
+const main = () => {
   for (const code of document.querySelectorAll('pre > code')) {
     const button = (() => {
       const button = document.createElement('button');
@@ -19,4 +19,5 @@ window.addEventListener('DOMContentLoaded', e => {
     pre.after(div);
     code.style.whiteSpace = 'nowrap';
   }
-});
+};
+window.addEventListener('DOMContentLoaded', main);

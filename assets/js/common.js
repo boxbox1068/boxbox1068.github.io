@@ -1,39 +1,25 @@
 import * as website from '/website-data.js';
-window.addEventListener('DOMContentLoaded', e => {
+const main = () => {
   addFormatDetectionMeta();
   addHeader();
   addFooter();
   showBody();
   document.title += ` - ${website.name}`;
-});
+};
 const addFormatDetectionMeta = () => {
   const meta = document.createElement('meta');
   meta.setAttribute('name', 'format-detection');
   meta.setAttribute('content', 'telephone=no');
   document.head.append(meta);
-/*
-
-var meta = document.createElement("meta");  
-meta.setAttribute("name", "format-detection");  
-meta.setAttribute("content","telephone=no");  
-document.getElementsByTagName("head")[0].appendChild(meta);  
-
-
-*/
-
-
-
-
-
 };
 const addHeader = () => {
   const logo = (() => {
     const span = document.createElement('span');
     span.style.fontWeight = 'bold';
-    span.style.fontSize = '2rem';
+    span.style.fontSize = '2.5rem';
     span.innerText = website.name;
     const img = document.createElement('img');
-    img.style.width = '2rem';
+    img.style.width = '2.5rem';
     img.src = website.mark;
     const div = document.createElement('div');
     div.style.display = 'flex';
@@ -66,8 +52,9 @@ const addHeader = () => {
         ul.append(li);
       }
     }
+    const pageTitle = document.title.replace(/^(.{16}).+$/, '$1...');
     const span = document.createElement('span');
-    span.innerHTML = '&nbsp;&gt;&nbsp;' + document.title.replace(/^(.{16}).+$/, '$1...');
+    span.innerHTML = (ul.childElementCount ? '&nbsp;&gt;&nbsp;' : '') + pageTitle;
     const li = document.createElement('li');
     li.append(span);
     ul.append(li);
@@ -111,3 +98,4 @@ const showBody = () => {
   `;
   document.head.append(style);
 };
+window.addEventListener('DOMContentLoaded', main);
