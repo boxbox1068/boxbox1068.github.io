@@ -48,7 +48,7 @@ const addHeader = () => {
     document.head.append(style);
     const ul = document.createElement('ul');
     ul.className = 'breadcrumb';
-    const path = location.href.replace(/^https?:\/\/[^/]+|\/(index.html)?(\?.*?)?(#.*)$/ig, '');
+    const path = location.href.replace(/^https?:\/\/[^/]+|\/(index.html)?(\?.*?)?(#.*)?$/ig, '');
     const pathParts = path.split('/');
     for (let i = 0; i < pathParts.length - 1; i++) {
       const path = pathParts.slice(0, i + 1).join('/') + '/';
