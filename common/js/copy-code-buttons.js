@@ -2,7 +2,7 @@ const main = () => {
   for (const code of document.querySelectorAll('pre > code')) {
     const button = (() => {
       const button = document.createElement('button');
-      button.innerText = 'Copy code to clipboard';
+      button.innerText = 'Copy to clipboard';
       button.addEventListener('click', () => {
         const text = code.innerText.trim();
         navigator.clipboard.writeText(text).then(() => {

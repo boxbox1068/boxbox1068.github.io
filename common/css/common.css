@@ -1,0 +1,58 @@
+@import url("https://cdn.jsdelivr.net/npm/water.css@2/out/water.min.css");
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+body {
+  opacity: 0;
+}
+ul:not([class]),
+ol:not([class]),
+dl:not([class]) {
+  padding-left: 2.5rem;
+}
+ol:not([class]) > li {
+  list-style-type: none;
+  counter-increment: item-number;
+}
+ol:not([class]) > li::before {
+  width: 2.5rem;
+margin-left: -2.5rem;
+display: inline-block;
+  text-align: center;
+  content: "("counter(item-number)")";
+}
+dt:not([class]) {
+  display: list-item;
+  list-style-type: desc;
+}
+ul:not([class]) > li + li,
+ol:not([class]) > li + li,
+dl:not([class]) > li + li {
+  margin-top: .5rem;
+}
+h1:not([class]) {
+  counter-reset: chapter;
+}
+h2:not([class]) {
+  counter-reset: section;
+}
+h3:not([class]) {
+  counter-reset: subsection;
+}
+h2:not([class])::before {
+  counter-increment: chapter;
+  content: counter(chapter)". ";
+}
+h3:not([class])::before {
+  counter-increment: section;
+  content: counter(chapter)"."counter(section)". ";
+}
+h4:not([class])::before {
+  counter-increment: subsection;
+  content: counter(chapter)"."counter(section)"."counter(subsection)". ";
+}
