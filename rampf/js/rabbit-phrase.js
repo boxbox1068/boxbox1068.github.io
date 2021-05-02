@@ -1,69 +1,47 @@
 class RabbitPhrase {
-  constructor({src, variables, seed} = {}) {
-    src = typeof src == 'string' ? src : '';
-    variables = typeof variables == 'object' ? variables : {};
-    seed = Number.isInteger(seed) && seed != 0 ? seed : Math.floor(88675123 * Math.random()) + 1;
-    for (const name in variables) {
-      src = src.replace(new RegExp(`%${name}%`, 'ig'), variables[name]);
+  constructor({template, variableDictionary, combinationIdSeed} = {}) {
+    if (typeof template != 'string') template = '';
+    if (typeof variableDictionary != 'object') variableDictionary = {};
+    if (! Number.isFinite(combinationIdSeed) || combinationIdSeed < 0 || 1 <= combinationIdSeed) combinationIdSeed = Math.random();
+    for (const variableName in variableDictionary) {
+      template = template.replace(new RegExp(`%${variableName}%`, 'ig'), variableDictionary[variableName]);
     }
-    this._src = src;
-    this._seed = seed;
-    this._parsePhrase();
-  }
-  alternate() {
-    this._seed = this._xorshift(this._seed, 1);
-    this._parsePhrase();
-  }
-  _xorshift(seed, count) {
-    let x = 123456789;
-    let y = 362436069;
-    let z = 521288629;
-    let w = seed;
-    for (let i = 0; i < count; i++) {
-      let t = x ^ (x << 11);
-      x = y;
-      y = z;
-      z = w;
-      w = (w ^ (w >>> 19)) ^ (t ^ (t >>> 8)); 
+    const nodePartRegExp = /(\^+)\[(.*?)\]/g;
+    const nodeCounts = [];
+    template.replace(nodePartRegExp, (match, p1, p2, offset, string) => {
+      const nodeLevel = p1.length;
+      const nodes  = p2.split('|');
+      nodeCounts[nodeLevel] = Math.min(nodes.length, nodeCounts[nodeLevel] || Infinity);
+    });
+    let possibleCombinationCount = 1;
+    for (let nodeLevel = 0; nodeLevel < nodeCounts.length; nodeLevel++) {
+      possibleCombinationCount *= nodeCounts[nodeLevel] || 1;
     }
-    return Math.abs(w);
-  }
-  _parsePhrase() {
-    this._branchItems = [];
-    let text = '';
-    let html = '';
-    let patternNumbers = [];
-    this._src.replace(/(.*?)(\^+)\{((\\}|.)*?)\}|(.*)/g, (match, p1, p2, p3, p4, p5, offset, string) => {
-      if (p5 === undefined) {
-        const branchNumber = p2.length - 1;
-        const items = p3.split('|');
-        const index = this._xorshift(this._seed, branchNumber) % items.length;
-        const branchItem = items[index];
-        this._branchItems[branchNumber] = branchItem;
-        text += `${p1}${branchItem}`;
-        html += `${p1}<span class="branch" id="branch_${branchNumber}">${branchItem}</span>`;
-        patternNumbers[branchNumber] = items.length;
-      } else {
-        text += p5;
-        html += p5;
-      }
+    const combinationId = Math.ceil(possibleCombinationCount * combinationIdSeed);
+    let currentPath = combinationId;
+    const nodeIds = [];
+    for (let nodeLevel = 0; nodeLevel < nodeCounts.length; nodeLevel++) {
+      const nodeCount = nodeCounts[nodeLevel] || 1;
+      const nodeId = currentPath % nodeCount;
+      nodeIds[nodeLevel] = nodeId;
+      currentPath = Math.ceil(currentPath / nodeCount);
+    }
+    const text = template.replace(nodePartRegExp, (match, p1, p2, offset, string) => {
+      const nodeLevel = p1.length;
+      const nodeId = nodeIds[nodeLevel];
+      const nodeContent = p2.split('|')[nodeId];
+      return nodeContent;
+    });
+    const html = template.replace(nodePartRegExp, (match, p1, p2, offset, string) => {
+      const nodeLevel = p1.length;
+      const nodeId = nodeIds[nodeLevel];
+      const nodeContent = p2.split('|')[nodeId];
+      return `<span class="node" id="node_nodeLevel_${nodeLevel}">${nodeContent}</span>`;
     });
     this._text = text;
     this._html = html;
-    let totalPatternNumber = 1;
-    for (let i = 0; i < patternNumbers.length; i++) {
-      if (patternNumbers[i]) totalPatternNumber *= patternNumbers[i];
-    }
-    this._totalPatternNumber = totalPatternNumber;
-  }
-  get src() {
-    return this._src;
-  }
-  get seed() {
-    return this._seed;
-  }
-  get branchItems() {
-    return this._branchItems;
+    this._possibleCombinationCount = possibleCombinationCount;
+    this._combinationId = combinationId;
   }
   get text() {
     return this._text;
@@ -71,7 +49,40 @@ class RabbitPhrase {
   get html() {
     return this._html;
   }
-  get totalPatternNumber() {
-    return this._totalPatternNumber;
+  get possibleCombinationCount() {
+    return this._possibleCombinationCount;
+  }
+  get combinationId() {
+    return this._combinationId;
   }
 }
+
+
+const test = () => {
+  const data = {};
+  for (let i = 0; i < 120000; i++) {
+    const rp = new RabbitPhrase({template: '^[私|私たち|あなた|たけし君]は^^[オペラ|ニンジン|散歩|いじわる|社長|飛行機旅行|LAMY]が^^^[好き|嫌い|どちらでもない]です。', combinationIdSeed: 11});
+    const key = rp.text;
+    data[key] = (data[key] ? data[key] : 0) + 1;
+  }
+  const div = document.createElement('div');
+//  div.innerText = rp.combinationIdSeed;
+//  document.body.append(div);
+  let length = 0;
+  const dl = document.createElement('dl');
+  for (const key in data) {
+    length++;
+    const dt = document.createElement('dt');
+    dt.innerText = key;
+    const dd = document.createElement('dd');
+    dd.innerText = data[key];
+    dl.append(dt);
+    dl.append(dd);
+  }
+  const div2 = document.createElement('div');
+  div2.innerText = length;
+  document.body.append(div2);
+  document.body.append(dl);
+}
+
+window.addEventListener('load', test);
