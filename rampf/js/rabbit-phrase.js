@@ -1,75 +1,75 @@
 export class RabbitPhrase {
-  constructor(template, patternIdSeed) {
+  constructor(template, pathIdSeed) {
     if (typeof template != 'string') template = '';
-    if (! (0 <= patternIdSeed && patternIdSeed < 1)) patternIdSeed = Math.random();
-    const replaceNodeParts = (template, callback) => {
-      const pattern = /(\^+)\[([^^]*?)\]/;
+    if (! (0 <= pathIdSeed && pathIdSeed < 1)) pathIdSeed = Math.random();
+    const replaceBranchParts = (template, callback) => {
+      const path = /(\^+)\[([^^]*?)\]/;
       const replacer = (match, p1, p2, offset, string) => {
-        const nodeLevel = p1.length;
-        const nodes  = p2.split('|');
-        const firstNodePartOffset = string.indexOf('^');
-        const isMainNode = firstNodePartOffset == offset;
-        return callback(nodeLevel, nodes, isMainNode) || '';
+        const branchNumber = p1.length;
+        const branchTexts  = p2.split('|');
+        const firstBranchPartOffset = string.indexOf('^');
+        const isMainBranch = firstBranchPartOffset == offset;
+        return callback(branchNumber, branchTexts, isMainBranch) || '';
       };
-      while (template != (template = template.replace(pattern, replacer)));
+      while (template != (template = template.replace(path, replacer)));
       return template;
     };
-    const nodeCounts = [];
-    replaceNodeParts(template, (nodeLevel, nodes, isMainNode) => {
-      const nodeCount = nodes.length;
-      const existingNodeCount = nodeCounts[nodeLevel] || Infinity;
-      nodeCounts[nodeLevel] = Math.min(nodeCount, existingNodeCount);
+    const branchCounts = [];
+    replaceBranchParts(template, (branchNumber, branchTexts, isMainBranch) => {
+      const branchCount = branchTexts.length;
+      const existingBranchCount = branchCounts[branchNumber] || Infinity;
+      branchCounts[branchNumber] = Math.min(branchCount, existingBranchCount);
     });
-    let possiblePatternCount = 1;
-    for (let nodeCount of nodeCounts) {
-      possiblePatternCount *= nodeCount || 1;
+    let possiblePathCount = 1;
+    for (let branchCount of branchCounts) {
+      possiblePathCount *= branchCount || 1;
     }
-    const patternId = Math.ceil(possiblePatternCount * patternIdSeed);
-    let tempPatternId = patternId;
-    const validNodeIds = [];
-    for (let nodeCount of nodeCounts) {
-      if (nodeCount) {
-        const validNodeId = tempPatternId % nodeCount;
-        validNodeIds.push(validNodeId);
-        tempPatternId = Math.ceil(tempPatternId / nodeCount);
+    const pathId = Math.ceil(possiblePathCount * pathIdSeed);
+    let tempPathId = pathId;
+    const chosenBranchIds = [];
+    for (let branchCount of branchCounts) {
+      if (branchCount) {
+        const chosenBranchId = tempPathId % branchCount;
+        chosenBranchIds.push(chosenBranchId);
+        tempPathId = Math.ceil(tempPathId / branchCount);
       } else {
-        validNodeIds.push(undefined);
+        chosenBranchIds.push(undefined);
       }
     }
-    const validNodes = [];
-    const text = replaceNodeParts(template, (nodeLevel, nodes, isMainNode) => {
-      const validNodeId = validNodeIds[nodeLevel];
-      const validNode = nodes[validNodeId];
-      if (isMainNode && validNode) {
-        const existingValidNode = validNodes[nodeLevel];
-        validNodes[nodeLevel] = (existingValidNode ? existingValidNode + ' ~ ' : '') + validNode;
+    const chosenBranchTexts = [];
+    const text = replaceBranchParts(template, (branchNumber, branchTexts, isMainBranch) => {
+      const chosenBranchId = chosenBranchIds[branchNumber];
+      const chosenBranch = branchTexts[chosenBranchId];
+      if (isMainBranch && chosenBranch) {
+        const existingValidBranch = chosenBranchTexts[branchNumber];
+        chosenBranchTexts[branchNumber] = (existingValidBranch ? existingValidBranch + ' ~ ' : '') + chosenBranch;
       }
-      return validNode;
+      return chosenBranch;
     });
     const htmlTemplate = template.replace(/ /g, '&nbsp;');
-    const html = replaceNodeParts(htmlTemplate, (nodeLevel, nodes, isMainNode) => {
-      const validNodeId = validNodeIds[nodeLevel];
-      const validNode = nodes[validNodeId];
-      if (validNode && isMainNode) {
-        return `<span class="node" data-node-level="${nodeLevel}">${validNode}</span>`;
+    const html = replaceBranchParts(htmlTemplate, (branchNumber, branchTexts, isMainBranch) => {
+      const chosenBranchId = chosenBranchIds[branchNumber];
+      const chosenBranch = branchTexts[chosenBranchId];
+      if (chosenBranch && isMainBranch) {
+        return `<span class="branch" data-branch-number="${branchNumber}">${chosenBranch}</span>`;
       } else {
-        return validNode;
+        return chosenBranch;
       }
     });
-    this._possiblePatternCount = possiblePatternCount;
-    this._patternId = patternId;
-    this._validNodes = validNodes;
+    this._possiblePathCount = possiblePathCount;
+    this._pathId = pathId;
+    this._chosenBranchTexts = chosenBranchTexts;
     this._text = text;
     this._html = html;
   }
-  get possiblePatternCount() {
-    return this._possiblePatternCount;
+  get possiblePathCount() {
+    return this._possiblePathCount;
   }
-  get patternId() {
-    return this._patternId;
+  get pathId() {
+    return this._pathId;
   }
-  get validNodes() {
-    return this._validNodes;
+  get chosenBranchTexts() {
+    return this._chosenBranchTexts;
   }
   get text() {
     return this._text;

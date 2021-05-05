@@ -8,52 +8,82 @@
   const main = () => {
     const queryParser = new QueryParser();
     dataset.description = queryParser.getValue('descr', 'string', '');
+    dataset.questionTemplate = queryParser.getValue('qtempl', 'string', '');
+    dataset.answerTemplate = queryParser.getValue('atempl', 'string', '');
+    dataset.changeCount = 0;
 
-dataset.description = '"A love B."';
-    if (dataset.description) {
-      const leadElement = document.querySelector('#lead');
-      leadElement.append(dataset.description);
+    // dummy
+    {
+      dataset.description = '"A love B."';
+      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はあああああああああああああああああああああああああああああ^^[車|食べること|いたずら]が大好き。';
+      dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
 
-
-    const questionTemplate = queryParser.getValue('qtempl', 'string', '');
-    const answerTemplate = queryParser.getValue('atempl', 'string', '');
-    dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はあああああああああああああああああああああああああああああ^^[車|食べること|いたずら]が大好き。';
-    dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
-
-/*
-    dataset.questionTemplate = 'A: ^[I|You|He|We] / B: ^^[cars|eating|playing tricks]';
-    dataset.answerTemplate = '^[I|You|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
-*/
-
-    dataset.attackCount = 0;
+    if (dataset.description) {
+      const leadContainer = document.querySelector('#lead-frame');
+      leadContainer.append(dataset.description);
+    }
     changeCard();
-
   };
   const changeCard = () => {
-    const patternIdSeed = Math.random();
-    const questionPhrase = new RabbitPhrase(dataset.questionTemplate, patternIdSeed);
-    const answerPhrase = new RabbitPhrase(dataset.answerTemplate, patternIdSeed);
-    const questionElement = document.querySelector('#question');
-//    questionElement.innerHTML = questionPhrase.html;
-const div = document.createElement('div');
-div.style.position = 'relative';
-div.style.maxHeight = '100%';
-div.innerHTML = questionPhrase.html;
-questionElement.append(div);
+    const pathIdSeed = Math.random();
+    const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
+    const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
+    const questionContainer = document.querySelector('#question-frame');
+    const questionWrapper = document.querySelector('#question-wrapper');
+    questionWrapper.innerHTML = questionPhrase.html;
 
-/*
-    const nodeElements = questionElement.querySelectorAll('.node');
-    for (const nodeElement of nodeElements) {
-      const nodeLevel = nodeElement.dataset.nodeLevel;
-      const validNode = answerPhrase.validNodes[nodeLevel];
-      const hintElement = document.createElement('span');
-      hintElement.className = 'hint';
-      hintElement.innerHTML = ' ' + validNode;
-      nodeElement.prepend(hintElement);
-    }
+    questionPhrase.chosenBranchTexts.forEach((currentValue, index, array) => {
+      const branchNumber = index;
+      const hintText = answerPhrase.chosenBranchTexts[branchNumber];
+      if (! hintText) return;
+      const branchWrapper = document.querySelector(`.branch[data-branch-number="${index}"`);
+      if (! branchWrapper) return;
+      const zeroWidthSpace = document.createTextNode('\u200b');
+      branchWrapper.append(zeroWidthSpace);
+      const hintWrapper = document.createElement('div');
+      hintWrapper.style.cssText = `
+        position: absolute;
+        white-space: nowrap;
+        padding: .4em;
+        border: .1em solid gray;
+        border-radius: .4em;
+        background-color: white;
+      `;
+      hintWrapper.innerText = hintText;
+      branchWrapper.append(hintWrapper);
+      const questionWrapperWidth = questionWrapper.clientWidth;
+      const hintWrapperRight = branchWrapper.offsetLeft + hintWrapper.offsetWidth;
+      const hintWrapperOffsetX = Math.min(questionWrapperWidth - hintWrapperRight, 0);
+      const branchWrapperLeft = branchWrapper.offsetLeft;
+      const hintWrapperLeft = branchWrapperLeft + hintWrapperOffsetX;
+      hintWrapper.style.left = `${hintWrapperLeft}px`;
+      const branchWrapperTop = branchWrapper.offsetTop;
+      const hintWrapperHeight = hintWrapper.offsetHeight;
+      const hintWrapperTop = branchWrapperTop - hintWrapperHeight;
+      hintWrapper.style.top = `${hintWrapperTop}px`;
+
+      //alert(`${branchWrapper.offsetLeft}, ${questionWrapper.clientWidth}, ${hintWrapper.offsetWidth}`);
+ /*
+   .hint-wrapper {
+//    display: none;
+    white-space: nowrap;
+    position: absolute;
+margin-top: -.4em;
+    padding: .4em;
+    border: .1em solid gray;
+    border-radius: .4em;
+    background-color: white;
+  }
 */
-    const nodeElements = questionElement.querySelectorAll('.node');
+ 
+ 
+    });
+    return;
+
+
+
+    const nodeElements = questionContainer.querySelectorAll('.node');
     for (const nodeElement of nodeElements) {
       const hoge = document.createElement('div');
       hoge.className = 'hint';
@@ -86,7 +116,7 @@ hoge.style.display = 'none';
 
     const answerElement = document.querySelector('#answer');
     answerElement.innerHTML = answerPhrase.html;
-    const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.attackCount++}）`;
+    const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.changeCount++}）`;
     const statisticElement = document.querySelector('#statistic');
     statisticElement.innerText = statisticText;
   };
@@ -110,18 +140,18 @@ hoge.style.display = 'none';
     height: 100%;
     margin: 0;
   }
-  #container {
+  #app-container {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
   }
-  #lead {
+  #lead-frame {
     display: flex;
     padding: 1.5rem;
     justify-content: center;
     font-size: 1.5rem;
   }
-  #question {
+  #question-frame {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
@@ -129,7 +159,10 @@ hoge.style.display = 'none';
     font-size: 2rem;
     padding: 3rem;
   }
-  #answer {
+  #question-wrapper {
+    position: relative;
+  }
+  #answer-frame {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
@@ -137,12 +170,12 @@ hoge.style.display = 'none';
     font-size: 2rem;
     padding: 3rem;
   }
-  #statistic {
+  #statistic-frame {
 display: flex;
     padding: 1.5rem;
         justify-content: flex-start;
   }
-  #copyright {
+  #copyright-frame {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -188,7 +221,7 @@ display: flex;
     display: none;
   }
 */
-  .hint {
+  .hint-wrapper {
 //    display: none;
     white-space: nowrap;
     position: absolute;
@@ -198,7 +231,7 @@ margin-top: -.4em;
     border-radius: .4em;
     background-color: white;
   }
-  .hint:before {
+  .hint-wrapper:before {
     content: "";
     position: absolute;
     bottom: -.75em;
@@ -206,7 +239,7 @@ margin-top: -.4em;
     border: .25em solid transparent;
     border-top: .5em solid gray;
   }
-  .hint:after {
+  .hint-wrapper:after {
     content: "";
     position: absolute;
     bottom: calc(-.75em + .2em);
@@ -244,10 +277,12 @@ margin-top: -.4em;
   }
 
 </style>
-<div id="container">
-  <div id="lead"></div>
-  <div id="question"></div>
-  <div id="answer"></div></div>
-  <div id="statistic"></div>
-  <div id="copyright"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
+<div id="app-container">
+  <div id="lead-frame"></div>
+  <div id="question-frame">
+    <div id="question-wrapper"></div>
+  </div>
+  <div id="answer-frame"></div></div>
+  <div id="statistic-frame"></div>
+  <div id="copyright-frame"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
 </div>
