@@ -18,8 +18,13 @@ dataset.description = '"A love B."';
 
     const questionTemplate = queryParser.getValue('qtempl', 'string', '');
     const answerTemplate = queryParser.getValue('atempl', 'string', '');
-    dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]あああああああああああああああああああああああああああああああああは^^[車|食べること|いたずら]が大好き。';
+    dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はあああああああああああああああああああああああああああああ^^[車|食べること|いたずら]が大好き。';
     dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
+
+/*
+    dataset.questionTemplate = 'A: ^[I|You|He|We] / B: ^^[cars|eating|playing tricks]';
+    dataset.answerTemplate = '^[I|You|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
+*/
 
     dataset.attackCount = 0;
     changeCard();
@@ -32,18 +37,53 @@ dataset.description = '"A love B."';
     const questionElement = document.querySelector('#question');
 //    questionElement.innerHTML = questionPhrase.html;
 const div = document.createElement('div');
+div.style.position = 'relative';
+div.style.maxHeight = '100%';
 div.innerHTML = questionPhrase.html;
 questionElement.append(div);
 
-    const nodeElements = questionElement.querySelectorAll('[data-node-level]');
+/*
+    const nodeElements = questionElement.querySelectorAll('.node');
     for (const nodeElement of nodeElements) {
       const nodeLevel = nodeElement.dataset.nodeLevel;
       const validNode = answerPhrase.validNodes[nodeLevel];
       const hintElement = document.createElement('span');
       hintElement.className = 'hint';
-      hintElement.innerHTML = validNode;
-      nodeElement.append(hintElement);
+      hintElement.innerHTML = ' ' + validNode;
+      nodeElement.prepend(hintElement);
     }
+*/
+    const nodeElements = questionElement.querySelectorAll('.node');
+    for (const nodeElement of nodeElements) {
+      const hoge = document.createElement('div');
+      hoge.className = 'hint';
+      const nodeLevel = nodeElement.dataset.nodeLevel;
+      const validNode = answerPhrase.validNodes[nodeLevel];
+      hoge.dataset.nodeLevel = nodeLevel;
+      hoge.innerHTML = validNode;
+//      nodeElement.parentElement.append(hoge);
+const textNode = document.createElement('span');
+textNode.innerHTML = '&#8203;';
+nodeElement.after(textNode);
+nodeElement.after(hoge);
+      hoge.style.left = Math.min(nodeElement.offsetLeft, div.clientWidth - hoge.offsetWidth) + 'px';
+//alert(`${nodeElement.offsetLeft}, ${div.clientWidth - hoge.offsetWidth}`);
+//alert(div.width);
+hoge.style.top = `${nodeElement.offsetTop - hoge.offsetHeight}px`;
+hoge.style.display = 'none';
+      /*
+      hoge.style.display = 'none';
+      nodeElement.addEventListener('mouseover', e => {
+        hoge.style.display = 'block';
+      });
+      nodeElement.addEventListener('mouseout', e => {
+        hoge.style.display = 'none';
+      });
+*/
+    }
+
+
+
     const answerElement = document.querySelector('#answer');
     answerElement.innerHTML = answerPhrase.html;
     const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.attackCount++}）`;
@@ -56,7 +96,7 @@ questionElement.append(div);
 <style>
 
   * {
-    overflow: hidden;
+//    overflow: hidden;
     box-sizing: border-box;
   }
   html {
@@ -79,6 +119,7 @@ questionElement.append(div);
     display: flex;
     padding: 1.5rem;
     justify-content: center;
+    font-size: 1.5rem;
   }
   #question {
     display: flex;
@@ -98,7 +139,7 @@ questionElement.append(div);
   }
   #statistic {
 display: flex;
-    padding: .5rem 1rem;
+    padding: 1.5rem;
         justify-content: flex-start;
   }
   #copyright {
@@ -107,11 +148,17 @@ display: flex;
     align-items: center;
     padding: .5rem 1rem;
   }
+  
 
+/*
   .hint {
     position: absolute;
 //    margin-top: -2em;
 //    margin-left: -.25em;
+//width: 0;
+//left: calc(100%);
+//top: 100%;
+//left: 0;
     padding: .5em;
     border: .1em solid gray;
     border-radius: .25em;
@@ -126,7 +173,7 @@ display: flex;
     left: .2em;
     border: .25em solid transparent;
     border-top: .5em solid gray;
-    z-index: 2;
+//    z-index: 2;
   }
   .hint:after {
     content: "";
@@ -135,14 +182,44 @@ display: flex;
     left: .2em;
     border: .25em solid transparent;
     border-top: .5em solid white;
-    z-index: 2;
+//    z-index: 2;
   }
   .node:not(:hover) .hint {
     display: none;
   }
+*/
+  .hint {
+//    display: none;
+    white-space: nowrap;
+    position: absolute;
+margin-top: -.4em;
+    padding: .4em;
+    border: .1em solid gray;
+    border-radius: .4em;
+    background-color: white;
+  }
+  .hint:before {
+    content: "";
+    position: absolute;
+    bottom: -.75em;
+    left: .2em;
+    border: .25em solid transparent;
+    border-top: .5em solid gray;
+  }
+  .hint:after {
+    content: "";
+    position: absolute;
+    bottom: calc(-.75em + .2em);
+    left: .2em;
+    border: .25em solid transparent;
+    border-top: .5em solid white;
+  }
+  .node:hover + .hint {
+    display: block !important;
+  }
   .node[data-node-level] {
-    padding-right: .25em;
-    padding-left: .25em;
+    padding-right: .1em;
+    padding-left: .1em;
     font-weight: bold;
   }
   .node[data-node-level="1"],
