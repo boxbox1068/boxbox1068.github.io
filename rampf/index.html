@@ -4,125 +4,56 @@
 <script type="module">
   import {QueryParser} from './js/query-parser.js';
   import {RabbitPhrase} from './js/rabbit-phrase.js';
+  const dataset = {};
   const main = () => {
     const queryParser = new QueryParser();
-    const description = queryParser.getValue('descr', 'string', '');
+    dataset.description = queryParser.getValue('descr', 'string', '');
+
+dataset.description = '"A love B."';
+    if (dataset.description) {
+      const leadElement = document.querySelector('#lead');
+      leadElement.append(dataset.description);
+    }
+
+
     const questionTemplate = queryParser.getValue('qtempl', 'string', '');
     const answerTemplate = queryParser.getValue('atempl', 'string', '');
-/*
-    if (description) {
-      const div = document.createElement('div');
-      div.innerHTML = description;
-      document.querySelector('#header').append(div);
-    }
-*/
-    if (questionTemplate && answerTemplate) {
-      
-    }
-const question = '^[私|あなた|私たち]は^^[車|食べること|いたずら]が大好きです。';
-const answer = '^[I|You|We] love ^^[cars|eating|playing tricks].';
+    dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]あああああああああああああああああああああああああああああああああは^^[車|食べること|いたずら]が大好き。';
+    dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
 
-const random = Math.random();
-const questionPhrase = new RabbitPhrase(question, random);
-const answerPhrase = new RabbitPhrase(answer, random);
-document.querySelector('#question').innerHTML = questionPhrase.html;
-document.querySelector('#answer').innerHTML = answerPhrase.html;
-const hoge = document.querySelectorAll('#question > [data-node-level]');
-for (const fuga of hoge) {
-  const nodeLevel = fuga.dataset.nodeLevel;
-  const validNode = answerPhrase.validNodes[nodeLevel];
-  const foo = document.createElement('span');
-  foo.className = 'hint';
-  foo.innerHTML = validNode;
-  fuga.prepend(foo);
-//  fuga.innerHTML = `<ruby>${fuga.innerHTML}<rt>${validNode}</rt>`;
-
-}
-
-//alert(answerPhrase.text);
-
+    dataset.attackCount = 0;
+    changeCard();
 
   };
+  const changeCard = () => {
+    const patternIdSeed = Math.random();
+    const questionPhrase = new RabbitPhrase(dataset.questionTemplate, patternIdSeed);
+    const answerPhrase = new RabbitPhrase(dataset.answerTemplate, patternIdSeed);
+    const questionElement = document.querySelector('#question');
+//    questionElement.innerHTML = questionPhrase.html;
+const div = document.createElement('div');
+div.innerHTML = questionPhrase.html;
+questionElement.append(div);
 
-
+    const nodeElements = questionElement.querySelectorAll('[data-node-level]');
+    for (const nodeElement of nodeElements) {
+      const nodeLevel = nodeElement.dataset.nodeLevel;
+      const validNode = answerPhrase.validNodes[nodeLevel];
+      const hintElement = document.createElement('span');
+      hintElement.className = 'hint';
+      hintElement.innerHTML = validNode;
+      nodeElement.append(hintElement);
+    }
+    const answerElement = document.querySelector('#answer');
+    answerElement.innerHTML = answerPhrase.html;
+    const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.attackCount++}）`;
+    const statisticElement = document.querySelector('#statistic');
+    statisticElement.innerText = statisticText;
+  };
 
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
-/*
-  * {
-    overflow: hidden;
-    box-sizing: border-box;
-  }
-  html {
-    height: 100%;
-    font-size: min(1rem, 5vmin);
-    font-family: sans-serif;
-  }
-  body {
-    height: 100%;
-    margin: 0;
-    padding: .5rem;
-  }
-  #app_wrapper {
-    display: table;
-    width: 100%;
-    height: 100%;
-//    background: red;
-  }
-  #header {
-    display: table-row;
-    height: 0;
-  }
-  #main {
-    display: table-row;
-    height: auto;
-//    background: violet;
-  }
-  #card_wrapper {
-    display: table;
-    width: 100%;
-    height: 100%;
-    background: gold;
-  }
-  #question_wrapper {
-    display: table-row;
-    height: auto;
-  }
-  #answer_wrapper {
-    display: table-row;
-    height: auto;
-    background: blue;
-  }
-  #info_wrapper {
-    display: table-row;
-    height: 2rem;
-    background: violet;
-  }
-  #question_hoge, #answer_hoge, #info_hoge {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  #question, #answer, #info {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    margin-left: -50%;
-//    margin-top: -50%;
-text-align: center;
-background: white;
-overflow-y: auto;
-  }
-  #footer {
-    display: table-row;
-    height: 1rem;
-    text-align: right;
-    background: lightblue;
-  }
-*/
 
   * {
     overflow: hidden;
@@ -138,45 +69,80 @@ overflow-y: auto;
     flex-direction: column;
     height: 100%;
     margin: 0;
-    padding: .5rem;
   }
-  #main {
+  #container {
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
   }
   #lead {
+    display: flex;
+    padding: 1.5rem;
+    justify-content: center;
   }
   #question {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
     align-items: center;
+    font-size: 2rem;
+    padding: 3rem;
   }
   #answer {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
     align-items: center;
+    font-size: 2rem;
+    padding: 3rem;
   }
   #statistic {
+display: flex;
+    padding: .5rem 1rem;
+        justify-content: flex-start;
   }
-  #footer {
+  #copyright {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    padding: .5rem 1rem;
   }
-  .node .hint {
-    display: none;
+
+  .hint {
     position: absolute;
-    margin-top: -2em;
+//    margin-top: -2em;
+//    margin-left: -.25em;
+    padding: .5em;
+    border: .1em solid gray;
+    border-radius: .25em;
+    background-color: white;
+    overflow: visible;
   }
-  .node:hover .hint {
-    display: block;
+
+  .hint:before {
+    content: "";
+    position: absolute;
+    bottom: -.75em;
+    left: .2em;
+    border: .25em solid transparent;
+    border-top: .5em solid gray;
+    z-index: 2;
+  }
+  .hint:after {
+    content: "";
+    position: absolute;
+    bottom: calc(-.75em + .2em);
+    left: .2em;
+    border: .25em solid transparent;
+    border-top: .5em solid white;
+    z-index: 2;
+  }
+  .node:not(:hover) .hint {
+    display: none;
   }
   .node[data-node-level] {
-    padding-right: .2em;
-    padding-left: .2em;
+    padding-right: .25em;
+    padding-left: .25em;
     font-weight: bold;
   }
   .node[data-node-level="1"],
@@ -201,40 +167,10 @@ overflow-y: auto;
   }
 
 </style>
-<div id="main">
-  <div id="lead">lead</div>
-  <div id="question"><div id="question_content"></div></div>
-  <div id="answer"><div id="answer_content"></div></div>
-  <div id="statistic">statistic</div>
+<div id="container">
+  <div id="lead"></div>
+  <div id="question"></div>
+  <div id="answer"></div></div>
+  <div id="statistic"></div>
+  <div id="copyright"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
 </div>
-<div id="footer"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
-
-
-
-<!--
-<div id="app_wrapper">
-  <div id="header"></div>
-  <div id="main">
-    <div id="card_wrapper">
-      <div id="question_wrapper">
-        <div id="question_hoge">
-          <div id="question">aaaaaaaaaaaaaaaaaaaaaaa</div>
-        </div>
-      </div>
-      <div id="answer_wrapper">
-        <div id="answer_hoge">
-          <div id="answer">aaaaaaaaaaaaaaaaaaaaaaa</div>
-        </div>
-      </div>
-      <div id="info_wrapper">
-        <div id="info_hoge">
-          <div id="info">aaaaaaaaaaaaaaaaaaaaaaa</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="footer">
-    <small>Powerd by 鼠算式フレーズ練習帳 &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small>
-  </div>
-</div>
--->

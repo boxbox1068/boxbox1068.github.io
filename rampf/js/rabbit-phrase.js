@@ -1,13 +1,13 @@
 export class RabbitPhrase {
-  constructor(template, pathIdSeed) {
+  constructor(template, patternIdSeed) {
     if (typeof template != 'string') template = '';
-    if (! (0 <= pathIdSeed && pathIdSeed < 1)) pathIdSeed = Math.random();
+    if (! (0 <= patternIdSeed && patternIdSeed < 1)) patternIdSeed = Math.random();
     const replaceNodeParts = (template, callback) => {
-      const pattern = /(\^*)\[([^[]*?)\]/;
+      const pattern = /(\^+)\[([^^]*?)\]/;
       const replacer = (match, p1, p2, offset, string) => {
         const nodeLevel = p1.length;
         const nodes  = p2.split('|');
-        const firstNodePartOffset = string.indexOf('[') - nodeLevel;
+        const firstNodePartOffset = string.indexOf('^');
         const isMainNode = firstNodePartOffset == offset;
         return callback(nodeLevel, nodes, isMainNode) || '';
       };
@@ -20,18 +20,18 @@ export class RabbitPhrase {
       const existingNodeCount = nodeCounts[nodeLevel] || Infinity;
       nodeCounts[nodeLevel] = Math.min(nodeCount, existingNodeCount);
     });
-    let possiblePathCount = 1;
+    let possiblePatternCount = 1;
     for (let nodeCount of nodeCounts) {
-      possiblePathCount *= nodeCount || 1;
+      possiblePatternCount *= nodeCount || 1;
     }
-    const pathId = Math.ceil(possiblePathCount * pathIdSeed);
-    let tempPathId = pathId;
+    const patternId = Math.ceil(possiblePatternCount * patternIdSeed);
+    let tempPatternId = patternId;
     const validNodeIds = [];
     for (let nodeCount of nodeCounts) {
       if (nodeCount) {
-        const validNodeId = tempPathId % nodeCount;
+        const validNodeId = tempPatternId % nodeCount;
         validNodeIds.push(validNodeId);
-        tempPathId = Math.ceil(tempPathId / nodeCount);
+        tempPatternId = Math.ceil(tempPatternId / nodeCount);
       } else {
         validNodeIds.push(undefined);
       }
@@ -40,9 +40,9 @@ export class RabbitPhrase {
     const text = replaceNodeParts(template, (nodeLevel, nodes, isMainNode) => {
       const validNodeId = validNodeIds[nodeLevel];
       const validNode = nodes[validNodeId];
-      if (isMainNode) {
+      if (isMainNode && validNode) {
         const existingValidNode = validNodes[nodeLevel];
-        validNodes[nodeLevel] = (existingValidNode ? existingValidNode + '/' : '') + validNode;
+        validNodes[nodeLevel] = (existingValidNode ? existingValidNode + ' ~ ' : '') + validNode;
       }
       return validNode;
     });
@@ -50,19 +50,23 @@ export class RabbitPhrase {
     const html = replaceNodeParts(htmlTemplate, (nodeLevel, nodes, isMainNode) => {
       const validNodeId = validNodeIds[nodeLevel];
       const validNode = nodes[validNodeId];
-      return `<span class="node" data-node-level="${nodeLevel}">${validNode}</span>`;
+      if (validNode && isMainNode) {
+        return `<span class="node" data-node-level="${nodeLevel}">${validNode}</span>`;
+      } else {
+        return validNode;
+      }
     });
-    this._possiblePathCount = possiblePathCount;
-    this._pathId = pathId;
+    this._possiblePatternCount = possiblePatternCount;
+    this._patternId = patternId;
     this._validNodes = validNodes;
     this._text = text;
     this._html = html;
   }
-  get possiblePathCount() {
-    return this._possiblePathCount;
+  get possiblePatternCount() {
+    return this._possiblePatternCount;
   }
-  get pathId() {
-    return this._pathId;
+  get patternId() {
+    return this._patternId;
   }
   get validNodes() {
     return this._validNodes;
