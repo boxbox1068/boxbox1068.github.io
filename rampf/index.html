@@ -15,8 +15,8 @@
     // dummy
     {
       dataset.lead = '"A love B."';
-      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はああああaaaaaaaaaaaaああああaaaaaaaaaaああああああああああああ^^[車|食べること|いたずら]が大好き^[11|22|33|44]かも。';
-      dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
+      dataset.questionTemplate = '^[私|あなた|彼|私たち]は^^[車|食べるの|いたずらするの]が大好き。';
+      dataset.answerTemplate = '^[I|You|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
 
 
@@ -36,13 +36,12 @@
         return;
       }
     }, {passive: false});
-    document.body.addEventListener('touchend', event => {
+    document.addEventListener('click', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
         return;
       }
-    }, {passive: false});
-    document.addEventListener('click', event => {
+      alert('click');
     }, {passive: false});
     resetCard();
   };
@@ -52,16 +51,25 @@
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
     const questionPanelElement = document.querySelector('#question-panel');
     questionPanelElement.innerHTML = questionPhrase.html;
-    const branchElements = document.querySelectorAll('[data-branch-number]');
+    addHintBalloon(questionPanelElement, answerPhrase.chosenBranchTexts, questionPanelElement.clientWidth);
+    const answerPanelElement = document.querySelector('#answer-panel');
+    answerPanelElement.innerHTML = answerPhrase.html;
+    addHintBalloon(answerPanelElement, questionPhrase.chosenBranchTexts, answerPanelElement.clientWidth);
+    const statisticText = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，出題数合計：${dataset.changeCount++}）`;
+    const statisticPanelElement = document.querySelector('#statistic-panel');
+    statisticPanelElement.innerText = statisticText;
+  };
+  const addHintBalloon = (targetPanel, hintTextList, hintBalloonElementMaxRight) => {
+    const branchElements = targetPanel.querySelectorAll('[data-branch-number]');
     for (const branchElement of branchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
       branchElement.append(document.createTextNode('\u200b'));
       const hintBalloonElement = document.createElement('div');
       hintBalloonElement.className = 'hint-balloon';
-      hintBalloonElement.innerText = answerPhrase.chosenBranchTexts[branchNumber];
+      hintBalloonElement.innerText = hintTextList[branchNumber];
       branchElement.append(hintBalloonElement);
       const hintBalloonElementRight = branchElement.offsetLeft + hintBalloonElement.offsetWidth;
-      const hintBalloonElementOffsetX = Math.min(questionPanelElement.clientWidth - hintBalloonElementRight, 0);
+      const hintBalloonElementOffsetX = Math.min(hintBalloonElementMaxRight - hintBalloonElementRight, 0);
       const hintBalloonElementLeft = branchElement.offsetLeft + hintBalloonElementOffsetX;
       hintBalloonElement.style.left = `${hintBalloonElementLeft}px`;
       const hintBalloonElementHeight = hintBalloonElement.offsetHeight;
@@ -72,19 +80,7 @@
       hintBalloonTailElement.style.marginLeft = `${- hintBalloonElementOffsetX}px`;
       hintBalloonElement.append(hintBalloonTailElement);
     }
-    const answerPanelElement = document.querySelector('#answer-panel');
-    answerPanelElement.innerHTML = answerPhrase.html;
   };
-
-
-/*
-    const answerElement = document.querySelector('#answer');
-    answerElement.innerHTML = answerPhrase.html;
-    const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.changeCount++}）`;
-    const statisticElement = document.querySelector('#statistic');
-    statisticElement.innerText = statisticText;
-  };
-*/
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
@@ -133,15 +129,15 @@
     position: relative;
   }
   #statistic-frame {
-display: flex;
-    padding: 1.5rem;
-        justify-content: flex-start;
+    display: flex;
+    padding: .4rem 1rem;
+    justify-content: flex-start;
   }
   #copyright-frame {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: .5rem 1rem;
+    padding: .4rem 1rem;
   }
   .hint-balloon {
     visibility: hidden;
