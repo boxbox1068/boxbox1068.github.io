@@ -7,21 +7,20 @@
   const dataset = {};
   const main = () => {
     const queryParser = new QueryParser();
-    dataset.description = queryParser.getValue('descr', 'string', '');
-    dataset.questionTemplate = queryParser.getValue('qtempl', 'string', '');
-    dataset.answerTemplate = queryParser.getValue('atempl', 'string', '');
+    dataset.lead = queryParser.getValue('lead', 'string', '');
+    dataset.questionTemplate = queryParser.getValue('question', 'string', '');
+    dataset.answerTemplate = queryParser.getValue('answer', 'string', '');
     dataset.changeCount = 0;
 
     // dummy
     {
-      dataset.description = '"A love B."';
-      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はあああああああああああああああああああああああああああああ^^[車|食べること|いたずら]が大好き。';
+      dataset.lead = '"A love B."';
+      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はああああああああaaaaaaaaaaああああああああああああ^^[車|食べること|いたずら]が大好き^[11|22|33|44]かも。';
       dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
-
-    if (dataset.description) {
+    if (dataset.lead) {
       const leadContainer = document.querySelector('#lead-frame');
-      leadContainer.append(dataset.description);
+      leadContainer.append(dataset.lead);
     }
     changeCard();
   };
@@ -29,27 +28,17 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionContainer = document.querySelector('#question-frame');
     const questionWrapper = document.querySelector('#question-wrapper');
     questionWrapper.innerHTML = questionPhrase.html;
-
     questionPhrase.chosenBranchTexts.forEach((currentValue, index, array) => {
       const branchNumber = index;
       const hintText = answerPhrase.chosenBranchTexts[branchNumber];
-      if (! hintText) return;
       const branchWrapper = document.querySelector(`.branch[data-branch-number="${index}"`);
       if (! branchWrapper) return;
       const zeroWidthSpace = document.createTextNode('\u200b');
       branchWrapper.append(zeroWidthSpace);
       const hintWrapper = document.createElement('div');
-      hintWrapper.style.cssText = `
-        position: absolute;
-        white-space: nowrap;
-        padding: .4em;
-        border: .1em solid gray;
-        border-radius: .4em;
-        background-color: white;
-      `;
+      hintWrapper.className = 'hint-wrapper';
       hintWrapper.innerText = hintText;
       branchWrapper.append(hintWrapper);
       const questionWrapperWidth = questionWrapper.clientWidth;
@@ -62,6 +51,71 @@
       const hintWrapperHeight = hintWrapper.offsetHeight;
       const hintWrapperTop = branchWrapperTop - hintWrapperHeight;
       hintWrapper.style.top = `${hintWrapperTop}px`;
+
+      const hintHornA = document.createElement('div');
+      hintHornA.className = 'hint-horn-a';
+      hintWrapper.append(hintHornA);
+      hintHornA.style.marginLeft = `${- hintWrapperOffsetX}px`;
+/*
+      const hintBalloonHornA = document.createElement('div');
+
+      hintBalloonHornA.style.cssText = `
+        position: absolute;
+        bottom: -.75em;
+        left: .25em;
+        border: .25em solid transparent;
+        border-top: .5em solid gray;
+        margin-left: ${- hintWrapperOffsetX}px;
+      `;
+      hintWrapper.append(hintBalloonHornA);
+      const hintBalloonHornB = document.createElement('div');
+      hintBalloonHornB.style.cssText = `
+        position: absolute;
+        bottom: -.55em;
+        left: .25em;
+        border: .25em solid transparent;
+        border-top: .5em solid white;
+        margin-left: ${- hintWrapperOffsetX}px;
+      `;
+      hintWrapper.append(hintBalloonHornB);
+      hintWrapper.style.display = 'none';
+      branchWrapper.addEventListener('mouseenter', e => {
+        hintWrapper.style.display = 'block';
+      });
+      branchWrapper.addEventListener('mouseleave', e => {
+        hintWrapper.style.display = 'none';
+      });
+//      document.body.addEventListener('touchstart', e => {
+      hintWrapper.addEventListener('touchstart', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        hintWrapper.style.display = 'block';
+      }, {passive: false});
+      document.body.addEventListener('touchmove', e => {
+//        if (! isHintShown) return;
+        e.preventDefault();
+        e.stopPropagation();
+      }, {passive: false});
+      hintWrapper.addEventListener('touchend', e => {
+        hintWrapper.style.display = 'none';
+      }, {passive: false});
+      hintWrapper.addEventListener('touchcancel', e => {
+        hintWrapper.style.display = 'none';
+      }, {passive: false});
+*/
+
+
+      /*
+      .hint:before {
+    content: "";
+    position: absolute;
+    bottom: -.75em;
+    left: .2em;
+    border: .25em solid transparent;
+    border-top: .5em solid gray;
+//    z-index: 2;
+  }
+*/
 
       //alert(`${branchWrapper.offsetLeft}, ${questionWrapper.clientWidth}, ${hintWrapper.offsetWidth}`);
  /*
@@ -82,7 +136,7 @@ margin-top: -.4em;
     return;
 
 
-
+/*
     const nodeElements = questionContainer.querySelectorAll('.node');
     for (const nodeElement of nodeElements) {
       const hoge = document.createElement('div');
@@ -101,6 +155,8 @@ nodeElement.after(hoge);
 //alert(div.width);
 hoge.style.top = `${nodeElement.offsetTop - hoge.offsetHeight}px`;
 hoge.style.display = 'none';
+
+*/
       /*
       hoge.style.display = 'none';
       nodeElement.addEventListener('mouseover', e => {
@@ -131,6 +187,7 @@ hoge.style.display = 'none';
   }
   html {
     height: 100%;
+    width: 100%;
     font-size: min(1rem, 5vmin);
     font-family: sans-serif;
   }
@@ -138,10 +195,13 @@ hoge.style.display = 'none';
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
     margin: 0;
   }
   #app-container {
     display: flex;
+    height: 100%;
+    width: 100%;
     flex: 1 1 auto;
     flex-direction: column;
   }
@@ -181,7 +241,60 @@ display: flex;
     align-items: center;
     padding: .5rem 1rem;
   }
-  
+  .hint-wrapper {
+    position: absolute;
+    white-space: nowrap;
+    padding: .4em;
+    border: .1em solid gray;
+    border-radius: .4em;
+    background-color: white;
+    margin-top: -.5em;
+  }
+  .hint-horn-a {
+    position: absolute;
+    left: 0;
+    top: 100%;
+  }
+  .hint-horn-a:before {
+    position: absolute;
+    bottom: -.75em;
+    left: .25em;
+    border: .25em solid transparent;
+    border-top: .5em solid gray;
+    content: "";
+  }
+  .hint-horn-a:after {
+    position: absolute;
+    bottom: -.55em;
+    left: .25em;
+    border: .25em solid transparent;
+    border-top: .5em solid white;
+    content: "";
+  }
+
+/*
+        position: absolute;
+        bottom: -.75em;
+        left: .25em;
+        border: .25em solid transparent;
+        border-top: .5em solid gray;
+        margin-left: ${- hintWrapperOffsetX}px;
+      `;
+      hintWrapper.append(hintBalloonHornA);
+      const hintBalloonHornB = document.createElement('div');
+      hintBalloonHornB.style.cssText = `
+        position: absolute;
+        bottom: -.55em;
+        left: .25em;
+        border: .25em solid transparent;
+        border-top: .5em solid white;
+        margin-left: ${- hintWrapperOffsetX}px;
+
+
+
+
+*/
+
 
 /*
   .hint {
@@ -221,6 +334,7 @@ display: flex;
     display: none;
   }
 */
+/*
   .hint-wrapper {
 //    display: none;
     white-space: nowrap;
@@ -250,29 +364,35 @@ margin-top: -.4em;
   .node:hover + .hint {
     display: block !important;
   }
-  .node[data-node-level] {
+*/
+/*
+  .branch:hover .hint {
+    display: block !important;
+  }
+*/
+  .branch {
     padding-right: .1em;
     padding-left: .1em;
     font-weight: bold;
   }
-  .node[data-node-level="1"],
-  .node[data-node-level="6"] {
+  .branch[data-branch-number="1"],
+  .branch[data-branch-number="6"] {
     background-color: #F82F6666;
   }
-  .node[data-node-level="2"],
-  .node[data-node-level="7"] {
+  .branch[data-branch-number="2"],
+  .branch[data-branch-number="7"] {
     background-color: #008ECF66;
   }
-  .node[data-node-level="3"],
-  .node[data-node-level="8"] {
+  .branch[data-branch-number="3"],
+  .branch[data-branch-number="8"] {
     background-color: #70BE4766;
   }
-  .node[data-node-level="4"],
-  .node[data-node-level="9"] {
+  .branch[data-branch-number="4"],
+  .branch[data-branch-number="9"] {
     background-color: #F55A2166;
   }
-  .node[data-node-level="5"],
-  .node[data-node-level="0"] {
+  .branch[data-branch-number="5"],
+  .branch[data-branch-number="0"] {
     background-color: #F0EA3066;
   }
 
