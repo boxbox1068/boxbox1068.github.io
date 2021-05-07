@@ -15,9 +15,10 @@
     // dummy
     {
       dataset.lead = '"A love B."';
-      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はああああああああaaaaaaaaaaああああああああああああ^^[車|食べること|いたずら]が大好き^[11|22|33|44]かも。';
+      dataset.questionTemplate = '^[私|あなた|彼|私^^[a|b|c]たち]はああああaaaaaaaaaaaaああああaaaaaaaaaaああああああああああああ^^[車|食べること|いたずら]が大好き^[11|22|33|44]かも。';
       dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
+
     if (dataset.lead) {
       const leadContainer = document.querySelector('#lead-frame');
       leadContainer.append(dataset.lead);
@@ -28,155 +29,41 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionWrapper = document.querySelector('#question-wrapper');
-    questionWrapper.innerHTML = questionPhrase.html;
-    questionPhrase.chosenBranchTexts.forEach((currentValue, index, array) => {
-      const branchNumber = index;
-      const hintText = answerPhrase.chosenBranchTexts[branchNumber];
-      const branchWrapper = document.querySelector(`.branch[data-branch-number="${index}"`);
-      if (! branchWrapper) return;
-      const zeroWidthSpace = document.createTextNode('\u200b');
-      branchWrapper.append(zeroWidthSpace);
-      const hintWrapper = document.createElement('div');
-      hintWrapper.className = 'hint-wrapper';
-      hintWrapper.innerText = hintText;
-      branchWrapper.append(hintWrapper);
-      const questionWrapperWidth = questionWrapper.clientWidth;
-      const hintWrapperRight = branchWrapper.offsetLeft + hintWrapper.offsetWidth;
-      const hintWrapperOffsetX = Math.min(questionWrapperWidth - hintWrapperRight, 0);
-      const branchWrapperLeft = branchWrapper.offsetLeft;
-      const hintWrapperLeft = branchWrapperLeft + hintWrapperOffsetX;
-      hintWrapper.style.left = `${hintWrapperLeft}px`;
-      const branchWrapperTop = branchWrapper.offsetTop;
-      const hintWrapperHeight = hintWrapper.offsetHeight;
-      const hintWrapperTop = branchWrapperTop - hintWrapperHeight;
-      hintWrapper.style.top = `${hintWrapperTop}px`;
-
-      const hintHornA = document.createElement('div');
-      hintHornA.className = 'hint-horn-a';
-      hintWrapper.append(hintHornA);
-      hintHornA.style.marginLeft = `${- hintWrapperOffsetX}px`;
-/*
-      const hintBalloonHornA = document.createElement('div');
-
-      hintBalloonHornA.style.cssText = `
-        position: absolute;
-        bottom: -.75em;
-        left: .25em;
-        border: .25em solid transparent;
-        border-top: .5em solid gray;
-        margin-left: ${- hintWrapperOffsetX}px;
-      `;
-      hintWrapper.append(hintBalloonHornA);
-      const hintBalloonHornB = document.createElement('div');
-      hintBalloonHornB.style.cssText = `
-        position: absolute;
-        bottom: -.55em;
-        left: .25em;
-        border: .25em solid transparent;
-        border-top: .5em solid white;
-        margin-left: ${- hintWrapperOffsetX}px;
-      `;
-      hintWrapper.append(hintBalloonHornB);
-      hintWrapper.style.display = 'none';
-      branchWrapper.addEventListener('mouseenter', e => {
-        hintWrapper.style.display = 'block';
-      });
-      branchWrapper.addEventListener('mouseleave', e => {
-        hintWrapper.style.display = 'none';
-      });
-//      document.body.addEventListener('touchstart', e => {
-      hintWrapper.addEventListener('touchstart', e => {
-        e.preventDefault();
-        e.stopPropagation();
-        hintWrapper.style.display = 'block';
-      }, {passive: false});
-      document.body.addEventListener('touchmove', e => {
-//        if (! isHintShown) return;
-        e.preventDefault();
-        e.stopPropagation();
-      }, {passive: false});
-      hintWrapper.addEventListener('touchend', e => {
-        hintWrapper.style.display = 'none';
-      }, {passive: false});
-      hintWrapper.addEventListener('touchcancel', e => {
-        hintWrapper.style.display = 'none';
-      }, {passive: false});
-*/
-
-
-      /*
-      .hint:before {
-    content: "";
-    position: absolute;
-    bottom: -.75em;
-    left: .2em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-//    z-index: 2;
-  }
-*/
-
-      //alert(`${branchWrapper.offsetLeft}, ${questionWrapper.clientWidth}, ${hintWrapper.offsetWidth}`);
- /*
-   .hint-wrapper {
-//    display: none;
-    white-space: nowrap;
-    position: absolute;
-margin-top: -.4em;
-    padding: .4em;
-    border: .1em solid gray;
-    border-radius: .4em;
-    background-color: white;
-  }
-*/
- 
- 
-    });
-    return;
-
-
-/*
-    const nodeElements = questionContainer.querySelectorAll('.node');
-    for (const nodeElement of nodeElements) {
-      const hoge = document.createElement('div');
-      hoge.className = 'hint';
-      const nodeLevel = nodeElement.dataset.nodeLevel;
-      const validNode = answerPhrase.validNodes[nodeLevel];
-      hoge.dataset.nodeLevel = nodeLevel;
-      hoge.innerHTML = validNode;
-//      nodeElement.parentElement.append(hoge);
-const textNode = document.createElement('span');
-textNode.innerHTML = '&#8203;';
-nodeElement.after(textNode);
-nodeElement.after(hoge);
-      hoge.style.left = Math.min(nodeElement.offsetLeft, div.clientWidth - hoge.offsetWidth) + 'px';
-//alert(`${nodeElement.offsetLeft}, ${div.clientWidth - hoge.offsetWidth}`);
-//alert(div.width);
-hoge.style.top = `${nodeElement.offsetTop - hoge.offsetHeight}px`;
-hoge.style.display = 'none';
-
-*/
-      /*
-      hoge.style.display = 'none';
-      nodeElement.addEventListener('mouseover', e => {
-        hoge.style.display = 'block';
-      });
-      nodeElement.addEventListener('mouseout', e => {
-        hoge.style.display = 'none';
-      });
-*/
+    const questionPanel = document.querySelector('#question-panel');
+    questionPanel.innerHTML = questionPhrase.html;
+    const branchElements = document.querySelectorAll('[data-branch-number]');
+    for (const branchElement of branchElements) {
+      const branchNumber = Number(branchElement.dataset.branchNumber);
+      branchElement.append(document.createTextNode('\u200b'));
+      const hintBalloonElement = document.createElement('div');
+      hintBalloonElement.className = 'hint-balloon';
+      hintBalloonElement.innerText = answerPhrase.chosenBranchTexts[branchNumber];
+      branchElement.append(hintBalloonElement);
+      const hintBalloonElementRight = branchElement.offsetLeft + hintBalloonElement.offsetWidth;
+      const hintBalloonElementOffsetX = Math.min(questionPanel.clientWidth - hintBalloonElementRight, 0);
+      const hintBalloonElementLeft = branchElement.offsetLeft + hintBalloonElementOffsetX;
+      hintBalloonElement.style.left = `${hintBalloonElementLeft}px`;
+      const hintBalloonElementHeight = hintBalloonElement.offsetHeight;
+      const hintBalloonElementTop = branchElement.offsetTop - hintBalloonElementHeight;
+      hintBalloonElement.style.top = `${hintBalloonElementTop}px`;
+      const hintBalloonTailElement = document.createElement('div');
+      hintBalloonTailElement.className = 'hint-balloon-tail';
+      hintBalloonTailElement.style.marginLeft = `${- hintBalloonElementOffsetX}px`;
+      hintBalloonElement.append(hintBalloonTailElement);
     }
 
+    return;
+  };
 
 
+/*
     const answerElement = document.querySelector('#answer');
     answerElement.innerHTML = answerPhrase.html;
     const statisticText = `（総パターン数：${questionPhrase.possiblePatternCount}，パターンID：${questionPhrase.patternId}，通算回答数：${dataset.changeCount++}）`;
     const statisticElement = document.querySelector('#statistic');
     statisticElement.innerText = statisticText;
   };
-
+*/
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
@@ -219,7 +106,7 @@ hoge.style.display = 'none';
     font-size: 2rem;
     padding: 3rem;
   }
-  #question-wrapper {
+  #question-panel {
     position: relative;
   }
   #answer-frame {
@@ -241,7 +128,11 @@ display: flex;
     align-items: center;
     padding: .5rem 1rem;
   }
-  .hint-wrapper {
+  .branch:hover > .hint-balloon {
+    visibility: visible;
+  }
+  .hint-balloon {
+    visibility: hidden;
     position: absolute;
     white-space: nowrap;
     padding: .4em;
@@ -250,12 +141,12 @@ display: flex;
     background-color: white;
     margin-top: -.5em;
   }
-  .hint-horn-a {
+  .hint-balloon-tail {
     position: absolute;
     left: 0;
     top: 100%;
   }
-  .hint-horn-a:before {
+  .hint-balloon-tail:before {
     position: absolute;
     bottom: -.75em;
     left: .25em;
@@ -263,7 +154,7 @@ display: flex;
     border-top: .5em solid gray;
     content: "";
   }
-  .hint-horn-a:after {
+  .hint-balloon-tail:after {
     position: absolute;
     bottom: -.55em;
     left: .25em;
@@ -400,7 +291,7 @@ margin-top: -.4em;
 <div id="app-container">
   <div id="lead-frame"></div>
   <div id="question-frame">
-    <div id="question-wrapper"></div>
+    <div id="question-panel"></div>
   </div>
   <div id="answer-frame"></div></div>
   <div id="statistic-frame"></div>
