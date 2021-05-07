@@ -19,13 +19,34 @@
       dataset.answerTemplate = '^[I|Y^^[aa|bb|cc]ou|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
 
-    if (dataset.lead) {
-      const leadContainer = document.querySelector('#lead-frame');
-      leadContainer.append(dataset.lead);
-    }
-    changeCard();
+
+
+    initializeScreen();
   };
-  const changeCard = () => {
+  const initializeScreen = () => {
+    if (dataset.lead) {
+      const leadPanelElement = document.querySelector('#lead-panel');
+      leadPanelElement.append(dataset.lead);
+    }
+    const copyrightPanelElement = document.querySelector('#copyright-panel');
+    copyrightPanelElement.innerHTML = '<small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small>';
+    document.body.addEventListener('touchmove', event => {
+      if (event.target.className == 'branch') {
+        event.preventDefault();
+        return;
+      }
+    }, {passive: false});
+    document.body.addEventListener('touchend', event => {
+      if (event.target.className == 'branch') {
+        event.preventDefault();
+        return;
+      }
+    }, {passive: false});
+    document.addEventListener('click', event => {
+    }, {passive: false});
+    resetCard();
+  };
+  const resetCard = () => {
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
@@ -53,20 +74,6 @@
     }
     const answerPanelElement = document.querySelector('#answer-panel');
     answerPanelElement.innerHTML = answerPhrase.html;
-    document.body.addEventListener('touchmove', event => {
-      if (event.target.className == 'branch') {
-        event.preventDefault();
-        return;
-      }
-    }, {passive: false});
-    document.body.addEventListener('touchend', event => {
-      if (event.target.className == 'branch') {
-        event.preventDefault();
-        return;
-      }
-    }, {passive: false});
-    document.addEventListener('click', event => {
-    }, {passive: false});
   };
 
 
@@ -201,13 +208,19 @@ display: flex;
 
 </style>
 <div id="app-container">
-  <div id="lead-frame"></div>
+  <div id="lead-frame">
+    <div id="lead-panel"></div>
+  </div>
   <div id="question-frame">
     <div id="question-panel"></div>
   </div>
   <div id="answer-frame">
     <div id="answer-panel"></div>
   </div>
-  <div id="statistic-frame"></div>
-  <div id="copyright-frame"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
+  <div id="statistic-frame">
+    <div id="statistic-panel"></div>
+  </div>
+  <div id="copyright-frame">
+    <div id="copyright-panel"></div>
+  </div>
 </div>
