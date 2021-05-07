@@ -29,8 +29,8 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionPanel = document.querySelector('#question-panel');
-    questionPanel.innerHTML = questionPhrase.html;
+    const questionPanelElement = document.querySelector('#question-panel');
+    questionPanelElement.innerHTML = questionPhrase.html;
     const branchElements = document.querySelectorAll('[data-branch-number]');
     for (const branchElement of branchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
@@ -40,7 +40,7 @@
       hintBalloonElement.innerText = answerPhrase.chosenBranchTexts[branchNumber];
       branchElement.append(hintBalloonElement);
       const hintBalloonElementRight = branchElement.offsetLeft + hintBalloonElement.offsetWidth;
-      const hintBalloonElementOffsetX = Math.min(questionPanel.clientWidth - hintBalloonElementRight, 0);
+      const hintBalloonElementOffsetX = Math.min(questionPanelElement.clientWidth - hintBalloonElementRight, 0);
       const hintBalloonElementLeft = branchElement.offsetLeft + hintBalloonElementOffsetX;
       hintBalloonElement.style.left = `${hintBalloonElementLeft}px`;
       const hintBalloonElementHeight = hintBalloonElement.offsetHeight;
@@ -51,8 +51,22 @@
       hintBalloonTailElement.style.marginLeft = `${- hintBalloonElementOffsetX}px`;
       hintBalloonElement.append(hintBalloonTailElement);
     }
-
-    return;
+    const answerPanelElement = document.querySelector('#answer-panel');
+    answerPanelElement.innerHTML = answerPhrase.html;
+    document.body.addEventListener('touchmove', event => {
+      if (event.target.className == 'branch') {
+        event.preventDefault();
+        return;
+      }
+    }, {passive: false});
+    document.body.addEventListener('touchend', event => {
+      if (event.target.className == 'branch') {
+        event.preventDefault();
+        return;
+      }
+    }, {passive: false});
+    document.addEventListener('click', event => {
+    }, {passive: false});
   };
 
 
@@ -98,17 +112,7 @@
     justify-content: center;
     font-size: 1.5rem;
   }
-  #question-frame {
-    display: flex;
-    flex: 1 1 auto;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    padding: 3rem;
-  }
-  #question-panel {
-    position: relative;
-  }
+  #question-frame,
   #answer-frame {
     display: flex;
     flex: 1 1 auto;
@@ -116,6 +120,10 @@
     align-items: center;
     font-size: 2rem;
     padding: 3rem;
+  }
+  #question-panel,
+  #answer-panel {
+    position: relative;
   }
   #statistic-frame {
 display: flex;
@@ -128,18 +136,16 @@ display: flex;
     align-items: center;
     padding: .5rem 1rem;
   }
-  .branch:hover > .hint-balloon {
-    visibility: visible;
-  }
   .hint-balloon {
     visibility: hidden;
     position: absolute;
     white-space: nowrap;
-    padding: .4em;
+    padding: .2em .4em;
     border: .1em solid gray;
     border-radius: .4em;
     background-color: white;
-    margin-top: -.5em;
+    font-weight: bold;
+    margin-top: -.2em;
   }
   .hint-balloon-tail {
     position: absolute;
@@ -162,106 +168,12 @@ display: flex;
     border-top: .5em solid white;
     content: "";
   }
-
-/*
-        position: absolute;
-        bottom: -.75em;
-        left: .25em;
-        border: .25em solid transparent;
-        border-top: .5em solid gray;
-        margin-left: ${- hintWrapperOffsetX}px;
-      `;
-      hintWrapper.append(hintBalloonHornA);
-      const hintBalloonHornB = document.createElement('div');
-      hintBalloonHornB.style.cssText = `
-        position: absolute;
-        bottom: -.55em;
-        left: .25em;
-        border: .25em solid transparent;
-        border-top: .5em solid white;
-        margin-left: ${- hintWrapperOffsetX}px;
-
-
-
-
-*/
-
-
-/*
-  .hint {
-    position: absolute;
-//    margin-top: -2em;
-//    margin-left: -.25em;
-//width: 0;
-//left: calc(100%);
-//top: 100%;
-//left: 0;
-    padding: .5em;
-    border: .1em solid gray;
-    border-radius: .25em;
-    background-color: white;
-    overflow: visible;
+  .branch:hover .hint-balloon,
+  .branch:active .hint-balloon {
+    visibility: visible;
   }
 
-  .hint:before {
-    content: "";
-    position: absolute;
-    bottom: -.75em;
-    left: .2em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-//    z-index: 2;
-  }
-  .hint:after {
-    content: "";
-    position: absolute;
-    bottom: calc(-.75em + .2em);
-    left: .2em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-//    z-index: 2;
-  }
-  .node:not(:hover) .hint {
-    display: none;
-  }
-*/
-/*
-  .hint-wrapper {
-//    display: none;
-    white-space: nowrap;
-    position: absolute;
-margin-top: -.4em;
-    padding: .4em;
-    border: .1em solid gray;
-    border-radius: .4em;
-    background-color: white;
-  }
-  .hint-wrapper:before {
-    content: "";
-    position: absolute;
-    bottom: -.75em;
-    left: .2em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-  }
-  .hint-wrapper:after {
-    content: "";
-    position: absolute;
-    bottom: calc(-.75em + .2em);
-    left: .2em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-  }
-  .node:hover + .hint {
-    display: block !important;
-  }
-*/
-/*
-  .branch:hover .hint {
-    display: block !important;
-  }
-*/
-  .branch {
+    .branch {
     padding-right: .1em;
     padding-left: .1em;
     font-weight: bold;
@@ -293,7 +205,9 @@ margin-top: -.4em;
   <div id="question-frame">
     <div id="question-panel"></div>
   </div>
-  <div id="answer-frame"></div></div>
+  <div id="answer-frame">
+    <div id="answer-panel"></div>
+  </div>
   <div id="statistic-frame"></div>
   <div id="copyright-frame"><small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small></div>
 </div>
