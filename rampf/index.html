@@ -15,7 +15,7 @@
     // dummy
     {
       dataset.lead = '"A love B."';
-      dataset.questionTemplate = '^[私|あなた|彼|私たち]は^^[車|食べるの|いたずらするの]が大好き。';
+      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaaaあああああああああああああああああああああああああああああああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] love^[||s|] ^^[cars|eating|playing tricks].';
     }
 
@@ -25,10 +25,10 @@
   };
   const initializeScreen = () => {
     if (dataset.lead) {
-      const leadPanelElement = document.querySelector('#lead-panel');
+      const leadPanelElement = document.querySelector('#lead-content');
       leadPanelElement.append(dataset.lead);
     }
-    const copyrightPanelElement = document.querySelector('#copyright-panel');
+    const copyrightPanelElement = document.querySelector('#copyright-content');
     copyrightPanelElement.innerHTML = '<small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small>';
     document.body.addEventListener('touchmove', event => {
       if (event.target.className == 'branch') {
@@ -43,80 +43,161 @@
       }
       alert('click');
     }, {passive: false});
+    adjustScreen();
     resetCard();
+  };
+  const adjustScreen = () => {
+    const appScreenElement = document.querySelector('#app-screen');
+    if (appScreenElement.offsetWidth > appScreenElement.offsetHeight) {
+      appScreenElement.classList.add('is-landscape');
+    } else {
+      appScreenElement.classList.remove('is-landscape');
+    }
   };
   const resetCard = () => {
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionPanelElement = document.querySelector('#question-panel');
+    const questionPanelElement = document.querySelector('#question-content');
     questionPanelElement.innerHTML = questionPhrase.html;
-    addHintBalloon(questionPanelElement, answerPhrase.chosenBranchTexts, questionPanelElement.clientWidth);
-    const answerPanelElement = document.querySelector('#answer-panel');
+    addHintBalloons(questionPanelElement, answerPhrase.chosenBranchTexts, questionPanelElement.clientWidth);
+    const answerPanelElement = document.querySelector('#answer-content');
     answerPanelElement.innerHTML = answerPhrase.html;
-    addHintBalloon(answerPanelElement, questionPhrase.chosenBranchTexts, answerPanelElement.clientWidth);
+    addHintBalloons(answerPanelElement, questionPhrase.chosenBranchTexts, answerPanelElement.clientWidth);
     const statisticText = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，出題数合計：${dataset.changeCount++}）`;
-    const statisticPanelElement = document.querySelector('#statistic-panel');
+    const statisticPanelElement = document.querySelector('#statistic-content');
     statisticPanelElement.innerText = statisticText;
   };
-  const addHintBalloon = (targetPanel, hintTextList, hintBalloonElementMaxRight) => {
-    const branchElements = targetPanel.querySelectorAll('[data-branch-number]');
+  const addHintBalloons = (targetContent, hintTextList) => {
+    const branchElements = targetContent.querySelectorAll('[data-branch-number]');
     for (const branchElement of branchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
       branchElement.append(document.createTextNode('\u200b'));
-      const hintBalloonElement = document.createElement('div');
-      hintBalloonElement.className = 'hint-balloon';
-      hintBalloonElement.innerText = hintTextList[branchNumber];
-      branchElement.append(hintBalloonElement);
-      const hintBalloonElementRight = branchElement.offsetLeft + hintBalloonElement.offsetWidth;
-      const hintBalloonElementOffsetX = Math.min(hintBalloonElementMaxRight - hintBalloonElementRight, 0);
-      const hintBalloonElementLeft = branchElement.offsetLeft + hintBalloonElementOffsetX;
-      hintBalloonElement.style.left = `${hintBalloonElementLeft}px`;
-      const hintBalloonElementHeight = hintBalloonElement.offsetHeight;
-      const hintBalloonElementTop = branchElement.offsetTop - hintBalloonElementHeight;
-      hintBalloonElement.style.top = `${hintBalloonElementTop}px`;
+      const hintBalloonBodyElement = document.createElement('div');
+      hintBalloonBodyElement.className = 'hint-balloon-body';
+      hintBalloonBodyElement.innerHTML = hintTextList[branchNumber];
+      targetContent.append(hintBalloonBodyElement);
+      const hintBalloonLeft = branchElement.offsetLeft;
+      const hintBalloonTop = branchElement.offsetTop - hintBalloonBodyElement.offsetHeight;
+      const hintBalloonWidth = hintBalloonBodyElement.offsetWidth;
+      const hintBalloonHeight = hintBalloonBodyElement.offsetHeight;
+      const hintBalloonBodyMaxRight = hintBalloonBodyElement.offsetParent.parentElement.clientWidth - (hintBalloonBodyElement.offsetParent.parentElement.offsetWidth - targetContent.offsetWidth) / 2;
+      const hintBalloonBodyMarginLeft = Math.min(0, hintBalloonBodyMaxRight - (hintBalloonLeft + hintBalloonWidth));
+      hintBalloonBodyElement.style.left = `${hintBalloonLeft}px`;
+      hintBalloonBodyElement.style.top = `${hintBalloonTop}px`;
+      hintBalloonBodyElement.style.marginLeft = `${hintBalloonBodyMarginLeft}px`;
+      hintBalloonBodyElement.style.visibility = 'visible';
       const hintBalloonTailElement = document.createElement('div');
       hintBalloonTailElement.className = 'hint-balloon-tail';
-      hintBalloonTailElement.style.marginLeft = `${- hintBalloonElementOffsetX}px`;
-      hintBalloonElement.append(hintBalloonTailElement);
+      targetContent.append(hintBalloonTailElement);
+
+hintBalloonTailElement.style.left = `${hintBalloonLeft}px`;
+hintBalloonTailElement.style.top = `${hintBalloonTop}px`;
+hintBalloonTailElement.style.width = `${hintBalloonWidth}px`;
+hintBalloonTailElement.style.height = `${hintBalloonHeight}px`;
+
+hintBalloonTailElement.style.visibility = 'visible';
+/*
+      const hintBalloonTailElement = document.createElement('div');
+      hintBalloonTailElement.className = 'hint-balloon-tail';
+      hintBalloonTailElement.style.marginLeft = `${- hintBalloonBodyElementOffsetX}px`;
+      hintBalloonBodyElement.append(hintBalloonTailElement);
+*/
     }
   };
+/*
+  const addHintBalloons = (targetContent, hintTextList, hintBalloonBodyElementMaxRight) => {
+    const branchElements = targetContent.querySelectorAll('[data-branch-number]');
+    for (const branchElement of branchElements) {
+      const branchNumber = Number(branchElement.dataset.branchNumber);
+      branchElement.append(document.createTextNode('\u200b'));
+      const hintBalloonBodyElement = document.createElement('div');
+      hintBalloonBodyElement.className = 'hint-balloon';
+      hintBalloonBodyElement.innerText = hintTextList[branchNumber];
+      branchElement.append(hintBalloonBodyElement);
+      const hintBalloonRight = branchElement.offsetLeft + hintBalloonBodyElement.offsetWidth;
+      const hintBalloonBodyElementOffsetX = Math.min(hintBalloonBodyElementMaxRight - hintBalloonRight, 0);
+      const hintBalloonLeft = branchElement.offsetLeft + hintBalloonBodyElementOffsetX;
+      hintBalloonBodyElement.style.left = `${hintBalloonLeft}px`;
+      const hintBalloonBodyElementHeight = hintBalloonBodyElement.offsetHeight;
+      const hintBalloonTop = branchElement.offsetTop - hintBalloonBodyElementHeight;
+      hintBalloonBodyElement.style.top = `${hintBalloonTop}px`;
+      const hintBalloonTailElement = document.createElement('div');
+      hintBalloonTailElement.className = 'hint-balloon-tail';
+      hintBalloonTailElement.style.marginLeft = `${- hintBalloonBodyElementOffsetX}px`;
+      hintBalloonBodyElement.append(hintBalloonTailElement);
+    }
+  };
+*/
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
-
   * {
-//    overflow: hidden;
     box-sizing: border-box;
   }
   html {
     height: 100%;
-    width: 100%;
     font-size: min(1rem, 5vmin);
     font-family: sans-serif;
   }
   body {
+    height: 100%;
+  }
+  #app-screen {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
-    margin: 0;
+    position: fixed;
+    top: .5rem;
+    right: .5rem;
+    bottom: .5rem;
+    left: .5rem;
   }
-  #app-container {
+  #lead-block {
     display: flex;
-    height: 100%;
-    width: 100%;
-    flex: 1 1 auto;
-    flex-direction: column;
-  }
-  #lead-frame {
-    display: flex;
-    padding: 1.5rem;
     justify-content: center;
+    padding: 1.5rem;
     font-size: 1.5rem;
   }
-  #question-frame,
-  #answer-frame {
+  #q-and-a-block {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+  }
+  .is-landscape #q-and-a-block {
+    flex-direction: row;
+  }
+  #question-block,
+  #answer-block {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+
+display: flex;
+justify-content: center;
+align-items: center;
+  }
+  #question-content,
+  #answer-content {
+position: relative;
+/*
+display: table;
+margin: auto;
+text-align: left;
+*/
+/*
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+*/
+  }
+/*
+  #question-block,
+  #answer-block {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
@@ -124,36 +205,37 @@
     font-size: 2rem;
     padding: 3rem;
   }
-  #question-panel,
-  #answer-panel {
+  #question-content,
+  #answer-content {
     position: relative;
   }
-  #statistic-frame {
+*/
+  #statistic-block {
+background: blue;
     display: flex;
     padding: .4rem 1rem;
     justify-content: flex-start;
   }
-  #copyright-frame {
+  #copyright-block {
+background: green;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     padding: .4rem 1rem;
   }
-  .hint-balloon {
+  .hint-balloon-body,
+  .hint-balloon-tail {
     visibility: hidden;
     position: absolute;
+    margin-top: -.2em;
+  }
+  .hint-balloon-body {
     white-space: nowrap;
     padding: .2em .4em;
     border: .1em solid gray;
     border-radius: .4em;
     background-color: white;
     font-weight: bold;
-    margin-top: -.2em;
-  }
-  .hint-balloon-tail {
-    position: absolute;
-    left: 0;
-    top: 100%;
   }
   .hint-balloon-tail:before {
     position: absolute;
@@ -171,11 +253,13 @@
     border-top: .5em solid white;
     content: "";
   }
+/*
   .branch:hover .hint-balloon,
   .branch:active .hint-balloon {
     visibility: visible;
   }
-
+*/
+  .branch:hover ~ .hint-balloon,
     .branch {
     padding-right: .1em;
     padding-left: .1em;
@@ -203,20 +287,22 @@
   }
 
 </style>
-<div id="app-container">
-  <div id="lead-frame">
-    <div id="lead-panel"></div>
+<div id="app-screen">
+  <div id="lead-block">
+    <div id="lead-content"></div>
   </div>
-  <div id="question-frame">
-    <div id="question-panel"></div>
+  <div id="q-and-a-block">
+    <div id="question-block">
+      <div id="question-content"></div>
+    </div>
+    <div id="answer-block">
+      <div id="answer-content"></div>
+    </div>
+  </div>  
+  <div id="statistic-block">
+    <div id="statistic-content"></div>
   </div>
-  <div id="answer-frame">
-    <div id="answer-panel"></div>
-  </div>
-  <div id="statistic-frame">
-    <div id="statistic-panel"></div>
-  </div>
-  <div id="copyright-frame">
-    <div id="copyright-panel"></div>
+  <div id="copyright-block">
+    <div id="copyright-content"></div>
   </div>
 </div>
