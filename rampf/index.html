@@ -25,24 +25,25 @@
   };
   const initializeScreen = () => {
     if (dataset.lead) {
-      const leadPanelElement = document.querySelector('#lead-content');
-      leadPanelElement.append(dataset.lead);
+      const leadContentElement = document.querySelector('#lead-content');
+      leadContentElement.append(dataset.lead);
     }
-    const copyrightPanelElement = document.querySelector('#copyright-content');
-    copyrightPanelElement.innerHTML = '<small><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a></small>';
+    const copyrightContentElement = document.querySelector('#copyright-content');
+    copyrightContentElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
     document.body.addEventListener('touchmove', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
         return;
       }
     }, {passive: false});
-    document.addEventListener('click', event => {
+    document.body.addEventListener('click', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
         return;
       }
       alert('click');
     }, {passive: false});
+    window.addEventListener('resize', onResize);
     adjustScreen();
     resetCard();
   };
@@ -58,15 +59,15 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionPanelElement = document.querySelector('#question-content');
-    questionPanelElement.innerHTML = questionPhrase.html;
-    addHintBalloons(questionPanelElement, answerPhrase.chosenBranchTexts, questionPanelElement.clientWidth);
-    const answerPanelElement = document.querySelector('#answer-content');
-    answerPanelElement.innerHTML = answerPhrase.html;
-    addHintBalloons(answerPanelElement, questionPhrase.chosenBranchTexts, answerPanelElement.clientWidth);
-    const statisticText = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，出題数合計：${dataset.changeCount++}）`;
-    const statisticPanelElement = document.querySelector('#statistic-content');
-    statisticPanelElement.innerText = statisticText;
+    const questionContentElement = document.querySelector('#question-content');
+    questionContentElement.innerHTML = questionPhrase.html;
+    addHintBalloons(questionContentElement, answerPhrase.chosenBranchTexts, questionContentElement.clientWidth);
+    const answerContentElement = document.querySelector('#answer-content');
+    answerContentElement.innerHTML = answerPhrase.html;
+    addHintBalloons(answerContentElement, questionPhrase.chosenBranchTexts, answerContentElement.clientWidth);
+    const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，問題番号：${dataset.changeCount++}）`;
+    const statisticContentElement = document.querySelector('#statistic-content');
+    statisticContentElement.innerHTML = statisticHtml;
   };
   const addHintBalloons = (targetContent, hintTextList) => {
     targetContent.style.width = '100%';
@@ -97,6 +98,10 @@
       hintBalloonTailElement.style.width = `${hintBalloonWidth}px`;
       hintBalloonTailElement.style.height = `${hintBalloonHeight}px`;
     }
+  };
+  const onResize = event => {
+    window.clearTimeout(onResize.timeoutId);
+    onResize = window.setTimeout(adjustScreen, 1000);
   };
   window.addEventListener('DOMContentLoaded', main);
 </script>
@@ -145,7 +150,8 @@
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 2rem;
+    padding: 2.5rem;
+    font-size: 2rem;
   }
   #question-content,
   #answer-content {
@@ -154,17 +160,24 @@
   #statistic-block {
 background: blue;
     display: flex;
-    padding: .4rem 1rem;
     justify-content: flex-start;
+    align-items: center;
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: .8rem;
   }
   #copyright-block {
 background: green;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: .4rem 1rem;
+    padding: 0 1rem;
+    height: 3rem;
+    font-size: .8rem;
   }
   .branch {
+    padding-left: .2em;
+    padding-right: .2em;
     font-weight: bold;
   }
   .branch[data-branch-number="1"],
@@ -197,7 +210,7 @@ background: green;
     white-space: nowrap;
     padding: .2em .4em;
     border: .1em solid gray;
-    border-radius: .4em;
+    border-radius: .2em;
     background-color: white;
     font-weight: bold;
   }
