@@ -46,7 +46,8 @@ export class RabbitPhrase {
       }
       return chosenBranch;
     });
-    const htmlTemplate = template.replace(/ /g, '&nbsp;');
+//    const htmlTemplate = template.replace(/ /g, '&nbsp;');
+const htmlTemplate = template;
     const html = replaceBranchParts(htmlTemplate, (branchNumber, branchTexts, isMainBranch) => {
       const chosenBranchId = chosenBranchIds[branchNumber];
       const chosenBranch = branchTexts[chosenBranchId];

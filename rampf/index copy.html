@@ -108,13 +108,15 @@
 </script>
 <style>
   * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
   }
-  :root {
-    font-size: 4vmin;
+  html {
+    height: 100%;
+    font-size: min(2.5rem, 4vmin);
     font-family: sans-serif;
+  }
+  body {
+    height: 100%;
   }
   #app-screen {
     display: flex;
@@ -124,129 +126,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-background: green;
   }
-  #lead-block {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: .5em 1rem;
-    font-size: 1.5rem;
-  }
-  #q-and-a-block {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    font-size: 1.5rem;
-  }
-  .is-landscape #q-and-a-block {
-    flex-direction: row;
-  }
-  #question-block {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    padding: .5em 1rem;
-background: yellow;
-  }
-  #answer-block {
-    display: flex;
-    flex: 1;
-
-    justify-content: center;
-    align-items: center;
-    padding: .2em 1rem;
-background: blue;
-  }
-  #answer-content,
-  #question-content {
-background: purple;
-  }
-  #statistic-block {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: .5em 1rem;
-    font-size: .8rem;
-background: skyblue;
-  }
-  #copyright-block {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: .5em 1rem;
-    font-size: .8rem;
-  }
-  .hint-balloon-body {
-    position: absolute;
-  }
-  .hint-balloon-tail {
-    position: absolute;
-  }
-  .branch {
-    padding-left: .2em;
-    padding-right: .2em;
-    font-weight: bold;
-  }
-  .branch[data-branch-number="1"],
-  .branch[data-branch-number="6"] {
-    background-color: #F82F6666;
-  }
-  .branch[data-branch-number="2"],
-  .branch[data-branch-number="7"] {
-    background-color: #008ECF66;
-  }
-  .branch[data-branch-number="3"],
-  .branch[data-branch-number="8"] {
-    background-color: #70BE4766;
-  }
-  .branch[data-branch-number="4"],
-  .branch[data-branch-number="9"] {
-    background-color: #F55A2166;
-  }
-  .branch[data-branch-number="5"],
-  .branch[data-branch-number="0"] {
-    background-color: #F0EA3066;
-  }
-  .hint-balloon-body,
-  .hint-balloon-tail {
-    visibility: hidden;
-    position: absolute;
-    margin-top: -.4em;
-  }
-  .hint-balloon-body {
-    white-space: nowrap;
-    padding: .2em .4em;
-    border: .1em solid gray;
-    border-radius: .2em;
-    background-color: white;
-    font-weight: bold;
-  }
-  .hint-balloon-tail:before {
-    position: absolute;
-    bottom: -.75em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-    content: "";
-  }
-  .hint-balloon-tail:after {
-    position: absolute;
-    bottom: -.55em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-    content: "";
-  }
-  .branch:hover + .hint-balloon-body,
-  .branch:hover + .hint-balloon-body + .hint-balloon-tail,
-  .branch:active + .hint-balloon-body,
-  .branch:active + .hint-balloon-body + .hint-balloon-tail {
-    visibility: visible;
-  }
-
-/*
   #lead-block {
     display: flex;
     justify-content: center;
@@ -367,24 +247,23 @@ background: green;
   .branch:active + .hint-balloon-body + .hint-balloon-tail {
     visibility: visible;
   }
-*/
 </style>
 <div id="app-screen">
   <div id="lead-block">
-    <div id="lead-content">Lead Content</div>
+    <div id="lead-content"></div>
   </div>
   <div id="q-and-a-block">
     <div id="question-block">
-      <div id="question-content">Question Content</div>
+      <div id="question-content"></div>
     </div>
     <div id="answer-block">
-      <div id="answer-content">Answer Content</div>
+      <div id="answer-content"></div>
     </div>
   </div>  
   <div id="statistic-block">
-    <div id="statistic-content">Statistic Content</div>
+    <div id="statistic-content"></div>
   </div>
   <div id="copyright-block">
-    <div id="copyright-content">Copyright Content</div>
+    <div id="copyright-content"></div>
   </div>
 </div>
