@@ -15,7 +15,7 @@
     // dummy
     {
       dataset.lead = '"A love B."';
-      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaaaああああああああああああああああああああああああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
+      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaaaあああああああああああああああううううううううううううううううううううううううううううううううううううううううううううううううううあああああああああああああああああああああああああああああああああああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing tricks].';
     }
 
@@ -130,8 +130,8 @@ background: green;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: .5em 1rem;
-    font-size: 1.5rem;
+    padding: .5rem 1rem;
+    font-size: 1.2rem;
   }
   #q-and-a-block {
     display: flex;
@@ -147,7 +147,8 @@ background: green;
     flex: 1;
     justify-content: center;
     align-items: center;
-    padding: .5em 1rem;
+    padding: 0 .5em;
+    overflow-y: auto;
 background: yellow;
   }
   #answer-block {
@@ -156,18 +157,21 @@ background: yellow;
 
     justify-content: center;
     align-items: center;
-    padding: .2em 1rem;
+    padding: 0 .5em;
+    overflow-y: auto;
 background: blue;
   }
   #answer-content,
   #question-content {
+    max-height: 100%;
+    padding: .5em 0;
 background: purple;
   }
   #statistic-block {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: .5em 1rem;
+    padding: .5em .5em;
     font-size: .8rem;
 background: skyblue;
   }
@@ -175,7 +179,7 @@ background: skyblue;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: .5em 1rem;
+    padding: .5em .5em;
     font-size: .8rem;
   }
   .hint-balloon-body {
