@@ -102,17 +102,16 @@
   };
   const onResize = event => {
     window.clearTimeout(onResize.timeoutId);
-    onResize = window.setTimeout(adjustScreen, 1000);
+    onResize.timeoutId = window.setTimeout(adjustScreen, 1000);
   };
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
   * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
   }
   :root {
+    overflow: hidden;
     font-size: 4vmin;
     font-family: sans-serif;
   }
@@ -124,7 +123,99 @@
     right: 0;
     bottom: 0;
     left: 0;
-background: green;
+  }
+  #lead-block {
+    display: flex;
+    justify-content: center;
+    padding: .5rem 1rem;
+    font-size: 1.2rem;
+  }
+  #q-and-a-block {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0;
+  }
+  #question-block,
+  #answer-block {
+    display: flex;
+    flex-basis: 50%;
+    justify-content: center;
+    align-items: center;
+  }
+  #question-content,
+  #answer-content {
+    overflow-y: auto;
+    max-height: 100%;
+    padding: .5rem 1rem;
+    font-size: 5rem;
+  }
+  #statistic-block {
+    display: flex;
+    justify-content: flex-start;
+    padding: .5em .5em;
+    font-size: .8rem;
+  }
+  #copyright-block {
+    display: flex;
+    justify-content: flex-end;
+    padding: .5em .5em;
+    font-size: .8rem;
+  }
+  .branch {
+    padding-left: .2em;
+    padding-right: .2em;
+    font-weight: bold;
+  }
+  .branch[data-branch-number="1"],
+  .branch[data-branch-number="6"] {
+    background-color: #F82F6666;
+  }
+  .branch[data-branch-number="2"],
+  .branch[data-branch-number="7"] {
+    background-color: #008ECF66;
+  }
+  .branch[data-branch-number="3"],
+  .branch[data-branch-number="8"] {
+    background-color: #70BE4766;
+  }
+  .branch[data-branch-number="4"],
+  .branch[data-branch-number="9"] {
+    background-color: #F55A2166;
+  }
+  .branch[data-branch-number="5"],
+  .branch[data-branch-number="0"] {
+    background-color: #F0EA3066;
+  }
+  .hint-balloon-body {
+    visibility: hidden;
+    position: absolute;
+  }
+  .hint-balloon-tail {
+    visibility: hidden;
+    position: absolute;
+  }
+
+
+/*
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  :root {
+    overflow: hidden;
+    font-size: 4vmin;
+    font-family: sans-serif;
+  }
+  #app-screen {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
   #lead-block {
     display: flex;
@@ -142,30 +233,20 @@ background: green;
   .is-landscape #q-and-a-block {
     flex-direction: row;
   }
-  #question-block {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    padding: 0 .5em;
-    overflow-y: auto;
-background: yellow;
-  }
+  #question-block,
   #answer-block {
     display: flex;
     flex: 1;
-
     justify-content: center;
     align-items: center;
     padding: 0 .5em;
     overflow-y: auto;
-background: blue;
+
   }
   #answer-content,
   #question-content {
     max-height: 100%;
     padding: .5em 0;
-background: purple;
   }
   #statistic-block {
     display: flex;
@@ -173,7 +254,6 @@ background: purple;
     align-items: center;
     padding: .5em .5em;
     font-size: .8rem;
-background: skyblue;
   }
   #copyright-block {
     display: flex;
@@ -181,12 +261,6 @@ background: skyblue;
     align-items: center;
     padding: .5em .5em;
     font-size: .8rem;
-  }
-  .hint-balloon-body {
-    position: absolute;
-  }
-  .hint-balloon-tail {
-    position: absolute;
   }
   .branch {
     padding-left: .2em;
@@ -213,129 +287,11 @@ background: skyblue;
   .branch[data-branch-number="0"] {
     background-color: #F0EA3066;
   }
-  .hint-balloon-body,
-  .hint-balloon-tail {
+  .hint-balloon-body {
     visibility: hidden;
     position: absolute;
     margin-top: -.4em;
   }
-  .hint-balloon-body {
-    white-space: nowrap;
-    padding: .2em .4em;
-    border: .1em solid gray;
-    border-radius: .2em;
-    background-color: white;
-    font-weight: bold;
-  }
-  .hint-balloon-tail:before {
-    position: absolute;
-    bottom: -.75em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-    content: "";
-  }
-  .hint-balloon-tail:after {
-    position: absolute;
-    bottom: -.55em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-    content: "";
-  }
-  .branch:hover + .hint-balloon-body,
-  .branch:hover + .hint-balloon-body + .hint-balloon-tail,
-  .branch:active + .hint-balloon-body,
-  .branch:active + .hint-balloon-body + .hint-balloon-tail {
-    visibility: visible;
-  }
-
-/*
-  #lead-block {
-    display: flex;
-    justify-content: center;
-    padding: 1.5rem;
-    font-size: 1.5rem;
-  }
-  #q-and-a-block {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 100%;
-  }
-  .is-landscape #q-and-a-block {
-    flex-direction: row;
-  }
-  #question-block,
-  #answer-block {
-    display: flex;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 2.5rem;
-    font-size: 2rem;
-  }
-  #question-content,
-  #answer-content {
-max-width: 100%;
-max-height: 100%;
-//position: relative;
-  }
-#question-content {
-  background:yellow;
-}
-#answer-content {
-  background: red;
-  overflow-wrap: break-word;
-
-}
-  #statistic-block {
-background: blue;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    height: 2.5rem;
-    padding: 0 1rem;
-    font-size: .8rem;
-  }
-  #copyright-block {
-background: green;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 1rem;
-    height: 3rem;
-    font-size: .8rem;
-  }
-  .branch {
-    padding-left: .2em;
-    padding-right: .2em;
-    font-weight: bold;
-  }
-  .branch[data-branch-number="1"],
-  .branch[data-branch-number="6"] {
-    background-color: #F82F6666;
-  }
-  .branch[data-branch-number="2"],
-  .branch[data-branch-number="7"] {
-    background-color: #008ECF66;
-  }
-  .branch[data-branch-number="3"],
-  .branch[data-branch-number="8"] {
-    background-color: #70BE4766;
-  }
-  .branch[data-branch-number="4"],
-  .branch[data-branch-number="9"] {
-    background-color: #F55A2166;
-  }
-  .branch[data-branch-number="5"],
-  .branch[data-branch-number="0"] {
-    background-color: #F0EA3066;
-  }
-  .hint-balloon-body,
   .hint-balloon-tail {
     visibility: hidden;
     position: absolute;
@@ -384,7 +340,7 @@ background: green;
     <div id="answer-block">
       <div id="answer-content">Answer Content</div>
     </div>
-  </div>  
+  </div>
   <div id="statistic-block">
     <div id="statistic-content">Statistic Content</div>
   </div>
