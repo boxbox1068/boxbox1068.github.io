@@ -124,9 +124,7 @@
     bottom: 0;
     left: 0;
   }
-  #lead-block {
-    display: flex;
-    justify-content: center;
+  #lead-content {
     padding: .5rem 1rem;
     font-size: 1.2rem;
   }
@@ -140,27 +138,31 @@
   #answer-block {
     display: flex;
     flex-basis: 50%;
+min-height: 0;
+max-height: 50%;
+overflow: hidden;
+flex: 1 1 auto;
     justify-content: center;
     align-items: center;
   }
   #question-content,
   #answer-content {
     overflow-y: auto;
-    max-height: 100%;
+max-height: 100%;
+
     padding: .5rem 1rem;
     font-size: 5rem;
   }
-  #statistic-block {
-    display: flex;
-    justify-content: flex-start;
+#question-block {background: blue}
+#answer-block {background: red}
+  #statistic-content {
     padding: .5em .5em;
     font-size: .8rem;
   }
-  #copyright-block {
-    display: flex;
-    justify-content: flex-end;
+  #copyright-content {
     padding: .5em .5em;
     font-size: .8rem;
+    text-align: right;
   }
   .branch {
     padding-left: .2em;
