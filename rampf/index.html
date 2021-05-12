@@ -14,7 +14,7 @@
 
     // dummy
     {
-      dataset.lead = '"A love B."';
+      dataset.lead = '"A love B.safdaaaaaaaaaaaaaaaaあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"';
       dataset.questionTemplate = '^[私|あなた|彼|私たち]aaaaあああああああああああああああううううううううううううううううううううううううううううううううううううううううううううううううううあああああああああああああああああああああああああああああああああああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing tricks].';
     }
@@ -25,11 +25,11 @@
   };
   const initializeScreen = () => {
     if (dataset.lead) {
-      const leadContentElement = document.querySelector('#lead-content');
-      leadContentElement.append(dataset.lead);
+      const leadElement = document.querySelector('#lead');
+      leadElement.append(dataset.lead);
     }
-    const copyrightContentElement = document.querySelector('#copyright-content');
-    copyrightContentElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
+    const copyrightElement = document.querySelector('#copyright');
+    copyrightElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
     document.body.addEventListener('touchmove', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
@@ -48,26 +48,26 @@
     resetCard();
   };
   const adjustScreen = () => {
-    const appScreenElement = document.querySelector('#app-screen');
-    if (appScreenElement.offsetWidth > appScreenElement.offsetHeight) {
-      appScreenElement.classList.add('is-landscape');
+    const appContainerElement = document.querySelector('#container');
+    if (appContainerElement.offsetWidth > appContainerElement.offsetHeight) {
+      appContainerElement.classList.add('is-landscape');
     } else {
-      appScreenElement.classList.remove('is-landscape');
+      appContainerElement.classList.remove('is-landscape');
     }
   };
   const resetCard = () => {
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionContentElement = document.querySelector('#question-content');
-    questionContentElement.innerHTML = questionPhrase.html;
-    addHintBalloons(questionContentElement, answerPhrase.chosenBranchTexts, questionContentElement.clientWidth);
-    const answerContentElement = document.querySelector('#answer-content');
-    answerContentElement.innerHTML = answerPhrase.html;
-    addHintBalloons(answerContentElement, questionPhrase.chosenBranchTexts, answerContentElement.clientWidth);
+    const questionElement = document.querySelector('#question');
+    questionElement.innerHTML = questionPhrase.html;
+    addHintBalloons(questionElement, answerPhrase.chosenBranchTexts, questionElement.clientWidth);
+    const answerElement = document.querySelector('#answer');
+    answerElement.innerHTML = answerPhrase.html;
+    addHintBalloons(answerElement, questionPhrase.chosenBranchTexts, answerElement.clientWidth);
     const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，問題番号：${dataset.changeCount++}）`;
-    const statisticContentElement = document.querySelector('#statistic-content');
-    statisticContentElement.innerHTML = statisticHtml;
+    const statisticElement = document.querySelector('#statistic');
+    statisticElement.innerHTML = statisticHtml;
   };
   const addHintBalloons = (targetContent, hintTextList) => {
     targetContent.style.width = '100%';
@@ -111,58 +111,73 @@
     box-sizing: border-box;
   }
   :root {
-    overflow: hidden;
     font-size: 4vmin;
     font-family: sans-serif;
   }
-  #app-screen {
-    display: flex;
-    flex-direction: column;
+  #container {
+    display: grid;
+grid-template-rows: max-content 1fr 1fr max-content max-content;
+grid-template-columns: 50% 50%;
+      grid-template-areas:
+        "lead lead"
+        "question answer"
+        "question answer"
+        "statistic statistic"
+        "copyright copyright";
+width: 100%;
+height: 100%;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
   }
-  #lead-content {
+  @media screen and (orientation: portrait) {
+    #container {
+      grid-template-areas:
+        "lead lead"
+        "question question"
+        "answer answer"
+        "statistic statistic"
+        "copyright copyright";
+    }
+  }
+  #lead {
     padding: .5rem 1rem;
     font-size: 1.2rem;
+grid-area: lead;
   }
-  #q-and-a-block {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    min-height: 0;
+  #question {
+    grid-area: question;
   }
-  #question-block,
-  #answer-block {
-    display: flex;
-    flex-basis: 50%;
-min-height: 0;
-max-height: 50%;
-overflow: hidden;
-flex: 1 1 auto;
-    justify-content: center;
-    align-items: center;
+  #answer {
+    grid-area: answer;
   }
-  #question-content,
-  #answer-content {
+  #question,
+  #answer {
+//    max-height: 100%;
     overflow-y: auto;
-max-height: 100%;
+  }
 
+  #question,
+  #answer {
     padding: .5rem 1rem;
     font-size: 5rem;
+    background: gold;
   }
-#question-block {background: blue}
-#answer-block {background: red}
-  #statistic-content {
+
+  #statistic {
+    grid-area: statistic;
     padding: .5em .5em;
     font-size: .8rem;
+background: blue;
   }
-  #copyright-content {
+  #copyright {
+  grid-area: copyright;
     padding: .5em .5em;
     font-size: .8rem;
     text-align: right;
+    min-height: 3em;
   }
   .branch {
     padding-left: .2em;
@@ -197,156 +212,11 @@ max-height: 100%;
     visibility: hidden;
     position: absolute;
   }
-
-
-/*
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  :root {
-    overflow: hidden;
-    font-size: 4vmin;
-    font-family: sans-serif;
-  }
-  #app-screen {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  #lead-block {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: .5rem 1rem;
-    font-size: 1.2rem;
-  }
-  #q-and-a-block {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    font-size: 1.5rem;
-  }
-  .is-landscape #q-and-a-block {
-    flex-direction: row;
-  }
-  #question-block,
-  #answer-block {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    padding: 0 .5em;
-    overflow-y: auto;
-
-  }
-  #answer-content,
-  #question-content {
-    max-height: 100%;
-    padding: .5em 0;
-  }
-  #statistic-block {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: .5em .5em;
-    font-size: .8rem;
-  }
-  #copyright-block {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: .5em .5em;
-    font-size: .8rem;
-  }
-  .branch {
-    padding-left: .2em;
-    padding-right: .2em;
-    font-weight: bold;
-  }
-  .branch[data-branch-number="1"],
-  .branch[data-branch-number="6"] {
-    background-color: #F82F6666;
-  }
-  .branch[data-branch-number="2"],
-  .branch[data-branch-number="7"] {
-    background-color: #008ECF66;
-  }
-  .branch[data-branch-number="3"],
-  .branch[data-branch-number="8"] {
-    background-color: #70BE4766;
-  }
-  .branch[data-branch-number="4"],
-  .branch[data-branch-number="9"] {
-    background-color: #F55A2166;
-  }
-  .branch[data-branch-number="5"],
-  .branch[data-branch-number="0"] {
-    background-color: #F0EA3066;
-  }
-  .hint-balloon-body {
-    visibility: hidden;
-    position: absolute;
-    margin-top: -.4em;
-  }
-  .hint-balloon-tail {
-    visibility: hidden;
-    position: absolute;
-    margin-top: -.4em;
-  }
-  .hint-balloon-body {
-    white-space: nowrap;
-    padding: .2em .4em;
-    border: .1em solid gray;
-    border-radius: .2em;
-    background-color: white;
-    font-weight: bold;
-  }
-  .hint-balloon-tail:before {
-    position: absolute;
-    bottom: -.75em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-    content: "";
-  }
-  .hint-balloon-tail:after {
-    position: absolute;
-    bottom: -.55em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-    content: "";
-  }
-  .branch:hover + .hint-balloon-body,
-  .branch:hover + .hint-balloon-body + .hint-balloon-tail,
-  .branch:active + .hint-balloon-body,
-  .branch:active + .hint-balloon-body + .hint-balloon-tail {
-    visibility: visible;
-  }
-*/
 </style>
-<div id="app-screen">
-  <div id="lead-block">
-    <div id="lead-content">Lead Content</div>
-  </div>
-  <div id="q-and-a-block">
-    <div id="question-block">
-      <div id="question-content">Question Content</div>
-    </div>
-    <div id="answer-block">
-      <div id="answer-content">Answer Content</div>
-    </div>
-  </div>
-  <div id="statistic-block">
-    <div id="statistic-content">Statistic Content</div>
-  </div>
-  <div id="copyright-block">
-    <div id="copyright-content">Copyright Content</div>
-  </div>
+<div id="container">
+  <div id="lead"></div>
+  <div id="question"></div>
+  <div id="answer"></div>
+  <div id="statistic"></div>
+  <div id="copyright"></div>
 </div>
