@@ -14,8 +14,8 @@
 
     // dummy
     {
-      dataset.lead = '"A love B.safdaaaaaaaaaaaaaaaaあああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"';
-      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaaaあああああああああああああああううううううううううううううううううううううううううううううううううううううううううううううううううあああああああああああああああああああああああああああああああああああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
+      dataset.lead = '"A love B.safdaaaaaaaaaaaaaaaaあああああああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいいいいいいいううういうおいうオエうおいうウェイオリクォウェリオウqイオウェ売りおqウィオエ売りおくぅいえrwqいお絵売りおwクゥ言おうれいおクェいおるwくぃおえうりくぉwぷえrああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"';
+      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing tricks].';
     }
 
@@ -25,11 +25,11 @@
   };
   const initializeScreen = () => {
     if (dataset.lead) {
-      const leadElement = document.querySelector('#lead');
-      leadElement.append(dataset.lead);
+      const leadContentElement = document.querySelector('#lead-content');
+      leadContentElement.append(dataset.lead);
     }
-    const copyrightElement = document.querySelector('#copyright');
-    copyrightElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
+    const copyrightContentElement = document.querySelector('#copyright-content');
+    copyrightContentElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
     document.body.addEventListener('touchmove', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
@@ -43,31 +43,21 @@
       }
       alert('click');
     }, {passive: false});
-    window.addEventListener('resize', onResize);
-    adjustScreen();
     resetCard();
-  };
-  const adjustScreen = () => {
-    const appContainerElement = document.querySelector('#container');
-    if (appContainerElement.offsetWidth > appContainerElement.offsetHeight) {
-      appContainerElement.classList.add('is-landscape');
-    } else {
-      appContainerElement.classList.remove('is-landscape');
-    }
   };
   const resetCard = () => {
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const questionElement = document.querySelector('#question');
-    questionElement.innerHTML = questionPhrase.html;
-    addHintBalloons(questionElement, answerPhrase.chosenBranchTexts, questionElement.clientWidth);
-    const answerElement = document.querySelector('#answer');
-    answerElement.innerHTML = answerPhrase.html;
-    addHintBalloons(answerElement, questionPhrase.chosenBranchTexts, answerElement.clientWidth);
+    const queationContentElement = document.querySelector('#question-content');
+    queationContentElement.innerHTML = questionPhrase.html;
+    addHintBalloons(queationContentElement, answerPhrase.chosenBranchTexts, queationContentElement.clientWidth);
+    const answerContentElement = document.querySelector('#answer-content');
+    answerContentElement.innerHTML = answerPhrase.html;
+    addHintBalloons(answerContentElement, questionPhrase.chosenBranchTexts, answerContentElement.clientWidth);
     const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，問題番号：${dataset.changeCount++}）`;
-    const statisticElement = document.querySelector('#statistic');
-    statisticElement.innerHTML = statisticHtml;
+    const statisticContentElement = document.querySelector('#statistic-content');
+    statisticContentElement.innerHTML = statisticHtml;
   };
   const addHintBalloons = (targetContent, hintTextList) => {
     targetContent.style.width = '100%';
@@ -100,10 +90,6 @@
       hintBalloonTailElement.style.height = `${hintBalloonHeight}px`;
     }
   };
-  const onResize = event => {
-    window.clearTimeout(onResize.timeoutId);
-    onResize.timeoutId = window.setTimeout(adjustScreen, 1000);
-  };
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
@@ -114,26 +100,24 @@
     font-size: 4vmin;
     font-family: sans-serif;
   }
-  #container {
+  #app-container {
     display: grid;
-grid-template-rows: max-content 1fr 1fr max-content max-content;
-grid-template-columns: 50% 50%;
-      grid-template-areas:
-        "lead lead"
-        "question answer"
-        "question answer"
-        "statistic statistic"
-        "copyright copyright";
-width: 100%;
-height: 100%;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: min-content 1fr 1fr min-content min-content;
+    grid-template-areas:
+      "lead lead"
+      "question answer"
+      "question answer"
+      "... ..."
+      "statistic copyright";
     position: fixed;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
   }
   @media screen and (orientation: portrait) {
-    #container {
+    #app-container {
       grid-template-areas:
         "lead lead"
         "question question"
@@ -142,42 +126,44 @@ height: 100%;
         "copyright copyright";
     }
   }
-  #lead {
+  #lead-wrapper {
+    grid-area: lead;
     padding: .5rem 1rem;
     font-size: 1.2rem;
-grid-area: lead;
   }
-  #question {
-    grid-area: question;
-  }
-  #answer {
-    grid-area: answer;
-  }
-  #question,
-  #answer {
-//    max-height: 100%;
+  #lead-content {
+    max-height: 20vh;
     overflow-y: auto;
   }
-
-  #question,
-  #answer {
-    padding: .5rem 1rem;
-    font-size: 5rem;
-    background: gold;
+  #question-wrapper {
+    grid-area: question;
   }
-
-  #statistic {
+  #answer-wrapper {
+    grid-area: answer;
+  }
+  #question-wrapper,
+  #answer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .5rem 1rem;
+    overflow-y: auto;
+    font-size: 1.5rem;
+  }
+  #question-content,
+  #answer-content {
+    margin: auto;
+  }
+  #statistic-wrapper {
     grid-area: statistic;
     padding: .5em .5em;
     font-size: .8rem;
-background: blue;
   }
-  #copyright {
-  grid-area: copyright;
+  #copyright-wrapper {
+    grid-area: copyright;
     padding: .5em .5em;
     font-size: .8rem;
     text-align: right;
-    min-height: 3em;
   }
   .branch {
     padding-left: .2em;
@@ -213,10 +199,20 @@ background: blue;
     position: absolute;
   }
 </style>
-<div id="container">
-  <div id="lead"></div>
-  <div id="question"></div>
-  <div id="answer"></div>
-  <div id="statistic"></div>
-  <div id="copyright"></div>
+<div id="app-container">
+  <div id="lead-wrapper">
+    <div id="lead-content"></div>
+  </div>
+  <div id="question-wrapper">
+    <div id="question-content"></div>
+  </div>
+  <div id="answer-wrapper">
+    <div id="answer-content"></div>
+  </div>
+  <div id="statistic-wrapper">
+    <div id="statistic-content"></div>
+  </div>
+  <div id="copyright-wrapper">
+    <div id="copyright-content"></div>
+  </div>
 </div>
