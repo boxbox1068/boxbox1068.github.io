@@ -14,7 +14,7 @@
 
     // dummy
     {
-      dataset.lead = '"A love B.safdaaaaaaaaaaaaaaaaあああああああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいああああああああああああああああああああああああいいいいいいいいううういうおいうオエうおいうウェイオリクォウェリオウqイオウェ売りおqウィオエ売りおくぅいえrwqいお絵売りおwクゥ言おうれいおクェいおるwくぃおえうりくぉwぷえrああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"';
+      dataset.lead = 'あああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓ';
       dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing tricks].';
     }
@@ -30,6 +30,9 @@
     }
     const copyrightContentElement = document.querySelector('#copyright-content');
     copyrightContentElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
+
+
+/*
     document.body.addEventListener('touchmove', event => {
       if (event.target.className == 'branch') {
         event.preventDefault();
@@ -43,6 +46,7 @@
       }
       alert('click');
     }, {passive: false});
+*/
     resetCard();
   };
   const resetCard = () => {
@@ -55,10 +59,50 @@
     const answerContentElement = document.querySelector('#answer-content');
     answerContentElement.innerHTML = answerPhrase.html;
     addHintBalloons(answerContentElement, questionPhrase.chosenBranchTexts, answerContentElement.clientWidth);
-    const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，問題番号：${dataset.changeCount++}）`;
+    const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
     const statisticContentElement = document.querySelector('#statistic-content');
     statisticContentElement.innerHTML = statisticHtml;
   };
+  const addHintBalloons = (targetContent, hintTextList) => {
+    const branchElements = targetContent.querySelectorAll('[data-branch-number]');
+    for (const branchElement of branchElements) {
+      const branchNumber = Number(branchElement.dataset.branchNumber);
+      const hintBalloonBodyElement = document.createElement('span');
+      hintBalloonBodyElement.className = 'hint-balloon-body';
+      const hintText = hintTextList[branchNumber];
+      hintBalloonBodyElement.innerText = hintText;
+      branchElement.append(hintBalloonBodyElement);
+      const hintBalloonTailElement = document.createElement('span');
+      hintBalloonTailElement.className = 'hint-balloon-tail';
+      hintBalloonBodyElement.append(hintBalloonTailElement);
+      branchElement.addEventListener('mouseenter', e => {
+        const branchElement = e.target;
+        const hintBalloonBodyElement = branchElement.querySelector('.hint-balloon-body');
+        const hintBalloonTailElement = branchElement.querySelector('.hint-balloon-tail');
+        const branchRect = branchElement.getBoundingClientRect();
+        hintBalloonBodyElement.style.top = `${branchRect.top}px`;
+        hintBalloonBodyElement.style.left = `${branchRect.left}px`;
+        hintBalloonTailElement.style.top = `${branchRect.top}px`;
+        hintBalloonTailElement.style.left = `${branchRect.left}px`;
+
+
+        hintBalloonBodyElement.style.visibility = 'visible';
+        hintBalloonTailElement.style.visibility = 'visible';
+
+
+alert(branchElement.getBoundingClientRect().top)
+
+      });
+      branchElement.addEventListener('mouseleave', e => {
+        const branchElement = e.target;
+        const hintBalloonBodyElement = branchElement.querySelector('.hint-balloon-body');
+        const hintBalloonTailElement = branchElement.querySelector('.hint-balloon-tail');
+        hintBalloonBodyElement.style.visibility = 'hidden';
+        hintBalloonTailElement.style.visibility = 'hidden';
+      });
+    }
+  }
+/*
   const addHintBalloons = (targetContent, hintTextList) => {
     targetContent.style.width = '100%';
     const hintBalloonMarginRight = targetContent.offsetLeft;
@@ -90,7 +134,8 @@
       hintBalloonTailElement.style.height = `${hintBalloonHeight}px`;
     }
   };
-  window.addEventListener('DOMContentLoaded', main);
+*/
+window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
   * {
@@ -102,66 +147,82 @@
   }
   #app-container {
     display: grid;
-    grid-template-columns: 50% 50%;
-    grid-template-rows: min-content 1fr 1fr min-content min-content;
-    grid-template-areas:
-      "lead lead"
-      "question answer"
-      "question answer"
-      "... ..."
-      "statistic copyright";
+    grid-template:
+      "lead lead" min-content
+      "question answer" 1fr
+      "controller controller" min-content
+      "statistic copyright" min-content
+      / 50% 50%;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-color: #99ddff;
   }
   @media screen and (orientation: portrait) {
     #app-container {
-      grid-template-areas:
-        "lead lead"
-        "question question"
-        "answer answer"
-        "statistic statistic"
-        "copyright copyright";
+      grid-template:
+        "lead" min-content
+        "question" 1fr
+        "answer" 1fr
+        "controller" min-content
+        "statistic" min-content
+        "copyright" min-content
+        / 100%;
     }
   }
   #lead-wrapper {
     grid-area: lead;
-    padding: .5rem 1rem;
+    max-height: 20vh;
+    overflow-y: auto;
     font-size: 1.2rem;
   }
   #lead-content {
-    max-height: 20vh;
-    overflow-y: auto;
+    padding: .4rem 1rem;
   }
   #question-wrapper {
     grid-area: question;
+    margin: 0 .4rem .4rem 0;
   }
   #answer-wrapper {
     grid-area: answer;
+    margin: .4rem 0 0 .4rem;
   }
   #question-wrapper,
   #answer-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: .5rem 1rem;
+    padding: .4rem 1rem;
     overflow-y: auto;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+    background: #ffffffcc;
   }
+  #lead-content,
   #question-content,
   #answer-content {
     margin: auto;
   }
+  #controller-wrapper {
+    grid-area: controller;
+    padding: .4rem 1rem;
+    font-size: 1rem;
+    text-align: right;
+  }
+  #play-audio-button,
+  #auto-play-audio-checkbox,
+  #continue-button {
+    font-size: 1.6rem;
+  }
   #statistic-wrapper {
     grid-area: statistic;
-    padding: .5em .5em;
+    padding: .4rem 1rem;
     font-size: .8rem;
   }
   #copyright-wrapper {
     grid-area: copyright;
-    padding: .5em .5em;
+    padding: .4rem 1rem;
     font-size: .8rem;
     text-align: right;
   }
@@ -192,11 +253,35 @@
   }
   .hint-balloon-body {
     visibility: hidden;
-    position: absolute;
+    position: fixed;
+    margin-top: -.2rem;
+    padding: .4rem;
+    border: .2rem solid gray;
+    border-radius: .2rem;
+    background-color: white;
+    font-weight: bold;
+    white-space: nowrap;
   }
   .hint-balloon-tail {
     visibility: hidden;
+    position: fixed;
+    margin-top: -.2rem;
+  }
+  .hint-balloon-tail:before {
     position: absolute;
+    bottom: -.75em;
+    left: .25em;
+    border: .25em solid transparent;
+    border-top: .5em solid gray;
+    content: "";
+  }
+  .hint-balloon-tail:after {
+    position: absolute;
+    bottom: -.55em;
+    left: .25em;
+    border: .25em solid transparent;
+    border-top: .5em solid white;
+    content: "";
   }
 </style>
 <div id="app-container">
@@ -208,6 +293,12 @@
   </div>
   <div id="answer-wrapper">
     <div id="answer-content"></div>
+  </div>
+  <div id="controller-wrapper">
+    <div id="controller-content">
+      <button id="play-audio-button">音声再生</button><input type="checkbox" id="auto-play-audio-checkbox">
+      <button id="continue-button">次の問題</button>
+    </div>
   </div>
   <div id="statistic-wrapper">
     <div id="statistic-content"></div>
