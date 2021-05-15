@@ -67,38 +67,32 @@
     const branchElements = targetContent.querySelectorAll('[data-branch-number]');
     for (const branchElement of branchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
-      const hintBalloonBodyElement = document.createElement('span');
-      hintBalloonBodyElement.className = 'hint-balloon-body';
+      const hintBalloonContentElement = document.createElement('span');
+      hintBalloonContentElement.className = 'hint-balloon-content';
       const hintText = hintTextList[branchNumber];
-      hintBalloonBodyElement.innerText = hintText;
-      branchElement.append(hintBalloonBodyElement);
-      const hintBalloonTailElement = document.createElement('span');
-      hintBalloonTailElement.className = 'hint-balloon-tail';
-      hintBalloonBodyElement.append(hintBalloonTailElement);
+      hintBalloonContentElement.innerText = hintText;
+      const hintBalloonWrapperElement = document.createElement('span');
+      hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
+      hintBalloonWrapperElement.append(hintBalloonContentElement);
+      branchElement.append(hintBalloonWrapperElement);
       branchElement.addEventListener('mouseenter', e => {
         const branchElement = e.target;
-        const hintBalloonBodyElement = branchElement.querySelector('.hint-balloon-body');
-        const hintBalloonTailElement = branchElement.querySelector('.hint-balloon-tail');
+        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
         const branchRect = branchElement.getBoundingClientRect();
-        hintBalloonBodyElement.style.top = `${branchRect.top}px`;
-        hintBalloonBodyElement.style.left = `${branchRect.left}px`;
-        hintBalloonTailElement.style.top = `${branchRect.top}px`;
-        hintBalloonTailElement.style.left = `${branchRect.left}px`;
+        hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
+        hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
+
+        hintBalloonWrapperElement.style.visibility = 'visible';
 
 
-        hintBalloonBodyElement.style.visibility = 'visible';
-        hintBalloonTailElement.style.visibility = 'visible';
-
-
-alert(branchElement.getBoundingClientRect().top)
+//alert(branchElement.getBoundingClientRect().top)
 
       });
       branchElement.addEventListener('mouseleave', e => {
         const branchElement = e.target;
-        const hintBalloonBodyElement = branchElement.querySelector('.hint-balloon-body');
-        const hintBalloonTailElement = branchElement.querySelector('.hint-balloon-tail');
-        hintBalloonBodyElement.style.visibility = 'hidden';
-        hintBalloonTailElement.style.visibility = 'hidden';
+        const hintBalloonContentElement = branchElement.querySelector('.hint-balloon-content');
+        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+        hintBalloonWrapperElement.style.visibility = 'hidden';
       });
     }
   }
@@ -111,27 +105,27 @@ alert(branchElement.getBoundingClientRect().top)
     const branchElements = targetContent.querySelectorAll('[data-branch-number]');
     for (const branchElement of branchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
-      const hintBalloonBodyElement = document.createElement('div');
-      hintBalloonBodyElement.className = 'hint-balloon-body';
+      const hintBalloonContentElement = document.createElement('div');
+      hintBalloonContentElement.className = 'hint-balloon-content';
       const hintText = hintTextList[branchNumber];
-      hintBalloonBodyElement.innerText = hintText;
-      branchElement.after(hintBalloonBodyElement);
-      const hintBalloonTailElement = document.createElement('div');
-      hintBalloonTailElement.className = 'hint-balloon-tail';
-      hintBalloonBodyElement.after(hintBalloonTailElement);
-      const hintBalloonTop = branchElement.offsetTop - hintBalloonBodyElement.offsetHeight;
+      hintBalloonContentElement.innerText = hintText;
+      branchElement.after(hintBalloonContentElement);
+      const hintBalloonWrapperElement = document.createElement('div');
+      hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
+      hintBalloonContentElement.after(hintBalloonWrapperElement);
+      const hintBalloonTop = branchElement.offsetTop - hintBalloonContentElement.offsetHeight;
       const hintBalloonLeft = branchElement.offsetLeft;
-      const hintBalloonWidth = hintBalloonBodyElement.offsetWidth;
-      const hintBalloonHeight = hintBalloonBodyElement.offsetHeight;
-      const hintBalloonBodyMaxLeft = hintBalloonMaxWidth - hintBalloonWidth;
-      const hintBalloonBodyMarginLeft = Math.min(0, hintBalloonBodyMaxLeft - hintBalloonLeft);
-      hintBalloonBodyElement.style.left = `${hintBalloonLeft}px`;
-      hintBalloonBodyElement.style.top = `${hintBalloonTop}px`;
-      hintBalloonBodyElement.style.marginLeft = `${hintBalloonBodyMarginLeft}px`;
-      hintBalloonTailElement.style.left = `${hintBalloonLeft}px`;
-      hintBalloonTailElement.style.top = `${hintBalloonTop}px`;
-      hintBalloonTailElement.style.width = `${hintBalloonWidth}px`;
-      hintBalloonTailElement.style.height = `${hintBalloonHeight}px`;
+      const hintBalloonWidth = hintBalloonContentElement.offsetWidth;
+      const hintBalloonHeight = hintBalloonContentElement.offsetHeight;
+      const hintBalloonContentMaxLeft = hintBalloonMaxWidth - hintBalloonWidth;
+      const hintBalloonContentMarginLeft = Math.min(0, hintBalloonContentMaxLeft - hintBalloonLeft);
+      hintBalloonContentElement.style.left = `${hintBalloonLeft}px`;
+      hintBalloonContentElement.style.top = `${hintBalloonTop}px`;
+      hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+      hintBalloonWrapperElement.style.left = `${hintBalloonLeft}px`;
+      hintBalloonWrapperElement.style.top = `${hintBalloonTop}px`;
+      hintBalloonWrapperElement.style.width = `${hintBalloonWidth}px`;
+      hintBalloonWrapperElement.style.height = `${hintBalloonHeight}px`;
     }
   };
 */
@@ -141,7 +135,7 @@ window.addEventListener('DOMContentLoaded', main);
   * {
     box-sizing: border-box;
   }
-  :root {
+  html {
     font-size: 4vmin;
     font-family: sans-serif;
   }
@@ -251,37 +245,46 @@ window.addEventListener('DOMContentLoaded', main);
   .branch[data-branch-number="0"] {
     background-color: #F0EA3066;
   }
-  .hint-balloon-body {
+  .hint-balloon-wrapper {
+    --hint-balloon-font-size: 1em;
+    --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.6);
+    --hint-balloon-background-color: #fff;
+    --hint-balloon-border-color: #999;
+    --hint-balloon-border-width: .2rem;
+    display: block;
     visibility: hidden;
     position: fixed;
-    margin-top: -.2rem;
-    padding: .4rem;
-    border: .2rem solid gray;
-    border-radius: .2rem;
-    background-color: white;
+    height: var(--hint-balloon-height);
+    margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
     font-weight: bold;
+    font-size: var(--hint-balloon-font-size);
+  }
+  .hint-balloon-wrapper:before {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: calc(var(--hint-balloon-border-width) * 2);
+    border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
+    border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-border-color);
+    content: "";
+  }
+  .hint-balloon-wrapper:after {
+    display: block;
+    position: absolute;
+    top: calc(100% - .2rem * 2);
+    left: calc(var(--hint-balloon-border-width) * 2);
+    border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
+    border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background-color);
+    content: "";
+  }
+  .hint-balloon-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 calc(var(--hint-balloon-border-width) * 2);
+    border: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
+    background-color: var(--hint-balloon-background-color);
     white-space: nowrap;
-  }
-  .hint-balloon-tail {
-    visibility: hidden;
-    position: fixed;
-    margin-top: -.2rem;
-  }
-  .hint-balloon-tail:before {
-    position: absolute;
-    bottom: -.75em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid gray;
-    content: "";
-  }
-  .hint-balloon-tail:after {
-    position: absolute;
-    bottom: -.55em;
-    left: .25em;
-    border: .25em solid transparent;
-    border-top: .5em solid white;
-    content: "";
   }
 </style>
 <div id="app-container">
