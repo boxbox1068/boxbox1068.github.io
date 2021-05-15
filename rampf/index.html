@@ -37,20 +37,40 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
+/*
     elements.questionContent.innerHTML = questionPhrase.html;
-    addHintBalloons(elements.questionContent, answerPhrase.chosenBranchTexts);
-    elements.answerContent.innerHTML = answerPhrase.html;
-    addHintBalloons(elements.answerContent, questionPhrase.chosenBranchTexts);
-    elements.continueButton.innerHTML = '解答を表示';
-    const continueButtonOnClick = event => {
-      elements.continueButton.removeEventListener('click', continueButtonOnClick);
-      showAnswer();
-    };
-    elements.continueButton.addEventListener('click', continueButtonOnClick);
+    addHintBalloons(elements.questionContent.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
+*/
+    addOnetimeEventListener(elements.questionContent, 'animationend',
+      target => {
+        target.style.animation = 'fadeOut 500ms';
+      }, target => {
+        target.style.visibility = 'hidden';
+        target.innerHTML = questionPhrase.html;
+        addHintBalloons(target.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
+        addOnetimeEventListener(target, 'animationend',
+          target => {
+            target.style.animation = 'fadeIn 500ms';
+          }, target => {
+            target.style.visibility = 'visible';
+          }
+        );
+      }
+    );
+    addOnetimeEventListener(elements.answerContent, 'animationend',
+      target => {
+        target.style.animation = 'fadeOut 500ms';
+      }, target => {
+        target.style.visibility = 'hidden';
+        target.innerHTML = answerPhrase.html;
+        addHintBalloons(target.querySelectorAll('[data-branch-number]'), questionPhrase.chosenBranchTexts);
+      }
+    );
+    addOnetimeEventListener(elements.continueButton, 'click', null, showAnswer);
     elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
   };
-  const addHintBalloons = (targetContent, hintTextList) => {
-    for (const branchElement of targetContent.querySelectorAll('[data-branch-number]')) {
+  const addHintBalloons = (targetBranchElements, hintTextList) => {
+    for (const branchElement of targetBranchElements) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
       const hintBalloonContentElement = document.createElement('span');
       hintBalloonContentElement.className = 'hint-balloon-content';
@@ -78,7 +98,21 @@
     }
   }
   const showAnswer = () => {
-alert('ok');
+    addOnetimeEventListener(elements.answerContent, 'animationend',
+      target => {
+        target.style.animation = 'fadeIn 500ms';
+      }, target => {
+        target.style.visibility = 'visible';
+      }
+    );
+  };
+  const addOnetimeEventListener = (target, listener, callbackBeforeEvent, callbackAfterEvent) => {
+    const eventHandler = event => {
+      target.removeEventListener(listener, eventHandler);
+      callbackAfterEvent && callbackAfterEvent(target);
+    };
+    target.addEventListener(listener, eventHandler);
+    callbackBeforeEvent && callbackBeforeEvent(target);
   };
   window.addEventListener('DOMContentLoaded', main);
 </script>
@@ -92,6 +126,7 @@ alert('ok');
   * {
     box-sizing: border-box;
     overflow: hidden;
+    animation-fill-mode: forwards;
   }
   body {
     display: grid;
