@@ -132,13 +132,13 @@
 window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
+  :root {
+    font-size: 4vmin;
+    font-family: sans-serif;
+  }
   * {
     box-sizing: border-box;
     overflow: hidden;
-  }
-  html {
-    font-size: 4vmin;
-    font-family: sans-serif;
   }
   #app-container {
     display: grid;
@@ -170,19 +170,24 @@ window.addEventListener('DOMContentLoaded', main);
   #lead-wrapper {
     grid-area: lead;
     max-height: 20vh;
+    padding: .4rem 1rem;
     overflow-y: auto;
-    font-size: 1.2rem;
   }
   #lead-content {
-    padding: .4rem 1rem;
+    --font-size: 1.2rem;
+    font-size: var(--font-size);
+    overflow-wrap: break-word;
+    line-height: calc(var(--font-size) * 1.6);
   }
   #question-wrapper {
     grid-area: question;
-    margin: 0 .4rem .4rem 0;
+    margin: .2rem .4rem .2rem 0;
+    margin-left: 0;
   }
   #answer-wrapper {
     grid-area: answer;
-    margin: .4rem 0 0 .4rem;
+    margin: .2rem 0 .2rem .4rem;
+    margin-right: 0;
   }
   #question-wrapper,
   #answer-wrapper {
@@ -191,14 +196,15 @@ window.addEventListener('DOMContentLoaded', main);
     align-items: center;
     padding: .4rem 1rem;
     overflow-y: auto;
-    font-size: 1.6rem;
-    background: #ffffffcc;
+    background-color: #ffffffcc;
   }
-  #lead-content,
   #question-content,
   #answer-content {
+    --font-size: 1.6rem;
     margin: auto;
-    overflow-wrap: anywhere;
+    font-size: var(--font-size);
+    overflow-wrap: break-word;
+    line-height: calc(var(--font-size) * 1.6);
   }
   #controller-wrapper {
     grid-area: controller;
@@ -223,8 +229,8 @@ window.addEventListener('DOMContentLoaded', main);
     text-align: right;
   }
   .branch {
-    padding-left: .2em;
-    padding-right: .2em;
+//    padding-left: .2em;
+//    padding-right: .2em;
     font-weight: bold;
   }
   .branch[data-branch-number="1"],
