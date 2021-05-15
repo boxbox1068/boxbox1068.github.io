@@ -4,8 +4,17 @@
 <script type="module">
   import {QueryParser} from './js/query-parser.js';
   import {RabbitPhrase} from './js/rabbit-phrase.js';
+  const elements = {};
   const dataset = {};
   const main = () => {
+    for (const element of document.querySelectorAll('[id]')) {
+      if (element.id) {
+        const key = element.id.replace(/-(.)/g, (match, p1, offset, string) => {
+          return p1.toUpperCase();
+        });
+        elements[key] = element;
+      }
+    }
     const queryParser = new QueryParser();
     dataset.lead = queryParser.getValue('lead', 'string', '');
     dataset.questionTemplate = queryParser.getValue('question', 'string', '');
@@ -21,118 +30,57 @@
 
 
 
-    initializeScreen();
-  };
-  const initializeScreen = () => {
     if (dataset.lead) {
       const leadContentElement = document.querySelector('#lead-content');
       leadContentElement.append(dataset.lead);
     }
-    const copyrightContentElement = document.querySelector('#copyright-content');
-    copyrightContentElement.innerHTML = '<b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
 
-
-/*
-    document.body.addEventListener('touchmove', event => {
-      if (event.target.className == 'branch') {
-        event.preventDefault();
-        return;
-      }
-    }, {passive: false});
-    document.body.addEventListener('click', event => {
-      if (event.target.className == 'branch') {
-        event.preventDefault();
-        return;
-      }
-      alert('click');
-    }, {passive: false});
-*/
     resetCard();
   };
   const resetCard = () => {
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    const queationContentElement = document.querySelector('#question-content');
-    queationContentElement.innerHTML = questionPhrase.html;
-    addHintBalloons(queationContentElement, answerPhrase.chosenBranchTexts, queationContentElement.clientWidth);
-    const answerContentElement = document.querySelector('#answer-content');
-    answerContentElement.innerHTML = answerPhrase.html;
-    addHintBalloons(answerContentElement, questionPhrase.chosenBranchTexts, answerContentElement.clientWidth);
-    const statisticHtml = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
-    const statisticContentElement = document.querySelector('#statistic-content');
-    statisticContentElement.innerHTML = statisticHtml;
+    elements.questionContent.innerHTML = questionPhrase.html;
+    addHintBalloons(elements.questionContent, answerPhrase.chosenBranchTexts);
+    elements.answerContent.innerHTML = answerPhrase.html;
+    addHintBalloons(elements.answerContent, questionPhrase.chosenBranchTexts);
+    elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
   };
   const addHintBalloons = (targetContent, hintTextList) => {
-    const branchElements = targetContent.querySelectorAll('[data-branch-number]');
-    for (const branchElement of branchElements) {
+    for (const branchElement of targetContent.querySelectorAll('[data-branch-number]')) {
       const branchNumber = Number(branchElement.dataset.branchNumber);
       const hintBalloonContentElement = document.createElement('span');
       hintBalloonContentElement.className = 'hint-balloon-content';
-      const hintText = hintTextList[branchNumber];
-      hintBalloonContentElement.innerText = hintText;
+      hintBalloonContentElement.innerText = hintTextList[branchNumber];
       const hintBalloonWrapperElement = document.createElement('span');
       hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
       hintBalloonWrapperElement.append(hintBalloonContentElement);
       branchElement.append(hintBalloonWrapperElement);
-
-
-      const appContainerElement = document.body;
       const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
-      const hintBalloonContentMarginLeft = Math.min(0, appContainerElement.offsetWidth - hintBalloonRight);
+      const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
       hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-      branchElement.addEventListener('mouseenter', e => {
-        const branchElement = e.target;
+      branchElement.addEventListener('mouseenter', event => {
+        const branchElement = event.target;
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-        const branchRect = branchElement.getBoundingClientRect();
+        const branchRect = branchElement.getClientRects()[0];
         hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
-        hintBalloonWrapperElement.style.left = `${branchElement.offsetLeft}px`;
+        hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
         hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
       });
-      branchElement.addEventListener('mouseleave', e => {
-        const branchElement = e.target;
+      branchElement.addEventListener('mouseleave', event => {
+        const branchElement = event.target;
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
         hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
       });
     }
   }
-/*
-  const addHintBalloons = (targetContent, hintTextList) => {
-    targetContent.style.width = '100%';
-    const hintBalloonMarginRight = targetContent.offsetLeft;
-    targetContent.style.width = '';
-    const hintBalloonMaxWidth = targetContent.offsetWidth + targetContent.offsetLeft - hintBalloonMarginRight;
-    const branchElements = targetContent.querySelectorAll('[data-branch-number]');
-    for (const branchElement of branchElements) {
-      const branchNumber = Number(branchElement.dataset.branchNumber);
-      const hintBalloonContentElement = document.createElement('div');
-      hintBalloonContentElement.className = 'hint-balloon-content';
-      const hintText = hintTextList[branchNumber];
-      hintBalloonContentElement.innerText = hintText;
-      branchElement.after(hintBalloonContentElement);
-      const hintBalloonWrapperElement = document.createElement('div');
-      hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
-      hintBalloonContentElement.after(hintBalloonWrapperElement);
-      const hintBalloonTop = branchElement.offsetTop - hintBalloonContentElement.offsetHeight;
-      const hintBalloonLeft = branchElement.offsetLeft;
-      const hintBalloonWidth = hintBalloonContentElement.offsetWidth;
-      const hintBalloonHeight = hintBalloonContentElement.offsetHeight;
-      const hintBalloonContentMaxLeft = hintBalloonMaxWidth - hintBalloonWidth;
-      const hintBalloonContentMarginLeft = Math.min(0, hintBalloonContentMaxLeft - hintBalloonLeft);
-      hintBalloonContentElement.style.left = `${hintBalloonLeft}px`;
-      hintBalloonContentElement.style.top = `${hintBalloonTop}px`;
-      hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-      hintBalloonWrapperElement.style.left = `${hintBalloonLeft}px`;
-      hintBalloonWrapperElement.style.top = `${hintBalloonTop}px`;
-      hintBalloonWrapperElement.style.width = `${hintBalloonWidth}px`;
-      hintBalloonWrapperElement.style.height = `${hintBalloonHeight}px`;
-    }
-  };
-*/
-window.addEventListener('DOMContentLoaded', main);
+  window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
   :root {
+    --background-color: #ccc;
+    --panel-color: #fffc;
     font-size: 4vmin;
     font-family: sans-serif;
   }
@@ -155,7 +103,7 @@ window.addEventListener('DOMContentLoaded', main);
     height: 100%;
     margin: 0;
     overflow: hidden;
-    background-color: #99ddff;
+    background-color: var(--background-color);
   }
   @media screen and (orientation: portrait) {
     body {
@@ -198,7 +146,7 @@ window.addEventListener('DOMContentLoaded', main);
     align-items: center;
     padding: .5rem 1rem;
     overflow-y: auto;
-    background-color: #ffffffcc;
+    background-color: var(--panel-color);
   }
   #question-content,
   #answer-content {
@@ -336,5 +284,7 @@ window.addEventListener('DOMContentLoaded', main);
   <div id="statistic-content"></div>
 </div>
 <div id="copyright-wrapper">
-  <div id="copyright-content"></div>
+  <div id="copyright-content">
+    <b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>
+  </div>
 </div>
