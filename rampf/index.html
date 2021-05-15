@@ -28,13 +28,9 @@
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing triaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacks].';
     }
 
-
-
     if (dataset.lead) {
-      const leadContentElement = document.querySelector('#lead-content');
-      leadContentElement.append(dataset.lead);
+      elements.leadContent.append(dataset.lead);
     }
-
     resetCard();
   };
   const resetCard = () => {
@@ -45,6 +41,12 @@
     addHintBalloons(elements.questionContent, answerPhrase.chosenBranchTexts);
     elements.answerContent.innerHTML = answerPhrase.html;
     addHintBalloons(elements.answerContent, questionPhrase.chosenBranchTexts);
+    elements.continueButton.innerHTML = '解答を表示';
+    const continueButtonOnClick = event => {
+      elements.continueButton.removeEventListener('click', continueButtonOnClick);
+      showAnswer();
+    };
+    elements.continueButton.addEventListener('click', continueButtonOnClick);
     elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
   };
   const addHintBalloons = (targetContent, hintTextList) => {
@@ -75,6 +77,9 @@
       });
     }
   }
+  const showAnswer = () => {
+alert('ok');
+  };
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
