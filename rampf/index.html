@@ -37,36 +37,24 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-/*
-    elements.questionContent.innerHTML = questionPhrase.html;
-    addHintBalloons(elements.questionContent.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
-*/
-    addOnetimeEventListener(elements.questionContent, 'animationend',
-      target => {
-        target.style.animation = 'fadeOut 500ms';
-      }, target => {
-        target.style.visibility = 'hidden';
-        target.innerHTML = questionPhrase.html;
-        addHintBalloons(target.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
-        addOnetimeEventListener(target, 'animationend',
-          target => {
-            target.style.animation = 'fadeIn 500ms';
-          }, target => {
-            target.style.visibility = 'visible';
-          }
-        );
-      }
-    );
-    addOnetimeEventListener(elements.answerContent, 'animationend',
-      target => {
-        target.style.animation = 'fadeOut 500ms';
-      }, target => {
-        target.style.visibility = 'hidden';
-        target.innerHTML = answerPhrase.html;
-        addHintBalloons(target.querySelectorAll('[data-branch-number]'), questionPhrase.chosenBranchTexts);
-      }
-    );
-    addOnetimeEventListener(elements.continueButton, 'click', null, showAnswer);
+    addOnetimeEventListener(elements.questionContent, 'animationend', target => {
+      target.style.visibility = 'hidden';
+      target.innerHTML = questionPhrase.html;
+      addHintBalloons(target.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
+      target.style.animation = 'fadeIn 500ms';
+      target.style.visibility = 'visible';
+      target.scrollTop = 0;
+    });
+    elements.questionContent.style.animation = 'fadeOut 500ms';
+    addOnetimeEventListener(elements.answerContent, 'animationend', target => {
+      target.style.visibility = 'hidden';
+      target.scrollTop = 0;
+      target.innerHTML = answerPhrase.html;
+      addHintBalloons(target.querySelectorAll('[data-branch-number]'), questionPhrase.chosenBranchTexts);
+    });
+    elements.answerContent.style.animation = 'fadeOut 500ms';
+    addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
+    elements.continueButton.innerHTML = '答えを表示';
     elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
   };
   const addHintBalloons = (targetBranchElements, hintTextList) => {
@@ -98,22 +86,21 @@
     }
   }
   const showAnswer = () => {
-    addOnetimeEventListener(elements.answerContent, 'animationend',
-      target => {
-        target.style.animation = 'fadeIn 500ms';
-      }, target => {
-        target.style.visibility = 'visible';
-      }
-    );
+    addOnetimeEventListener(elements.answerContent, 'animationend', target => {
+      target.style.visibility = 'visible';
+      target.scrollTop = 0;
+    });
+    elements.answerContent.style.animation = 'fadeIn 500ms';
+    addOnetimeEventListener(elements.continueButton, 'click', resetCard);
+    elements.continueButton.innerHTML = '次の問題';
   };
-  const addOnetimeEventListener = (target, listener, callbackBeforeEvent, callbackAfterEvent) => {
+  const addOnetimeEventListener = (target, listener, callback) => {
     const eventHandler = event => {
       target.removeEventListener(listener, eventHandler);
-      callbackAfterEvent && callbackAfterEvent(target);
-    };
+      callback && callback(target);
+    }
     target.addEventListener(listener, eventHandler);
-    callbackBeforeEvent && callbackBeforeEvent(target);
-  };
+  }
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
