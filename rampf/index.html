@@ -81,36 +81,18 @@
       const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
       const hintBalloonContentMarginLeft = Math.min(0, appContainerElement.offsetWidth - hintBalloonRight);
       hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-console.log(document.body.offsetWidth + ',' + document.querySelector('#app-container').offsetWidth);
-
-
       branchElement.addEventListener('mouseenter', e => {
         const branchElement = e.target;
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-//        const hintBalloonContentElement = branchElement.querySelector('.hint-balloon-content');
         const branchRect = branchElement.getBoundingClientRect();
-
-/*
-        const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
-        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
-console.log(hintBalloonRight);
-*/
-//console.log(hintBalloonContentMarginLeft);
-//console.log(hintBalloonContentElement.getBoundingClientRect().right);
-//hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-
-//alert(branchElement.offsetLeft);
-//        const hintBalloonContentRight = branchElement.offsetLeft + hintBalloonContentElement.offsetWidth;
-//        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - (branchElement.offsetLeft + hintBalloonContentElement.offsetWidth));
-
         hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
         hintBalloonWrapperElement.style.left = `${branchElement.offsetLeft}px`;
-        hintBalloonWrapperElement.style.visibility = 'visible';
+        hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
       });
       branchElement.addEventListener('mouseleave', e => {
         const branchElement = e.target;
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-        hintBalloonWrapperElement.style.visibility = 'hidden';
+        hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
       });
     }
   }
@@ -309,6 +291,26 @@ window.addEventListener('DOMContentLoaded', main);
   }
   .branch:hover .hint-balloon-wrapper {
     visibility: visible;
+  }
+  @keyframes fadeIn {
+    0% {
+      visibility: hidden;
+      opacity: 0;
+    }
+    100% {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  @keyframes fadeOut {
+    0% {
+      visibility: visible;
+      opacity: 1;
+    }
+    100% {
+      visibility: hidden;
+      opacity: 0;
+    }
   }
 </style>
 <div id="app-container">

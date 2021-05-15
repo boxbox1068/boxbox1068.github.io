@@ -52,7 +52,7 @@ const htmlTemplate = template;
       const chosenBranchId = chosenBranchIds[branchNumber];
       const chosenBranch = branchTexts[chosenBranchId];
       if (chosenBranch && isMainBranch) {
-        return `<span class="branch" data-branch-number="${branchNumber}">${chosenBranch}</span>`;
+        return `<a class="branch" data-branch-number="${branchNumber}">${chosenBranch}</a>`;
       } else {
         return chosenBranch;
       }
