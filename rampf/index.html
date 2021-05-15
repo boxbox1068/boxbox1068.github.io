@@ -77,7 +77,7 @@
       branchElement.append(hintBalloonWrapperElement);
 
 
-      const appContainerElement = document.querySelector('#app-container');
+      const appContainerElement = document.body;
       const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
       const hintBalloonContentMarginLeft = Math.min(0, appContainerElement.offsetWidth - hintBalloonRight);
       hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', main);
     box-sizing: border-box;
     overflow: hidden;
   }
-  #app-container {
+  body {
     display: grid;
     grid-template:
       "lead lead" min-content
@@ -153,10 +153,12 @@ window.addEventListener('DOMContentLoaded', main);
     left: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
+    overflow: hidden;
     background-color: #99ddff;
   }
   @media screen and (orientation: portrait) {
-    #app-container {
+    body {
       grid-template:
         "lead" min-content
         "question" 1fr
@@ -169,24 +171,24 @@ window.addEventListener('DOMContentLoaded', main);
   }
   #lead-wrapper {
     grid-area: lead;
+    min-height: 2rem;
     max-height: 20vh;
-    padding: .4rem 1rem;
+    padding: .5rem 1rem;
     overflow-y: auto;
   }
   #lead-content {
-    --font-size: 1.2rem;
-    font-size: var(--font-size);
+    font-size: 1.25rem;
     overflow-wrap: break-word;
-    line-height: calc(var(--font-size) * 1.6);
+    line-height: 1.5em;
   }
   #question-wrapper {
     grid-area: question;
-    margin: .2rem .4rem .2rem 0;
+    margin: .5rem;
     margin-left: 0;
   }
   #answer-wrapper {
     grid-area: answer;
-    margin: .2rem 0 .2rem .4rem;
+    margin: .5rem;
     margin-right: 0;
   }
   #question-wrapper,
@@ -194,43 +196,39 @@ window.addEventListener('DOMContentLoaded', main);
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: .4rem 1rem;
+    padding: .5rem 1rem;
     overflow-y: auto;
     background-color: #ffffffcc;
   }
   #question-content,
   #answer-content {
-    --font-size: 1.6rem;
     margin: auto;
-    font-size: var(--font-size);
+    font-size: 1.5rem;
     overflow-wrap: break-word;
-    line-height: calc(var(--font-size) * 1.6);
+    line-height: 1.5em;
   }
   #controller-wrapper {
     grid-area: controller;
-    padding: .4rem 1rem;
-    font-size: 1rem;
+    padding: .5rem 1rem;
     text-align: right;
   }
   #play-audio-button,
   #auto-play-audio-checkbox,
   #continue-button {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   #statistic-wrapper {
     grid-area: statistic;
-    padding: .4rem 1rem;
-    font-size: .8rem;
+    padding: .5rem 1rem;
+    font-size: .75rem;
   }
   #copyright-wrapper {
     grid-area: copyright;
-    padding: .4rem 1rem;
-    font-size: .8rem;
+    padding: .5rem 1rem;
+    font-size: .75rem;
     text-align: right;
   }
   .branch {
-//    padding-left: .2em;
-//    padding-right: .2em;
     font-weight: bold;
   }
   .branch[data-branch-number="1"],
@@ -319,26 +317,24 @@ window.addEventListener('DOMContentLoaded', main);
     }
   }
 </style>
-<div id="app-container">
-  <div id="lead-wrapper">
-    <div id="lead-content"></div>
+<div id="lead-wrapper">
+  <div id="lead-content"></div>
+</div>
+<div id="question-wrapper">
+  <div id="question-content"></div>
+</div>
+<div id="answer-wrapper">
+  <div id="answer-content"></div>
+</div>
+<div id="controller-wrapper">
+  <div id="controller-content">
+    <button id="play-audio-button">音声再生</button><input type="checkbox" id="auto-play-audio-checkbox">
+    <button id="continue-button">次の問題</button>
   </div>
-  <div id="question-wrapper">
-    <div id="question-content"></div>
-  </div>
-  <div id="answer-wrapper">
-    <div id="answer-content"></div>
-  </div>
-  <div id="controller-wrapper">
-    <div id="controller-content">
-      <button id="play-audio-button">音声再生</button><input type="checkbox" id="auto-play-audio-checkbox">
-      <button id="continue-button">次の問題</button>
-    </div>
-  </div>
-  <div id="statistic-wrapper">
-    <div id="statistic-content"></div>
-  </div>
-  <div id="copyright-wrapper">
-    <div id="copyright-content"></div>
-  </div>
+</div>
+<div id="statistic-wrapper">
+  <div id="statistic-content"></div>
+</div>
+<div id="copyright-wrapper">
+  <div id="copyright-content"></div>
 </div>
