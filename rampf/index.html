@@ -15,8 +15,8 @@
     // dummy
     {
       dataset.lead = 'あああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓ';
-      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるの|いたずらするの]が大好き。';
-      dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing tricks].';
+      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるdsfadfasfasdsdfasdfasdfasdfsdafasdfasdfasdfasdfasの|いたずらするの]が大好き。';
+      dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing triaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacks].';
     }
 
 
@@ -75,22 +75,40 @@
       hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
       hintBalloonWrapperElement.append(hintBalloonContentElement);
       branchElement.append(hintBalloonWrapperElement);
+
+
+      const appContainerElement = document.querySelector('#app-container');
+      const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
+      const hintBalloonContentMarginLeft = Math.min(0, appContainerElement.offsetWidth - hintBalloonRight);
+      hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+console.log(document.body.offsetWidth + ',' + document.querySelector('#app-container').offsetWidth);
+
+
       branchElement.addEventListener('mouseenter', e => {
         const branchElement = e.target;
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+//        const hintBalloonContentElement = branchElement.querySelector('.hint-balloon-content');
         const branchRect = branchElement.getBoundingClientRect();
+
+/*
+        const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
+        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
+console.log(hintBalloonRight);
+*/
+//console.log(hintBalloonContentMarginLeft);
+//console.log(hintBalloonContentElement.getBoundingClientRect().right);
+//hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+
+//alert(branchElement.offsetLeft);
+//        const hintBalloonContentRight = branchElement.offsetLeft + hintBalloonContentElement.offsetWidth;
+//        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - (branchElement.offsetLeft + hintBalloonContentElement.offsetWidth));
+
         hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
-        hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
-
+        hintBalloonWrapperElement.style.left = `${branchElement.offsetLeft}px`;
         hintBalloonWrapperElement.style.visibility = 'visible';
-
-
-//alert(branchElement.getBoundingClientRect().top)
-
       });
       branchElement.addEventListener('mouseleave', e => {
         const branchElement = e.target;
-        const hintBalloonContentElement = branchElement.querySelector('.hint-balloon-content');
         const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
         hintBalloonWrapperElement.style.visibility = 'hidden';
       });
@@ -134,6 +152,7 @@ window.addEventListener('DOMContentLoaded', main);
 <style>
   * {
     box-sizing: border-box;
+    overflow: hidden;
   }
   html {
     font-size: 4vmin;
@@ -197,6 +216,7 @@ window.addEventListener('DOMContentLoaded', main);
   #question-content,
   #answer-content {
     margin: auto;
+    overflow-wrap: anywhere;
   }
   #controller-wrapper {
     grid-area: controller;
@@ -256,6 +276,7 @@ window.addEventListener('DOMContentLoaded', main);
     position: fixed;
     height: var(--hint-balloon-height);
     margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
+    overflow: visible;
     font-weight: bold;
     font-size: var(--hint-balloon-font-size);
   }
@@ -285,6 +306,9 @@ window.addEventListener('DOMContentLoaded', main);
     border: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
     background-color: var(--hint-balloon-background-color);
     white-space: nowrap;
+  }
+  .branch:hover .hint-balloon-wrapper {
+    visibility: visible;
   }
 </style>
 <div id="app-container">
