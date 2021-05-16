@@ -19,13 +19,15 @@
     dataset.lead = queryParser.getValue('lead', 'string', '');
     dataset.questionTemplate = queryParser.getValue('question', 'string', '');
     dataset.answerTemplate = queryParser.getValue('answer', 'string', '');
-    dataset.changeCount = 0;
+    dataset.animation = queryParser.getValue('animation', 'string', '').trim().toLowerCase();
+    dataset.trainingCount = 0;
 
     // dummy
     {
       dataset.lead = 'あああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓ';
       dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるdsfadfasfasdsdfasdfasdfasdfsdafasdfasdfasdfasdfasの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing triaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacks].';
+      dataset.animation = 'cover';
     }
 
     if (dataset.lead) {
@@ -37,67 +39,132 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+    elements.patternCount.innerHTML = questionPhrase.possiblePathCount;
+    elements.patternId.innerHTML = questionPhrase.pathId;
+    elements.trainingCount.innerHTML = dataset.trainingCount++;
+    const addHintBalloons = (targetContent, hintTextList) => {
+      const branchElements = targetContent.querySelectorAll('.branch');
+      for (const branchElement of branchElements) {
+        const branchNumber = Number(branchElement.dataset.branchNumber);
+        const hintBalloonContentElement = document.createElement('span');
+        hintBalloonContentElement.className = 'hint-balloon-content';
+        hintBalloonContentElement.innerText = hintTextList[branchNumber];
+        const hintBalloonWrapperElement = document.createElement('span');
+        hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
+        hintBalloonWrapperElement.append(hintBalloonContentElement);
+        branchElement.append(hintBalloonWrapperElement);
+        const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
+        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
+        hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+        branchElement.addEventListener('mouseenter', event => {
+          const branchElement = event.target;
+          const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+          const branchRect = branchElement.getClientRects()[0];
+          hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
+          hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
+          hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
+        });
+        branchElement.addEventListener('mouseleave', event => {
+          const branchElement = event.target;
+          const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+          hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
+        });
+      }
+    }
+    const resetQuestion = () => {
       elements.questionWrapper.scrollTop = 0;
       elements.questionContent.innerHTML = questionPhrase.html;
-      elements.questionCover.style.visibility = 'visible';
-      elements.questionWrapper.style.animation = 'flipB 200ms';
-      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
-        elements.answerWrapper.scrollTop = 0;
-        elements.answerContent.innerHTML = answerPhrase.html;
-        elements.answerCover.style.visibility = 'visible';
-        elements.answerWrapper.style.animation = 'flipB 200ms';
-        addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
-          elements.questionCover.style.visibility = 'hidden';
-          addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
-            addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
-            elements.continueButton.innerHTML = '答えを表示';
-          });
-          elements.questionWrapper.style.animation = 'flipB 200ms';
-        });
-        elements.questionWrapper.style.animation = 'flipA 200ms';
-      });
-      elements.answerWrapper.style.animation = 'flipA 200ms';
-    });
-    elements.questionWrapper.style.animation = 'flipA 200ms';
-    elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
-  };
-  const addHintBalloons = (targetBranchElements, hintTextList) => {
-    for (const branchElement of targetBranchElements) {
-      const branchNumber = Number(branchElement.dataset.branchNumber);
-      const hintBalloonContentElement = document.createElement('span');
-      hintBalloonContentElement.className = 'hint-balloon-content';
-      hintBalloonContentElement.innerText = hintTextList[branchNumber];
-      const hintBalloonWrapperElement = document.createElement('span');
-      hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
-      hintBalloonWrapperElement.append(hintBalloonContentElement);
-      branchElement.append(hintBalloonWrapperElement);
-      const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
-      const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
-      hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-      branchElement.addEventListener('mouseenter', event => {
-        const branchElement = event.target;
-        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-        const branchRect = branchElement.getClientRects()[0];
-        hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
-        hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
-        hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
-      });
-      branchElement.addEventListener('mouseleave', event => {
-        const branchElement = event.target;
-        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-        hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
-      });
+      addHintBalloons(elements.questionContent, answerPhrase.chosenBranchTexts);
+    };
+    const uncoverQuestion = () => {
+      elements.questionCover.style.visibility = 'hidden';
+    };
+    const resetAnswer = () => {
+      elements.answerWrapper.scrollTop = 0;
+      elements.answerContent.innerHTML = answerPhrase.html;
+      addHintBalloons(elements.answerContent, questionPhrase.chosenBranchTexts);
     }
-  }
+    const coverAnswer = () => {
+      elements.answerCover.style.visibility = 'visible';
+    };
+    const enableContinueButton = () => {
+      addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
+      elements.continueButton.innerHTML = '答えを表示';
+    }
+    if (dataset.animation == 'flip') {
+      addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+        addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+          resetAnswer();
+          coverAnswer();
+          elements.answerWrapper.style.animation = 'flipB 250ms';
+        });
+        elements.answerWrapper.style.animation = 'flipA 250ms';
+        resetQuestion();
+        uncoverQuestion();
+        addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+          enableContinueButton();
+        });
+        elements.questionWrapper.style.animation = 'flipB 250ms';
+      });
+      elements.questionWrapper.style.animation = 'flipA 250ms';
+    } else if (dataset.animation == 'cover') {
+      addOnetimeEventListener(elements.questionCover, 'animationend', target => {
+        resetQuestion();
+        addOnetimeEventListener(elements.questionCover, 'animationend', target => {
+          uncoverQuestion();
+        });
+        elements.questionCover.style.animation = 'slideOutToLeft 250ms';
+        addOnetimeEventListener(elements.answerCover, 'animationend', target => {
+          resetAnswer();
+          coverAnswer();
+          enableContinueButton();
+        });
+        if (dataset.trainingCount > 1) {
+          elements.answerCover.style.animation = 'slideInFromRight 250ms';
+        } else {
+          elements.answerCover.style.animation = 'dummySlide 0ms';
+        }
+      });
+      if (dataset.trainingCount > 1) {
+        elements.questionCover.style.animation = 'slideInFromLeft 250ms';
+      } else {
+        elements.questionCover.style.animation = 'dummySlide 0ms';
+      }
+    } else {
+      resetQuestion();
+      uncoverQuestion();
+      resetAnswer();
+      coverAnswer();
+      enableContinueButton();
+    }
+  };
   const showAnswer = () => {
-    addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+    const uncoverAnswer = () => {
       elements.answerCover.style.visibility = 'hidden';
-      elements.answerWrapper.style.animation = 'flipB 200ms';
+    };
+    const enableContinueButton = () => {
       addOnetimeEventListener(elements.continueButton, 'click', resetCard);
-    });
-    elements.answerWrapper.style.animation = 'flipA 200ms';
-    elements.continueButton.innerHTML = '次の問題';
+      elements.continueButton.innerHTML = '次の問題';
+    };
+    if (dataset.animation == 'flip') {
+      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+        uncoverAnswer();
+        addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+          enableContinueButton();
+        });
+        elements.answerWrapper.style.animation = 'flipB 250ms';
+      });
+      elements.answerWrapper.style.animation = 'flipA 250ms';
+    } else if (dataset.animation == 'cover') {
+      addOnetimeEventListener(elements.answerCover, 'animationend', target => {
+        uncoverAnswer();
+        enableContinueButton();
+      });
+      elements.answerCover.style.animation = 'slideOutToRight 250ms';
+    } else {
+      uncoverAnswer();
+      enableContinueButton();
+    }
   };
   const addOnetimeEventListener = (target, listener, callback) => {
     const eventHandler = event => {
@@ -181,6 +248,8 @@
     overflow-y: auto;
     background-color: var(--panel-color);
   }
+  #question-background,
+  #answer-background,
   #question-cover,
   #answer-cover {
     display: flex;
@@ -191,18 +260,30 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: purple;
     font-weight: bold;
     font-size: 10rem;
   }
+  #question-background:before,
   #question-cover:before {
     content: "Q";
   }
+  #answer-background:before,
   #answer-cover:before {
     content: "A";
   }
+  #question-background,
+  #answer-background {
+    background-color: white;
+    color: lightgray;
+  }
+  #question-cover,
+  #answer-cover {
+    background-color: purple;
+    color: black;
+  }
   #question-content,
   #answer-content {
+    position: relative;
     margin: auto;
     font-size: 1.5rem;
     overflow-wrap: break-word;
@@ -297,6 +378,48 @@
   .branch:hover .hint-balloon-wrapper {
     visibility: visible;
   }
+  @keyframes dummySlide {
+    0% {
+    }
+    100% {
+    }
+  }
+  @keyframes slideInFromLeft {
+    0% {
+      visibility: visible;
+      left: -100%;
+    }
+    100% {
+      left: 0;
+    }
+  }
+  @keyframes slideOutToLeft {
+    0% {
+      visibility: visible;
+      left: 0;
+    }
+    100% {
+      left: -100%;
+    }
+  }
+  @keyframes slideInFromRight {
+    0% {
+      visibility: visible;
+      left: 100%;
+    }
+    100% {
+      left: 0;
+    }
+  }
+  @keyframes slideOutToRight {
+    0% {
+      visibility: visible;
+      left: 0;
+    }
+    100% {
+      left: 100%;
+    }
+  }
   @keyframes flipA {
     0% {
       transform: rotateX(0);
@@ -341,12 +464,14 @@
   <div id="lead-content"></div>
 </div>
 <div id="question-wrapper">
-  <div id="question-cover"></div>
+  <div id="question-background"></div>
   <div id="question-content"></div>
+  <div id="question-cover"></div>
 </div>
 <div id="answer-wrapper">
-  <div id="answer-cover"></div>
+  <div id="answer-background"></div>
   <div id="answer-content"></div>
+  <div id="answer-cover"></div>
 </div>
 <div id="controller-wrapper">
   <div id="controller-content">
@@ -355,7 +480,9 @@
   </div>
 </div>
 <div id="statistic-wrapper">
-  <div id="statistic-content"></div>
+  <div id="statistic-content">
+    <span>（総パターン数：<span id="pattern-count"></span>，パターンID：<span id="pattern-id"></span>，練習回数：<span id="training-count"></span>）</span>
+  </div>
 </div>
 <div id="copyright-wrapper">
   <div id="copyright-content">
