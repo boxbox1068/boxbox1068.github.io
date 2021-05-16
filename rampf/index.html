@@ -27,144 +27,166 @@
       dataset.lead = 'あああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓ';
       dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるdsfadfasfasdsdfasdfasdfasdfsdafasdfasdfasdfasdfasの|いたずらするの]が大好き。';
       dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing triaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacks].';
-      dataset.animation = 'cover';
+      dataset.animation = 'flip';
     }
 
     if (dataset.lead) {
       elements.leadContent.append(dataset.lead);
     }
+    elements.playAudioButton.addEventListener('click', playAudio);
+    elements.continueButton.addEventListener('click', () => {
+      if (dataset.isAnswerShown) {
+        resetCard();
+      } else {
+        showAnswer();
+      }
+    });
+    elements.skipButton.addEventListener('click', resetCard);
     resetCard();
   };
   const resetCard = () => {
+    disableButtons();
     const pathIdSeed = Math.random();
-    const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
-    const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    elements.patternCount.innerHTML = questionPhrase.possiblePathCount;
-    elements.patternId.innerHTML = questionPhrase.pathId;
+    dataset.questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
+    dataset.answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
+    elements.patternCount.innerHTML = dataset.questionPhrase.possiblePathCount;
+    elements.patternId.innerHTML = dataset.questionPhrase.pathId;
     elements.trainingCount.innerHTML = dataset.trainingCount++;
-    const addHintBalloons = (targetContent, hintTextList) => {
-      const branchElements = targetContent.querySelectorAll('.branch');
-      for (const branchElement of branchElements) {
-        const branchNumber = Number(branchElement.dataset.branchNumber);
-        const hintBalloonContentElement = document.createElement('span');
-        hintBalloonContentElement.className = 'hint-balloon-content';
-        hintBalloonContentElement.innerText = hintTextList[branchNumber];
-        const hintBalloonWrapperElement = document.createElement('span');
-        hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
-        hintBalloonWrapperElement.append(hintBalloonContentElement);
-        branchElement.append(hintBalloonWrapperElement);
-        const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
-        const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
-        hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-        branchElement.addEventListener('mouseenter', event => {
-          const branchElement = event.target;
-          const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-          const branchRect = branchElement.getClientRects()[0];
-          hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
-          hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
-          hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
-        });
-        branchElement.addEventListener('mouseleave', event => {
-          const branchElement = event.target;
-          const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
-          hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
-        });
-      }
-    }
-    const resetQuestion = () => {
-      elements.questionWrapper.scrollTop = 0;
-      elements.questionContent.innerHTML = questionPhrase.html;
-      addHintBalloons(elements.questionContent, answerPhrase.chosenBranchTexts);
-    };
-    const uncoverQuestion = () => {
-      elements.questionCover.style.visibility = 'hidden';
-    };
-    const resetAnswer = () => {
-      elements.answerWrapper.scrollTop = 0;
-      elements.answerContent.innerHTML = answerPhrase.html;
-      addHintBalloons(elements.answerContent, questionPhrase.chosenBranchTexts);
-    }
-    const coverAnswer = () => {
-      elements.answerCover.style.visibility = 'visible';
-    };
-    const enableContinueButton = () => {
-      addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
-      elements.continueButton.innerHTML = '答えを表示';
-    }
     if (dataset.animation == 'flip') {
-      addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
-        addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
-          resetAnswer();
-          coverAnswer();
-          elements.answerWrapper.style.animation = 'flipB 250ms';
-        });
-        elements.answerWrapper.style.animation = 'flipA 250ms';
-        resetQuestion();
-        uncoverQuestion();
-        addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
-          enableContinueButton();
-        });
-        elements.questionWrapper.style.animation = 'flipB 250ms';
-      });
-      elements.questionWrapper.style.animation = 'flipA 250ms';
-    } else if (dataset.animation == 'cover') {
-      addOnetimeEventListener(elements.questionCover, 'animationend', target => {
-        resetQuestion();
-        addOnetimeEventListener(elements.questionCover, 'animationend', target => {
-          uncoverQuestion();
-        });
-        elements.questionCover.style.animation = 'slideOutToLeft 250ms';
-        addOnetimeEventListener(elements.answerCover, 'animationend', target => {
-          resetAnswer();
-          coverAnswer();
-          enableContinueButton();
-        });
-        if (dataset.trainingCount > 1) {
-          elements.answerCover.style.animation = 'slideInFromRight 250ms';
-        } else {
-          elements.answerCover.style.animation = 'dummySlide 0ms';
-        }
-      });
-      if (dataset.trainingCount > 1) {
-        elements.questionCover.style.animation = 'slideInFromLeft 250ms';
-      } else {
-        elements.questionCover.style.animation = 'dummySlide 0ms';
-      }
+      flipAndShowQuestion();
+    } else if (dataset.animation == 'slide') {
+      slideAndShowQuestion();
     } else {
+      showQuestion();
+    }
+    dataset.isAnswerShown = false;
+  };
+  const resetQuestion = () => {
+    elements.questionWrapper.scrollTop = 0;
+    elements.questionContent.innerHTML = dataset.questionPhrase.html;
+    addHintBalloons(elements.questionContent, dataset.answerPhrase.chosenBranchTexts);
+  };
+  const resetAnswer = () => {
+    elements.answerWrapper.scrollTop = 0;
+    elements.answerContent.innerHTML = dataset.answerPhrase.html;
+    addHintBalloons(elements.answerContent, dataset.questionPhrase.chosenBranchTexts);
+  }
+  const showQuestion = () => {
+    resetQuestion();
+    elements.questionCover.style.visibility = 'hidden';
+    resetAnswer();
+    elements.answerCover.style.visibility = 'visible';
+    enableButtons();
+  };
+  const flipAndShowQuestion = () => {
+    addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
       resetQuestion();
-      uncoverQuestion();
+      elements.questionCover.style.visibility = 'hidden';
+      addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+        enableButtons();
+      });
+      elements.questionWrapper.style.animation = 'flipB 250ms';
+    });
+    elements.questionWrapper.style.animation = 'flipA 250ms';
+    if (dataset.isAnswerShown) {
+      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+        resetAnswer();
+        elements.answerCover.style.visibility = 'visible';
+        elements.answerWrapper.style.animation = 'flipB 250ms';
+      });
+      elements.answerWrapper.style.animation = 'flipA 250ms';
+    } else {
       resetAnswer();
-      coverAnswer();
-      enableContinueButton();
     }
   };
+  const slideAndShowQuestion = () => {
+    addOnetimeEventListener(elements.questionCover, 'animationend', target => {
+      resetQuestion();
+      addOnetimeEventListener(elements.questionCover, 'animationend', target => {
+        elements.questionCover.style.visibility = 'hidden';
+        enableButtons();
+      });
+      elements.questionCover.style.animation = 'slideOutToLeft 500ms';
+    });
+    if (elements.questionCover.style.visibility == 'hidden') {
+      elements.questionCover.style.animation = 'slideInFromLeft 500ms';
+    } else {
+      elements.questionCover.style.animation = 'dummySlide 0ms';
+    }
+    addOnetimeEventListener(elements.answerCover, 'animationend', target => {
+      resetAnswer();
+      elements.answerCover.style.visibility = 'visible';
+    });
+    if (elements.answerCover.style.visibility == 'hidden') {
+      elements.answerCover.style.animation = 'slideInFromRight 500ms';
+    } else {
+      elements.answerCover.style.animation = 'dummySlide 0ms';
+    }
+  };
+  const addHintBalloons = (targetContent, hintTextList) => {
+    const branchElements = targetContent.querySelectorAll('.branch');
+    for (const branchElement of branchElements) {
+      const branchNumber = Number(branchElement.dataset.branchNumber);
+      const hintBalloonContentElement = document.createElement('span');
+      hintBalloonContentElement.className = 'hint-balloon-content';
+      hintBalloonContentElement.innerText = hintTextList[branchNumber];
+      const hintBalloonWrapperElement = document.createElement('span');
+      hintBalloonWrapperElement.className = 'hint-balloon-wrapper';
+      hintBalloonWrapperElement.append(hintBalloonContentElement);
+      branchElement.append(hintBalloonWrapperElement);
+      const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonWrapperElement.offsetWidth;
+      const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
+      hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+      branchElement.addEventListener('mouseenter', event => {
+        const branchElement = event.target;
+        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+        const branchRect = branchElement.getClientRects()[0];
+        hintBalloonWrapperElement.style.top = `${branchRect.top}px`;
+        hintBalloonWrapperElement.style.left = `${branchRect.left}px`;
+        hintBalloonWrapperElement.style.animation = 'fadeIn 500ms';
+      });
+      branchElement.addEventListener('mouseleave', event => {
+        const branchElement = event.target;
+        const hintBalloonWrapperElement = branchElement.querySelector('.hint-balloon-wrapper');
+        hintBalloonWrapperElement.style.animation = 'fadeOut 500ms';
+      });
+    }
+  }
   const showAnswer = () => {
-    const uncoverAnswer = () => {
-      elements.answerCover.style.visibility = 'hidden';
-    };
-    const enableContinueButton = () => {
-      addOnetimeEventListener(elements.continueButton, 'click', resetCard);
-      elements.continueButton.innerHTML = '次の問題';
-    };
+    dataset.isAnswerShown = true;
+    disableButtons();
     if (dataset.animation == 'flip') {
       addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
-        uncoverAnswer();
+        elements.answerCover.style.visibility = 'hidden';
         addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
-          enableContinueButton();
+          enableButtons();
         });
         elements.answerWrapper.style.animation = 'flipB 250ms';
       });
       elements.answerWrapper.style.animation = 'flipA 250ms';
-    } else if (dataset.animation == 'cover') {
+    } else if (dataset.animation == 'slide') {
       addOnetimeEventListener(elements.answerCover, 'animationend', target => {
-        uncoverAnswer();
-        enableContinueButton();
+        elements.answerCover.style.visibility = 'hidden';
+        enableButtons();
       });
       elements.answerCover.style.animation = 'slideOutToRight 250ms';
     } else {
-      uncoverAnswer();
-      enableContinueButton();
+      elements.answerCover.style.visibility = 'hidden';
+      enableButtons();
     }
+  };
+  const playAudio = () => {
+
+  };
+  const disableButtons = () => {
+    elements.playAudioButton.disabled = true;
+    elements.continueButton.disabled = true;
+    elements.skipButton.disabled = true;
+  };
+  const enableButtons = () => {
+    elements.playAudioButton.disabled = false;
+    elements.continueButton.disabled = false;
+    elements.skipButton.disabled = false;
   };
   const addOnetimeEventListener = (target, listener, callback) => {
     const eventHandler = event => {
@@ -172,7 +194,7 @@
       callback && callback(target);
     }
     target.addEventListener(listener, eventHandler);
-  }
+  };
   window.addEventListener('DOMContentLoaded', main);
 </script>
 <style>
@@ -296,7 +318,8 @@
   }
   #play-audio-button,
   #auto-play-audio-checkbox,
-  #continue-button {
+  #continue-button,
+  #skip-button {
     font-size: 1.5rem;
   }
   #statistic-wrapper {
@@ -378,10 +401,20 @@
   .branch:hover .hint-balloon-wrapper {
     visibility: visible;
   }
-  @keyframes dummySlide {
+  @keyframes flipA {
     0% {
+      transform: rotateX(0);
     }
     100% {
+      transform: rotateX(90deg);
+    }
+  }
+  @keyframes flipB {
+    0% {
+      transform: rotateX(-90deg);
+    }
+    100% {
+      transform: rotateX(0);
     }
   }
   @keyframes slideInFromLeft {
@@ -420,20 +453,10 @@
       left: 100%;
     }
   }
-  @keyframes flipA {
+  @keyframes dummySlide {
     0% {
-      transform: rotateX(0);
     }
     100% {
-      transform: rotateX(90deg);
-    }
-  }
-  @keyframes flipB {
-    0% {
-      transform: rotateX(-90deg);
-    }
-    100% {
-      transform: rotateX(0);
     }
   }
   @keyframes fadeIn {
@@ -445,9 +468,6 @@
       visibility: visible;
       opacity: 1;
     }
-  }
-  .fadeOut {
-    animation: fadeOut 500ms;
   }
   @keyframes fadeOut {
     0% {
@@ -475,8 +495,9 @@
 </div>
 <div id="controller-wrapper">
   <div id="controller-content">
-    <button id="play-audio-button">音声再生</button><input type="checkbox" id="auto-play-audio-checkbox">
-    <button id="continue-button">次の問題</button>
+    <button id="play-audio-button">&#x1f50a;</button><input type="checkbox" id="auto-play-audio-checkbox">
+    <button id="continue-button">&#x25b6;</button>
+    <button id="skip-button">&#x23ed;</button>
   </div>
 </div>
 <div id="statistic-wrapper">
