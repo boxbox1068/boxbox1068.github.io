@@ -37,22 +37,20 @@
     const pathIdSeed = Math.random();
     const questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     const answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
-    addOnetimeEventListener(elements.questionContent, 'animationend', target => {
-      target.style.visibility = 'hidden';
-      target.innerHTML = questionPhrase.html;
-      addHintBalloons(target.querySelectorAll('[data-branch-number]'), answerPhrase.chosenBranchTexts);
-      target.style.animation = 'fadeIn 500ms';
-      target.style.visibility = 'visible';
-      target.scrollTop = 0;
+    addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+      elements.questionWrapper.scrollTop = 0;
+      elements.questionContent.innerHTML = questionPhrase.html;
+      elements.questionCover.style.visibility = 'hidden';
+      elements.questionWrapper.style.animation = 'flipB 250ms';
+      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+        elements.answerWrapper.scrollTop = 0;
+        elements.answerContent.innerHTML = answerPhrase.html;
+        elements.answerCover.style.visibility = 'visible';
+        elements.answerWrapper.style.animation = 'flipB 250ms';
+      });
+      elements.answerWrapper.style.animation = 'flipA 250ms';
     });
-    elements.questionContent.style.animation = 'fadeOut 500ms';
-    addOnetimeEventListener(elements.answerContent, 'animationend', target => {
-      target.style.visibility = 'hidden';
-      target.scrollTop = 0;
-      target.innerHTML = answerPhrase.html;
-      addHintBalloons(target.querySelectorAll('[data-branch-number]'), questionPhrase.chosenBranchTexts);
-    });
-    elements.answerContent.style.animation = 'fadeOut 500ms';
+    elements.questionWrapper.style.animation = 'flipA 250ms';
     addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
     elements.continueButton.innerHTML = '答えを表示';
     elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
@@ -86,12 +84,12 @@
     }
   }
   const showAnswer = () => {
-    addOnetimeEventListener(elements.answerContent, 'animationend', target => {
-      target.style.visibility = 'visible';
-      target.scrollTop = 0;
+    addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+      elements.answerCover.style.visibility = 'hidden';
+      elements.answerWrapper.style.animation = 'flipB 250ms';
+      addOnetimeEventListener(elements.continueButton, 'click', resetCard);
     });
-    elements.answerContent.style.animation = 'fadeIn 500ms';
-    addOnetimeEventListener(elements.continueButton, 'click', resetCard);
+    elements.answerWrapper.style.animation = 'flipA 250ms';
     elements.continueButton.innerHTML = '次の問題';
   };
   const addOnetimeEventListener = (target, listener, callback) => {
@@ -106,7 +104,7 @@
 <style>
   :root {
     --background-color: #ccc;
-    --panel-color: #fffc;
+    --panel-color: #fff;
     font-size: 4vmin;
     font-family: sans-serif;
   }
@@ -171,9 +169,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     padding: .5rem 1rem;
     overflow-y: auto;
     background-color: var(--panel-color);
+  }
+  #question-cover,
+  #answer-cover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: purple;
+    font-weight: bold;
+    font-size: 10rem;
+  }
+  #question-cover:before {
+    content: "Q";
+  }
+  #answer-cover:before {
+    content: "A";
   }
   #question-content,
   #answer-content {
@@ -271,6 +290,22 @@
   .branch:hover .hint-balloon-wrapper {
     visibility: visible;
   }
+  @keyframes flipA {
+    0% {
+      transform: rotateX(0);
+    }
+    100% {
+      transform: rotateX(90deg);
+    }
+  }
+  @keyframes flipB {
+    0% {
+      transform: rotateX(-90deg);
+    }
+    100% {
+      transform: rotateX(0);
+    }
+  }
   @keyframes fadeIn {
     0% {
       visibility: hidden;
@@ -280,6 +315,9 @@
       visibility: visible;
       opacity: 1;
     }
+  }
+  .fadeOut {
+    animation: fadeOut 500ms;
   }
   @keyframes fadeOut {
     0% {
@@ -296,9 +334,11 @@
   <div id="lead-content"></div>
 </div>
 <div id="question-wrapper">
+  <div id="question-cover"></div>
   <div id="question-content"></div>
 </div>
 <div id="answer-wrapper">
+  <div id="answer-cover"></div>
   <div id="answer-content"></div>
 </div>
 <div id="controller-wrapper">
