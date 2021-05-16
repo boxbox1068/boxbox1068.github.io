@@ -40,19 +40,26 @@
     addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
       elements.questionWrapper.scrollTop = 0;
       elements.questionContent.innerHTML = questionPhrase.html;
-      elements.questionCover.style.visibility = 'hidden';
-      elements.questionWrapper.style.animation = 'flipB 250ms';
+      elements.questionCover.style.visibility = 'visible';
+      elements.questionWrapper.style.animation = 'flipB 200ms';
       addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
         elements.answerWrapper.scrollTop = 0;
         elements.answerContent.innerHTML = answerPhrase.html;
         elements.answerCover.style.visibility = 'visible';
-        elements.answerWrapper.style.animation = 'flipB 250ms';
+        elements.answerWrapper.style.animation = 'flipB 200ms';
+        addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+          elements.questionCover.style.visibility = 'hidden';
+          addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+            addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
+            elements.continueButton.innerHTML = '答えを表示';
+          });
+          elements.questionWrapper.style.animation = 'flipB 200ms';
+        });
+        elements.questionWrapper.style.animation = 'flipA 200ms';
       });
-      elements.answerWrapper.style.animation = 'flipA 250ms';
+      elements.answerWrapper.style.animation = 'flipA 200ms';
     });
-    elements.questionWrapper.style.animation = 'flipA 250ms';
-    addOnetimeEventListener(elements.continueButton, 'click', showAnswer);
-    elements.continueButton.innerHTML = '答えを表示';
+    elements.questionWrapper.style.animation = 'flipA 200ms';
     elements.statisticContent.innerHTML = `（総パターン数：${questionPhrase.possiblePathCount}，パターンID：${questionPhrase.pathId}，おかわり：${dataset.changeCount++}）`;
   };
   const addHintBalloons = (targetBranchElements, hintTextList) => {
@@ -86,10 +93,10 @@
   const showAnswer = () => {
     addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
       elements.answerCover.style.visibility = 'hidden';
-      elements.answerWrapper.style.animation = 'flipB 250ms';
+      elements.answerWrapper.style.animation = 'flipB 200ms';
       addOnetimeEventListener(elements.continueButton, 'click', resetCard);
     });
-    elements.answerWrapper.style.animation = 'flipA 250ms';
+    elements.answerWrapper.style.animation = 'flipA 200ms';
     elements.continueButton.innerHTML = '次の問題';
   };
   const addOnetimeEventListener = (target, listener, callback) => {
