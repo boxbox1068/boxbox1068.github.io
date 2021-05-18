@@ -4,8 +4,8 @@
 <script type="module">
   import {QueryParser} from './js/query-parser.js';
   import {RabbitPhrase} from './js/rabbit-phrase.js';
-  const elements = {};
   const dataset = {};
+  const elements = {};
   const main = () => {
     for (const element of document.querySelectorAll('[id]')) {
       if (element.id) {
@@ -20,6 +20,7 @@
     dataset.questionTemplate = queryParser.getValue('question', 'string', '');
     dataset.answerTemplate = queryParser.getValue('answer', 'string', '');
     dataset.animation = queryParser.getValue('animation', 'string', '').trim().toLowerCase();
+    dataset.isAnswerShown = true;
     dataset.trainingCount = 0;
 
     // dummy
@@ -45,7 +46,6 @@
     resetCard();
   };
   const resetCard = () => {
-    disableButtons();
     const pathIdSeed = Math.random();
     dataset.questionPhrase = new RabbitPhrase(dataset.questionTemplate, pathIdSeed);
     dataset.answerPhrase = new RabbitPhrase(dataset.answerTemplate, pathIdSeed);
@@ -53,13 +53,14 @@
     elements.patternId.innerHTML = dataset.questionPhrase.pathId;
     elements.trainingCount.innerHTML = dataset.trainingCount++;
     if (dataset.animation == 'flip') {
-      flipAndShowQuestion();
+      showQuestionWithFlipping();
     } else if (dataset.animation == 'slide') {
-      slideAndShowQuestion();
+      showQuestionWithSliding();
     } else {
       showQuestion();
     }
     dataset.isAnswerShown = false;
+    disableButtons();
   };
   const resetQuestion = () => {
     elements.questionWrapper.scrollTop = 0;
@@ -78,50 +79,44 @@
     elements.answerCover.style.visibility = 'visible';
     enableButtons();
   };
-  const flipAndShowQuestion = () => {
-    addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+  const showQuestionWithFlipping = () => {
+    addAnimation(elements.questionWrapper, 'flipA 250ms', target => {
       resetQuestion();
       elements.questionCover.style.visibility = 'hidden';
-      addOnetimeEventListener(elements.questionWrapper, 'animationend', target => {
+      addAnimation(elements.questionWrapper, 'flipB 250ms', target => {
         enableButtons();
       });
-      elements.questionWrapper.style.animation = 'flipB 250ms';
     });
-    elements.questionWrapper.style.animation = 'flipA 250ms';
     if (dataset.isAnswerShown) {
-      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+      addAnimation(elements.answerWrapper, 'flipA 250ms', target => {
         resetAnswer();
         elements.answerCover.style.visibility = 'visible';
-        elements.answerWrapper.style.animation = 'flipB 250ms';
+        addAnimation(elements.answerWrapper, 'flipB 250ms', null);
       });
-      elements.answerWrapper.style.animation = 'flipA 250ms';
     } else {
       resetAnswer();
     }
   };
-  const slideAndShowQuestion = () => {
-    addOnetimeEventListener(elements.questionCover, 'animationend', target => {
-      resetQuestion();
-      addOnetimeEventListener(elements.questionCover, 'animationend', target => {
-        elements.questionCover.style.visibility = 'hidden';
-        enableButtons();
-      });
-      elements.questionCover.style.animation = 'slideOutToLeft 500ms';
-    });
-    if (elements.questionCover.style.visibility == 'hidden') {
-      elements.questionCover.style.animation = 'slideInFromLeft 500ms';
-    } else {
-      elements.questionCover.style.animation = 'dummySlide 0ms';
-    }
-    addOnetimeEventListener(elements.answerCover, 'animationend', target => {
-      resetAnswer();
-      elements.answerCover.style.visibility = 'visible';
-    });
-    if (elements.answerCover.style.visibility == 'hidden') {
-      elements.answerCover.style.animation = 'slideInFromRight 500ms';
-    } else {
-      elements.answerCover.style.animation = 'dummySlide 0ms';
-    }
+  const showQuestionWithSliding = () => {
+    addAnimation(
+      elements.questionCover,
+      elements.questionCover.style.visibility == 'hidden' ? 'slideInFromLeft 500ms' : 'dummySlide 0',
+      target => {
+        resetQuestion();
+        addAnimation(elements.questionCover, 'slideOutToLeft 500ms', target => {
+          elements.questionCover.style.visibility = 'hidden';
+          enableButtons();
+        });
+      }
+    );
+    addAnimation(
+      elements.answerCover,
+      elements.answerCover.style.visibility == 'hidden' ? 'slideInFromRight 500ms' : 'dummySlide 0',
+      target => {
+        resetAnswer();
+        elements.answerCover.style.visibility = 'visible';
+      }
+    );
   };
   const addHintBalloons = (targetContent, hintTextList) => {
     const branchElements = targetContent.querySelectorAll('.branch');
@@ -153,27 +148,24 @@
     }
   }
   const showAnswer = () => {
-    dataset.isAnswerShown = true;
-    disableButtons();
     if (dataset.animation == 'flip') {
-      addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+      addAnimation(elements.answerWrapper, 'flipA 250ms', target => {
         elements.answerCover.style.visibility = 'hidden';
-        addOnetimeEventListener(elements.answerWrapper, 'animationend', target => {
+        addAnimation(elements.answerWrapper, 'flipB 250ms', target => {
           enableButtons();
         });
-        elements.answerWrapper.style.animation = 'flipB 250ms';
       });
-      elements.answerWrapper.style.animation = 'flipA 250ms';
     } else if (dataset.animation == 'slide') {
-      addOnetimeEventListener(elements.answerCover, 'animationend', target => {
+      addAnimation(elements.answerCover, 'slideOutToRight 250ms', target => {
         elements.answerCover.style.visibility = 'hidden';
         enableButtons();
       });
-      elements.answerCover.style.animation = 'slideOutToRight 250ms';
     } else {
       elements.answerCover.style.visibility = 'hidden';
       enableButtons();
     }
+    dataset.isAnswerShown = true;
+    disableButtons();
   };
   const playAudio = () => {
 
@@ -188,12 +180,14 @@
     elements.continueButton.disabled = false;
     elements.skipButton.disabled = false;
   };
-  const addOnetimeEventListener = (target, listener, callback) => {
+  const addAnimation = (target, animation, callback) => {
+//alert(animation);
     const eventHandler = event => {
-      target.removeEventListener(listener, eventHandler);
+      target.removeEventListener('animationend', eventHandler);
       callback && callback(target);
     }
-    target.addEventListener(listener, eventHandler);
+    target.addEventListener('animationend', eventHandler);
+    target.style.animation = animation;
   };
   window.addEventListener('DOMContentLoaded', main);
 </script>
@@ -241,7 +235,7 @@
   #lead-wrapper {
     grid-area: lead;
     min-height: 2rem;
-    max-height: 20vh;
+    max-height: 15vh;
     padding: .5rem 1rem;
     overflow-y: auto;
   }
@@ -300,6 +294,7 @@
   }
   #question-cover,
   #answer-cover {
+    visibility: hidden;
     background-color: purple;
     color: black;
   }
@@ -495,7 +490,7 @@
 </div>
 <div id="controller-wrapper">
   <div id="controller-content">
-    <button id="play-audio-button">&#x1f50a;</button><input type="checkbox" id="auto-play-audio-checkbox">
+    <button id="play-audio-button">&#x1f4ac;</button><input type="checkbox" id="auto-play-audio-checkbox">
     <button id="continue-button">&#x25b6;</button>
     <button id="skip-button">&#x23ed;</button>
   </div>
