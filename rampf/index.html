@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>鼠算式フレーズ練習帳</title>
+<meta name="author" content="@shikaku1068">
+<meta name="description" content="">
+<link rel="icon" type="image/png" href="">
+<link rel="canonical" href="https://shikaku1068.github.io/rampf/">
+<meta name="viewport" content="width=device-width">
+<meta name="format-detection" content="telephone=no,address=no,email=no">
 <script type="module">
   import {QueryParser} from './js/query-parser.js';
   import {RabbitPhrase} from './js/rabbit-phrase.js';
@@ -16,26 +22,34 @@
       }
     }
     const queryParser = new QueryParser();
-    dataset.lead = queryParser.getValue('lead', 'string', '');
+    dataset.leadText = queryParser.getValue('lead', 'string', '');
     dataset.questionTemplate = queryParser.getValue('question', 'string', '');
     dataset.answerTemplate = queryParser.getValue('answer', 'string', '');
+    dataset.answerLang = queryParser.getValue('lang', 'string', '');
     dataset.animation = queryParser.getValue('animation', 'string', '').trim().toLowerCase();
     dataset.isAnswerShown = true;
     dataset.trainingCount = 0;
 
     // dummy
     {
-      dataset.lead = 'あああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓあああdsふぁｓｄふぁｓ';
-      dataset.questionTemplate = '^[私|あなた|彼|私たち]aaああskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃkskdfじゃksjdフィアsjフィオアウェウリおjqウィオエjフィdウィ絵おfジョイdジェ入りクェ雨fじゃsどいdファおddフィジャウィ絵おdリオ亜dジェイおrじゃいおうぇうりおうぇういおrじおせああは^^[車ああああああああああああああああああああああああああ|食べるdsfadfasfasdsdfasdfasdfasdfsdafasdfasdfasdfasdfasの|いたずらするの]が大好き。';
-      dataset.answerTemplate = '^[I|You|He|We] lovaaaae^[||s|] ^^[cars|eating|playing triaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacks].';
-      dataset.animation = 'flip';
+      dataset.leadText = '';
+
+      dataset.questionTemplate = 'もし私が^[鳥|魚|犬|猫|馬]だったら^[空を自由に飛べる|海深くまで泳げる|君の匂いを嗅ぎ分けられる|一日中寝ていられる|風より速く走れる]んだけど。';
+      dataset.answerTemplate = 'If I were ^[a bird|a fish|a dog|a cat|a horse], I could ^[fly freely in the sky|swim deep in the ocean|pick up your scent|sleep all day long|run faster than wind].';
+
+      dataset.questionTemplate = '私の誕生日は^[1|2|3|4|5|6|7|8|9|10|11|12]月^^[1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27|28|29|^[30||30|30|30|30|30|30|30|30|30|30]|^[31||31||31||31|31||31||31]]日です。';
+      dataset.answerTemplate = 'My birthday is ^[January|February|March|April|May|June|July|August|September|October|November|December] ^^[1st|2nd|3rd|4th|5th|6th|7th|8th|9th|10th|11th|12th|13th|14th|15th|16th|17th|18th|19th|20th|21st|22nd|23rd|24th|25th|26th|27th|28th|29th|^[30th||30th|30th|30th|30th|30th|30th|30th|30th|30th|30th]|^[31st||31st||31st||31st|31st||31st||31st]].';
+      dataset.animation = 'slide';
     }
 
-    if (dataset.lead) {
-      elements.leadContent.append(dataset.lead);
+    if (dataset.leadText) {
+      elements.leadContent.append(dataset.leadText);
     }
     elements.playAudioButton.addEventListener('click', playAudio);
-    elements.continueButton.addEventListener('click', () => {
+    elements.autoPlayAudioCheckbox.addEventListener('change', event => {
+      dataset.isAutoPlayAudioEnabled = event.target.checked;
+    });
+    elements.continueButton.addEventListener('click', event => {
       if (dataset.isAnswerShown) {
         resetCard();
       } else {
@@ -52,15 +66,55 @@
     elements.patternCount.innerHTML = dataset.questionPhrase.possiblePathCount;
     elements.patternId.innerHTML = dataset.questionPhrase.pathId;
     elements.trainingCount.innerHTML = dataset.trainingCount++;
+    showQuestion();
+  };
+  const showQuestion = () => {
+    disableButtons();
     if (dataset.animation == 'flip') {
-      showQuestionWithFlipping();
+      addAnimation(elements.questionWrapper, 'flipA 250ms', target => {
+        resetQuestion();
+        elements.questionCover.style.visibility = 'hidden';
+        addAnimation(elements.questionWrapper, 'flipB 250ms', target => {
+          enableButtons();
+        });
+      });
+      if (dataset.isAnswerShown) {
+        addAnimation(elements.answerWrapper, 'flipA 250ms', target => {
+          resetAnswer();
+          elements.answerCover.style.visibility = 'visible';
+          addAnimation(elements.answerWrapper, 'flipB 250ms', null);
+        });
+      } else {
+        resetAnswer();
+      }
     } else if (dataset.animation == 'slide') {
-      showQuestionWithSliding();
+      addAnimation(
+        elements.questionCover,
+        elements.questionCover.style.visibility == 'hidden' ? 'slideInFromLeft 250ms' : 'dummySlide 0',
+        target => {
+          resetQuestion();
+          addAnimation(elements.questionCover, 'slideOutToLeft 250ms', target => {
+            elements.questionCover.style.visibility = 'hidden';
+            enableButtons();
+          });
+        }
+      );
+      addAnimation(
+        elements.answerCover,
+        elements.answerCover.style.visibility == 'hidden' ? 'slideInFromRight 500ms' : 'dummySlide 0',
+        target => {
+          resetAnswer();
+          elements.answerCover.style.visibility = 'visible';
+        }
+      );
     } else {
-      showQuestion();
+      resetQuestion();
+      elements.questionCover.style.visibility = 'hidden';
+      resetAnswer();
+      elements.answerCover.style.visibility = 'visible';
+      enableButtons();
     }
     dataset.isAnswerShown = false;
-    disableButtons();
   };
   const resetQuestion = () => {
     elements.questionWrapper.scrollTop = 0;
@@ -72,52 +126,6 @@
     elements.answerContent.innerHTML = dataset.answerPhrase.html;
     addHintBalloons(elements.answerContent, dataset.questionPhrase.chosenBranchTexts);
   }
-  const showQuestion = () => {
-    resetQuestion();
-    elements.questionCover.style.visibility = 'hidden';
-    resetAnswer();
-    elements.answerCover.style.visibility = 'visible';
-    enableButtons();
-  };
-  const showQuestionWithFlipping = () => {
-    addAnimation(elements.questionWrapper, 'flipA 250ms', target => {
-      resetQuestion();
-      elements.questionCover.style.visibility = 'hidden';
-      addAnimation(elements.questionWrapper, 'flipB 250ms', target => {
-        enableButtons();
-      });
-    });
-    if (dataset.isAnswerShown) {
-      addAnimation(elements.answerWrapper, 'flipA 250ms', target => {
-        resetAnswer();
-        elements.answerCover.style.visibility = 'visible';
-        addAnimation(elements.answerWrapper, 'flipB 250ms', null);
-      });
-    } else {
-      resetAnswer();
-    }
-  };
-  const showQuestionWithSliding = () => {
-    addAnimation(
-      elements.questionCover,
-      elements.questionCover.style.visibility == 'hidden' ? 'slideInFromLeft 500ms' : 'dummySlide 0',
-      target => {
-        resetQuestion();
-        addAnimation(elements.questionCover, 'slideOutToLeft 500ms', target => {
-          elements.questionCover.style.visibility = 'hidden';
-          enableButtons();
-        });
-      }
-    );
-    addAnimation(
-      elements.answerCover,
-      elements.answerCover.style.visibility == 'hidden' ? 'slideInFromRight 500ms' : 'dummySlide 0',
-      target => {
-        resetAnswer();
-        elements.answerCover.style.visibility = 'visible';
-      }
-    );
-  };
   const addHintBalloons = (targetContent, hintTextList) => {
     const branchElements = targetContent.querySelectorAll('.branch');
     for (const branchElement of branchElements) {
@@ -148,27 +156,45 @@
     }
   }
   const showAnswer = () => {
+    disableButtons();
     if (dataset.animation == 'flip') {
       addAnimation(elements.answerWrapper, 'flipA 250ms', target => {
         elements.answerCover.style.visibility = 'hidden';
         addAnimation(elements.answerWrapper, 'flipB 250ms', target => {
           enableButtons();
+          if (dataset.isAutoPlayAudioEnabled) playAudio();
         });
       });
     } else if (dataset.animation == 'slide') {
       addAnimation(elements.answerCover, 'slideOutToRight 250ms', target => {
         elements.answerCover.style.visibility = 'hidden';
         enableButtons();
+        if (dataset.isAutoPlayAudioEnabled) playAudio();
       });
     } else {
       elements.answerCover.style.visibility = 'hidden';
       enableButtons();
+      if (dataset.isAutoPlayAudioEnabled) playAudio();
     }
     dataset.isAnswerShown = true;
-    disableButtons();
+  };
+  const addAnimation = (target, animation, callback) => {
+    const eventHandler = event => {
+      target.removeEventListener('animationend', eventHandler);
+      target.style.animation = '';
+      callback && callback(target);
+    }
+    target.addEventListener('animationend', eventHandler);
+    target.style.animation = animation;
   };
   const playAudio = () => {
-
+  	const uttearnce = new SpeechSynthesisUtterance();
+   	uttearnce.text = dataset.answerPhrase.text;
+   	uttearnce.volume = 1;
+   	uttearnce.rate = 1;
+   	uttearnce.pitch = 1;
+   	uttearnce.lang = 'en-US';
+   	window.speechSynthesis.speak(uttearnce);
   };
   const disableButtons = () => {
     elements.playAudioButton.disabled = true;
@@ -176,18 +202,9 @@
     elements.skipButton.disabled = true;
   };
   const enableButtons = () => {
-    elements.playAudioButton.disabled = false;
+    elements.playAudioButton.disabled = ! dataset.isAnswerShown;
     elements.continueButton.disabled = false;
     elements.skipButton.disabled = false;
-  };
-  const addAnimation = (target, animation, callback) => {
-//alert(animation);
-    const eventHandler = event => {
-      target.removeEventListener('animationend', eventHandler);
-      callback && callback(target);
-    }
-    target.addEventListener('animationend', eventHandler);
-    target.style.animation = animation;
   };
   window.addEventListener('DOMContentLoaded', main);
 </script>
@@ -246,13 +263,11 @@
   }
   #question-wrapper {
     grid-area: question;
-    margin: .5rem;
-    margin-left: 0;
+    margin: .5rem .5rem .5rem 0;
   }
   #answer-wrapper {
     grid-area: answer;
-    margin: .5rem;
-    margin-right: 0;
+    margin: .5rem 0 .5rem .5rem;
   }
   #question-wrapper,
   #answer-wrapper {
@@ -311,10 +326,100 @@
     padding: .5rem 1rem;
     text-align: right;
   }
-  #play-audio-button,
-  #auto-play-audio-checkbox,
-  #continue-button,
+  #play-audio-button {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+  #auto-play-audio-checkbox {
+    display: none;
+  }
+  #auto-play-audio-checkbox + label {
+    --border-width: 2px;
+    --toggle-height: 2rem;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    width: 1.5rem;
+    height: 3rem;
+    border: var(--border-width) solid gray;
+    background: gray;
+    vertical-align: bottom;
+  }
+  #auto-play-audio-checkbox + label::before {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    top: calc(var(--border-width) * -1);
+    left: 0;
+    width: 100%;
+    height: 0;
+    border-width: 0 0 var(--border-width) 0;
+    border-style: solid;
+    border-color: gray;
+    background-color: lightgray;
+    animation-fill-mode: forwards;
+    content: "";
+  }
+  #auto-play-audio-checkbox + label::after {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: block;
+    position: absolute;
+    bottom: calc(var(--border-width) * -1);
+    left: 0;
+    width: 100%;
+    height: var(--toggle-height);
+    border-width: var(--border-width) 0 0 0;
+    border-style: solid;
+    border-color: gray;
+    background-color: lime;
+    content: "";
+  }
+  #auto-play-audio-checkbox:not(:checked) + label::before {
+    animation: hoge 500ms;
+    animation-fill-mode: forwards;
+  }
+  #auto-play-audio-checkbox:not(:checked) + label::after {
+    animation: hogehoge 500ms;
+    animation-fill-mode: forwards;
+  }
+  #auto-play-audio-checkbox:checked + label::before {
+    animation: hogehoge 500ms;
+    animation-fill-mode: forwards;
+  }
+  #auto-play-audio-checkbox:checked + label::after {
+    animation: hoge 500ms;
+    animation-fill-mode: forwards;
+  }
+  @keyframes hoge {
+    0% {
+      height: 0;
+    }
+    100% {
+      height: var(--toggle-height);
+    }
+  }
+  @keyframes hogehoge {
+    0% {
+      height: var(--toggle-height);
+    }
+    100% {
+      height: 0;
+    }
+  }
+  
+
+
+  #continue-button {
+    width: 6rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
   #skip-button {
+    width: 3rem;
+    height: 3rem;
     font-size: 1.5rem;
   }
   #statistic-wrapper {
@@ -360,6 +465,7 @@
     display: block;
     visibility: hidden;
     position: fixed;
+    z-index: 1000;
     height: var(--hint-balloon-height);
     margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
     overflow: visible;
@@ -375,7 +481,7 @@
     border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-border-color);
     content: "";
   }
-  .hint-balloon-wrapper:after {
+  .hint-balloon-wrapper::after {
     display: block;
     position: absolute;
     top: calc(100% - .2rem * 2);
@@ -490,7 +596,9 @@
 </div>
 <div id="controller-wrapper">
   <div id="controller-content">
-    <button id="play-audio-button">&#x1f4ac;</button><input type="checkbox" id="auto-play-audio-checkbox">
+    <button id="play-audio-button">&#x1f4ac;</button>
+    <input type="checkbox" id="auto-play-audio-checkbox">
+    <label for="auto-play-audio-checkbox"></label>
     <button id="continue-button">&#x25b6;</button>
     <button id="skip-button">&#x23ed;</button>
   </div>
