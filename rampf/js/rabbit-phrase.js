@@ -7,6 +7,11 @@ export class RabbitPhrase {
       const replacer = (match, p1, p2, offset, string) => {
         const branchNumber = p1.length;
         const branchTexts  = p2.split('|');
+        for (let i = 1; i < branchTexts.length; i++) {
+          if (branchTexts[i] == '-') {
+            branchTexts[i] = branchTexts[i - 1];
+          }
+        }
         const firstBranchPartOffset = string.indexOf('^');
         const isMainBranch = firstBranchPartOffset == offset;
         return callback(branchNumber, branchTexts, isMainBranch) || '';
