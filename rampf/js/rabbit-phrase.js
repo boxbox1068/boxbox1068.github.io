@@ -1,4 +1,5 @@
-export class RabbitPhrase {
+'use strict';
+class RabbitPhrase {
   constructor(template, pathIdSeed) {
     if (typeof template != 'string') template = '';
     if (! (0 <= pathIdSeed && pathIdSeed < 1)) pathIdSeed = Math.random();
