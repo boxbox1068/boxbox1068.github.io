@@ -23,8 +23,6 @@ const $element = selectors => {
 };
 const $data = {};
 const main = () => {
-  $data.answerLang = $query('lang', true, true);
-  $data.animation = $query('animation', true, true);
   // dummy
   {
 
@@ -72,52 +70,63 @@ const main = () => {
   });
   $element('#skip-button').addEventListener('click', resetCard);
 
-  const jsonpFileUrl = $query('jsonp');
-  if (jsonpFileUrl) {
+  $data.trainingCount = 0;
+  if ($query('jsonp')) {
     const jsonpCallbackScriptElement = document.createElement('script');
     jsonpCallbackScriptElement.innerHTML = `
       const jsonpCallback = jsonData => {
+        $data.questionTemplate = hoge(jsonData['question']);
+        $data.answerTemplate = hoge(jsonData['answer']);
+        $data.answerLang = jsonData['lang'];
         $data.captionText = jsonData['caption'];
-        $data.questionTemplate = jsonData['question'];
-        $data.answerTemplate = jsonData['answer'];
-        $data.trainingCount = 0;
+        $data.animation = jsonData['animation'];
         resetCard();
       };
     `;
     document.head.append(jsonpCallbackScriptElement);
     const jsonpFileScriptElement = document.createElement('script');
-    jsonpFileScriptElement.src = jsonpFileUrl;
+    jsonpFileScriptElement.src = $query('jsonp');
     document.head.append(jsonpFileScriptElement);
-  } else {
+  } else if ($query('question')) {
+    $data.questionTemplate = hoge($query('question', true));
+    $data.answerTemplate = hoge($query('answer', true));
+    $data.answerLang = $query('lang', true, true);
     $data.captionText = $query('caption', true);
-    $data.questionTemplate = $query('question', true);
-    $data.answerTemplate = $query('answer', true);
-    $data.trainingCount = 0;
+    $data.animation = $query('animation', true, true);
     resetCard();
+  } else {
+    if (window.parent != window) {
+      window.addEventListener('message', event => {
+        const postedData = event.data;
+        if (typeof postedData != 'object') return;
+        $data.questionTemplate = hoge(postedData['question']);
+        $data.answerTemplate = hoge(postedData['answer']);
+        $data.answerLang = postedData['lang'];
+        $data.captionText = postedData['caption'];
+        $data.animation = postedData['animation'];
+        resetCard();
+      });
+    }
   }
-  if (window != window.parent) {
-    window.addEventListener('message', event => {
-      const postedData = event.data;
-      if (typeof postedData != 'object') return;
-      $data.captionText = postedData['caption'];
-      $data.questionTemplate = postedData['question'];
-      $data.answerTemplate = postedData['answer'];
-      $data.trainingCount = 0;
-      resetCard();
-    });
+hoge();
+};
+const hoge = template => {
+alert($templateVariables);
+  for (const key in $templateVariables) {
+    template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
   }
 };
+
+
 const resetCard = () => {
-  if ($data.captionText) {
-    $element('#caption-content').append($data.captionText);
-  }
+  $element('#caption-content').innerHTML = $data.captionText || '';
   const pathIdSeed = Math.random();
   $data.questionPhrase = new RabbitPhrase($data.questionTemplate, pathIdSeed);
   $data.answerPhrase = new RabbitPhrase($data.answerTemplate, pathIdSeed);
   $element('#pattern-count').innerHTML = $data.questionPhrase.possiblePathCount;
   $element('#pattern-id').innerHTML = $data.questionPhrase.pathId;
   $element('#training-count').innerHTML = $data.trainingCount++;
-//  $data.isAnswerShown = true;
+  $data.isAnswerShown = true;
   showQuestion();
 };
 const showQuestion = () => {

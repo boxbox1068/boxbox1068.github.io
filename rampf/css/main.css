@@ -133,7 +133,7 @@ body {
   width: 1.5rem;
   height: 3rem;
   border: var(--border-width) solid gray;
-  background: gray;
+  background: lightgray;
   vertical-align: bottom;
 }
 #auto-play-audio-checkbox + label::before {
@@ -147,7 +147,7 @@ body {
   border-width: 0 0 var(--border-width) 0;
   border-style: solid;
   border-color: gray;
-  background-color: lightgray;
+  background-color: gray;
   animation-fill-mode: forwards;
   content: "";
 }
@@ -167,19 +167,19 @@ body {
   content: "";
 }
 #auto-play-audio-checkbox:not(:checked) + label::before {
-  animation: hoge 500ms;
+  animation: hoge 250ms;
   animation-fill-mode: forwards;
 }
 #auto-play-audio-checkbox:not(:checked) + label::after {
-  animation: hogehoge 500ms;
+  animation: hogehoge 250ms;
   animation-fill-mode: forwards;
 }
 #auto-play-audio-checkbox:checked + label::before {
-  animation: hogehoge 500ms;
+  animation: hogehoge 250ms;
   animation-fill-mode: forwards;
 }
 #auto-play-audio-checkbox:checked + label::after {
-  animation: hoge 500ms;
+  animation: hoge 250ms;
   animation-fill-mode: forwards;
 }
 @keyframes hoge {
