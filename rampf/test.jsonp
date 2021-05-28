@@ -1,9 +1,9 @@
 jsonpCallback({
 //  question: "もし私が^[鳥|魚|犬|猫|馬]だったら^[空を自由に飛べる|海深くまで泳げる|君の匂いを嗅ぎ分けられる|一日中寝ていられる|風より速く走れる]んだけど。",
 //  answer: "If I were ^[a bird|a fish|a dog|a cat|a horse], I could ^[fly freely in the sky|swim deep in the ocean|pick up your scent|sleep all day long|run faster than wind].",
-  "question": "[私の|あなたの|彼の|彼女の|]",
-  "answer": "",
-  "answerLang": "en-US",
+  "question": "^[私の|君の|彼の|彼女の|私たちの|君たちの|彼らの]^^[誕生日|結婚記念日|命日]は^^^[%366-dates.ja%]^^^^[です|だった|になる]。",
+  "answer": "^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].",
+  "lang": "en-US",
   "caption": "仮定法過去の練習",
   "animation": "flip"
 });
