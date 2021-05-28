@@ -122,12 +122,6 @@ body {
   vertical-align: bottom;
   color: red;
 }
-#read-aloud-button > svg {
-  width: 80%;
-  height: 80%;
-  fill: currentColor;
-  stroke: currentColor;
-}
 /*
 #read-aloud-button:before {
   display: block;
@@ -332,6 +326,15 @@ body {
   height: 2rem;
   font-size: 1.5rem;
 }
+#read-aloud-button > svg,
+#continue-button > svg,
+#skip-button > svg {
+  width: 80%;
+  height: 80%;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
 #statistic-wrapper {
   grid-area: statistic;
   padding: .5rem 1rem;
