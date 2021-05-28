@@ -119,7 +119,7 @@ body {
   display: none;
 }
 #auto-read-aloud-checkbox + label {
-  --border-width: 2px;
+  --border-width: 1px;
   --toggle-height: 1.5rem;
   overflow: hidden;
   box-sizing: border-box;
@@ -202,6 +202,15 @@ body {
 #skip-button {
   width: 4rem;
 }
+button{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  appearance: none;
+}
+
 #read-aloud-button,
 #continue-button,
 #skip-button {
@@ -209,11 +218,13 @@ body {
   justify-content: center;
   align-items: center;
   height: 2rem;
+ border: 1px solid gray;
   color: red;
 }
 #read-aloud-button > svg,
 #continue-button > svg,
 #skip-button > svg {
+  display: block;
   width: 60%;
   height: 60%;
   fill: currentColor;
