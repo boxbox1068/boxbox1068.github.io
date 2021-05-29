@@ -219,18 +219,8 @@ button{
   align-items: center;
   height: 2rem;
  border: 1px solid gray;
-  color: red;
+  color: gray;
 }
-
-/*
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M50.71 30L610 30L610 445.38L340.71 445.38L195.71 570L195.71 445.38L30 445.38L30 30L50.71 30Z" id="a1WgQ7fkuq"></path><path d="M120 200L200 200L200 280L120 280L120 200Z" id="fimr20ao"></path><path d="M280 200L360 200L360 280L280 280L280 200Z" id="c1mb1B7Yjl"></path><path d="M440 200L520 200L520 280L440 280L440 200Z" id="f6gsI40dM"></path></defs><g><g><g><use xlink:href="#a1WgQ7fkuq" opacity="1" fill-opacity="0" stroke-width="60" stroke-opacity="1"></use></g></g><g><use xlink:href="#fimr20ao" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#c1mb1B7Yjl" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#f6gsI40dM" opacity="1" fill-opacity="1"></use></g></g></svg>
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M320 480L0 640L0 319.99L0 0L320 159.98L640 319.99L320 480Z" id="cioIEjTok"></path></defs><g><g><use xlink:href="#cioIEjTok" opacity="1" fill-opacity="1"></use></g></g></svg>
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M145 480L0 640L0 319.99L0 0L145 159.98L290 319.99L145 480Z" id="jspDtsqqj"></path><path d="M435 480L290 640L290 319.99L290 0L435 159.98L580 319.99L435 480Z" id="cD7GQ8efP"></path><path d="M600 20L600 620L620 620L620 20L600 20Z" id="bmW0NmDZt"></path></defs><g><g><use xlink:href="#jspDtsqqj" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#cD7GQ8efP" opacity="1" fill-opacity="1"></use></g><g><g><use xlink:href="#bmW0NmDZt" opacity="1" fill-opacity="0" stroke-width="40" stroke-opacity="1"></use></g></g></g></svg>
-*/
-
-#read-aloud-svg,
-#continue-svg,
-#skip-svg,
 #read-aloud-button > svg,
 #continue-button > svg,
 #skip-button > svg {
@@ -320,6 +310,7 @@ button{
   background-color: var(--hint-balloon-background-color);
   white-space: nowrap;
 }
+.branch:active .hint-balloon-wrapper,
 .branch:hover .hint-balloon-wrapper {
   visibility: visible;
 }
