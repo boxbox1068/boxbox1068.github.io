@@ -1,9 +1,9 @@
 :root {
   --font-color: #333;
   --background-color: #ccc;
-  --q-and-a-panel-background: #fff;
-  --q-and-a-panel-watermark-color: #eee;
-  --q-and-a-panel-font-color: red;
+  --q-and-a-content-background: #fff;
+  --q-and-a-content-watermark-color: #eee;
+  --q-and-a-content-font-color: red;
   --q-and-a-cover-background: lightgreen;
   --q-and-a-cover-watermark-color: green;
   --disabled-toggle-background: black;
@@ -14,6 +14,13 @@
   --button-border-color: #666;
   --footer-background: #000;
   --footer-font-color: #fff;
+}
+* {
+  box-sizing: border-box;
+  overflow: hidden;
+  animation-fill-mode: forwards;
+}
+html {
   font-size: 4vmin;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
@@ -21,11 +28,6 @@
   font-family: "Yu Gothic";
   src: local("Yu Gothic Bold");
   font-weight: bold;
-}
-* {
-  box-sizing: border-box;
-  overflow: hidden;
-  animation-fill-mode: forwards;
 }
 body {
   display: grid;
@@ -113,8 +115,8 @@ svg {
 }
 #question-background,
 #answer-background {
-  background: var(--q-and-a-panel-background);
-  color: var(--q-and-a-panel-watermark-color);
+  background: var(--q-and-a-content-background);
+  color: var(--q-and-a-content-watermark-color);
 }
 #question-cover,
 #answer-cover {
@@ -126,7 +128,7 @@ svg {
 #answer-content {
   position: relative;
   margin: auto;
-  color: var(--q-and-a-panel-font-color);
+  color: var(--q-and-a-content-font-color);
   font-size: 1.5rem;
   overflow-wrap: break-word;
   line-height: 1.5em;
@@ -134,12 +136,11 @@ svg {
 #controller-wrapper {
   grid-area: controller;
   padding: .5rem 1rem;
-  text-align: right;
 }
 #controller-content {
   display: flex;
-  justify-content: flex-end;
   flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 #auto-read-aloud-checkbox {
   display: none;
@@ -185,22 +186,22 @@ svg {
   content: "";
 }
 #auto-read-aloud-checkbox:not(:checked) + label::before {
-  animation: hoge 200ms;
+  animation: riseUp 200ms;
   animation-fill-mode: forwards;
 }
 #auto-read-aloud-checkbox:not(:checked) + label::after {
-  animation: hogehoge 200ms;
+  animation: fallDown 200ms;
   animation-fill-mode: forwards;
 }
 #auto-read-aloud-checkbox:checked + label::before {
-  animation: hogehoge 200ms;
+  animation: fallDown 200ms;
   animation-fill-mode: forwards;
 }
 #auto-read-aloud-checkbox:checked + label::after {
-  animation: hoge 200ms;
+  animation: riseUp 200ms;
   animation-fill-mode: forwards;
 }
-@keyframes hoge {
+@keyframes riseUp {
   0% {
     height: 0;
   }
@@ -208,7 +209,7 @@ svg {
     height: var(--toggle-height);
   }
 }
-@keyframes hogehoge {
+@keyframes fallDown {
   0% {
     height: var(--toggle-height);
   }
@@ -232,9 +233,9 @@ svg {
   justify-content: center;
   align-items: center;
   height: 2rem;
- background: var(--enabled-button-background);
- border: 1px solid var(--button-border-color);
- border-left: 0;
+  border: 1px solid var(--button-border-color);
+  border-left: 0;
+  background: var(--enabled-button-background);
   color: var(--button-font-color);
 }
 #read-aloud-button > svg,
@@ -244,7 +245,6 @@ svg {
   width: 60%;
   height: 60%;
 }
-
 #statistic-wrapper {
   grid-area: statistic;
   padding: .5rem 1rem;
@@ -252,9 +252,16 @@ svg {
 }
 #link-wrapper {
   grid-area: link;
+}
+#copyright-wrapper {
+  grid-area: copyright;
+}
+#link-wrapper,
+#copyright-wrapper {
   padding: .5rem 1rem;
   background-color: black;
   color: white;
+  font-size: .75rem;
   white-space: nowrap;
 }
 #home-link > svg {
@@ -262,14 +269,10 @@ svg {
   height: 1em;
   color: white;
 }
-#copyright-wrapper {
-  grid-area: copyright;
-  padding: .5rem 1rem;
-  background-color: black;
-  color: white;
-  font-size: .75rem;
-  text-align: right;
-  white-space: nowrap;
+#copyright-content {
+  display: flex;
+  justify-content: flex-end;
+
 }
 .branch {
   font-weight: bold;
