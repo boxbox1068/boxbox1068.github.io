@@ -117,6 +117,7 @@ const expandVariables = template => {
 };
 
 const resetCard = () => {
+  window.speechSynthesis.cancel();
   const pathIdSeed = Math.random();
   $data.questionPhrase = new RabbitPhrase($data.questionTemplate, pathIdSeed);
   $data.answerPhrase = new RabbitPhrase($data.answerTemplate, pathIdSeed);

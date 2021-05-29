@@ -1,19 +1,27 @@
 :root {
   --font-color: #333;
-  --background-color: #ccc;
+  --app-background: #ccc;
   --q-and-a-content-background: #fff;
   --q-and-a-content-watermark-color: #eee;
   --q-and-a-content-font-color: red;
   --q-and-a-cover-background: lightgreen;
   --q-and-a-cover-watermark-color: green;
   --disabled-toggle-background: black;
-  --enabled-toggle-background: blue;
-  --button-font-color: #666;
+  --enabled-toggle-background: purple;
+  --button-border-color: #666;
   --enabled-button-background: #eee;
   --disabled-button-background: #ccc;
-  --button-border-color: #666;
+  --button-font-color: #666;
   --footer-background: #000;
   --footer-font-color: #fff;
+  --branch-background-a: #F82F6666;
+  --branch-background-b: #008ECF66;
+  --branch-background-c: #70BE4766;
+  --branch-background-d: #F55A2166;
+  --branch-background-e: #F0EA3066;
+  --hint-balloon-border-color: #999;
+  --hint-balloon-background: #fff;
+  --hint-balloon-font-color: #333;
 }
 * {
   box-sizing: border-box;
@@ -44,7 +52,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background-color: var(--background-color);
+  background: var(--app-background);
 }
 @media screen and (orientation: portrait) {
   body {
@@ -238,6 +246,11 @@ svg {
   background: var(--enabled-button-background);
   color: var(--button-font-color);
 }
+#read-aloud-button:disabled,
+#play-button:disabled,
+#skip-button:disabled {
+  background: var(--disabled-button-background);
+}
 #read-aloud-button > svg,
 #play-button > svg,
 #skip-button > svg {
@@ -259,49 +272,41 @@ svg {
 #link-wrapper,
 #copyright-wrapper {
   padding: .5rem 1rem;
-  background-color: black;
-  color: white;
+  background: var(--footer-background);
+  color: var(--footer-font-color);
   font-size: .75rem;
   white-space: nowrap;
 }
 #home-link > svg {
   width: 1em;
   height: 1em;
-  color: white;
+  color: var(--footer-font-color);
 }
 #copyright-content {
   display: flex;
   justify-content: flex-end;
-
 }
 .branch {
   font-weight: bold;
 }
-.branch[data-branch-number="1"],
-.branch[data-branch-number="6"] {
-  background-color: #F82F6666;
+.branch[data-branch-number="1"] {
+  background: var(--branch-background-a);
 }
-.branch[data-branch-number="2"],
-.branch[data-branch-number="7"] {
-  background-color: #008ECF66;
+.branch[data-branch-number="2"] {
+  background: var(--branch-background-b);
 }
-.branch[data-branch-number="3"],
-.branch[data-branch-number="8"] {
-  background-color: #70BE4766;
+.branch[data-branch-number="3"] {
+  background: var(--branch-background-c);
 }
-.branch[data-branch-number="4"],
-.branch[data-branch-number="9"] {
-  background-color: #F55A2166;
+.branch[data-branch-number="4"] {
+  background: var(--branch-background-d);
 }
-.branch[data-branch-number="5"],
-.branch[data-branch-number="0"] {
-  background-color: #F0EA3066;
+.branch[data-branch-number="5"] {
+  background: var(--branch-background-e);
 }
 .hint-balloon-wrapper {
   --hint-balloon-font-size: 1em;
   --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.6);
-  --hint-balloon-background-color: #fff;
-  --hint-balloon-border-color: #999;
   --hint-balloon-border-width: .2rem;
   display: block;
   visibility: hidden;
@@ -310,6 +315,7 @@ svg {
   height: var(--hint-balloon-height);
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
+  color: var(--hint-balloon-font-color);
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
@@ -328,7 +334,7 @@ svg {
   top: calc(100% - .2rem * 2);
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background-color);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background);
   content: "";
 }
 .hint-balloon-content {
@@ -337,7 +343,7 @@ svg {
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
   border: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
-  background-color: var(--hint-balloon-background-color);
+  background: var(--hint-balloon-background);
   white-space: nowrap;
 }
 .branch:active .hint-balloon-wrapper,
