@@ -1,6 +1,19 @@
 :root {
+  --font-color: #333;
   --background-color: #ccc;
-  --panel-color: #fff;
+  --q-and-a-panel-background: #fff;
+  --q-and-a-panel-watermark-color: #eee;
+  --q-and-a-panel-font-color: red;
+  --q-and-a-cover-background: lightgreen;
+  --q-and-a-cover-watermark-color: green;
+  --disabled-toggle-background: black;
+  --enabled-toggle-background: blue;
+  --button-font-color: #666;
+  --enabled-button-background: #eee;
+  --disabled-button-background: #ccc;
+  --button-border-color: #666;
+  --footer-background: #000;
+  --footer-font-color: #fff;
   font-size: 4vmin;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
@@ -61,11 +74,9 @@ svg {
 }
 #question-wrapper {
   grid-area: question;
-  border: 1px solid lightgray;
 }
 #answer-wrapper {
   grid-area: answer;
-  border: 1px solid lightgray;
 }
 #question-wrapper,
 #answer-wrapper {
@@ -73,9 +84,9 @@ svg {
   justify-content: center;
   align-items: center;
   position: relative;
+  margin: 1px;
   padding: .5rem 1rem;
   overflow-y: auto;
-  background-color: var(--panel-color);
 }
 #question-background,
 #answer-background,
@@ -102,19 +113,20 @@ svg {
 }
 #question-background,
 #answer-background {
-  background-color: white;
-  color: lightgray;
+  background: var(--q-and-a-panel-background);
+  color: var(--q-and-a-panel-watermark-color);
 }
 #question-cover,
 #answer-cover {
   visibility: hidden;
-  background-color: purple;
-  color: black;
+  background: var(--q-and-a-cover-background);
+  color: var(--q-and-a-cover-watermark-color);
 }
 #question-content,
 #answer-content {
   position: relative;
   margin: auto;
+  color: var(--q-and-a-panel-font-color);
   font-size: 1.5rem;
   overflow-wrap: break-word;
   line-height: 1.5em;
@@ -141,9 +153,8 @@ svg {
   position: relative;
   width: 1.5rem;
   height: 2rem;
-  border: var(--border-width) solid gray;
-  background: lightgray;
-  vertical-align: bottom;
+  border: var(--border-width) solid var(--button-border-color);
+  background: var(--enabled-button-background);
 }
 #auto-read-aloud-checkbox + label::before {
   box-sizing: border-box;
@@ -153,10 +164,9 @@ svg {
   left: 0;
   width: 100%;
   height: 0;
+  border: solid var(--button-border-color);
   border-width: 0 0 var(--border-width) 0;
-  border-style: solid;
-  border-color: gray;
-  background-color: gray;
+  background: var(--disabled-toggle-background);
   animation-fill-mode: forwards;
   content: "";
 }
@@ -169,10 +179,9 @@ svg {
   left: 0;
   width: 100%;
   height: var(--toggle-height);
+  border: solid var(--button-border-color);
   border-width: var(--border-width) 0 0 0;
-  border-style: solid;
-  border-color: gray;
-  background-color: lime;
+  background: var(--enabled-toggle-background);
   content: "";
 }
 #auto-read-aloud-checkbox:not(:checked) + label::before {
@@ -223,10 +232,10 @@ svg {
   justify-content: center;
   align-items: center;
   height: 2rem;
-background-color: white;
- border: 1px solid gray;
+ background: var(--enabled-button-background);
+ border: 1px solid var(--button-border-color);
  border-left: 0;
-  color: gray;
+  color: var(--button-font-color);
 }
 #read-aloud-button > svg,
 #play-button > svg,
