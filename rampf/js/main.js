@@ -61,7 +61,7 @@ const main = () => {
   $element('#auto-read-aloud-checkbox').addEventListener('change', event => {
     $data.isAutoReadAloudEnabled = event.target.checked;
   });
-  $element('#continue-button').addEventListener('click', event => {
+  $element('#play-button').addEventListener('click', event => {
     if ($data.isAnswerShown) {
       resetCard();
     } else {
@@ -121,9 +121,9 @@ const resetCard = () => {
   $data.questionPhrase = new RabbitPhrase($data.questionTemplate, pathIdSeed);
   $data.answerPhrase = new RabbitPhrase($data.answerTemplate, pathIdSeed);
   $element('#caption-content').innerHTML = $data.captionText || '';
-  $element('#pattern-count').innerHTML = $data.questionPhrase.possiblePathCount;
-  $element('#pattern-id').innerHTML = $data.questionPhrase.pathId;
-  $element('#training-count').innerHTML = $data.trainingCount++;
+  $element('#pattern-count').innerHTML = $data.questionPhrase.possiblePathCount.toLocaleString();
+  $element('#pattern-id').innerHTML = $data.questionPhrase.pathId.toLocaleString();
+  $element('#training-count').innerHTML = ($data.trainingCount++).toLocaleString();
   $data.isAnswerShown = true;
   showQuestion();
 };
@@ -268,12 +268,12 @@ const readAloud = () => {
 };
 const disableButtons = () => {
   $element('#read-aloud-button').disabled = true;
-  $element('#continue-button').disabled = true;
+  $element('#play-button').disabled = true;
   $element('#skip-button').disabled = true;
 };
 const enableButtons = () => {
   $element('#read-aloud-button').disabled = false;
-  $element('#continue-button').disabled = false;
+  $element('#play-button').disabled = false;
   $element('#skip-button').disabled = false;
 };
 window.addEventListener('DOMContentLoaded', main);

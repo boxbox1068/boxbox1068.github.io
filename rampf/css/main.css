@@ -2,7 +2,12 @@
   --background-color: #ccc;
   --panel-color: #fff;
   font-size: 4vmin;
-  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
+}
+@font-face {
+  font-family: "Yu Gothic";
+  src: local("Yu Gothic Bold");
+  font-weight: bold;
 }
 * {
   box-sizing: border-box;
@@ -14,8 +19,8 @@ body {
   grid-template:
     "caption caption" min-content
     "question answer" 1fr
-    "controller controller" min-content
-    "statistic copyright" min-content
+    "statistic controller" min-content
+    "link copyright" min-content
     / 50% 50%;
   position: fixed;
   top: 0;
@@ -29,14 +34,18 @@ body {
 @media screen and (orientation: portrait) {
   body {
     grid-template:
-      "caption" min-content
-      "question" 1fr
-      "answer" 1fr
-      "controller" min-content
-      "statistic" min-content
-      "copyright" min-content
-      / 100%;
+      "caption caption" min-content
+      "question question" 1fr
+      "answer answer" 1fr
+      "statistic statistic" min-content
+      "controller controller" min-content
+      "link copyright" min-content
+      / min-content 1fr;
   }
+}
+svg {
+  fill: currentColor;
+  stroke: currentColor;
 }
 #caption-wrapper {
   grid-area: caption;
@@ -115,6 +124,11 @@ body {
   padding: .5rem 1rem;
   text-align: right;
 }
+#controller-content {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
 #auto-read-aloud-checkbox {
   display: none;
 }
@@ -123,7 +137,7 @@ body {
   --toggle-height: 1.5rem;
   overflow: hidden;
   box-sizing: border-box;
-  display: inline-block;
+  display: block;
   position: relative;
   width: 1.5rem;
   height: 2rem;
@@ -196,51 +210,55 @@ body {
 #read-aloud-button {
   width: 4rem;
 }
-#continue-button {
+#play-button {
   width: 6rem;
 }
 #skip-button {
   width: 4rem;
 }
-button{
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  appearance: none;
-}
-
 #read-aloud-button,
-#continue-button,
+#play-button,
 #skip-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   height: 2rem;
+background-color: white;
  border: 1px solid gray;
+ border-left: 0;
   color: gray;
 }
 #read-aloud-button > svg,
-#continue-button > svg,
+#play-button > svg,
 #skip-button > svg {
   display: block;
   width: 60%;
   height: 60%;
-  fill: currentColor;
-  stroke: currentColor;
 }
 
 #statistic-wrapper {
   grid-area: statistic;
   padding: .5rem 1rem;
-  font-size: min(.75rem, 1.5vw);
+  font-size: .75rem;
+}
+#link-wrapper {
+  grid-area: link;
+  padding: .5rem 1rem;
+  background-color: black;
+  color: white;
   white-space: nowrap;
+}
+#home-link > svg {
+  width: 1em;
+  height: 1em;
+  color: white;
 }
 #copyright-wrapper {
   grid-area: copyright;
   padding: .5rem 1rem;
-  font-size: min(.75rem, 1.5vw);
+  background-color: black;
+  color: white;
+  font-size: .75rem;
   text-align: right;
   white-space: nowrap;
 }
