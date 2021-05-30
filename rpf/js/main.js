@@ -48,7 +48,26 @@ const main = () => {
   });
   $E('#skip-button').addEventListener('click', resetCard);
   $D('refill-count', 0);
-  if ($Q('jsonp')) {
+  if ($Q('iframe')) {
+    window.addEventListener('message', event => {
+      const postedData = event.data;
+      if (typeof postedData != 'object') return;
+      $D('question-template', expandVariables(postedData['question']));
+      $D('answer-template', expandVariables(postedData['answer']));
+      $D('answer-lang', postedData['lang']);
+      $D('caption-text', postedData['caption']);
+      $D('animation', postedData['animation']);
+      resetCard();
+    });
+  } else if ($Q('question')) {
+    $D('question-template', expandVariables($Q('question', true)));
+    $D('answer-template', expandVariables($Q('answer', true)));
+    $D('answer-lang', $Q('lang', true, true));
+    $D('caption-text', $Q('caption', true));
+    $D('animation', $Q('animation', true, true));
+    resetCard();
+  } else {
+    const jsonpUrl = $Q('jsonp') || './data/demo.jsonp';
     const jsonpCallbackScriptElement = document.createElement('script');
     jsonpCallbackScriptElement.innerHTML = `
       const jsonpCallback = jsonData => {
@@ -62,29 +81,10 @@ const main = () => {
     `;
     document.head.append(jsonpCallbackScriptElement);
     const jsonpFileScriptElement = document.createElement('script');
-    jsonpFileScriptElement.src = $Q('jsonp');
+    jsonpFileScriptElement.src = jsonpUrl;
     document.head.append(jsonpFileScriptElement);
-  } else if ($Q('question')) {
-    $D('question-template', expandVariables($Q('question', true)));
-    $D('answer-template', expandVariables($Q('answer', true)));
-    $D('answer-lang', $Q('lang', true, true));
-    $D('caption-text', $Q('caption', true));
-    $D('animation', $Q('animation', true, true));
-    resetCard();
-  } else {
-    if (window.parent != window) {
-      window.addEventListener('message', event => {
-        const postedData = event.data;
-        if (typeof postedData != 'object') return;
-        $D('question-template', expandVariables(postedData['question']));
-        $D('answer-template', expandVariables(postedData['answer']));
-        $D('answer-lang', postedData['lang']);
-        $D('caption-text', postedData['caption']);
-        $D('animation', postedData['animation']);
-        resetCard();
-      });
-    }
   }
+//  $E('#caption-content').style.animation = 'hoge 400ms';
 };
 const expandVariables = template => {
   for (const key in $templateVariables) {

@@ -1,8 +1,13 @@
 :root {
-  --main-background: #CFD8DC;
+  --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --main-border-color: #607D8B;
   --main-font-color: #263238;
-  --q-and-a-content-background: #FFF;
+/*
+  --caption-content-background: #CFD8DCCC;
+*/
+  --caption-content-background: #FFE0B2EE;
+  --caption-content-font-color: #263238;
+  --q-and-a-content-background: #FFFE;
   --q-and-a-content-watermark-color: #ECEFF1;
   --q-and-a-content-font-color: #263238;
   --q-and-a-cover-background: #3F51B5;
@@ -29,6 +34,7 @@
   animation-fill-mode: forwards;
 }
 html {
+  height: 100%;
   font-size: 4vmin;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
@@ -45,15 +51,14 @@ body {
     "statistic controller" min-content
     "footer footer" min-content
     / 50% 50%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
   margin: 0;
   overflow: hidden;
   background: var(--main-background);
+  color: var(--main-font-color);
 }
+
+
 @media screen and (orientation: portrait) {
   body {
     grid-template:
@@ -72,16 +77,44 @@ svg {
 }
 #caption-container {
   grid-area: caption;
+  height: 3rem;
+/*
   min-height: 2rem;
   max-height: 15vh;
   padding: .5rem 1rem;
+*/
+/*
   overflow-y: auto;
+*/
 }
 #caption-content {
-  font-size: 1.25rem;
+position: fixed;
+top: 0;
+left: .5rem;
+right: .5rem;
+padding: .5rem 1rem 1.5rem 1rem;
+font-size: 1rem;
   overflow-wrap: break-word;
   line-height: 1.5em;
+z-index: 1000;
+//border: 1px solid var(--main-border-color);
+background: var(--caption-content-background);
+  color: var(--caption-content-font-color);
+  
 }
+@keyframes hoge {
+  0% {
+    height: 2.5rem;
+  }
+  100% {
+    height: 50vh;
+    animation-fill-mode: forwards;
+  }
+
+}
+
+
+
 #question-container {
   grid-area: question;
 }
