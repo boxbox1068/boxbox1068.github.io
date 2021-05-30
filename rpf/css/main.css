@@ -2,9 +2,6 @@
   --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --main-border-color: #607D8B;
   --main-font-color: #263238;
-/*
-  --caption-content-background: #CFD8DCCC;
-*/
   --caption-content-background: #FFE0B2EE;
   --caption-content-font-color: #263238;
   --q-and-a-content-background: #FFFE;
@@ -57,8 +54,6 @@ body {
   background: var(--main-background);
   color: var(--main-font-color);
 }
-
-
 @media screen and (orientation: portrait) {
   body {
     grid-template:
@@ -75,24 +70,16 @@ svg {
   fill: currentColor;
   stroke: currentColor;
 }
-#caption-container {
+#caption-cell {
   grid-area: caption;
   height: 3rem;
-/*
-  min-height: 2rem;
-  max-height: 15vh;
-  padding: .5rem 1rem;
-*/
-/*
-  overflow-y: auto;
-*/
 }
 #caption-content {
 position: fixed;
 top: 0;
 left: .5rem;
 right: .5rem;
-padding: .5rem 1rem 1.5rem 1rem;
+padding: .5rem 1rem 2rem 1rem;
 font-size: 1rem;
   overflow-wrap: break-word;
   line-height: 1.5em;
@@ -100,29 +87,63 @@ z-index: 1000;
 //border: 1px solid var(--main-border-color);
 background: var(--caption-content-background);
   color: var(--caption-content-font-color);
-  
+  max-height: 2.5rem;
+}
+#show-caption-checkbox {
+  display: none;
+}
+[for="show-caption-checkbox"] {
+  position: absolute;
+  bottom: 0;
+  right: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--button-font-color);
+  color: var(--enabled-button-background);
+  border: 1px solid var(--main-border-color);
+}
+#show-caption-checkbox:checked ~ * [for="show-caption-checkbox"] {
+  transform: scale(1, -1);
+}
+
+#show-caption-checkbox:checked + #caption-content {
+  animation: hoge 400ms;
+  animation-fill-mode: forwards;
+
+}
+#show-caption-checkbox:not(:checked) + #caption-content {
+  animation: fuga 400ms;
+  animation-fill-mode: forwards;
 }
 @keyframes hoge {
   0% {
-    height: 2.5rem;
+    max-height: calc(100vh - .5rem);
   }
   100% {
-    height: 50vh;
-    animation-fill-mode: forwards;
+    max-height: 2.5rem;
+    overflow-y: hidden;
   }
-
+}
+@keyframes fuga {
+  0% {
+    max-height: 2.5rem;
+  }
+  100% {
+    max-height: calc(100vh - .5rem);
+    overflow-y: auto;
+  }
 }
 
 
 
-#question-container {
+#question-cell {
   grid-area: question;
 }
-#answer-container {
+#answer-cell {
   grid-area: answer;
 }
-#question-container,
-#answer-container {
+#question-cell,
+#answer-cell {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -174,7 +195,7 @@ background: var(--caption-content-background);
   overflow-wrap: break-word;
   line-height: 1.5em;
 }
-#controller-container {
+#controller-cell {
   grid-area: controller;
   padding: .5rem 1rem;
 }
@@ -291,12 +312,12 @@ background: var(--caption-content-background);
   width: 60%;
   height: 60%;
 }
-#statistic-container {
+#statistic-cell {
   grid-area: statistic;
   padding: .5rem 1rem;
   font-size: .75rem;
 }
-#footer-container {
+#footer-cell {
   grid-area: footer;
   padding: .5rem 1rem;
   background: var(--footer-background);
@@ -335,7 +356,7 @@ background: var(--caption-content-background);
 .branch[data-branch-number="5"] {
   background: var(--branch-background-e);
 }
-.hint-balloon-container {
+.hint-balloon-cell {
   --hint-balloon-font-size: 1em;
   --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.6);
   --hint-balloon-border-width: .2rem;
@@ -350,7 +371,7 @@ background: var(--caption-content-background);
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
-.hint-balloon-container:before {
+.hint-balloon-cell:before {
   display: block;
   position: absolute;
   top: 100%;
@@ -359,7 +380,7 @@ background: var(--caption-content-background);
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-border-color);
   content: "";
 }
-.hint-balloon-container::after {
+.hint-balloon-cell::after {
   display: block;
   position: absolute;
   top: calc(100% - .2rem * 2);
@@ -377,8 +398,8 @@ background: var(--caption-content-background);
   background: var(--hint-balloon-background);
   white-space: nowrap;
 }
-.branch:active .hint-balloon-container,
-.branch:hover .hint-balloon-container {
+.branch:active .hint-balloon-cell,
+.branch:hover .hint-balloon-cell {
   visibility: visible;
 }
 @keyframes flipA {

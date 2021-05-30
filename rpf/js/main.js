@@ -97,7 +97,7 @@ const resetCard = () => {
   const pathIdSeed = Math.random();
   $D('question-phrase', new RabbitPhrase($D('question-template'), pathIdSeed));
   $D('answer-phrase', new RabbitPhrase($D('answer-template'), pathIdSeed));
-  $E('#caption-content').innerHTML = $D('caption-text') || '';
+  $E('#caption-body').innerHTML = $D('caption-text') || '';
   $E('.pattern-count').innerHTML = $D('question-phrase').possiblePathCount.toLocaleString();
   $E('.pattern-id').innerHTML = $D('question-phrase').pathId.toLocaleString();
   $E('.refill-count').innerHTML = ($D('refill-count')).toLocaleString();
@@ -108,18 +108,18 @@ const resetCard = () => {
 const showQuestion = () => {
   disableButtons();
   if ($D('animation') == 'flip') {
-    addAnimation($E('#question-container'), 'flipA 200ms', target => {
+    addAnimation($E('#question-cell'), 'flipA 200ms', target => {
       resetQuestion();
       $E('#question-cover').style.visibility = 'hidden';
-      addAnimation($E('#question-container'), 'flipB 200ms', target => {
+      addAnimation($E('#question-cell'), 'flipB 200ms', target => {
         enableButtons();
       });
     });
     if ($D('is-answer-shown')) {
-      addAnimation($E('#answer-container'), 'flipA 200ms', target => {
+      addAnimation($E('#answer-cell'), 'flipA 200ms', target => {
         resetAnswer();
         $E('#answer-cover').style.visibility = 'visible';
-        addAnimation($E('#answer-container'), 'flipB 200ms', null);
+        addAnimation($E('#answer-cell'), 'flipB 200ms', null);
       });
     } else {
       resetAnswer();
@@ -154,12 +154,12 @@ const showQuestion = () => {
   $D('is-answer-shown', false);
 };
 const resetQuestion = () => {
-  $E('#question-container').scrollTop = 0;
+  $E('#question-cell').scrollTop = 0;
   $E('#question-content').innerHTML = $D('question-phrase').html;
   addHintBalloons($E('#question-content'), $D('answer-phrase').chosenBranchTexts);
 };
 const resetAnswer = () => {
-  $E('#answer-container').scrollTop = 0;
+  $E('#answer-cell').scrollTop = 0;
   $E('#answer-content').innerHTML = $D('answer-phrase').html;
   addHintBalloons($E('#answer-content'), $D('question-phrase').chosenBranchTexts);
 }
@@ -170,34 +170,34 @@ const addHintBalloons = (targetContent, hintTextList) => {
     const hintBalloonContentElement = document.createElement('span');
     hintBalloonContentElement.className = 'hint-balloon-content';
     hintBalloonContentElement.innerText = hintTextList[branchNumber];
-    const hintBalloonContainerElement = document.createElement('span');
-    hintBalloonContainerElement.className = 'hint-balloon-container';
-    hintBalloonContainerElement.append(hintBalloonContentElement);
-    branchElement.append(hintBalloonContainerElement);
-    const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonContainerElement.offsetWidth;
+    const hintBallooncellElement = document.createElement('span');
+    hintBallooncellElement.className = 'hint-balloon-cell';
+    hintBallooncellElement.append(hintBalloonContentElement);
+    branchElement.append(hintBallooncellElement);
+    const hintBalloonRight = branchElement.getClientRects()[0].left + hintBallooncellElement.offsetWidth;
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
     branchElement.addEventListener('mouseenter', event => {
       const branchElement = event.target;
-      const hintBalloonContainerElement = branchElement.querySelector('.hint-balloon-container');
+      const hintBallooncellElement = branchElement.querySelector('.hint-balloon-cell');
       const branchRect = branchElement.getClientRects()[0];
-      hintBalloonContainerElement.style.top = `${branchRect.top}px`;
-      hintBalloonContainerElement.style.left = `${branchRect.left}px`;
-      hintBalloonContainerElement.style.animation = 'fadeIn 400ms';
+      hintBallooncellElement.style.top = `${branchRect.top}px`;
+      hintBallooncellElement.style.left = `${branchRect.left}px`;
+      hintBallooncellElement.style.animation = 'fadeIn 400ms';
     });
     branchElement.addEventListener('mouseleave', event => {
       const branchElement = event.target;
-      const hintBalloonContainerElement = branchElement.querySelector('.hint-balloon-container');
-      hintBalloonContainerElement.style.animation = 'fadeOut 400ms';
+      const hintBallooncellElement = branchElement.querySelector('.hint-balloon-cell');
+      hintBallooncellElement.style.animation = 'fadeOut 400ms';
     });
   }
 }
 const showAnswer = () => {
   disableButtons();
   if ($D('animation') == 'flip') {
-    addAnimation($E('#answer-container'), 'flipA 200ms', target => {
+    addAnimation($E('#answer-cell'), 'flipA 200ms', target => {
       $E('#answer-cover').style.visibility = 'hidden';
-      addAnimation($E('#answer-container'), 'flipB 200ms', target => {
+      addAnimation($E('#answer-cell'), 'flipB 200ms', target => {
         enableButtons();
         if ($D('is-auto-read-aloud-enabled')) readAloud();
       });
