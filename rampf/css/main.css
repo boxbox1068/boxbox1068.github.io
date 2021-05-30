@@ -1,26 +1,26 @@
 :root {
-  --font-color: #333;
-  --app-background: #ccc;
-  --q-and-a-content-background: #fff;
-  --q-and-a-content-watermark-color: #eee;
-  --q-and-a-content-font-color: red;
-  --q-and-a-cover-background: lightgreen;
-  --q-and-a-cover-watermark-color: green;
-  --disabled-toggle-background: black;
-  --enabled-toggle-background: purple;
-  --button-border-color: #666;
-  --enabled-button-background: #eee;
-  --disabled-button-background: #ccc;
-  --button-font-color: #666;
-  --footer-background: #000;
-  --footer-font-color: #fff;
+  --main-background: #CFD8DC;
+  --main-border-color: #607D8B;
+  --main-font-color: #263238;
+  --q-and-a-content-background: #FFF;
+  --q-and-a-content-watermark-color: #ECEFF1;
+  --q-and-a-content-font-color: #263238;
+  --q-and-a-cover-background: #3F51B5;
+  --q-and-a-cover-watermark-color: #3949AB;
+  --on-toggle-background: #FFB74D;
+  --off-toggle-background: #455A64;
+  --enabled-button-background: #CFD8DC;
+  --disabled-button-background: #ECEFF1;
+  --button-font-color: #455A64;
+  --footer-background: #263238;
+  --footer-font-color: #CFD8DC;
   --branch-background-a: #F82F6666;
   --branch-background-b: #008ECF66;
   --branch-background-c: #70BE4766;
   --branch-background-d: #F55A2166;
   --branch-background-e: #F0EA3066;
-  --hint-balloon-border-color: #999;
   --hint-balloon-background: #fff;
+  --hint-balloon-border-color: #999;
   --hint-balloon-font-color: #333;
 }
 * {
@@ -43,7 +43,7 @@ body {
     "caption caption" min-content
     "question answer" 1fr
     "statistic controller" min-content
-    "link copyright" min-content
+    "footer footer" min-content
     / 50% 50%;
   position: fixed;
   top: 0;
@@ -52,25 +52,25 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--app-background);
+  background: var(--main-background);
 }
 @media screen and (orientation: portrait) {
   body {
     grid-template:
-      "caption caption" min-content
-      "question question" 1fr
-      "answer answer" 1fr
-      "statistic statistic" min-content
-      "controller controller" min-content
-      "link copyright" min-content
-      / min-content 1fr;
+      "caption" min-content
+      "question" 1fr
+      "answer" 1fr
+      "statistic" min-content
+      "controller" min-content
+      "footer" min-content
+      / 100%;
   }
 }
 svg {
   fill: currentColor;
   stroke: currentColor;
 }
-#caption-wrapper {
+#caption-container {
   grid-area: caption;
   min-height: 2rem;
   max-height: 15vh;
@@ -82,14 +82,14 @@ svg {
   overflow-wrap: break-word;
   line-height: 1.5em;
 }
-#question-wrapper {
+#question-container {
   grid-area: question;
 }
-#answer-wrapper {
+#answer-container {
   grid-area: answer;
 }
-#question-wrapper,
-#answer-wrapper {
+#question-container,
+#answer-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,7 +141,7 @@ svg {
   overflow-wrap: break-word;
   line-height: 1.5em;
 }
-#controller-wrapper {
+#controller-container {
   grid-area: controller;
   padding: .5rem 1rem;
 }
@@ -162,7 +162,7 @@ svg {
   position: relative;
   width: 1.5rem;
   height: 2rem;
-  border: var(--border-width) solid var(--button-border-color);
+  border: var(--border-width) solid var(--main-border-color);
   background: var(--enabled-button-background);
 }
 #auto-read-aloud-checkbox + label::before {
@@ -173,9 +173,9 @@ svg {
   left: 0;
   width: 100%;
   height: 0;
-  border: solid var(--button-border-color);
+  border: solid var(--main-border-color);
   border-width: 0 0 var(--border-width) 0;
-  background: var(--disabled-toggle-background);
+  background: var(--off-toggle-background);
   animation-fill-mode: forwards;
   content: "";
 }
@@ -188,9 +188,9 @@ svg {
   left: 0;
   width: 100%;
   height: var(--toggle-height);
-  border: solid var(--button-border-color);
+  border: solid var(--main-border-color);
   border-width: var(--border-width) 0 0 0;
-  background: var(--enabled-toggle-background);
+  background: var(--on-toggle-background);
   content: "";
 }
 #auto-read-aloud-checkbox:not(:checked) + label::before {
@@ -241,7 +241,7 @@ svg {
   justify-content: center;
   align-items: center;
   height: 2rem;
-  border: 1px solid var(--button-border-color);
+  border: 1px solid var(--main-border-color);
   border-left: 0;
   background: var(--enabled-button-background);
   color: var(--button-font-color);
@@ -258,33 +258,31 @@ svg {
   width: 60%;
   height: 60%;
 }
-#statistic-wrapper {
+#statistic-container {
   grid-area: statistic;
   padding: .5rem 1rem;
   font-size: .75rem;
 }
-#link-wrapper {
-  grid-area: link;
-}
-#copyright-wrapper {
-  grid-area: copyright;
-}
-#link-wrapper,
-#copyright-wrapper {
+#footer-container {
+  grid-area: footer;
   padding: .5rem 1rem;
   background: var(--footer-background);
   color: var(--footer-font-color);
   font-size: .75rem;
   white-space: nowrap;
 }
+#footer-content {
+  display: flex;
+  justify-content: space-between;
+}
+#home-link {
+  display: inline-flex;
+  align-items: center;
+}
 #home-link > svg {
   width: 1em;
   height: 1em;
   color: var(--footer-font-color);
-}
-#copyright-content {
-  display: flex;
-  justify-content: flex-end;
 }
 .branch {
   font-weight: bold;
@@ -304,7 +302,7 @@ svg {
 .branch[data-branch-number="5"] {
   background: var(--branch-background-e);
 }
-.hint-balloon-wrapper {
+.hint-balloon-container {
   --hint-balloon-font-size: 1em;
   --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.6);
   --hint-balloon-border-width: .2rem;
@@ -319,7 +317,7 @@ svg {
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
-.hint-balloon-wrapper:before {
+.hint-balloon-container:before {
   display: block;
   position: absolute;
   top: 100%;
@@ -328,7 +326,7 @@ svg {
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-border-color);
   content: "";
 }
-.hint-balloon-wrapper::after {
+.hint-balloon-container::after {
   display: block;
   position: absolute;
   top: calc(100% - .2rem * 2);
@@ -346,8 +344,8 @@ svg {
   background: var(--hint-balloon-background);
   white-space: nowrap;
 }
-.branch:active .hint-balloon-wrapper,
-.branch:hover .hint-balloon-wrapper {
+.branch:active .hint-balloon-container,
+.branch:hover .hint-balloon-container {
   visibility: visible;
 }
 @keyframes flipA {
