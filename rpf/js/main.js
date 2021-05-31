@@ -129,13 +129,13 @@ const showQuestion = () => {
 };
 const resetQuestion = () => {
   $E('#question-cell').scrollTop = 0;
-  $E('#question-content').innerHTML = $D('question-phrase').html;
-  addHintBalloons($E('#question-content'), $D('answer-phrase').chosenBranchTexts);
+  $E('#question-body').innerHTML = $D('question-phrase').html;
+  addHintBalloons($E('#question-body'), $D('answer-phrase').chosenBranchTexts);
 };
 const resetAnswer = () => {
   $E('#answer-cell').scrollTop = 0;
-  $E('#answer-content').innerHTML = $D('answer-phrase').html;
-  addHintBalloons($E('#answer-content'), $D('question-phrase').chosenBranchTexts);
+  $E('#answer-body').innerHTML = $D('answer-phrase').html;
+  addHintBalloons($E('#answer-body'), $D('question-phrase').chosenBranchTexts);
 }
 const addHintBalloons = (targetContent, hintTextList) => {
   const branchElements = targetContent.querySelectorAll('.branch');
