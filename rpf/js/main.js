@@ -1,32 +1,4 @@
 'use strict';
-const $Q = (field, trim, toLowerCase) => {
-  let value = undefined;
-  const queryString = window.location.search.replace(/^\?/, '');
-  const parameters = queryString.split('&');
-  for (const parameter of parameters) {
-    const currentField = parameter.replace(/=.*/, '').trim().toLowerCase();
-    if (currentField == field) {
-      value = decodeURIComponent(parameter.replace(/.*?=|.*/, ''));
-      if (trim) value = value.trim();
-      if (toLowerCase) value = value.toLowerCase();
-      break;
-    }
-  }
-  return value;
-};
-const $E = (selectors, returnMultiple) => {
-  if (returnMultiple) {
-    return document.querySelectorAll(selectors);
-  } else {
-    return document.querySelector(selectors);
-  }
-};
-const $D = (key, value) => {
-  if (value !== undefined) {
-    $D[key] = value;
-  }
-  return $D[key];
-};
 const main = () => {
   const lang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {'en': 'Rabbity Phrases Flashcards', 'ja': '鼠算式フレーズ練習帳'}[lang];
@@ -93,7 +65,9 @@ const expandVariables = template => {
   return template;
 };
 const resetCard = () => {
-  window.speechSynthesis.cancel();
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
   const pathIdSeed = Math.random();
   $D('question-phrase', new RabbitPhrase($D('question-template'), pathIdSeed));
   $D('answer-phrase', new RabbitPhrase($D('answer-template'), pathIdSeed));

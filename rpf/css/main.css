@@ -1,9 +1,10 @@
 :root {
   --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
-  --main-border-color: #607D8B;
   --main-font-color: #263238;
-  --caption-content-background: #FFE0B2EE;
-  --caption-content-font-color: #263238;
+  --caption-background: #FFE0B2EE;
+  --caption-font-color: #263238;
+  --caption-visibility-toggle-background: #455A64;
+  --caption-visibility-toggle-font-color: #CFD8DC;
   --q-and-a-content-background: #FFFE;
   --q-and-a-content-watermark-color: #ECEFF1;
   --q-and-a-content-font-color: #263238;
@@ -13,6 +14,7 @@
   --off-toggle-background: #455A64;
   --enabled-button-background: #CFD8DC;
   --disabled-button-background: #ECEFF1;
+  --button-border-color: #607D8B;
   --button-font-color: #455A64;
   --footer-background: #263238;
   --footer-font-color: #CFD8DC;
@@ -24,6 +26,7 @@
   --hint-balloon-background: #fff;
   --hint-balloon-border-color: #999;
   --hint-balloon-font-color: #333;
+  --panel-line-height: 1.5em;
 }
 * {
   box-sizing: border-box;
@@ -71,51 +74,50 @@ svg {
   stroke: currentColor;
 }
 #caption-cell {
+  --caption-panel-height: 2.5rem;
+  --caption-visibility-toggle-height: 1.5rem;
   grid-area: caption;
-  height: 3rem;
+  height: calc(var(--caption-panel-height) + .5rem);
 }
-#caption-content {
-position: fixed;
-top: 0;
-left: .5rem;
-right: .5rem;
-padding: .5rem 1rem 2rem 1rem;
-font-size: 1rem;
+#caption-panel {
+  position: fixed;
+  top: 0;
+  right: .5rem;
+  left: .5rem;
+  z-index: 100;
+  min-height: var(--caption-panel-height);
+  max-height: var(--caption-panel-height);
+  padding: .5rem 1rem calc(var(--caption-visibility-toggle-height) + .5rem) 1rem;
+  background: var(--caption-background);
+  color: var(--caption-font-color);
+  font-size: 1rem;
+  line-height: var(--panel-line-height);
   overflow-wrap: break-word;
-  line-height: 1.5em;
-z-index: 1000;
-//border: 1px solid var(--main-border-color);
-background: var(--caption-content-background);
-  color: var(--caption-content-font-color);
-  max-height: 2.5rem;
 }
-#show-caption-checkbox {
+#caption-visibility-checkbox {
   display: none;
 }
-[for="show-caption-checkbox"] {
+[for="caption-visibility-checkbox"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  bottom: 0;
   right: 1rem;
+  bottom: 0;
   width: 1.5rem;
   height: 1.5rem;
-  background: var(--button-font-color);
-  color: var(--enabled-button-background);
-  border: 1px solid var(--main-border-color);
+  background: var(--caption-visibility-toggle-background);
+  color: var(--caption-visibility-toggle-font-color);
 }
-#show-caption-checkbox:checked ~ * [for="show-caption-checkbox"] {
-  transform: scale(1, -1);
+[for="caption-visibility-checkbox"] > svg {
+  width: 60%;
+  height: 60%;
 }
-
-#show-caption-checkbox:checked + #caption-content {
-  animation: hoge 400ms;
-  animation-fill-mode: forwards;
-
-}
-#show-caption-checkbox:not(:checked) + #caption-content {
-  animation: fuga 400ms;
+#caption-visibility-checkbox:checked + #caption-panel {
+  animation: hideCaption 800ms;
   animation-fill-mode: forwards;
 }
-@keyframes hoge {
+@keyframes hideCaption {
   0% {
     max-height: calc(100vh - .5rem);
   }
@@ -124,7 +126,11 @@ background: var(--caption-content-background);
     overflow-y: hidden;
   }
 }
-@keyframes fuga {
+#caption-visibility-checkbox:not(:checked) + #caption-panel {
+  animation: showCaption 800ms;
+  animation-fill-mode: forwards;
+}
+@keyframes showCaption {
   0% {
     max-height: 2.5rem;
   }
@@ -132,6 +138,9 @@ background: var(--caption-content-background);
     max-height: calc(100vh - .5rem);
     overflow-y: auto;
   }
+}
+#caption-visibility-checkbox:checked ~ * > [for="caption-visibility-checkbox"] {
+  transform: scale(1, -1);
 }
 
 
@@ -193,7 +202,7 @@ background: var(--caption-content-background);
   color: var(--q-and-a-content-font-color);
   font-size: 1.5rem;
   overflow-wrap: break-word;
-  line-height: 1.5em;
+  line-height: var(--panel-line-height);
 }
 #controller-cell {
   grid-area: controller;
@@ -216,7 +225,7 @@ background: var(--caption-content-background);
   position: relative;
   width: 1.5rem;
   height: 2rem;
-  border: var(--border-width) solid var(--main-border-color);
+  border: var(--border-width) solid var(--button-border-color);
   background: var(--enabled-button-background);
 }
 #auto-read-aloud-checkbox + label::before {
@@ -227,7 +236,7 @@ background: var(--caption-content-background);
   left: 0;
   width: 100%;
   height: 0;
-  border: solid var(--main-border-color);
+  border: solid var(--button-border-color);
   border-width: 0 0 var(--border-width) 0;
   background: var(--off-toggle-background);
   animation-fill-mode: forwards;
@@ -242,7 +251,7 @@ background: var(--caption-content-background);
   left: 0;
   width: 100%;
   height: var(--toggle-height);
-  border: solid var(--main-border-color);
+  border: solid var(--button-border-color);
   border-width: var(--border-width) 0 0 0;
   background: var(--on-toggle-background);
   content: "";
@@ -295,7 +304,7 @@ background: var(--caption-content-background);
   justify-content: center;
   align-items: center;
   height: 2rem;
-  border: 1px solid var(--main-border-color);
+  border: 1px solid var(--button-border-color);
   border-left: 0;
   background: var(--enabled-button-background);
   color: var(--button-font-color);
@@ -363,7 +372,7 @@ background: var(--caption-content-background);
   display: block;
   visibility: hidden;
   position: fixed;
-  z-index: 1000;
+  z-index: 100;
   height: var(--hint-balloon-height);
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
