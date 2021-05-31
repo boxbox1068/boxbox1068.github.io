@@ -122,7 +122,7 @@ svg {
     max-height: calc(100vh - .5rem);
   }
   100% {
-    max-height: 2.5rem;
+    max-height: var(--caption-panel-height);
     overflow-y: hidden;
   }
 }
@@ -142,9 +142,6 @@ svg {
 #caption-visibility-checkbox:checked ~ * > [for="caption-visibility-checkbox"] {
   transform: scale(1, -1);
 }
-
-
-
 #question-cell {
   grid-area: question;
 }
@@ -176,6 +173,7 @@ svg {
   font-weight: bold;
   font-size: 10rem;
 }
+/*
 #question-background:before,
 #question-cover:before {
   content: "Q";
@@ -189,6 +187,7 @@ svg {
   background: var(--q-and-a-content-background);
   color: var(--q-and-a-content-watermark-color);
 }
+*/
 #question-cover,
 #answer-cover {
   visibility: hidden;
