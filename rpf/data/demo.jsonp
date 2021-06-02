@@ -1,10 +1,11 @@
 jsonpCallback({
+  //道案内
 //  question: "もし私が^[鳥|魚|犬|猫|馬]だったら^[空を自由に飛べる|海深くまで泳げる|君の匂いを嗅ぎ分けられる|一日中寝ていられる|風より速く走れる]んだけど。",
 //  answer: "If I were ^[a bird|a fish|a dog|a cat|a horse], I could ^[fly freely in the sky|swim deep in the ocean|pick up your scent|sleep all day long|run faster than wind].",
   "question": "^[私の|君の|彼の|彼女の|私たちの|君たちの|彼らの]^^[誕生日|結婚記念日|命日]は^^^[%366-dates.ja%]^^^^[です|だった|になる]。",
   "answer": "^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].",
   "lang": "en-US",
-  "caption": "<b>鼠算式フレーズ練習帳</b>のデモへようこそ！<br>このウェブアプリは、主に外国語のフレーズを練習するため、指定されたテンプレートから、様々な組合せのフレーズを生成し、ランダムに出題してくれます。<br><br>このセッションは次のようなテンプレートを基にしたものです。<br>^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].<br>詳しい使い方は<a href='https://shikaku1068.github.io/webapp/rpf.html'>このページ</a>を参照してください。",
+  "caption": "<b>鼠算式フレーズ練習帳</b>のデモへようこそ！<br>このウェブアプリは、主に外国語のフレーズを練習するため、指定されたテンプレートから、様々な組合せのフレーズを生成し、ランダムに出題してくれます。<br><br>このセッションは次のようなテンプレートを基にしたものです。<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].<br>詳しい使い方は<a href='https://shikaku1068.github.io/webapp/rpf.html'>このページ</a>を参照してください。",
   "animation": "slide"
 });
 /*

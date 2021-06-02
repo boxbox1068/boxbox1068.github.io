@@ -3,30 +3,33 @@
   --main-color: #263238;
   --caption-panel-background: #FFE0B2EE;
   --caption-panel-color: #263238;
-  --caption-visibility-toggle-background: #455A64;
-  --caption-visibility-toggle-color: #CFD8DC;
-  --q-and-a-panel-background: #FFFE;
+  --hide-caption-checkbox-background: #455A64;
+  --hide-caption-checkbox-color: #CFD8DC;
+  --q-and-a-panel-background: #FFFC;
   --q-and-a-panel-color: #263238;
-  --q-and-a-content-watermark-color: #ECEFF1;
-  --q-and-a-content-color: #263238;
   --q-and-a-cover-background: #3F51B5;
-  --q-and-a-cover-watermark-color: #3949AB;
+  --q-and-a-cover-color: #3949AB;
+  --controller-border-color: #607D8B;
   --on-toggle-background: #FFB74D;
   --off-toggle-background: #455A64;
   --enabled-button-background: #CFD8DC;
   --disabled-button-background: #ECEFF1;
-  --button-border-color: #607D8B;
   --button-color: #455A64;
   --footer-background: #263238;
   --footer-color: #CFD8DC;
-  --branch-background-a: #F82F6666;
-  --branch-background-b: #008ECF66;
-  --branch-background-c: #70BE4766;
-  --branch-background-d: #F55A2166;
-  --branch-background-e: #F0EA3066;
-  --hint-balloon-background: #fff;
-  --hint-balloon-border-color: #999;
-  --hint-balloon-color: #333;
+  --branch-number-1-background: #EF9A9A99;
+  --branch-number-2-background: #90CAF999;
+  --branch-number-3-background: #FFF59D99;
+  --branch-number-4-background: #A5D6A799;
+  --branch-number-5-background: #CE93D899;
+  --branch-number-6-background: #FFCC8099;
+  --branch-number-7-background: #80DEEA99;
+  --branch-number-8-background: #F48FB199;
+  --branch-number-9-background: #BCAAA499;
+  --branch-number-0-background: #B0BEC599;
+  --hint-balloon-background: #FFF;
+  --hint-balloon-border-color: #607D8B;
+  --hint-balloon-color: #263238;
   --panel-line-height: 1.5em;
 }
 * {
@@ -34,24 +37,29 @@
   overflow: hidden;
   animation-fill-mode: forwards;
 }
-html {
-  height: 100%;
-  font-size: 4vmin;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
+svg {
+  fill: currentColor;
+  stroke: currentColor;
 }
 @font-face {
   font-family: "Yu Gothic";
   src: local("Yu Gothic Bold");
   font-weight: bold;
 }
+html {
+  height: 100%;
+  font-size: 4vmin;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
+}
 body {
   display: grid;
   grid-template:
-    "caption caption" min-content
-    "question answer" 1fr
-    "statistic controller" min-content
-    "footer footer" min-content
-    / 50% 50%;
+    "caption caption caption" min-content
+    "... ... ..." .25rem
+    "question ... answer" 1fr
+    "statistic ... controller" min-content
+    "footer footer footer" 2rem
+    / 1fr .25rem 1fr;
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -62,43 +70,45 @@ body {
   body {
     grid-template:
       "caption" min-content
+      "..." .25rem
       "question" 1fr
+      "..." .25rem
       "answer" 1fr
       "statistic" min-content
       "controller" min-content
-      "footer" min-content
+      "footer" 2rem
       / 100%;
   }
 }
-svg {
-  fill: currentColor;
-  stroke: currentColor;
-}
 #caption-cell {
-  --caption-panel-height: 2.5rem;
-  --caption-visibility-toggle-height: 1.5rem;
+  --caption-panel-height: 2.25rem;
+  --caption-panel-max-height: calc(100vh - 2rem);
   grid-area: caption;
-  height: calc(var(--caption-panel-height) + .5rem);
+  height: var(--caption-panel-height);
+}
+#hide-caption-checkbox {
+  display: none;
 }
 #caption-panel {
   position: fixed;
   top: 0;
-  right: .5rem;
-  left: .5rem;
+  left: 0;
   z-index: 100;
+  width: 100%;
   min-height: var(--caption-panel-height);
   max-height: var(--caption-panel-height);
-  padding: .5rem 1rem calc(var(--caption-visibility-toggle-height) + .5rem) 1rem;
   background: var(--caption-panel-background);
   color: var(--caption-panel-color);
   font-size: 1rem;
   line-height: var(--panel-line-height);
   overflow-wrap: break-word;
 }
-#caption-visibility-checkbox {
-  display: none;
+#caption-body {
+  padding: .5rem 1rem;
+  padding-bottom: 2rem;
+  overflow-y: scroll;
 }
-[for="caption-visibility-checkbox"] {
+[for="hide-caption-checkbox"] {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,40 +117,40 @@ svg {
   bottom: 0;
   width: 1.5rem;
   height: 1.5rem;
-  background: var(--caption-visibility-toggle-background);
-  color: var(--caption-visibility-toggle-color);
+  background: var(--hide-caption-checkbox-background);
+  color: var(--hide-caption-checkbox-color);
 }
-[for="caption-visibility-checkbox"] > svg {
-  width: 60%;
-  height: 60%;
-}
-#caption-visibility-checkbox:checked + #caption-panel {
-  animation: hideCaption 800ms;
-  animation-fill-mode: forwards;
+[for="hide-caption-checkbox"] > svg {
+  width: 50%;
+  height: 50%;
 }
 @keyframes hideCaption {
   0% {
-    max-height: calc(100vh - .5rem);
+    max-height: var(--caption-panel-max-height);
   }
   100% {
     max-height: var(--caption-panel-height);
-    overflow-y: hidden;
   }
-}
-#caption-visibility-checkbox:not(:checked) + #caption-panel {
-  animation: showCaption 800ms;
-  animation-fill-mode: forwards;
 }
 @keyframes showCaption {
   0% {
-    max-height: 2.5rem;
+    max-height: var(--caption-panel-height);
   }
   100% {
-    max-height: calc(100vh - .5rem);
-    overflow-y: auto;
+    max-height: var(--caption-panel-max-height);
   }
 }
-#caption-visibility-checkbox:checked ~ * > [for="caption-visibility-checkbox"] {
+#hide-caption-checkbox:checked ~ #caption-panel,
+#hide-caption-checkbox:checked ~ #caption-panel > #caption-body {
+  animation: hideCaption 500ms;
+  animation-fill-mode: forwards;
+}
+#hide-caption-checkbox:not(:checked) ~ #caption-panel,
+#hide-caption-checkbox:not(:checked) ~ #caption-panel > #caption-body {
+  animation: showCaption 500ms;
+  animation-fill-mode: forwards;
+}
+#hide-caption-checkbox:checked ~ #caption-panel > [for="hide-caption-checkbox"] {
   transform: scale(1, -1);
 }
 #question-cell {
@@ -152,7 +162,6 @@ svg {
 #question-cell,
 #answer-cell {
   position: relative;
-  margin: 1px;
 }
 #question-panel,
 #answer-panel {
@@ -177,114 +186,75 @@ svg {
   display: flex;
   justify-content: center;
   align-items: center;
+  visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  padding: .5rem 1rem;
+  background: var(--q-and-a-cover-background);
+  color: var(--q-and-a-cover-color);
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 10rem;
 }
-/*
-#question-background:before,
 #question-cover:before {
   content: "Q";
 }
-#answer-background:before,
 #answer-cover:before {
   content: "A";
 }
-#question-background,
-#answer-background {
-  background: var(--q-and-a-panel-background);
-  color: var(--q-and-a-content-watermark-color);
-}
-*/
-#question-cover,
-#answer-cover {
-  visibility: hidden;
-  background: var(--q-and-a-cover-background);
-  color: var(--q-and-a-cover-watermark-color);
-}
-#question-content,
-#answer-content {
-  position: relative;
-  margin: auto;
-  color: var(--q-and-a-content-color);
-  font-size: 1.5rem;
-  overflow-wrap: break-word;
-  line-height: var(--panel-line-height);
+#statistic-cell {
+  grid-area: statistic;
+  padding: .5rem 1rem;
+  font-size: .75rem;
 }
 #controller-cell {
   grid-area: controller;
   padding: .5rem 1rem;
 }
-#controller-content {
+#controller-body {
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
 }
+#controller-body > * {
+  height: 2rem;
+  border: 1px solid var(--controller-border-color);
+}
+#controller-body > *:not(:last-child) {
+  border-right: 0;
+}
 #auto-read-aloud-checkbox {
   display: none;
 }
-#auto-read-aloud-checkbox + label {
+[for="auto-read-aloud-checkbox"] {
   --border-width: 1px;
   --toggle-height: 1.5rem;
-  overflow: hidden;
-  box-sizing: border-box;
-  display: block;
   position: relative;
   width: 1.5rem;
-  height: 2rem;
-  border: var(--border-width) solid var(--button-border-color);
   background: var(--enabled-button-background);
 }
-#auto-read-aloud-checkbox + label::before {
-  box-sizing: border-box;
-  display: block;
+[for="auto-read-aloud-checkbox"]::before {
   position: absolute;
   top: calc(var(--border-width) * -1);
   left: 0;
   width: 100%;
   height: 0;
-  border: solid var(--button-border-color);
-  border-width: 0 0 var(--border-width) 0;
+  border-bottom: 1px solid var(--controller-border-color);
   background: var(--off-toggle-background);
-  animation-fill-mode: forwards;
   content: "";
 }
-#auto-read-aloud-checkbox + label::after {
-  box-sizing: border-box;
-  overflow: hidden;
-  display: block;
+[for="auto-read-aloud-checkbox"]::after {
   position: absolute;
   bottom: calc(var(--border-width) * -1);
   left: 0;
   width: 100%;
   height: var(--toggle-height);
-  border: solid var(--button-border-color);
-  border-width: var(--border-width) 0 0 0;
+  border-top: 1px solid var(--controller-border-color);
   background: var(--on-toggle-background);
   content: "";
 }
-#auto-read-aloud-checkbox:not(:checked) + label::before {
-  animation: riseUp 200ms;
-  animation-fill-mode: forwards;
-}
-#auto-read-aloud-checkbox:not(:checked) + label::after {
-  animation: fallDown 200ms;
-  animation-fill-mode: forwards;
-}
-#auto-read-aloud-checkbox:checked + label::before {
-  animation: fallDown 200ms;
-  animation-fill-mode: forwards;
-}
-#auto-read-aloud-checkbox:checked + label::after {
-  animation: riseUp 200ms;
-  animation-fill-mode: forwards;
-}
-@keyframes riseUp {
+@keyframes showToggleBackground {
   0% {
     height: 0;
   }
@@ -292,7 +262,7 @@ svg {
     height: var(--toggle-height);
   }
 }
-@keyframes fallDown {
+@keyframes hideToggleBackground {
   0% {
     height: var(--toggle-height);
   }
@@ -300,26 +270,34 @@ svg {
     height: 0;
   }
 }
-#read-aloud-button {
-  width: 4rem;
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
+  animation: showToggleBackground 200ms;
+  animation-fill-mode: forwards;
 }
-#play-button {
-  width: 6rem;
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
+  animation: hideToggleBackground 200ms;
+  animation-fill-mode: forwards;
 }
-#skip-button {
-  width: 4rem;
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
+  animation: hideToggleBackground 200ms;
+  animation-fill-mode: forwards;
+}
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
+  animation: showToggleBackground 200ms;
+  animation-fill-mode: forwards;
 }
 #read-aloud-button,
 #play-button,
 #skip-button {
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  height: 2rem;
-  border: 1px solid var(--button-border-color);
-  border-left: 0;
+  width: 4rem;
   background: var(--enabled-button-background);
   color: var(--button-color);
+}
+#play-button {
+  width: 6rem;
 }
 #read-aloud-button:disabled,
 #play-button:disabled,
@@ -329,29 +307,26 @@ svg {
 #read-aloud-button > svg,
 #play-button > svg,
 #skip-button > svg {
-  display: block;
-  width: 60%;
-  height: 60%;
-}
-#statistic-cell {
-  grid-area: statistic;
-  padding: .5rem 1rem;
-  font-size: .75rem;
+  width: 50%;
+  height: 50%;
 }
 #footer-cell {
   grid-area: footer;
+}
+#footer-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   padding: .5rem 1rem;
   background: var(--footer-background);
   color: var(--footer-color);
   font-size: .75rem;
   white-space: nowrap;
 }
-#footer-content {
-  display: flex;
-  justify-content: space-between;
-}
 #home-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
 }
 #home-link > svg {
@@ -363,25 +338,59 @@ svg {
   font-weight: bold;
 }
 .branch[data-branch-number="1"] {
-  background: var(--branch-background-a);
+  background: var(--branch-number-1-background);
 }
 .branch[data-branch-number="2"] {
-  background: var(--branch-background-b);
+  background: var(--branch-number-2-background);
 }
 .branch[data-branch-number="3"] {
-  background: var(--branch-background-c);
+  background: var(--branch-number-3-background);
 }
 .branch[data-branch-number="4"] {
-  background: var(--branch-background-d);
+  background: var(--branch-number-4-background);
 }
 .branch[data-branch-number="5"] {
-  background: var(--branch-background-e);
+  background: var(--branch-number-5-background);
 }
-.hint-balloon-cell {
+.branch[data-branch-number="6"] {
+  background: var(--branch-number-6-background);
+}
+.branch[data-branch-number="7"] {
+  background: var(--branch-number-7-background);
+}
+.branch[data-branch-number="8"] {
+  background: var(--branch-number-8-background);
+}
+.branch[data-branch-number="9"] {
+  background: var(--branch-number-9-background);
+}
+.branch[data-branch-number="0"] {
+  background: var(--branch-number-0-background);
+}
+@keyframes fadeIn {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    visibility: visible;
+    opacity: 1;
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+.hint-balloon-panel {
   --hint-balloon-font-size: 1em;
-  --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.6);
+  --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.5);
   --hint-balloon-border-width: .2rem;
-  display: block;
   visibility: hidden;
   position: fixed;
   z-index: 100;
@@ -392,7 +401,7 @@ svg {
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
-.hint-balloon-cell:before {
+.hint-balloon-panel:before {
   display: block;
   position: absolute;
   top: 100%;
@@ -401,7 +410,7 @@ svg {
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-border-color);
   content: "";
 }
-.hint-balloon-cell::after {
+.hint-balloon-panel::after {
   display: block;
   position: absolute;
   top: calc(100% - .2rem * 2);
@@ -410,7 +419,7 @@ svg {
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background);
   content: "";
 }
-.hint-balloon-content {
+.hint-balloon-body {
   display: flex;
   align-items: center;
   height: 100%;
@@ -419,8 +428,8 @@ svg {
   background: var(--hint-balloon-background);
   white-space: nowrap;
 }
-.branch:active .hint-balloon-cell,
-.branch:hover .hint-balloon-cell {
+.branch:active > .hint-balloon-panel,
+.branch:hover > .hint-balloon-panel {
   visibility: visible;
 }
 @keyframes flipA {
@@ -475,29 +484,9 @@ svg {
     left: 100%;
   }
 }
-@keyframes dummySlide {
+@keyframes dummyAnimation {
   0% {
   }
   100% {
-  }
-}
-@keyframes fadeIn {
-  0% {
-    visibility: hidden;
-    opacity: 0;
-  }
-  100% {
-    visibility: visible;
-    opacity: 1;
-  }
-}
-@keyframes fadeOut {
-  0% {
-    visibility: visible;
-    opacity: 1;
-  }
-  100% {
-    visibility: hidden;
-    opacity: 0;
   }
 }

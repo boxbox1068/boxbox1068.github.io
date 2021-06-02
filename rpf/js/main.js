@@ -101,7 +101,7 @@ const showQuestion = () => {
   } else if ($D('animation') == 'slide') {
     addAnimation(
       $E('#question-cover'),
-      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummySlide 0',
+      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
       target => {
         resetQuestion();
         addAnimation($E('#question-cover'), 'slideOutToRight 400ms', target => {
@@ -112,7 +112,7 @@ const showQuestion = () => {
     );
     addAnimation(
       $E('#answer-cover'),
-      $E('#answer-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummySlide 0',
+      $E('#answer-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
       target => {
         resetAnswer();
         $E('#answer-cover').style.visibility = 'visible';
@@ -142,28 +142,33 @@ const addHintBalloons = (targetContent, hintTextList) => {
   for (const branchElement of branchElements) {
     const branchNumber = Number(branchElement.dataset.branchNumber);
     const hintBalloonContentElement = document.createElement('span');
-    hintBalloonContentElement.className = 'hint-balloon-content';
+    hintBalloonContentElement.className = 'hint-balloon-body';
     hintBalloonContentElement.innerText = hintTextList[branchNumber];
-    const hintBallooncellElement = document.createElement('span');
-    hintBallooncellElement.className = 'hint-balloon-cell';
-    hintBallooncellElement.append(hintBalloonContentElement);
-    branchElement.append(hintBallooncellElement);
-    const hintBalloonRight = branchElement.getClientRects()[0].left + hintBallooncellElement.offsetWidth;
+    const hintBalloonPanelElement = document.createElement('span');
+    hintBalloonPanelElement.className = 'hint-balloon-panel';
+    hintBalloonPanelElement.append(hintBalloonContentElement);
+    branchElement.append(hintBalloonPanelElement);
+    const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+
+
+//    $E('#')
+/*
     branchElement.addEventListener('mouseenter', event => {
       const branchElement = event.target;
-      const hintBallooncellElement = branchElement.querySelector('.hint-balloon-cell');
+      const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
       const branchRect = branchElement.getClientRects()[0];
-      hintBallooncellElement.style.top = `${branchRect.top}px`;
-      hintBallooncellElement.style.left = `${branchRect.left}px`;
-      hintBallooncellElement.style.animation = 'fadeIn 400ms';
+      hintBalloonPanelElement.style.top = `${branchRect.top}px`;
+      hintBalloonPanelElement.style.left = `${branchRect.left}px`;
+      hintBalloonPanelElement.style.animation = 'fadeIn 400ms';
     });
     branchElement.addEventListener('mouseleave', event => {
       const branchElement = event.target;
-      const hintBallooncellElement = branchElement.querySelector('.hint-balloon-cell');
-      hintBallooncellElement.style.animation = 'fadeOut 400ms';
+      const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
+      hintBalloonPanelElement.style.animation = 'fadeOut 400ms';
     });
+*/
   }
 }
 const showAnswer = () => {
