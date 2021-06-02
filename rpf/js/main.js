@@ -153,22 +153,19 @@ const addHintBalloons = (targetContent, hintTextList) => {
     hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
 
 
-//    $E('#')
-/*
     branchElement.addEventListener('mouseenter', event => {
       const branchElement = event.target;
       const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
       const branchRect = branchElement.getClientRects()[0];
       hintBalloonPanelElement.style.top = `${branchRect.top}px`;
       hintBalloonPanelElement.style.left = `${branchRect.left}px`;
-      hintBalloonPanelElement.style.animation = 'fadeIn 400ms';
+      hintBalloonPanelElement.style.animation = 'fadeIn 400ms forwards';
     });
     branchElement.addEventListener('mouseleave', event => {
       const branchElement = event.target;
       const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
-      hintBalloonPanelElement.style.animation = 'fadeOut 400ms';
+      hintBalloonPanelElement.style.animation = 'fadeOut 400ms forwards';
     });
-*/
   }
 }
 const showAnswer = () => {

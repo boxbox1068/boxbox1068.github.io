@@ -30,12 +30,16 @@
   --hint-balloon-background: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
+  --common-margin-width: .25rem;
+  --common-margin-height: .25rem;
+  --common-padding-width: 1rem;
+  --common-padding-height: .5rem;
   --panel-line-height: 1.5em;
+  --footer-height: 2rem;
 }
 * {
   box-sizing: border-box;
   overflow: hidden;
-  animation-fill-mode: forwards;
 }
 svg {
   fill: currentColor;
@@ -55,11 +59,11 @@ body {
   display: grid;
   grid-template:
     "caption caption caption" min-content
-    "... ... ..." .25rem
+    "... ... ..." var(--common-margin-height)
     "question ... answer" 1fr
     "statistic ... controller" min-content
-    "footer footer footer" 2rem
-    / 1fr .25rem 1fr;
+    "footer footer footer" var(--footer-height)
+    / 1fr var(--common-margin-width) 1fr;
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -70,19 +74,19 @@ body {
   body {
     grid-template:
       "caption" min-content
-      "..." .25rem
+      "..." var(--common-margin-height)
       "question" 1fr
-      "..." .25rem
+      "..." var(--common-margin-height)
       "answer" 1fr
       "statistic" min-content
       "controller" min-content
-      "footer" 2rem
+      "footer" var(--footer-height)
       / 100%;
   }
 }
 #caption-cell {
   --caption-panel-height: 2.25rem;
-  --caption-panel-max-height: calc(100vh - 2rem);
+  --caption-panel-max-height: calc(100vh - var(--footer-height) - var(--common-margin-height));
   grid-area: caption;
   height: var(--caption-panel-height);
 }
@@ -142,13 +146,11 @@ body {
 }
 #hide-caption-checkbox:checked ~ #caption-panel,
 #hide-caption-checkbox:checked ~ #caption-panel > #caption-body {
-  animation: hideCaption 500ms;
-  animation-fill-mode: forwards;
+  animation: hideCaption 500ms forwards;
 }
 #hide-caption-checkbox:not(:checked) ~ #caption-panel,
 #hide-caption-checkbox:not(:checked) ~ #caption-panel > #caption-body {
-  animation: showCaption 500ms;
-  animation-fill-mode: forwards;
+  animation: showCaption 500ms forwards;
 }
 #hide-caption-checkbox:checked ~ #caption-panel > [for="hide-caption-checkbox"] {
   transform: scale(1, -1);
@@ -271,20 +273,16 @@ body {
   }
 }
 #auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: showToggleBackground 200ms;
-  animation-fill-mode: forwards;
+  animation: showToggleBackground 200ms forwards;
 }
 #auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: hideToggleBackground 200ms;
-  animation-fill-mode: forwards;
+  animation: hideToggleBackground 200ms forwards;
 }
 #auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: hideToggleBackground 200ms;
-  animation-fill-mode: forwards;
+  animation: hideToggleBackground 200ms forwards;
 }
 #auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: showToggleBackground 200ms;
-  animation-fill-mode: forwards;
+  animation: showToggleBackground 200ms forwards;
 }
 #read-aloud-button,
 #play-button,
@@ -428,10 +426,48 @@ body {
   background: var(--hint-balloon-background);
   white-space: nowrap;
 }
+
+/*
+.branch:not(:active) > .hint-balloon-panel,
+.branch:not(:hover) > .hint-balloon-panel {
+//  animation: hideHintBalloon 200ms;
+//  animation-fill-mode: forwards;
+  visibility: visible;
+  opacity: 0;
+  transition: visibility 1s ease-out, opacity 1s ease-out;
+}
+.branch:active > .hint-balloon-panel,
+.branch:hover > .hint-balloon-panel {
+//  animation: showHintBalloon 200ms;
+//  animation-fill-mode: forwards;
+  visibility: hidden;
+  opacity: 1;
+  transition: visibility 1s ease-out, opacity 1s ease-out;
+}
+
+@keyframes hideHintBalloon {
+  0% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+@keyframes showHintBalloon {
+  0% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+*/
+/*
 .branch:active > .hint-balloon-panel,
 .branch:hover > .hint-balloon-panel {
   visibility: visible;
 }
+*/
 @keyframes flipA {
   0% {
     transform: rotateX(0);
