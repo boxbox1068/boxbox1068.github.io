@@ -27,7 +27,7 @@ const main = () => {
       $D('question-template', expandVariables(postedData['question']));
       $D('answer-template', expandVariables(postedData['answer']));
       $D('answer-lang', postedData['lang']);
-      $D('caption-text', postedData['caption']);
+      $D('description-text', postedData['description']);
       $D('animation', postedData['animation']);
       resetCard();
     });
@@ -35,7 +35,7 @@ const main = () => {
     $D('question-template', expandVariables($Q('question', true)));
     $D('answer-template', expandVariables($Q('answer', true)));
     $D('answer-lang', $Q('lang', true, true));
-    $D('caption-text', $Q('caption', true));
+    $D('description-text', $Q('description', true));
     $D('animation', $Q('animation', true, true));
     resetCard();
   } else {
@@ -46,7 +46,7 @@ const main = () => {
         $D('question-template', expandVariables(jsonData['question']));
         $D('answer-template', expandVariables(jsonData['answer']));
         $D('answer-lang', jsonData['lang']);
-        $D('caption-text', jsonData['caption']);
+        $D('description-text', jsonData['description']);
         $D('animation', jsonData['animation']);
         resetCard();
       };
@@ -56,7 +56,6 @@ const main = () => {
     jsonpFileScriptElement.src = jsonpUrl;
     document.head.append(jsonpFileScriptElement);
   }
-//  $E('#caption-content').style.animation = 'hoge 400ms';
 };
 const expandVariables = template => {
   for (const key in $templateVariables) {
@@ -71,7 +70,7 @@ const resetCard = () => {
   const pathIdSeed = Math.random();
   $D('question-phrase', new RabbitPhrase($D('question-template'), pathIdSeed));
   $D('answer-phrase', new RabbitPhrase($D('answer-template'), pathIdSeed));
-  $E('#caption-body').innerHTML = $D('caption-text') || '';
+  $E('#description-body').innerHTML = $D('description-text') || '';
   $E('.pattern-count').innerHTML = $D('question-phrase').possiblePathCount.toLocaleString();
   $E('.pattern-id').innerHTML = $D('question-phrase').pathId.toLocaleString();
   $E('.refill-count').innerHTML = ($D('refill-count')).toLocaleString();
@@ -101,7 +100,8 @@ const showQuestion = () => {
   } else if ($D('animation') == 'slide') {
     addAnimation(
       $E('#question-cover'),
-      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
+//      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
+$E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'slideInFromLeft 400ms',
       target => {
         resetQuestion();
         addAnimation($E('#question-cover'), 'slideOutToRight 400ms', target => {

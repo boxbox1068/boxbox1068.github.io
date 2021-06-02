@@ -1,10 +1,10 @@
 :root {
   --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --main-color: #263238;
-  --caption-panel-background: #FFE0B2EE;
-  --caption-panel-color: #263238;
-  --hide-caption-checkbox-background: #455A64;
-  --hide-caption-checkbox-color: #CFD8DC;
+  --description-panel-background: repeating-linear-gradient(90deg, #FFECB3 0px, #FFF8E1 4px, #FFECB3 8px);
+  --description-panel-color: #263238;
+  --hide-description-checkbox-background: #455A64;
+  --hide-description-checkbox-color: #CFD8DC;
   --q-and-a-panel-background: #FFFC;
   --q-and-a-panel-color: #263238;
   --q-and-a-cover-background: #3F51B5;
@@ -40,6 +40,7 @@
 * {
   box-sizing: border-box;
   overflow: hidden;
+  cursor: default;
 }
 svg {
   fill: currentColor;
@@ -58,7 +59,7 @@ html {
 body {
   display: grid;
   grid-template:
-    "caption caption caption" min-content
+    "description description description" min-content
     "... ... ..." var(--common-margin-height)
     "question ... answer" 1fr
     "statistic ... controller" min-content
@@ -73,7 +74,7 @@ body {
 @media screen and (orientation: portrait) {
   body {
     grid-template:
-      "caption" min-content
+      "description" min-content
       "..." var(--common-margin-height)
       "question" 1fr
       "..." var(--common-margin-height)
@@ -84,35 +85,35 @@ body {
       / 100%;
   }
 }
-#caption-cell {
-  --caption-panel-height: 2.25rem;
-  --caption-panel-max-height: calc(100vh - var(--footer-height) - var(--common-margin-height));
-  grid-area: caption;
-  height: var(--caption-panel-height);
+#description-cell {
+  --description-panel-height: 2.25rem;
+  --description-panel-max-height: calc(100vh - var(--footer-height) - var(--common-margin-height));
+  grid-area: description;
+  height: var(--description-panel-height);
 }
-#hide-caption-checkbox {
+#hide-description-checkbox {
   display: none;
 }
-#caption-panel {
+#description-panel {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: 100%;
-  min-height: var(--caption-panel-height);
-  max-height: var(--caption-panel-height);
-  background: var(--caption-panel-background);
-  color: var(--caption-panel-color);
+  min-height: var(--description-panel-height);
+  max-height: var(--description-panel-height);
+  background: var(--description-panel-background);
+  color: var(--description-panel-color);
   font-size: 1rem;
   line-height: var(--panel-line-height);
   overflow-wrap: break-word;
 }
-#caption-body {
+#description-body {
   padding: .5rem 1rem;
   padding-bottom: 2rem;
   overflow-y: scroll;
 }
-[for="hide-caption-checkbox"] {
+[for="hide-description-checkbox"] {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,38 +122,38 @@ body {
   bottom: 0;
   width: 1.5rem;
   height: 1.5rem;
-  background: var(--hide-caption-checkbox-background);
-  color: var(--hide-caption-checkbox-color);
+  background: var(--hide-description-checkbox-background);
+  color: var(--hide-description-checkbox-color);
 }
-[for="hide-caption-checkbox"] > svg {
+[for="hide-description-checkbox"] > svg {
   width: 50%;
   height: 50%;
 }
-@keyframes hideCaption {
+#hide-description-checkbox:checked ~ #description-panel,
+#hide-description-checkbox:checked ~ #description-panel > #description-body {
+  animation: hideDescription 500ms forwards;
+}
+#hide-description-checkbox:not(:checked) ~ #description-panel,
+#hide-description-checkbox:not(:checked) ~ #description-panel > #description-body {
+  animation: showDescription 500ms forwards;
+}
+@keyframes hideDescription {
   0% {
-    max-height: var(--caption-panel-max-height);
+    max-height: var(--description-panel-max-height);
   }
   100% {
-    max-height: var(--caption-panel-height);
+    max-height: var(--description-panel-height);
   }
 }
-@keyframes showCaption {
+@keyframes showDescription {
   0% {
-    max-height: var(--caption-panel-height);
+    max-height: var(--description-panel-height);
   }
   100% {
-    max-height: var(--caption-panel-max-height);
+    max-height: var(--description-panel-max-height);
   }
 }
-#hide-caption-checkbox:checked ~ #caption-panel,
-#hide-caption-checkbox:checked ~ #caption-panel > #caption-body {
-  animation: hideCaption 500ms forwards;
-}
-#hide-caption-checkbox:not(:checked) ~ #caption-panel,
-#hide-caption-checkbox:not(:checked) ~ #caption-panel > #caption-body {
-  animation: showCaption 500ms forwards;
-}
-#hide-caption-checkbox:checked ~ #caption-panel > [for="hide-caption-checkbox"] {
+#hide-description-checkbox:checked ~ #description-panel > [for="hide-description-checkbox"] {
   transform: scale(1, -1);
 }
 #question-cell {
@@ -256,6 +257,18 @@ body {
   background: var(--on-toggle-background);
   content: "";
 }
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
+  animation: showToggleBackground 200ms forwards;
+}
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
+  animation: hideToggleBackground 200ms forwards;
+}
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
+  animation: hideToggleBackground 200ms forwards;
+}
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
+  animation: showToggleBackground 200ms forwards;
+}
 @keyframes showToggleBackground {
   0% {
     height: 0;
@@ -271,18 +284,6 @@ body {
   100% {
     height: 0;
   }
-}
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: showToggleBackground 200ms forwards;
-}
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: hideToggleBackground 200ms forwards;
-}
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: hideToggleBackground 200ms forwards;
-}
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: showToggleBackground 200ms forwards;
 }
 #read-aloud-button,
 #play-button,
@@ -364,26 +365,6 @@ body {
 }
 .branch[data-branch-number="0"] {
   background: var(--branch-number-0-background);
-}
-@keyframes fadeIn {
-  0% {
-    visibility: hidden;
-    opacity: 0;
-  }
-  100% {
-    visibility: visible;
-    opacity: 1;
-  }
-}
-@keyframes fadeOut {
-  0% {
-    visibility: visible;
-    opacity: 1;
-  }
-  100% {
-    visibility: hidden;
-    opacity: 0;
-  }
 }
 .hint-balloon-panel {
   --hint-balloon-font-size: 1em;
@@ -524,5 +505,25 @@ body {
   0% {
   }
   100% {
+  }
+}
+@keyframes fadeIn {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    visibility: visible;
+    opacity: 1;
+  }
+  100% {
+    visibility: hidden;
+    opacity: 0;
   }
 }
