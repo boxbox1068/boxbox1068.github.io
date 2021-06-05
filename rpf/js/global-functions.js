@@ -12,15 +12,14 @@ const $E = (selectors, returnMultiple) => {
     return document.querySelector(selectors);
   }
 };
-const $Q = (field, trim, toLowerCase) => {
+const $Q = (field, toLowerCase) => {
   let value = undefined;
   const queryString = window.location.search.replace(/^\?/, '');
   const parameters = queryString.split('&');
   for (const parameter of parameters) {
     const currentField = parameter.replace(/=.*/, '').trim().toLowerCase();
     if (currentField == field) {
-      value = decodeURIComponent(parameter.replace(/.*?=|.*/, ''));
-      if (trim) value = value.trim();
+      value = decodeURIComponent(parameter.replace(/.*?=|.*/, '')).trim();
       if (toLowerCase) value = value.toLowerCase();
       break;
     }

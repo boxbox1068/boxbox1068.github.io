@@ -7,10 +7,10 @@ const main = () => {
       element.remove();
     }
   }
-  $E('#read-aloud-button').addEventListener('click', readAloud);
   $E('#auto-read-aloud-checkbox').addEventListener('change', event => {
     $D('is-auto-read-aloud-enabled', event.target.checked);
   });
+  $E('#read-aloud-button').addEventListener('click', readAloud);
   $E('#play-button').addEventListener('click', event => {
     if ($D('is-answer-shown')) {
       resetCard();
@@ -20,7 +20,7 @@ const main = () => {
   });
   $E('#skip-button').addEventListener('click', resetCard);
   $D('refill-count', 0);
-  if ($Q('iframe')) {
+  if ($Q('iframe', true) == 'true') {
     window.addEventListener('message', event => {
       const postedData = event.data;
       if (typeof postedData != 'object') return;
@@ -29,15 +29,15 @@ const main = () => {
       $D('answer-lang', postedData['lang']);
       $D('description-text', postedData['description']);
       $D('animation', postedData['animation']);
-      resetCard();
+      initializeScreen();
     });
   } else if ($Q('question')) {
-    $D('question-template', expandVariables($Q('question', true)));
-    $D('answer-template', expandVariables($Q('answer', true)));
-    $D('answer-lang', $Q('lang', true, true));
-    $D('description-text', $Q('description', true));
-    $D('animation', $Q('animation', true, true));
-    resetCard();
+    $D('question-template', expandVariables($Q('question')));
+    $D('answer-template', expandVariables($Q('answer')));
+    $D('answer-lang', $Q('lang', true));
+    $D('description-text', $Q('description'));
+    $D('animation', $Q('animation', true));
+    initializeScreen();
   } else {
     const jsonpUrl = $Q('jsonp') || './data/demo.jsonp';
     const jsonpCallbackScriptElement = document.createElement('script');
@@ -48,7 +48,7 @@ const main = () => {
         $D('answer-lang', jsonData['lang']);
         $D('description-text', jsonData['description']);
         $D('animation', jsonData['animation']);
-        resetCard();
+        initializeScreen();
       };
     `;
     document.head.append(jsonpCallbackScriptElement);
@@ -63,6 +63,19 @@ const expandVariables = template => {
   }
   return template;
 };
+const initializeScreen = () => {
+  window.setTimeout(() => {
+    $E(':root').classList.add('enable-animation');
+    if ($D('description-text')) {
+      $E('#description-body').innerHTML = $D('description-text');
+    } else {
+      $E('#fold-description-checkbox').checked = true;
+//      $E('[for="fold-description-checkbox"]').style.display = 'none';
+      $E('[for="fold-description-checkbox"]').classList.add('hidden');
+    }
+    resetCard();
+  }, 100);
+}
 const resetCard = () => {
   if (window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
@@ -70,7 +83,6 @@ const resetCard = () => {
   const pathIdSeed = Math.random();
   $D('question-phrase', new RabbitPhrase($D('question-template'), pathIdSeed));
   $D('answer-phrase', new RabbitPhrase($D('answer-template'), pathIdSeed));
-  $E('#description-body').innerHTML = $D('description-text') || '';
   $E('.pattern-count').innerHTML = $D('question-phrase').possiblePathCount.toLocaleString();
   $E('.pattern-id').innerHTML = $D('question-phrase').pathId.toLocaleString();
   $E('.refill-count').innerHTML = ($D('refill-count')).toLocaleString();
@@ -101,10 +113,10 @@ const showQuestion = () => {
     addAnimation(
       $E('#question-cover'),
 //      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
-$E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'slideInFromLeft 400ms',
+$E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms ease-in-out' : 'slideInFromLeft 400ms ease-in-out',
       target => {
         resetQuestion();
-        addAnimation($E('#question-cover'), 'slideOutToRight 400ms', target => {
+        addAnimation($E('#question-cover'), 'slideOutToRight 400ms ease-in-out', target => {
           $E('#question-cover').style.visibility = 'hidden';
           enableButtons();
         });
@@ -112,7 +124,7 @@ $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : '
     );
     addAnimation(
       $E('#answer-cover'),
-      $E('#answer-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
+      $E('#answer-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms ease-in-out' : 'dummyAnimation 0',
       target => {
         resetAnswer();
         $E('#answer-cover').style.visibility = 'visible';

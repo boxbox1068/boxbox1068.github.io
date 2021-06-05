@@ -1,21 +1,19 @@
 :root {
   --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --main-color: #263238;
-  --description-panel-background: repeating-linear-gradient(90deg, #FFECB3 0px, #FFF8E1 4px, #FFECB3 8px);
+  --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
-  --hide-description-checkbox-background: #455A64;
-  --hide-description-checkbox-color: #CFD8DC;
+  --fold-description-checkbox-background: #455A64;
+  --fold-description-checkbox-color: #CFD8DC;
   --q-and-a-panel-background: #FFFC;
   --q-and-a-panel-color: #263238;
   --q-and-a-cover-background: #3F51B5;
   --q-and-a-cover-color: #3949AB;
-  --controller-border-color: #607D8B;
-  --on-toggle-background: #FFB74D;
-  --off-toggle-background: #455A64;
+  --controller-color: #455A64;
+  --toggle-color: #FFB74D;
   --enabled-button-background: #CFD8DC;
   --disabled-button-background: #ECEFF1;
-  --button-color: #455A64;
-  --footer-background: #263238;
+  --footer-background: #37474F;
   --footer-color: #CFD8DC;
   --branch-number-1-background: #EF9A9A99;
   --branch-number-2-background: #90CAF999;
@@ -37,6 +35,11 @@
   --panel-line-height: 1.5em;
   --footer-height: 2rem;
 }
+:root:not(.enable-animation) *,
+:root:not(.enable-animation) *::before,
+:root:not(.enable-animation) *::after {
+  transition-duration: 0ms !important;
+}
 * {
   box-sizing: border-box;
   overflow: hidden;
@@ -45,11 +48,6 @@
 svg {
   fill: currentColor;
   stroke: currentColor;
-}
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Bold");
-  font-weight: bold;
 }
 html {
   height: 100%;
@@ -87,33 +85,34 @@ body {
 }
 #description-cell {
   --description-panel-height: 2.25rem;
-  --description-panel-max-height: calc(100vh - var(--footer-height) - var(--common-margin-height));
+  --description-panel-max-height: calc(100vh - var(--footer-height));
   grid-area: description;
   height: var(--description-panel-height);
 }
-#hide-description-checkbox {
+#fold-description-checkbox {
   display: none;
 }
 #description-panel {
+  --transition-duration: 500ms;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: 100%;
-  min-height: var(--description-panel-height);
-  max-height: var(--description-panel-height);
+  height: var(--description-panel-max-height);
   background: var(--description-panel-background);
-  color: var(--description-panel-color);
-  font-size: 1rem;
-  line-height: var(--panel-line-height);
-  overflow-wrap: break-word;
 }
 #description-body {
   padding: .5rem 1rem;
   padding-bottom: 2rem;
   overflow-y: scroll;
+  color: var(--description-panel-color);
+  font-size: 1rem;
+  line-height: var(--panel-line-height);
+  overflow-wrap: break-word;
 }
-[for="hide-description-checkbox"] {
+[for="fold-description-checkbox"] {
+  --height: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,39 +120,29 @@ body {
   right: 1rem;
   bottom: 0;
   width: 1.5rem;
-  height: 1.5rem;
-  background: var(--hide-description-checkbox-background);
-  color: var(--hide-description-checkbox-color);
+  height: var(--height);
+  background: var(--fold-description-checkbox-background);
+  color: var(--fold-description-checkbox-color);
 }
-[for="hide-description-checkbox"] > svg {
+[for="fold-description-checkbox"].hidden {
+  margin-bottom: calc(var(--height) * -1);
+  transition: margin-bottom var(--transition-duration);
+}
+[for="fold-description-checkbox"] > svg {
   width: 50%;
   height: 50%;
 }
-#hide-description-checkbox:checked ~ #description-panel,
-#hide-description-checkbox:checked ~ #description-panel > #description-body {
-  animation: hideDescription 500ms forwards;
+#fold-description-checkbox:checked ~ #description-panel,
+#fold-description-checkbox:checked ~ #description-panel > #description-body {
+  height: var(--description-panel-height);
+  transition: height var(--transition-duration);
 }
-#hide-description-checkbox:not(:checked) ~ #description-panel,
-#hide-description-checkbox:not(:checked) ~ #description-panel > #description-body {
-  animation: showDescription 500ms forwards;
+#fold-description-checkbox:not(:checked) ~ #description-panel,
+#fold-description-checkbox:not(:checked) ~ #description-panel > #description-body {
+  height: var(--description-panel-max-height);
+  transition: height var(--transition-duration);
 }
-@keyframes hideDescription {
-  0% {
-    max-height: var(--description-panel-max-height);
-  }
-  100% {
-    max-height: var(--description-panel-height);
-  }
-}
-@keyframes showDescription {
-  0% {
-    max-height: var(--description-panel-height);
-  }
-  100% {
-    max-height: var(--description-panel-max-height);
-  }
-}
-#hide-description-checkbox:checked ~ #description-panel > [for="hide-description-checkbox"] {
+#fold-description-checkbox:checked ~ #description-panel > [for="fold-description-checkbox"] {
   transform: scale(1, -1);
 }
 #question-cell {
@@ -172,17 +161,20 @@ body {
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  padding: .5rem 1rem;
   overflow-y: auto;
   background: var(--q-and-a-panel-background);
-  color: var(--q-and-a-panel-color);
 }
 #question-body,
 #answer-body {
   margin: auto;
+  padding: .5rem 1rem;
+  color: var(--q-and-a-panel-color);
   font-size: 1.5rem;
+  line-height: var(--panel-line-height);
 }
 #question-cover,
 #answer-cover {
@@ -222,7 +214,7 @@ body {
 }
 #controller-body > * {
   height: 2rem;
-  border: 1px solid var(--controller-border-color);
+  border: 1px solid var(--controller-color);
 }
 #controller-body > *:not(:last-child) {
   border-right: 0;
@@ -243,8 +235,8 @@ body {
   left: 0;
   width: 100%;
   height: 0;
-  border-bottom: 1px solid var(--controller-border-color);
-  background: var(--off-toggle-background);
+  border-bottom: 1px solid var(--controller-color);
+  background: var(--controller-color);
   content: "";
 }
 [for="auto-read-aloud-checkbox"]::after {
@@ -253,8 +245,8 @@ body {
   left: 0;
   width: 100%;
   height: var(--toggle-height);
-  border-top: 1px solid var(--controller-border-color);
-  background: var(--on-toggle-background);
+  border-top: 1px solid var(--controller-color);
+  background: var(--toggle-color);
   content: "";
 }
 #auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
@@ -270,18 +262,18 @@ body {
   animation: showToggleBackground 200ms forwards;
 }
 @keyframes showToggleBackground {
-  0% {
+  from {
     height: 0;
   }
-  100% {
+  to {
     height: var(--toggle-height);
   }
 }
 @keyframes hideToggleBackground {
-  0% {
+  from {
     height: var(--toggle-height);
   }
-  100% {
+  to {
     height: 0;
   }
 }
@@ -293,7 +285,7 @@ body {
   align-items: center;
   width: 4rem;
   background: var(--enabled-button-background);
-  color: var(--button-color);
+  color: var(--controller-color);
 }
 #play-button {
   width: 6rem;
