@@ -11,8 +11,8 @@
   --q-and-a-cover-color: #3949AB;
   --controller-color: #455A64;
   --toggle-color: #FFB74D;
-  --enabled-button-background: #CFD8DC;
-  --disabled-button-background: #ECEFF1;
+  --control-background: #CFD8DC;
+  --disabled-control-background: #ECEFF1;
   --footer-background: #37474F;
   --footer-color: #CFD8DC;
   --branch-number-1-background: #EF9A9A99;
@@ -35,15 +35,15 @@
   --panel-line-height: 1.5em;
   --footer-height: 2rem;
 }
-:root:not(.enable-animation) *,
-:root:not(.enable-animation) *::before,
-:root:not(.enable-animation) *::after {
-  transition-duration: 0ms !important;
-}
 * {
   box-sizing: border-box;
   overflow: hidden;
   cursor: default;
+}
+:root.disable-animation *,
+:root.disable-animation *::before,
+:root.disable-animation *::after {
+  transition-duration: 0ms !important;
 }
 svg {
   fill: currentColor;
@@ -124,10 +124,6 @@ body {
   background: var(--fold-description-checkbox-background);
   color: var(--fold-description-checkbox-color);
 }
-[for="fold-description-checkbox"].hidden {
-  margin-bottom: calc(var(--height) * -1);
-  transition: margin-bottom var(--transition-duration);
-}
 [for="fold-description-checkbox"] > svg {
   width: 50%;
   height: 50%;
@@ -144,6 +140,10 @@ body {
 }
 #fold-description-checkbox:checked ~ #description-panel > [for="fold-description-checkbox"] {
   transform: scale(1, -1);
+}
+#fold-description-checkbox:disabled ~ #description-panel > [for="fold-description-checkbox"] {
+  margin-bottom: calc(var(--height) * -1);
+  transition: margin-bottom var(--transition-duration);
 }
 #question-cell {
   grid-area: question;
@@ -219,6 +219,10 @@ body {
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
+
+
+
+
 #auto-read-aloud-checkbox {
   display: none;
 }
@@ -227,14 +231,14 @@ body {
   --toggle-height: 1.5rem;
   position: relative;
   width: 1.5rem;
-  background: var(--enabled-button-background);
+  background: var(--control-background);
 }
 [for="auto-read-aloud-checkbox"]::before {
   position: absolute;
   top: calc(var(--border-width) * -1);
   left: 0;
   width: 100%;
-  height: 0;
+  height: var(--toggle-height);
   border-bottom: 1px solid var(--controller-color);
   background: var(--controller-color);
   content: "";
@@ -244,38 +248,26 @@ body {
   bottom: calc(var(--border-width) * -1);
   left: 0;
   width: 100%;
-  height: var(--toggle-height);
+  height: 0;
   border-top: 1px solid var(--controller-color);
   background: var(--toggle-color);
   content: "";
 }
 #auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: showToggleBackground 200ms forwards;
+  height: var(--toggle-height);
+  transition: height 250ms;
 }
 #auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: hideToggleBackground 200ms forwards;
+  height: 0;
+  transition: height 250ms;
 }
 #auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
-  animation: hideToggleBackground 200ms forwards;
+  height: 0;
+  transition: height 250ms;
 }
 #auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
-  animation: showToggleBackground 200ms forwards;
-}
-@keyframes showToggleBackground {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--toggle-height);
-  }
-}
-@keyframes hideToggleBackground {
-  from {
-    height: var(--toggle-height);
-  }
-  to {
-    height: 0;
-  }
+  height: var(--toggle-height);
+  transition: height 250ms;
 }
 #read-aloud-button,
 #play-button,
@@ -284,7 +276,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 4rem;
-  background: var(--enabled-button-background);
+  background: var(--control-background);
   color: var(--controller-color);
 }
 #play-button {
@@ -293,7 +285,7 @@ body {
 #read-aloud-button:disabled,
 #play-button:disabled,
 #skip-button:disabled {
-  background: var(--disabled-button-background);
+  background: var(--disabled-control-background);
 }
 #read-aloud-button > svg,
 #play-button > svg,
@@ -362,7 +354,6 @@ body {
   --hint-balloon-font-size: 1em;
   --hint-balloon-height: calc(var(--hint-balloon-font-size) * 1.5);
   --hint-balloon-border-width: .2rem;
-  visibility: hidden;
   position: fixed;
   z-index: 100;
   height: var(--hint-balloon-height);
@@ -372,7 +363,17 @@ body {
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
-.hint-balloon-panel:before {
+.branch:hover .hint-balloon-panel {
+  visibility: visible;
+  opacity: 1;
+  transition: all 250ms;
+}
+.branch:not(:hover) .hint-balloon-panel {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 250ms;
+}
+.hint-balloon-panel::before {
   display: block;
   position: absolute;
   top: 100%;
@@ -399,48 +400,6 @@ body {
   background: var(--hint-balloon-background);
   white-space: nowrap;
 }
-
-/*
-.branch:not(:active) > .hint-balloon-panel,
-.branch:not(:hover) > .hint-balloon-panel {
-//  animation: hideHintBalloon 200ms;
-//  animation-fill-mode: forwards;
-  visibility: visible;
-  opacity: 0;
-  transition: visibility 1s ease-out, opacity 1s ease-out;
-}
-.branch:active > .hint-balloon-panel,
-.branch:hover > .hint-balloon-panel {
-//  animation: showHintBalloon 200ms;
-//  animation-fill-mode: forwards;
-  visibility: hidden;
-  opacity: 1;
-  transition: visibility 1s ease-out, opacity 1s ease-out;
-}
-
-@keyframes hideHintBalloon {
-  0% {
-    visibility: visible;
-  }
-  100% {
-    visibility: hidden;
-  }
-}
-@keyframes showHintBalloon {
-  0% {
-    visibility: hidden;
-  }
-  100% {
-    visibility: visible;
-  }
-}
-*/
-/*
-.branch:active > .hint-balloon-panel,
-.branch:hover > .hint-balloon-panel {
-  visibility: visible;
-}
-*/
 @keyframes flipA {
   0% {
     transform: rotateX(0);

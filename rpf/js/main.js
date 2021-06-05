@@ -19,8 +19,7 @@ const main = () => {
     }
   });
   $E('#skip-button').addEventListener('click', resetCard);
-  $D('refill-count', 0);
-  if ($Q('iframe', true) == 'true') {
+  if ($Q('iframe') == 'true') {
     window.addEventListener('message', event => {
       const postedData = event.data;
       if (typeof postedData != 'object') return;
@@ -29,14 +28,16 @@ const main = () => {
       $D('answer-lang', postedData['lang']);
       $D('description-text', postedData['description']);
       $D('animation', postedData['animation']);
+      $D('disable-animation', postedData['disable-animation']);
       initializeScreen();
     });
   } else if ($Q('question')) {
     $D('question-template', expandVariables($Q('question')));
     $D('answer-template', expandVariables($Q('answer')));
-    $D('answer-lang', $Q('lang', true));
+    $D('answer-lang', $Q('lang'));
     $D('description-text', $Q('description'));
-    $D('animation', $Q('animation', true));
+    $D('animation', $Q('animation'));
+    $D('disable-animation', $Q('disable-animation'));
     initializeScreen();
   } else {
     const jsonpUrl = $Q('jsonp') || './data/demo.jsonp';
@@ -48,6 +49,7 @@ const main = () => {
         $D('answer-lang', jsonData['lang']);
         $D('description-text', jsonData['description']);
         $D('animation', jsonData['animation']);
+        $D('disable-animation', jsonData['disable-animation']);
         initializeScreen();
       };
     `;
@@ -64,17 +66,17 @@ const expandVariables = template => {
   return template;
 };
 const initializeScreen = () => {
-  window.setTimeout(() => {
-    $E(':root').classList.add('enable-animation');
-    if ($D('description-text')) {
-      $E('#description-body').innerHTML = $D('description-text');
-    } else {
-      $E('#fold-description-checkbox').checked = true;
-//      $E('[for="fold-description-checkbox"]').style.display = 'none';
-      $E('[for="fold-description-checkbox"]').classList.add('hidden');
-    }
-    resetCard();
-  }, 100);
+  if ($D('disable-animation') == 'true') {
+    $E(':root').classList.add('disable-animation');
+  }
+  if ($D('description-text')) {
+    $E('#description-body').innerHTML = $D('description-text');
+  } else {
+    $E('#fold-description-checkbox').checked = true;
+    $E('#fold-description-checkbox').disabled = true;
+  }
+  $D('refill-count', 0);
+  resetCard();
 }
 const resetCard = () => {
   if (window.speechSynthesis.speaking) {
@@ -142,43 +144,41 @@ $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms ease
 const resetQuestion = () => {
   $E('#question-cell').scrollTop = 0;
   $E('#question-body').innerHTML = $D('question-phrase').html;
-  addHintBalloons($E('#question-body'), $D('answer-phrase').chosenBranchTexts);
+  addHintBalloons($E('#question-panel'), $D('answer-phrase').chosenBranchTexts);
 };
 const resetAnswer = () => {
   $E('#answer-cell').scrollTop = 0;
   $E('#answer-body').innerHTML = $D('answer-phrase').html;
-  addHintBalloons($E('#answer-body'), $D('question-phrase').chosenBranchTexts);
+  addHintBalloons($E('#answer-panel'), $D('question-phrase').chosenBranchTexts);
 }
-const addHintBalloons = (targetContent, hintTextList) => {
-  const branchElements = targetContent.querySelectorAll('.branch');
-  for (const branchElement of branchElements) {
+const addHintBalloons = (parentPanelElement, hintTextList) => {
+  const adjustHintBalloonPosition = branchElement => {
+    const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
+    const branchRect = branchElement.getClientRects()[0];
+    hintBalloonPanelElement.style.top = `${branchRect.top}px`;
+    hintBalloonPanelElement.style.left = `${branchRect.left}px`;
+  };
+  const targetBranchElements = parentPanelElement.querySelectorAll('.branch');
+  for (const branchElement of targetBranchElements) {
     const branchNumber = Number(branchElement.dataset.branchNumber);
-    const hintBalloonContentElement = document.createElement('span');
-    hintBalloonContentElement.className = 'hint-balloon-body';
-    hintBalloonContentElement.innerText = hintTextList[branchNumber];
+    const hintBalloonBodyElement = document.createElement('span');
+    hintBalloonBodyElement.className = 'hint-balloon-body';
+    hintBalloonBodyElement.innerText = hintTextList[branchNumber];
     const hintBalloonPanelElement = document.createElement('span');
     hintBalloonPanelElement.className = 'hint-balloon-panel';
-    hintBalloonPanelElement.append(hintBalloonContentElement);
+    hintBalloonPanelElement.append(hintBalloonBodyElement);
     branchElement.append(hintBalloonPanelElement);
     const hintBalloonRight = branchElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
-    hintBalloonContentElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-
-
-    branchElement.addEventListener('mouseenter', event => {
-      const branchElement = event.target;
-      const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
-      const branchRect = branchElement.getClientRects()[0];
-      hintBalloonPanelElement.style.top = `${branchRect.top}px`;
-      hintBalloonPanelElement.style.left = `${branchRect.left}px`;
-      hintBalloonPanelElement.style.animation = 'fadeIn 400ms forwards';
-    });
-    branchElement.addEventListener('mouseleave', event => {
-      const branchElement = event.target;
-      const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
-      hintBalloonPanelElement.style.animation = 'fadeOut 400ms forwards';
-    });
+    hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+    adjustHintBalloonPosition(branchElement);
   }
+  parentPanelElement.addEventListener('scroll', event => {
+    const targetBranchElements = parentPanelElement.querySelectorAll('.branch');
+    for (const branchElement of targetBranchElements) {
+      adjustHintBalloonPosition(branchElement);
+    }
+  });
 }
 const showAnswer = () => {
   disableButtons();
