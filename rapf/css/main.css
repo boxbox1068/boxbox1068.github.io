@@ -4,7 +4,7 @@
 :root {
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --app-color: #263238;
-  --app-font-size: 4vmin;
+  --app-font-size: min(4vw, 4vh);
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
