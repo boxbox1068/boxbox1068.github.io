@@ -1,6 +1,7 @@
-:root {
-  --main-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
-  --main-color: #263238;
+/* ---------
+   # General
+   --------- */
+ :root {
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
   --fold-description-checkbox-background: #455A64;
@@ -28,71 +29,90 @@
   --hint-balloon-background: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
-  --common-margin-width: .25rem;
-  --common-margin-height: .25rem;
+  --cell-border-spacing: .25rem;
   --common-padding-width: 1rem;
   --common-padding-height: .5rem;
-  --panel-line-height: 1.5em;
-  --footer-height: 2rem;
+  --common-line-height: 1.5em;
+  --description-cell-height: 2.25rem;
+  --footer-cell-height: 2rem;
+  background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
+  color: #263238;
+  height: 100%;
+  font-size: 4vmin;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
 * {
   box-sizing: border-box;
   overflow: hidden;
   cursor: default;
 }
+svg {
+  fill: currentColor;
+  stroke: currentColor;
+}
 :root.disable-animation *,
 :root.disable-animation *::before,
 :root.disable-animation *::after {
   transition-duration: 0ms !important;
 }
-svg {
-  fill: currentColor;
-  stroke: currentColor;
-}
-html {
-  height: 100%;
-  font-size: 4vmin;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
-}
+
+/* -------------
+   # Grid Layout
+   ------------- */
 body {
   display: grid;
   grid-template:
-    "description description description" min-content
-    "... ... ..." var(--common-margin-height)
+    "description description description" var(--description-cell-height)
+    "... ... ..." var(--cell-border-spacing)
     "question ... answer" 1fr
     "statistic ... controller" min-content
-    "footer footer footer" var(--footer-height)
-    / 1fr var(--common-margin-width) 1fr;
+    "footer footer footer" var(--footer-cell-height)
+    / 1fr var(--cell-border-spacing) 1fr;
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--main-background);
-  color: var(--main-color);
 }
 @media screen and (orientation: portrait) {
   body {
     grid-template:
-      "description" min-content
-      "..." var(--common-margin-height)
+      "description" var(--description-cell-height)
+      "..." var(--cell-border-spacing)
       "question" 1fr
-      "..." var(--common-margin-height)
+      "..." var(--cell-border-spacing)
       "answer" 1fr
       "statistic" min-content
       "controller" min-content
-      "footer" var(--footer-height)
+      "footer" var(--footer-cell-height)
       / 100%;
   }
 }
 #description-cell {
-  --description-panel-height: 2.25rem;
-  --description-panel-max-height: calc(100vh - var(--footer-height));
   grid-area: description;
-  height: var(--description-panel-height);
 }
-#fold-description-checkbox {
+#question-cell {
+  grid-area: question;
+}
+#answer-cell {
+  grid-area: answer;
+}
+#statistic-cell {
+  grid-area: statistic;
+}
+#controller-cell {
+  grid-area: controller;
+}
+#footer-cell {
+  grid-area: footer;
+}
+
+/* ------------------
+   # Description Cell
+   ------------------ */
+ #fold-description-checkbox {
   display: none;
 }
 #description-panel {
+  --description-panel-max-height: calc(100vh - var(--footer-cell-height));
   --transition-duration: 500ms;
   position: fixed;
   top: 0;
@@ -108,7 +128,7 @@ body {
   overflow-y: scroll;
   color: var(--description-panel-color);
   font-size: 1rem;
-  line-height: var(--panel-line-height);
+  line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
 [for="fold-description-checkbox"] {
@@ -130,7 +150,7 @@ body {
 }
 #fold-description-checkbox:checked ~ #description-panel,
 #fold-description-checkbox:checked ~ #description-panel > #description-body {
-  height: var(--description-panel-height);
+  height: var(--description-cell-height);
   transition: height var(--transition-duration);
 }
 #fold-description-checkbox:not(:checked) ~ #description-panel,
@@ -145,24 +165,16 @@ body {
   margin-bottom: calc(var(--height) * -1);
   transition: margin-bottom var(--transition-duration);
 }
-#question-cell {
-  grid-area: question;
-}
-#answer-cell {
-  grid-area: answer;
-}
-#question-cell,
-#answer-cell {
-  position: relative;
-}
+
+/* ---------------------------------
+   # Question Panel and Answer Panel
+   --------------------------------- */
 #question-panel,
 #answer-panel {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -174,7 +186,7 @@ body {
   padding: .5rem 1rem;
   color: var(--q-and-a-panel-color);
   font-size: 1.5rem;
-  line-height: var(--panel-line-height);
+  line-height: var(--common-line-height);
 }
 #question-cover,
 #answer-cover {
@@ -192,19 +204,17 @@ body {
   font-weight: bold;
   font-size: 10rem;
 }
-#question-cover:before {
-  content: "Q";
-}
-#answer-cover:before {
-  content: "A";
-}
-#statistic-cell {
-  grid-area: statistic;
+#statistic-panel {
+  width: 100%;
+  height: 100%;
   padding: .5rem 1rem;
+}
+#statistic-body {
   font-size: .75rem;
 }
-#controller-cell {
-  grid-area: controller;
+#controller-panel {
+  width: 100%;
+  height: 100%;
   padding: .5rem 1rem;
 }
 #controller-body {
@@ -275,12 +285,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 4rem;
   background: var(--control-background);
   color: var(--controller-color);
 }
+#read-aloud-button {
+  width: 4rem;
+}
 #play-button {
   width: 6rem;
+}
+#skip-button {
+  width: 4rem;
 }
 #read-aloud-button:disabled,
 #play-button:disabled,
@@ -293,17 +308,16 @@ body {
   width: 50%;
   height: 50%;
 }
-#footer-cell {
-  grid-area: footer;
+#footer-panel {
+  width: 100%;
+  height: 100%;
+  background: var(--footer-background);
 }
 #footer-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: 100%;
   padding: .5rem 1rem;
-  background: var(--footer-background);
   color: var(--footer-color);
   font-size: .75rem;
   white-space: nowrap;

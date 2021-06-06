@@ -24,42 +24,52 @@
 <div id="question-cell">
   <div id="question-panel">
     <div id="question-body"></div>
+    <div id="question-cover">
+      <span>Q</span>
+    </div>
   </div>
-  <div id="question-cover"></div>
 </div>
 <div id="answer-cell">
   <div id="answer-panel">
     <div id="answer-body"></div>
+    <div id="answer-cover">
+      <span>A</span>
+    </div>
   </div>
-  <div id="answer-cover"></div>
 </div>
 <div id="statistic-cell">
-  <div id="statistic-body">
-    <span lang="en">No. <span class="pattern-id"></span> of <span class="pattern-count"></span> patterns / Refill <span class="refill-count"></span></span>
-    <span lang="ja">全<span class="pattern-count"></span>通り中第<span class="pattern-id"></span>番 / おかわり<span class="refill-count"></span>回目</span>
+  <div id="statistic-panel">
+    <div id="statistic-body">
+      <span lang="en">No. <span class="pattern-id"></span> of <span class="pattern-count"></span> patterns / Refill <span class="refill-count"></span></span>
+      <span lang="ja">全<span class="pattern-count"></span>通り中第<span class="pattern-id"></span>番 / おかわり<span class="refill-count"></span>回目</span>
+    </div>
   </div>
 </div>
 <div id="controller-cell">
-  <div id="controller-body">
-    <input type="checkbox" id="auto-read-aloud-checkbox">
-    <label for="auto-read-aloud-checkbox"></label>
-    <button id="read-aloud-button">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M520 290L640 290L640 350L520 350L520 290Z" id="i1C11dDKKa"></path><path d="M130 220L430 60L430 580L130 420L30 460L30 180L130 220Z" id="a2oF37ZwQz"></path><path d="M502.94 87.02L608.89 30.69L637.06 83.66L531.11 140L502.94 87.02Z" id="a1ZzuoI9NI"></path><path d="M531.11 505.34L637.06 561.68L608.89 614.66L502.94 558.32L531.11 505.34Z" id="abtgQWi9P"></path></defs><g><g><use xlink:href="#i1C11dDKKa" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="1"></use><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="0" stroke-width="60" stroke-opacity="1"></use></g></g><g><use xlink:href="#a1ZzuoI9NI" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#abtgQWi9P" opacity="1" fill-opacity="1"></use></g></g></svg>
-    </button>
-    <button id="play-button">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M320 480L0 640L0 319.99L0 0L320 159.98L640 319.99L320 480Z" id="cioIEjTok"></path></defs><g><g><use xlink:href="#cioIEjTok" opacity="1" fill-opacity="1"></use></g></g></svg>
-    </button>
-    <button id="skip-button">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M145 480L0 640L0 319.99L0 0L145 159.98L290 319.99L145 480Z" id="jspDtsqqj"></path><path d="M435 480L290 640L290 319.99L290 0L435 159.98L580 319.99L435 480Z" id="cD7GQ8efP"></path><path d="M600 20L600 620L620 620L620 20L600 20Z" id="bmW0NmDZt"></path></defs><g><g><use xlink:href="#jspDtsqqj" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#cD7GQ8efP" opacity="1" fill-opacity="1"></use></g><g><g><use xlink:href="#bmW0NmDZt" opacity="1" fill-opacity="0" stroke-width="40" stroke-opacity="1"></use></g></g></g></svg>
-    </button>
+  <div id="controller-panel">
+    <div id="controller-body">
+      <input type="checkbox" id="auto-read-aloud-checkbox">
+      <label for="auto-read-aloud-checkbox"></label>
+      <button id="read-aloud-button">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M520 290L640 290L640 350L520 350L520 290Z" id="i1C11dDKKa"></path><path d="M130 220L430 60L430 580L130 420L30 460L30 180L130 220Z" id="a2oF37ZwQz"></path><path d="M502.94 87.02L608.89 30.69L637.06 83.66L531.11 140L502.94 87.02Z" id="a1ZzuoI9NI"></path><path d="M531.11 505.34L637.06 561.68L608.89 614.66L502.94 558.32L531.11 505.34Z" id="abtgQWi9P"></path></defs><g><g><use xlink:href="#i1C11dDKKa" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="1"></use><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="0" stroke-width="60" stroke-opacity="1"></use></g></g><g><use xlink:href="#a1ZzuoI9NI" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#abtgQWi9P" opacity="1" fill-opacity="1"></use></g></g></svg>
+      </button>
+      <button id="play-button">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M320 480L0 640L0 319.99L0 0L320 159.98L640 319.99L320 480Z" id="cioIEjTok"></path></defs><g><g><use xlink:href="#cioIEjTok" opacity="1" fill-opacity="1"></use></g></g></svg>
+      </button>
+      <button id="skip-button">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M145 480L0 640L0 319.99L0 0L145 159.98L290 319.99L145 480Z" id="jspDtsqqj"></path><path d="M435 480L290 640L290 319.99L290 0L435 159.98L580 319.99L435 480Z" id="cD7GQ8efP"></path><path d="M600 20L600 620L620 620L620 20L600 20Z" id="bmW0NmDZt"></path></defs><g><g><use xlink:href="#jspDtsqqj" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#cD7GQ8efP" opacity="1" fill-opacity="1"></use></g><g><g><use xlink:href="#bmW0NmDZt" opacity="1" fill-opacity="0" stroke-width="40" stroke-opacity="1"></use></g></g></g></svg>
+      </button>
+    </div>
   </div>
 </div>
 <div id="footer-cell">
-  <div id="footer-body">
-    <a id="home-link" href="https://twitter.com/shikaku1068">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M80 320L200 320L200 640L80 640L80 320Z" id="a27u1uM0gR"></path><path d="M480 160L640 320L319.99 320L0 320L159.98 160L319.99 0L480 160Z" id="g8M6UrmFRu"></path><path d="M440 320L560 320L560 640L440 640L440 320Z" id="gY6IGR12D"></path><path d="M80 520L560 520L560 640L80 640L80 520Z" id="btyiAzdaT"></path><path d="M80 280L560 280L560 360L80 360L80 280Z" id="d2UTKb0gVf"></path></defs><g><g><use xlink:href="#a27u1uM0gR" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#g8M6UrmFRu" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#gY6IGR12D" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#btyiAzdaT" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#d2UTKb0gVf" opacity="1" fill-opacity="1"></use></g></g></svg>
-    </a>
-    <span lang="en"><b>Rabbity Phrases Flashcards</b> &copy; 2021 SKK@shikaku1068</span>
-    <span lang="ja"><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく@shikaku1068</span>
+  <div id="footer-panel">
+    <div id="footer-body">
+      <a id="home-link" href="https://twitter.com/shikaku1068">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M80 320L200 320L200 640L80 640L80 320Z" id="a27u1uM0gR"></path><path d="M480 160L640 320L319.99 320L0 320L159.98 160L319.99 0L480 160Z" id="g8M6UrmFRu"></path><path d="M440 320L560 320L560 640L440 640L440 320Z" id="gY6IGR12D"></path><path d="M80 520L560 520L560 640L80 640L80 520Z" id="btyiAzdaT"></path><path d="M80 280L560 280L560 360L80 360L80 280Z" id="d2UTKb0gVf"></path></defs><g><g><use xlink:href="#a27u1uM0gR" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#g8M6UrmFRu" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#gY6IGR12D" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#btyiAzdaT" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#d2UTKb0gVf" opacity="1" fill-opacity="1"></use></g></g></svg>
+      </a>
+      <span lang="en"><b>Rabbity Phrases Flashcards</b> &copy; 2021 SKK@shikaku1068</span>
+      <span lang="ja"><b>鼠算式フレーズ練習帳</b> &copy; 2021 しかく@shikaku1068</span>
+    </div>
   </div>
 </div>
