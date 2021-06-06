@@ -1,5 +1,6 @@
 'use strict';
 const main = () => {
+alert(1)
   const lang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {'en': 'Rabbity Phrases Flashcards', 'ja': '鼠算式フレーズ練習帳'}[lang];
   for (const element of $E('[lang]', true)) {
