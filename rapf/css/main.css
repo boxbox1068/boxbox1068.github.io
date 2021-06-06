@@ -3,6 +3,9 @@
    --------- */
 :root {
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
+  --app-color: #263238;
+  --app-font-size: 4vmin;
+  --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
   --fold-description-checkbox-background: #455A64;
@@ -36,9 +39,6 @@
   --common-line-height: 1.5em;
   --description-cell-height: 2.25rem;
   --footer-cell-height: 2rem;
-  color: #263238;
-  font-size: 4vmin;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
 * {
   box-sizing: border-box;
@@ -56,14 +56,10 @@ svg {
 html {
   height: 100%;
   background: var(--app-background);
+  color: var(--app-color);
+  font-size: var(--app-font-size);
+  font-family: var(--app-font-family);
 }
-/*
-@supports (-webkit-touch-callout: none) {
-  * {
-    height: -webkit-fill-available;
-  }
-}  
-*/
 body {
   display: grid;
   grid-template:
