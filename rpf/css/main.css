@@ -50,11 +50,6 @@ svg {
   fill: currentColor;
   stroke: currentColor;
 }
-:root.disable-animation *,
-:root.disable-animation *::before,
-:root.disable-animation *::after {
-  transition-duration: 0ms !important;
-}
 
 /* -------------
    # Grid Layout
@@ -86,6 +81,11 @@ body {
       / 100%;
   }
 }
+@supports (-webkit-touch-callout: none) {
+  body {
+    height: -webkit-fill-available;
+  }
+}  
 #description-cell {
   grid-area: description;
 }
@@ -491,4 +491,10 @@ body {
     visibility: hidden;
     opacity: 0;
   }
+}
+
+:root.disable-animation *,
+:root.disable-animation *::before,
+:root.disable-animation *::after {
+  transition-duration: 0ms !important;
 }
