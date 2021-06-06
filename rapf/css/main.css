@@ -1,10 +1,10 @@
-/* ---------
-   # General
-   --------- */
+/* --------- *
+ |  General  |
+ * --------- */
 :root {
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --app-color: #263238;
-  --app-font-size: 4vh;
+  --app-font-size: 4vmin;
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
@@ -40,13 +40,6 @@
   --description-cell-height: 2.25rem;
   --footer-cell-height: 2rem;
 }
-@media screen and (orientation: portrait) {
-  :root {
-    --app-font-size: 4vw;
-  }
-}
-
-
 * {
   box-sizing: border-box;
   overflow: hidden;
@@ -57,9 +50,9 @@ svg {
   stroke: currentColor;
 }
 
-/* -------------
-   # Grid Layout
-   ------------- */
+/* ------------- *
+ |  Grid Layout  |
+ * ------------- */
 html {
   height: 100%;
   background: var(--app-background);
@@ -112,10 +105,18 @@ body {
 #footer-cell {
   grid-area: footer;
 }
+#description-cell,
+#question-cell,
+#answer-cell,
+#statistic-cell,
+#controller-cell,
+#footer-cell {
+  position: relative;
+}
 
-/* ------------------
-   # Description Cell
-   ------------------ */
+/* ------------------ *
+ |  Description Cell  |
+ * ------------------ */
  #fold-description-checkbox {
   display: none;
 }
@@ -174,9 +175,9 @@ body {
   transition: margin-bottom var(--transition-duration);
 }
 
-/* ---------------------------------
-   # Question Panel and Answer Panel
-   --------------------------------- */
+/* --------------------------------- *
+ |  Question Panel and Answer Panel  |
+ * --------------------------------- */
 #question-panel,
 #answer-panel {
   display: flex;
@@ -211,137 +212,6 @@ body {
   color: var(--q-and-a-cover-color);
   font-weight: bold;
   font-size: 10rem;
-}
-
-/* -----------------
-   # Statistic Panel
-   ----------------- */
-#statistic-panel {
-  width: 100%;
-  height: 100%;
-  padding: .5rem 1rem;
-}
-#statistic-body {
-  font-size: .75rem;
-}
-#controller-panel {
-  width: 100%;
-  height: 100%;
-  padding: .5rem 1rem;
-}
-#controller-body {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-}
-#controller-body > * {
-  height: 2rem;
-  border: 1px solid var(--controller-color);
-}
-#controller-body > *:not(:last-child) {
-  border-right: 0;
-}
-
-
-
-
-#auto-read-aloud-checkbox {
-  display: none;
-}
-[for="auto-read-aloud-checkbox"] {
-  --border-width: 1px;
-  --toggle-height: 1.5rem;
-  position: relative;
-  width: 1.5rem;
-  background: var(--control-background);
-}
-[for="auto-read-aloud-checkbox"]::before {
-  position: absolute;
-  top: calc(var(--border-width) * -1);
-  left: 0;
-  width: 100%;
-  height: var(--toggle-height);
-  border-bottom: 1px solid var(--controller-color);
-  background: var(--controller-color);
-  content: "";
-}
-[for="auto-read-aloud-checkbox"]::after {
-  position: absolute;
-  bottom: calc(var(--border-width) * -1);
-  left: 0;
-  width: 100%;
-  height: 0;
-  border-top: 1px solid var(--controller-color);
-  background: var(--toggle-color);
-  content: "";
-}
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
-  height: var(--toggle-height);
-  transition: height 250ms;
-}
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
-  height: 0;
-  transition: height 250ms;
-}
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
-  height: 0;
-  transition: height 250ms;
-}
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
-  height: var(--toggle-height);
-  transition: height 250ms;
-}
-#read-aloud-button,
-#play-button,
-#skip-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--control-background);
-  color: var(--controller-color);
-}
-#read-aloud-button {
-  width: 4rem;
-}
-#play-button {
-  width: 6rem;
-}
-#skip-button {
-  width: 4rem;
-}
-#read-aloud-button:disabled,
-#play-button:disabled,
-#skip-button:disabled {
-  background: var(--disabled-control-background);
-}
-#read-aloud-button > svg,
-#play-button > svg,
-#skip-button > svg {
-  width: 50%;
-  height: 50%;
-}
-#footer-panel {
-  width: 100%;
-  height: 100%;
-  background: var(--footer-background);
-}
-#footer-body {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: .5rem 1rem;
-  color: var(--footer-color);
-  font-size: .75rem;
-  white-space: nowrap;
-}
-#home-link {
-  display: flex;
-  align-items: center;
-}
-#home-link > svg {
-  width: 1em;
-  height: 1em;
-  color: var(--footer-color);
 }
 .branch {
   font-weight: bold;
@@ -389,12 +259,14 @@ body {
   font-weight: bold;
   font-size: var(--hint-balloon-font-size);
 }
-.branch:hover .hint-balloon-panel {
+.branch:hover .hint-balloon-panel,
+.branch:active .hint-balloon-panel {
   visibility: visible;
   opacity: 1;
   transition: all 250ms;
 }
-.branch:not(:hover) .hint-balloon-panel {
+.branch:not(:hover) .hint-balloon-panel,
+.branch:not(:active) .hint-baloon-panel {
   visibility: hidden;
   opacity: 0;
   transition: all 250ms;
@@ -425,6 +297,141 @@ body {
   border: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
   background: var(--hint-balloon-background);
   white-space: nowrap;
+}
+
+/* ----------------- *
+ |  Statistic Panel  |
+ * ----------------- */
+#statistic-panel {
+  width: 100%;
+  height: 100%;
+  padding: .5rem 1rem;
+}
+#statistic-body {
+  font-size: .75rem;
+}
+
+/* ------------------ *
+ |  Controller Panel  |
+ * ------------------ */
+#controller-panel {
+  width: 100%;
+  height: 100%;
+  padding: .5rem 1rem;
+}
+#controller-body {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+#controller-body > * {
+  height: 2rem;
+  border: 1px solid var(--controller-color);
+}
+#controller-body > *:not(:last-child) {
+  border-right: 0;
+}
+#auto-read-aloud-checkbox {
+  display: none;
+}
+[for="auto-read-aloud-checkbox"] {
+  --border-width: 1px;
+  --toggle-height: 1.5rem;
+  position: relative;
+  width: 1.5rem;
+  background: var(--control-background);
+}
+[for="auto-read-aloud-checkbox"]::before {
+  position: absolute;
+  top: calc(var(--border-width) * -1);
+  left: 0;
+  width: 100%;
+  height: var(--toggle-height);
+  border-bottom: 1px solid var(--controller-color);
+  background: var(--controller-color);
+  content: "";
+}
+[for="auto-read-aloud-checkbox"]::after {
+  position: absolute;
+  bottom: calc(var(--border-width) * -1);
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-top: 1px solid var(--controller-color);
+  background: var(--toggle-color);
+  content: "";
+}
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
+  height: var(--toggle-height);
+  transition: height 250ms;
+}
+#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
+  height: 0;
+  transition: height 250ms;
+}
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
+  height: 0;
+  transition: height 250ms;
+}
+#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
+  height: var(--toggle-height);
+  transition: height 250ms;
+}
+#read-aloud-button {
+  width: 4rem;
+}
+#play-button {
+  width: 6rem;
+}
+#skip-button {
+  width: 4rem;
+}
+#read-aloud-button,
+#play-button,
+#skip-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--control-background);
+  color: var(--controller-color);
+}
+#read-aloud-button:disabled,
+#play-button:disabled,
+#skip-button:disabled {
+  background: var(--disabled-control-background);
+}
+#read-aloud-button > svg,
+#play-button > svg,
+#skip-button > svg {
+  width: 50%;
+  height: 50%;
+}
+
+/* ------------- *
+ |  Footer Cell  |
+ * ------------- */
+#footer-panel {
+  width: 100%;
+  height: 100%;
+  background: var(--footer-background);
+}
+#footer-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .5rem 1rem;
+  color: var(--footer-color);
+  font-size: .75rem;
+  white-space: nowrap;
+}
+#home-link {
+  display: flex;
+  align-items: center;
+}
+#home-link > svg {
+  width: 1em;
+  height: 1em;
+  color: var(--footer-color);
 }
 @keyframes flipA {
   0% {
