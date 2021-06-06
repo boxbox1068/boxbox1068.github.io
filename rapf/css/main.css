@@ -1,7 +1,8 @@
 /* ---------
    # General
    --------- */
- :root {
+:root {
+  --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
   --fold-description-checkbox-background: #455A64;
@@ -29,24 +30,16 @@
   --hint-balloon-background: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
-  --body-height: 100%;
   --cell-border-spacing: .25rem;
   --common-padding-width: 1rem;
   --common-padding-height: .5rem;
   --common-line-height: 1.5em;
   --description-cell-height: 2.25rem;
   --footer-cell-height: 2rem;
-  background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   color: #263238;
-  height: 100%;
   font-size: 4vmin;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
-@supports (-webkit-touch-callout: none) {
-  :root {
-    --body-height: -webkit-fill-available;
-  }
-}  
 * {
   box-sizing: border-box;
   overflow: hidden;
@@ -60,6 +53,16 @@ svg {
 /* -------------
    # Grid Layout
    ------------- */
+html {
+  --body-height: 100%;
+  height: 100%;
+  background: var(--app-background);
+}
+@supports (-webkit-touch-callout: none) {
+  html {
+    --body-height: -webkit-fill-available;
+  }
+}  
 body {
   display: grid;
   grid-template:
