@@ -29,6 +29,7 @@
   --hint-balloon-background: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
+  --body-height: 100%;
   --cell-border-spacing: .25rem;
   --common-padding-width: 1rem;
   --common-padding-height: .5rem;
@@ -41,6 +42,11 @@
   font-size: 4vmin;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
 }
+@supports (-webkit-touch-callout: none) {
+  :root {
+    --body-height: -webkit-fill-available;
+  }
+}  
 * {
   box-sizing: border-box;
   overflow: hidden;
@@ -63,7 +69,7 @@ body {
     "statistic ... controller" min-content
     "footer footer footer" var(--footer-cell-height)
     / 1fr var(--cell-border-spacing) 1fr;
-  height: 100%;
+  height: var(--body-height);
   margin: 0;
   overflow: hidden;
 }
@@ -81,11 +87,6 @@ body {
       / 100%;
   }
 }
-@supports (-webkit-touch-callout: none) {
-  body {
-    height: -webkit-fill-available;
-  }
-}  
 #description-cell {
   grid-area: description;
 }
@@ -112,7 +113,7 @@ body {
   display: none;
 }
 #description-panel {
-  --description-panel-max-height: calc(100vh - var(--footer-cell-height));
+  --description-panel-max-height: calc(var(--body-height) - var(--footer-cell-height));
   --transition-duration: 500ms;
   position: fixed;
   top: 0;
