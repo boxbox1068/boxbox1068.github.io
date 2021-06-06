@@ -41,7 +41,9 @@
   --footer-cell-height: 2rem;
 }
 @media screen and (orientation: portrait) {
-  --app-font-size: 4vw;
+  :root {
+    --app-font-size: 4vw;
+  }
 }
 
 
