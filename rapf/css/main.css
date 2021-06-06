@@ -4,7 +4,7 @@
 :root {
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --app-color: #263238;
-  --app-font-size: 4vmin;
+  --app-font-size: 4vh;
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --description-panel-background: #C5CAE9EE;
   --description-panel-color: #263238;
@@ -40,6 +40,11 @@
   --description-cell-height: 2.25rem;
   --footer-cell-height: 2rem;
 }
+@media screen and (orientation: portrait) {
+  --app-font-size: 4vw;
+}
+
+
 * {
   box-sizing: border-box;
   overflow: hidden;
@@ -205,6 +210,10 @@ body {
   font-weight: bold;
   font-size: 10rem;
 }
+
+/* -----------------
+   # Statistic Panel
+   ----------------- */
 #statistic-panel {
   width: 100%;
   height: 100%;
