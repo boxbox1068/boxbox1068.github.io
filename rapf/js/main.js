@@ -150,15 +150,6 @@ const showAnswer = () => {
       enableButtons();
     }, {once: true});
     $e().style.animation =  'slideOutToRight 500ms forwards';
-
-
-/*
-    addAnimation($e('#answer-cover'), 'slideOutToRight 400ms', target => {
-      $e('#answer-cover').style.visibility = 'hidden';
-      enableButtons();
-      if ($e('#auto-read-aloud-checkbox').checked) readAloud();
-    });
-*/
   } else if ($d('animation') == 'flip') {
     addAnimation($e('#answer-cell'), 'flipA 200ms', target => {
       $e('#answer-cover').style.visibility = 'hidden';
