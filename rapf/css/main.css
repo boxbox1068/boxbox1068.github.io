@@ -1,15 +1,15 @@
 /* --------- *
- |  General  |
+ |  GENERAL  |
  * --------- */
 :root {
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --app-color: #263238;
   --app-font-size: 4vmin;
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
-  --description-panel-background: #C5CAE9EE;
-  --description-panel-color: #263238;
-  --fold-description-checkbox-background: #455A64;
-  --fold-description-checkbox-color: #CFD8DC;
+  --lead-panel-background: #C5CAE9EE;
+  --lead-panel-color: #263238;
+  --fold-lead-checkbox-background: #455A64;
+  --fold-lead-checkbox-color: #CFD8DC;
   --q-and-a-panel-background: #FFFC;
   --q-and-a-panel-color: #263238;
   --q-and-a-cover-background: #3F51B5;
@@ -37,7 +37,7 @@
   --common-padding-width: 1rem;
   --common-padding-height: .5rem;
   --common-line-height: 1.5em;
-  --description-cell-height: 2.25rem;
+  --lead-cell-height: 2.25rem;
   --footer-cell-height: 2rem;
 }
 * {
@@ -45,13 +45,22 @@
   overflow: hidden;
   cursor: default;
 }
+#disable-animation-checkbox:checked ~ * *,
+#disable-animation-checkbox:checked ~ * *:before,
+#disable-animation-checkbox:checked ~ * *:after {
+  transition-duration: 0ms !important;
+  animation-duration: 0ms !important;
+}
+input[type="checkbox"] {
+  display: none;
+}
 svg {
   fill: currentColor;
   stroke: currentColor;
 }
 
 /* ------------- *
- |  Grid Layout  |
+ |  GRID LAYOUT  |
  * ------------- */
 html {
   height: 100%;
@@ -63,7 +72,7 @@ html {
 body {
   display: grid;
   grid-template:
-    "description description description" var(--description-cell-height)
+    "lead lead lead" var(--lead-cell-height)
     "... ... ..." var(--cell-border-spacing)
     "question ... answer" 1fr
     "statistic ... controller" min-content
@@ -76,7 +85,7 @@ body {
 @media screen and (orientation: portrait) {
   body {
     grid-template:
-      "description" var(--description-cell-height)
+      "lead" var(--lead-cell-height)
       "..." var(--cell-border-spacing)
       "question" 1fr
       "..." var(--cell-border-spacing)
@@ -87,8 +96,8 @@ body {
       / 100%;
   }
 }
-#description-cell {
-  grid-area: description;
+#lead-cell {
+  grid-area: lead;
 }
 #question-cell {
   grid-area: question;
@@ -105,7 +114,7 @@ body {
 #footer-cell {
   grid-area: footer;
 }
-#description-cell,
+#lead-cell,
 #question-cell,
 #answer-cell,
 #statistic-cell,
@@ -115,32 +124,29 @@ body {
 }
 
 /* ------------------ *
- |  Description Cell  |
+ |  DESCRIPTION CELL  |
  * ------------------ */
- #fold-description-checkbox {
-  display: none;
-}
-#description-panel {
-  --description-panel-max-height: calc(100% - var(--footer-cell-height));
+#lead-panel {
+  --lead-panel-max-height: calc(100% - var(--footer-cell-height));
   --transition-duration: 500ms;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: 100%;
-  height: var(--description-panel-max-height);
-  background: var(--description-panel-background);
+  height: var(--lead-panel-max-height);
+  background: var(--lead-panel-background);
 }
-#description-body {
+#lead-body {
   padding: .5rem 1rem;
   padding-bottom: 2rem;
   overflow-y: scroll;
-  color: var(--description-panel-color);
+  color: var(--lead-panel-color);
   font-size: 1rem;
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
-[for="fold-description-checkbox"] {
+[for="fold-lead-checkbox"] {
   --height: 1.5rem;
   display: flex;
   justify-content: center;
@@ -150,33 +156,33 @@ body {
   bottom: 0;
   width: 1.5rem;
   height: var(--height);
-  background: var(--fold-description-checkbox-background);
-  color: var(--fold-description-checkbox-color);
+  background: var(--fold-lead-checkbox-background);
+  color: var(--fold-lead-checkbox-color);
 }
-[for="fold-description-checkbox"] > svg {
+[for="fold-lead-checkbox"] > svg {
   width: 50%;
   height: 50%;
 }
-#fold-description-checkbox:checked ~ #description-panel,
-#fold-description-checkbox:checked ~ #description-panel > #description-body {
-  height: var(--description-cell-height);
+#fold-lead-checkbox:checked ~ #lead-panel,
+#fold-lead-checkbox:checked ~ #lead-panel > #lead-body {
+  height: var(--lead-cell-height);
   transition: height var(--transition-duration);
 }
-#fold-description-checkbox:not(:checked) ~ #description-panel,
-#fold-description-checkbox:not(:checked) ~ #description-panel > #description-body {
-  height: var(--description-panel-max-height);
+#fold-lead-checkbox:not(:checked) ~ #lead-panel,
+#fold-lead-checkbox:not(:checked) ~ #lead-panel > #lead-body {
+  height: var(--lead-panel-max-height);
   transition: height var(--transition-duration);
 }
-#fold-description-checkbox:checked ~ #description-panel > [for="fold-description-checkbox"] {
+#fold-lead-checkbox:checked ~ #lead-panel > [for="fold-lead-checkbox"] {
   transform: scale(1, -1);
 }
-#fold-description-checkbox:disabled ~ #description-panel > [for="fold-description-checkbox"] {
+#fold-lead-checkbox:disabled ~ #lead-panel > [for="fold-lead-checkbox"] {
   margin-bottom: calc(var(--height) * -1);
   transition: margin-bottom var(--transition-duration);
 }
 
 /* ------------------------------- *
- |  Question Cell and Answer Cell  |
+ |  QUESTION CELL AND ANSWER CELL  |
  * ------------------------------- */
 #question-panel,
 #answer-panel {
@@ -202,7 +208,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -262,12 +267,12 @@ body {
 .branch:hover .hint-balloon-panel {
   visibility: visible;
   opacity: 1;
-  transition: all 250ms;
+  transition: 250ms;
 }
 .branch:not(:hover) .hint-balloon-panel {
   visibility: hidden;
   opacity: 0;
-  transition: all 250ms;
+  transition: 250ms;
 }
 .hint-balloon-panel::before {
   display: block;
@@ -298,7 +303,7 @@ body {
 }
 
 /* ---------------- *
- |  Statistic Cell  |
+ |  STATISTIC CELL  |
  * ---------------- */
 #statistic-panel {
   width: 100%;
@@ -310,7 +315,7 @@ body {
 }
 
 /* ----------------- *
- |  Controller Cell  |
+ |  CONTROLLER CELL  |
  * ----------------- */
 #controller-panel {
   width: 100%;
@@ -328,9 +333,6 @@ body {
 }
 #controller-body > *:not(:last-child) {
   border-right: 0;
-}
-#auto-read-aloud-checkbox {
-  display: none;
 }
 [for="auto-read-aloud-checkbox"] {
   --border-width: 1px;
@@ -406,7 +408,7 @@ body {
 }
 
 /* ------------- *
- |  Footer Cell  |
+ |  FOOTER CELL  |
  * ------------- */
 #footer-panel {
   width: 100%;
@@ -431,6 +433,10 @@ body {
   height: 1em;
   color: var(--footer-color);
 }
+
+/* ----------- *
+ |  ANIMATION  |
+ * ----------- */
 @keyframes flipA {
   0% {
     transform: rotateX(0);
@@ -449,7 +455,6 @@ body {
 }
 @keyframes slideInFromLeft {
   0% {
-    visibility: visible;
     left: -100%;
   }
   100% {
@@ -458,7 +463,6 @@ body {
 }
 @keyframes slideOutToLeft {
   0% {
-    visibility: visible;
     left: 0;
   }
   100% {
@@ -467,7 +471,6 @@ body {
 }
 @keyframes slideInFromRight {
   0% {
-    visibility: visible;
     left: 100%;
   }
   100% {
@@ -476,42 +479,9 @@ body {
 }
 @keyframes slideOutToRight {
   0% {
-    visibility: visible;
     left: 0;
   }
   100% {
     left: 100%;
   }
-}
-@keyframes dummyAnimation {
-  0% {
-  }
-  100% {
-  }
-}
-@keyframes fadeIn {
-  0% {
-    visibility: hidden;
-    opacity: 0;
-  }
-  100% {
-    visibility: visible;
-    opacity: 1;
-  }
-}
-@keyframes fadeOut {
-  0% {
-    visibility: visible;
-    opacity: 1;
-  }
-  100% {
-    visibility: hidden;
-    opacity: 0;
-  }
-}
-
-:root.disable-animation *,
-:root.disable-animation *::before,
-:root.disable-animation *::after {
-  transition-duration: 0ms !important;
 }

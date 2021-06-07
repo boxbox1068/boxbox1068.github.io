@@ -1,18 +1,27 @@
 'use strict';
-const $D = (key, value) => {
+const $d = (key, value, defaultValue) => {
   if (value !== undefined) {
-    $D[key] = value;
+    $d[key] = value;
+  } else if (defaultValue !== undefined) {
+    $d[key] = defaultValue;
   }
-  return $D[key];
+  return $d[key];
 };
-const $E = (selectors, returnMultiple) => {
+const $e = (selectors, returnMultiple) => {
+  if (selectors === undefined) {
+    selectors = $e.lastSelectors;
+    returnMultiple = $e.lastReturnMultiple;
+  } else {
+    $e.lastSelectors = selectors;
+    $e.lastReturnMultiple = returnMultiple;
+  }
   if (returnMultiple) {
     return document.querySelectorAll(selectors);
   } else {
     return document.querySelector(selectors);
   }
 };
-const $Q = (field, toLowerCase) => {
+const $q = (field, toLowerCase) => {
   let value = undefined;
   const queryString = window.location.search.replace(/^\?/, '');
   const parameters = queryString.split('&');

@@ -1,156 +1,196 @@
 'use strict';
 const main = () => {
-  const lang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
+  const lang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {'en': 'Rabbity Phrases Flashcards', 'ja': '鼠算式フレーズ練習帳'}[lang];
-  for (const element of $E('[lang]', true)) {
-    if (element.lang != lang) {
-      element.remove();
-    }
+  for (const element of $e('[lang]', true)) {
+    if (element.lang != lang) element.remove();
   }
-  $E('#auto-read-aloud-checkbox').addEventListener('change', event => {
-    $D('is-auto-read-aloud-enabled', event.target.checked);
-  });
-  $E('#read-aloud-button').addEventListener('click', readAloud);
-  $E('#play-button').addEventListener('click', event => {
-    if ($D('is-answer-shown')) {
-      resetCard();
-    } else {
-      showAnswer();
-    }
-  });
-  $E('#skip-button').addEventListener('click', resetCard);
-  if ($Q('iframe') == 'true') {
+  if ($q('iframe') == 'true') {
     window.addEventListener('message', event => {
-      const postedData = event.data;
-      if (typeof postedData != 'object') return;
-      $D('question-template', expandVariables(postedData['question']));
-      $D('answer-template', expandVariables(postedData['answer']));
-      $D('answer-lang', postedData['lang']);
-      $D('description-text', postedData['description']);
-      $D('animation', postedData['animation']);
-      $D('disable-animation', postedData['disable-animation']);
-      initializeScreen();
-    });
-  } else if ($Q('question')) {
-    $D('question-template', expandVariables($Q('question')));
-    $D('answer-template', expandVariables($Q('answer')));
-    $D('answer-lang', $Q('lang'));
-    $D('description-text', $Q('description'));
-    $D('animation', $Q('animation'));
-    $D('disable-animation', $Q('disable-animation'));
-    initializeScreen();
+      if (typeof event.data != 'object') return;
+      initializeScreen(
+        event.data['lead'],
+        event.data['question'],
+        event.data['answer'],
+        event.data['lang'],
+        event.data['animation']
+      );
+    }, {once: true});
+  } else if ($q('question')) {
+    initializeScreen(
+      $q('lead'),
+      $q('question'),
+      $q('answer'),
+      $q('lang'),
+      $q('animation')
+    );
   } else {
-    const jsonpUrl = $Q('jsonp') || './data/demo.jsonp';
+    const demoJsonpSrc = {'en': './data/demo.en.jsonp', 'ja': './data/demo.ja.jsonp'}[lang];
+    const jsonpSrc = $q('jsonp') || demoJsonpSrc;
     const jsonpCallbackScriptElement = document.createElement('script');
     jsonpCallbackScriptElement.innerHTML = `
       const jsonpCallback = jsonData => {
-        $D('question-template', expandVariables(jsonData['question']));
-        $D('answer-template', expandVariables(jsonData['answer']));
-        $D('answer-lang', jsonData['lang']);
-        $D('description-text', jsonData['description']);
-        $D('animation', jsonData['animation']);
-        $D('disable-animation', jsonData['disable-animation']);
-        initializeScreen();
+        initializeScreen(
+          jsonData['lead'],
+          jsonData['question'],
+          jsonData['answer'],
+          jsonData['lang'],
+          jsonData['animation']
+        );
       };
     `;
     document.head.append(jsonpCallbackScriptElement);
-    const jsonpFileScriptElement = document.createElement('script');
-    jsonpFileScriptElement.src = jsonpUrl;
-    document.head.append(jsonpFileScriptElement);
+    const jsonpDataScriptElement = document.createElement('script');
+    jsonpDataScriptElement.src = jsonpSrc;
+    document.head.append(jsonpDataScriptElement);
   }
 };
+const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
+  $d('lead-text', leadText, '');
+  $d('question-template', questionTemplate, '');
+  $d('answer-template', answerTemplate, '');
+  $d('answer-lang', answerLang, 'en');
+  $d('animation', animation, 'slide');
+  $d('refill-count', 0);
+  $d('is-question-shown', false);
+  $d('is-answer-shown', false);
+  if ($d('animation') == 'none') {
+    $e('#disable-animation-checkbox').checked = true;
+  }
+  $e('#fold-lead-checkbox').addEventListener('change', event => {
+    $e('#read-aloud-button').addEventListener('click', readAloud);
+    $e('#play-button').addEventListener('click', playButtonOnClick);
+    $e('#skip-button').addEventListener('click', resetCard);
+    resetCard();
+  }, {once: true});
+  $e('#lead-body').innerHTML = $d('lead-text');
+  if (! $d('lead-text')) {
+    $e('#fold-lead-checkbox').checked = true;
+    $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+    $e('#fold-lead-checkbox').disabled = true;
+  }
+}
+const resetCard = () => {
+  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  const pathIdSeed = Math.random();
+  $d('question-phrase', new RabbitPhrase($d('question-template'), pathIdSeed));
+  $d('answer-phrase', new RabbitPhrase($d('answer-template'), pathIdSeed));
+  $e('.pattern-count').innerHTML = $d('question-phrase').possiblePathCount.toLocaleString();
+  $e('.pattern-id').innerHTML = $d('question-phrase').pathId.toLocaleString();
+  $e('.refill-count').innerHTML = ($d('refill-count')).toLocaleString();
+  $d('refill-count', $d('refill-count') + 1);
+  showQuestion();
+};
+const showQuestion = () => {
+  disableButtons();
+  if ($d('animation') == 'slide') {
+    $e('#question-cover').addEventListener('animationend', event => {
+      resetQuestion();
+      $e('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
+      $e().addEventListener('animationend', event => {
+        $d('is-question-shown', true);
+        enableButtons();
+      }, {once: true});
+    }, {once: true});
+    if ($d('is-question-shown')) {
+      $e().style.animation =  'slideInFromLeft 500ms forwards';
+    } else {
+      $e().style.animation =  'slideInFromLeft 0ms forwards';
+    }
+    $e('#answer-cover').addEventListener('animationend', event => {
+      $d('is-answer-shown', false);
+      resetAnswer();
+    }, {once: true});
+    if ($d('is-answer-shown')) {
+      $e().style.animation =  'slideInFromLeft 500ms forwards';
+    } else {
+      $e().style.animation =  'slideInFromLeft 0ms forwards';
+    }
+  } else if ($d('animation') == 'flip') {
+    addAnimation($e('#question-cell'), 'flipA 250ms', target => {
+      resetQuestion();
+      $e('#question-cover').style.visibility = 'hidden';
+      addAnimation($e('#question-cell'), 'flipB 250ms', target => {
+        enableButtons();
+      });
+    });
+    if ($d('is-answer-shown')) {
+      addAnimation($e('#answer-cell'), 'flipA 250ms', target => {
+        resetAnswer();
+        $e('#answer-cover').style.visibility = 'visible';
+        addAnimation($e('#answer-cell'), 'flipB 250ms', null);
+      });
+    } else {
+      resetAnswer();
+    }
+  } else {
+    resetQuestion();
+    $e('#question-cover').style.visibility = 'hidden';
+    resetAnswer();
+    $e('#answer-cover').style.visibility = 'visible';
+    enableButtons();
+  }
+  $d('is-answer-shown', false);
+};
+const resetQuestion = () => {
+  $e('#question-cell').scrollTop = 0;
+  $e('#question-body').innerHTML = $d('question-phrase').html;
+  addHintBalloons($e('#question-panel'), $d('answer-phrase').chosenBranchTexts);
+};
+const resetAnswer = () => {
+  $e('#answer-cell').scrollTop = 0;
+  $e('#answer-body').innerHTML = $d('answer-phrase').html;
+  addHintBalloons($e('#answer-panel'), $d('question-phrase').chosenBranchTexts);
+}
+const showAnswer = () => {
+  disableButtons();
+  if ($d('animation') == 'slide') {
+    $e('#answer-cover').addEventListener('animationend', event => {
+      $d('is-answer-shown', true);
+      enableButtons();
+    }, {once: true});
+    $e().style.animation =  'slideOutToRight 500ms forwards';
+
+
+/*
+    addAnimation($e('#answer-cover'), 'slideOutToRight 400ms', target => {
+      $e('#answer-cover').style.visibility = 'hidden';
+      enableButtons();
+      if ($e('#auto-read-aloud-checkbox').checked) readAloud();
+    });
+*/
+  } else if ($d('animation') == 'flip') {
+    addAnimation($e('#answer-cell'), 'flipA 200ms', target => {
+      $e('#answer-cover').style.visibility = 'hidden';
+      addAnimation($e('#answer-cell'), 'flipB 200ms', target => {
+        enableButtons();
+        if ($e('#auto-read-aloud-checkbox').checked) readAloud();
+      });
+    });
+  } else {
+    $e('#answer-cover').style.visibility = 'hidden';
+    enableButtons();
+    if ($e('#auto-read-aloud-checkbox').checked) readAloud();
+  }
+  $d('is-answer-shown', true);
+};
+
+
+
+
 const expandVariables = template => {
   for (const key in $templateVariables) {
     template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
   }
   return template;
 };
-const initializeScreen = () => {
-  if ($D('disable-animation') == 'true') {
-    $E(':root').classList.add('disable-animation');
-  }
-  if ($D('description-text')) {
-    $E('#description-body').innerHTML = $D('description-text');
+const playButtonOnClick = event => {
+  if ($d('is-answer-shown')) {
+    resetCard();
   } else {
-    $E('#fold-description-checkbox').checked = true;
-    $E('#fold-description-checkbox').disabled = true;
+    showAnswer();
   }
-  $D('refill-count', 0);
-  resetCard();
-}
-const resetCard = () => {
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
-  const pathIdSeed = Math.random();
-  $D('question-phrase', new RabbitPhrase($D('question-template'), pathIdSeed));
-  $D('answer-phrase', new RabbitPhrase($D('answer-template'), pathIdSeed));
-  $E('.pattern-count').innerHTML = $D('question-phrase').possiblePathCount.toLocaleString();
-  $E('.pattern-id').innerHTML = $D('question-phrase').pathId.toLocaleString();
-  $E('.refill-count').innerHTML = ($D('refill-count')).toLocaleString();
-  $D('refill-count', $D('refill-count') + 1);
-  $D('is-answer-shown', true);
-  showQuestion();
 };
-const showQuestion = () => {
-  disableButtons();
-  if ($D('animation') == 'flip') {
-    addAnimation($E('#question-cell'), 'flipA 200ms', target => {
-      resetQuestion();
-      $E('#question-cover').style.visibility = 'hidden';
-      addAnimation($E('#question-cell'), 'flipB 200ms', target => {
-        enableButtons();
-      });
-    });
-    if ($D('is-answer-shown')) {
-      addAnimation($E('#answer-cell'), 'flipA 200ms', target => {
-        resetAnswer();
-        $E('#answer-cover').style.visibility = 'visible';
-        addAnimation($E('#answer-cell'), 'flipB 200ms', null);
-      });
-    } else {
-      resetAnswer();
-    }
-  } else if ($D('animation') == 'slide') {
-    addAnimation(
-      $E('#question-cover'),
-//      $E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms' : 'dummyAnimation 0',
-$E('#question-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms ease-in-out' : 'slideInFromLeft 400ms ease-in-out',
-      target => {
-        resetQuestion();
-        addAnimation($E('#question-cover'), 'slideOutToRight 400ms ease-in-out', target => {
-          $E('#question-cover').style.visibility = 'hidden';
-          enableButtons();
-        });
-      }
-    );
-    addAnimation(
-      $E('#answer-cover'),
-      $E('#answer-cover').style.visibility == 'hidden' ? 'slideInFromLeft 400ms ease-in-out' : 'dummyAnimation 0',
-      target => {
-        resetAnswer();
-        $E('#answer-cover').style.visibility = 'visible';
-      }
-    );
-  } else {
-    resetQuestion();
-    $E('#question-cover').style.visibility = 'hidden';
-    resetAnswer();
-    $E('#answer-cover').style.visibility = 'visible';
-    enableButtons();
-  }
-  $D('is-answer-shown', false);
-};
-const resetQuestion = () => {
-  $E('#question-cell').scrollTop = 0;
-  $E('#question-body').innerHTML = $D('question-phrase').html;
-  addHintBalloons($E('#question-panel'), $D('answer-phrase').chosenBranchTexts);
-};
-const resetAnswer = () => {
-  $E('#answer-cell').scrollTop = 0;
-  $E('#answer-body').innerHTML = $D('answer-phrase').html;
-  addHintBalloons($E('#answer-panel'), $D('question-phrase').chosenBranchTexts);
-}
 const addHintBalloons = (parentPanelElement, hintTextList) => {
   const adjustHintBalloonPosition = branchElement => {
     const hintBalloonPanelElement = branchElement.querySelector('.hint-balloon-panel');
@@ -172,6 +212,7 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
     adjustHintBalloonPosition(branchElement);
+    branchElement.ontouchstart = '';
   }
   parentPanelElement.addEventListener('scroll', event => {
     const targetBranchElements = parentPanelElement.querySelectorAll('.branch');
@@ -180,29 +221,6 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
     }
   });
 }
-const showAnswer = () => {
-  disableButtons();
-  if ($D('animation') == 'flip') {
-    addAnimation($E('#answer-cell'), 'flipA 200ms', target => {
-      $E('#answer-cover').style.visibility = 'hidden';
-      addAnimation($E('#answer-cell'), 'flipB 200ms', target => {
-        enableButtons();
-        if ($D('is-auto-read-aloud-enabled')) readAloud();
-      });
-    });
-  } else if ($D('animation') == 'slide') {
-    addAnimation($E('#answer-cover'), 'slideOutToRight 400ms', target => {
-      $E('#answer-cover').style.visibility = 'hidden';
-      enableButtons();
-      if ($D('is-auto-read-aloud-enabled')) readAloud();
-    });
-  } else {
-    $E('#answer-cover').style.visibility = 'hidden';
-    enableButtons();
-    if ($D('is-auto-read-aloud-enabled')) readAloud();
-  }
-  $D('is-answer-shown', true);
-};
 const addAnimation = (target, animation, callback) => {
   const eventHandler = event => {
     target.removeEventListener('animationend', eventHandler);
@@ -215,14 +233,14 @@ const addAnimation = (target, animation, callback) => {
 const readAloud = () => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
-  utterance.text = $D('answer-phrase').text;
+  utterance.text = $d('answer-phrase').text;
   utterance.lang = 'en-US';
   utterance.volume = 1;
   utterance.rate = 1;
   utterance.pitch = 1;
   const candidateVoices = [];
   for (const voice of window.speechSynthesis.getVoices()) {
-    if (new RegExp(`^${$D('answer-lang')}`, 'i').test(voice.lang)) {
+    if (new RegExp(`^${$d('answer-lang')}`, 'i').test(voice.lang)) {
       candidateVoices.push(voice);
     }
   }
@@ -233,13 +251,13 @@ const readAloud = () => {
   window.speechSynthesis.speak(utterance);
 };
 const disableButtons = () => {
-  $E('#read-aloud-button').disabled = true;
-  $E('#play-button').disabled = true;
-  $E('#skip-button').disabled = true;
+  $e('#read-aloud-button').disabled = true;
+  $e('#play-button').disabled = true;
+  $e('#skip-button').disabled = true;
 };
 const enableButtons = () => {
-  $E('#read-aloud-button').disabled = false;
-  $E('#play-button').disabled = false;
-  $E('#skip-button').disabled = false;
+  $e('#read-aloud-button').disabled = false;
+  $e('#play-button').disabled = false;
+  $e('#skip-button').disabled = false;
 };
 window.addEventListener('DOMContentLoaded', main);
