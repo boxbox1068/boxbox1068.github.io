@@ -57,7 +57,7 @@ class RabbitPhrase {
       const chosenBranchId = chosenBranchIds[branchNumber];
       const chosenBranch = branchTexts[chosenBranchId];
       if (chosenBranch && isMainBranch) {
-        return `<a class="branch" data-branch-number="${branchNumber}">${chosenBranch}</a>`;
+        return `<a class="branch" data-branch-number="${branchNumber}" ontouchstart="">${chosenBranch}</a>`;
       } else {
         return chosenBranch;
       }

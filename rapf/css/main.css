@@ -334,14 +334,14 @@ body {
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
-[for="auto-read-aloud-checkbox"] {
+[for="auto-speak-checkbox"] {
   --border-width: 1px;
   --toggle-height: 1.5rem;
   position: relative;
   width: 1.5rem;
   background: var(--control-background);
 }
-[for="auto-read-aloud-checkbox"]::before {
+[for="auto-speak-checkbox"]::before {
   position: absolute;
   top: calc(var(--border-width) * -1);
   left: 0;
@@ -351,7 +351,7 @@ body {
   background: var(--controller-color);
   content: "";
 }
-[for="auto-read-aloud-checkbox"]::after {
+[for="auto-speak-checkbox"]::after {
   position: absolute;
   bottom: calc(var(--border-width) * -1);
   left: 0;
@@ -361,23 +361,23 @@ body {
   background: var(--toggle-color);
   content: "";
 }
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::before {
+#auto-speak-checkbox:not(:checked) ~ [for="auto-speak-checkbox"]::before {
   height: var(--toggle-height);
   transition: height 250ms;
 }
-#auto-read-aloud-checkbox:not(:checked) ~ [for="auto-read-aloud-checkbox"]::after {
+#auto-speak-checkbox:not(:checked) ~ [for="auto-speak-checkbox"]::after {
   height: 0;
   transition: height 250ms;
 }
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::before {
+#auto-speak-checkbox:checked ~ [for="auto-speak-checkbox"]::before {
   height: 0;
   transition: height 250ms;
 }
-#auto-read-aloud-checkbox:checked ~ [for="auto-read-aloud-checkbox"]::after {
+#auto-speak-checkbox:checked ~ [for="auto-speak-checkbox"]::after {
   height: var(--toggle-height);
   transition: height 250ms;
 }
-#read-aloud-button {
+#speak-button {
   width: 4rem;
 }
 #play-button {
@@ -386,7 +386,7 @@ body {
 #skip-button {
   width: 4rem;
 }
-#read-aloud-button,
+#speak-button,
 #play-button,
 #skip-button {
   display: flex;
@@ -395,12 +395,12 @@ body {
   background: var(--control-background);
   color: var(--controller-color);
 }
-#read-aloud-button:disabled,
+#speak-button:disabled,
 #play-button:disabled,
 #skip-button:disabled {
   background: var(--disabled-control-background);
 }
-#read-aloud-button > svg,
+#speak-button > svg,
 #play-button > svg,
 #skip-button > svg {
   width: 50%;
@@ -437,22 +437,6 @@ body {
 /* ----------- *
  |  ANIMATION  |
  * ----------- */
-@keyframes flipA {
-  0% {
-    transform: rotateX(0);
-  }
-  100% {
-    transform: rotateX(90deg);
-  }
-}
-@keyframes flipB {
-  0% {
-    transform: rotateX(-90deg);
-  }
-  100% {
-    transform: rotateX(0);
-  }
-}
 @keyframes slideInFromLeft {
   0% {
     left: -100%;
@@ -483,5 +467,21 @@ body {
   }
   100% {
     left: 100%;
+  }
+}
+@keyframes flipA {
+  0% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(90deg);
+  }
+}
+@keyframes flipB {
+  0% {
+    transform: rotateX(-90deg);
+  }
+  100% {
+    transform: rotateX(0);
   }
 }

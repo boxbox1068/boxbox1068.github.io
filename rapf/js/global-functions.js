@@ -8,13 +8,6 @@ const $d = (key, value, defaultValue) => {
   return $d[key];
 };
 const $e = (selectors, returnMultiple) => {
-  if (selectors === undefined) {
-    selectors = $e.lastSelectors;
-    returnMultiple = $e.lastReturnMultiple;
-  } else {
-    $e.lastSelectors = selectors;
-    $e.lastReturnMultiple = returnMultiple;
-  }
   if (returnMultiple) {
     return document.querySelectorAll(selectors);
   } else {

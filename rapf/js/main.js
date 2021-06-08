@@ -3,11 +3,15 @@ const main = () => {
   const lang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {'en': 'Rabbity Phrases Flashcards', 'ja': '鼠算式フレーズ練習帳'}[lang];
   for (const element of $e('[lang]', true)) {
-    if (element.lang != lang) element.remove();
+    if (element.lang != lang) {
+      element.remove();
+    }
   }
   if ($q('iframe') == 'true') {
     window.addEventListener('message', event => {
-      if (typeof event.data != 'object') return;
+      if (typeof event.data != 'object') {
+        return;
+      }
       initializeScreen(
         event.data['lead'],
         event.data['question'],
@@ -46,21 +50,40 @@ const main = () => {
   }
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
+  const expandVariables = template => {
+    for (const key in $templateVariables) {
+      template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
+    }
+    return template;
+  };
   $d('lead-text', leadText, '');
-  $d('question-template', questionTemplate, '');
-  $d('answer-template', answerTemplate, '');
+  $d('question-template', expandVariables(questionTemplate), '');
+  $d('answer-template', expandVariables(answerTemplate), '');
   $d('answer-lang', answerLang, 'en');
   $d('animation', animation, 'slide');
   $d('refill-count', 0);
-  $d('is-question-shown', false);
-  $d('is-answer-shown', false);
+  $d('current-step', 'startup');
   if ($d('animation') == 'none') {
     $e('#disable-animation-checkbox').checked = true;
   }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
-    $e('#read-aloud-button').addEventListener('click', readAloud);
-    $e('#play-button').addEventListener('click', playButtonOnClick);
-    $e('#skip-button').addEventListener('click', resetCard);
+    $e('#speak-button').addEventListener('click', event => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      } else {
+        speak();
+      }
+    });
+    $e('#play-button').addEventListener('click', event => {
+      if ($d('current-step') == 'question') {
+        showAnswer();
+      } else {
+        resetCard();
+      }
+    });
+    $e('#skip-button').addEventListener('click', event => {
+      resetCard();
+    });
     resetCard();
   }, {once: true});
   $e('#lead-body').innerHTML = $d('lead-text');
@@ -71,7 +94,9 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
   }
 }
 const resetCard = () => {
-  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
   const pathIdSeed = Math.random();
   $d('question-phrase', new RabbitPhrase($d('question-template'), pathIdSeed));
   $d('answer-phrase', new RabbitPhrase($d('answer-template'), pathIdSeed));
@@ -82,104 +107,83 @@ const resetCard = () => {
   showQuestion();
 };
 const showQuestion = () => {
+  const resetQuestionPanel = () => {
+    $e('#question-panel').scrollTop = 0;
+    $e('#question-body').innerHTML = $d('question-phrase').html;
+    addHintBalloons($e('#question-panel'), $d('answer-phrase').chosenBranchTexts);
+  };
   disableButtons();
   if ($d('animation') == 'slide') {
     $e('#question-cover').addEventListener('animationend', event => {
-      resetQuestion();
+      resetQuestionPanel();
       $e('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
-      $e().addEventListener('animationend', event => {
-        $d('is-question-shown', true);
+      $e('#question-cover').addEventListener('animationend', event => {
+        $d('current-step', 'question');
         enableButtons();
       }, {once: true});
     }, {once: true});
-    if ($d('is-question-shown')) {
-      $e().style.animation =  'slideInFromLeft 500ms forwards';
+    if ($d('current-step') == 'startup') {
+      $e('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
     } else {
-      $e().style.animation =  'slideInFromLeft 0ms forwards';
+      $e('#question-cover').style.animation =  'slideInFromLeft 500ms forwards';
     }
-    $e('#answer-cover').addEventListener('animationend', event => {
-      $d('is-answer-shown', false);
-      resetAnswer();
-    }, {once: true});
-    if ($d('is-answer-shown')) {
-      $e().style.animation =  'slideInFromLeft 500ms forwards';
+    if ($d('current-step') == 'answer') {
+      $e('#answer-cover').style.animation =  'slideInFromLeft 500ms forwards';
     } else {
-      $e().style.animation =  'slideInFromLeft 0ms forwards';
+      $e('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
     }
   } else if ($d('animation') == 'flip') {
-    addAnimation($e('#question-cell'), 'flipA 250ms', target => {
-      resetQuestion();
+    $e('#question-cell').addEventListener('animationend', event => {
+      resetQuestionPanel();
       $e('#question-cover').style.visibility = 'hidden';
-      addAnimation($e('#question-cell'), 'flipB 250ms', target => {
+      $e('#question-cell').addEventListener('animationend', event => {
+        $d('current-step', 'question');
         enableButtons();
-      });
-    });
-    if ($d('is-answer-shown')) {
-      addAnimation($e('#answer-cell'), 'flipA 250ms', target => {
-        resetAnswer();
-        $e('#answer-cover').style.visibility = 'visible';
-        addAnimation($e('#answer-cell'), 'flipB 250ms', null);
-      });
-    } else {
-      resetAnswer();
-    }
+      }, {once: true});
+      $e('#question-cell').style.animation = 'flipB 250ms forwards';
+    }, {once: true});
+    $e('#question-cell').style.animation = 'flipA 250ms forwards';
+    $e('#answer-cell').addEventListener('animationend', event => {
+      $e('#answer-cover').style.visibility = 'visible';
+      $e('#answer-cell').style.animation = 'flipB 250ms forwards';
+    }, {once: true});
+    $e('#answer-cell').style.animation = 'flipA 250ms forwards';
   } else {
-    resetQuestion();
+    resetQuestionPanel();
     $e('#question-cover').style.visibility = 'hidden';
-    resetAnswer();
     $e('#answer-cover').style.visibility = 'visible';
+    $d('current-step', 'question');
     enableButtons();
   }
-  $d('is-answer-shown', false);
 };
-const resetQuestion = () => {
-  $e('#question-cell').scrollTop = 0;
-  $e('#question-body').innerHTML = $d('question-phrase').html;
-  addHintBalloons($e('#question-panel'), $d('answer-phrase').chosenBranchTexts);
-};
-const resetAnswer = () => {
-  $e('#answer-cell').scrollTop = 0;
-  $e('#answer-body').innerHTML = $d('answer-phrase').html;
-  addHintBalloons($e('#answer-panel'), $d('question-phrase').chosenBranchTexts);
-}
 const showAnswer = () => {
   disableButtons();
+  $e('#answer-panel').scrollTop = 0;
+  $e('#answer-body').innerHTML = $d('answer-phrase').html;
+  addHintBalloons($e('#answer-panel'), $d('question-phrase').chosenBranchTexts);
   if ($d('animation') == 'slide') {
     $e('#answer-cover').addEventListener('animationend', event => {
-      $d('is-answer-shown', true);
+      $d('current-step', 'answer');
       enableButtons();
+      if ($e('#auto-speak-checkbox').checked) speak();
     }, {once: true});
-    $e().style.animation =  'slideOutToRight 500ms forwards';
+    $e('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
   } else if ($d('animation') == 'flip') {
-    addAnimation($e('#answer-cell'), 'flipA 200ms', target => {
+    $e('#answer-cell').addEventListener('animationend', event => {
       $e('#answer-cover').style.visibility = 'hidden';
-      addAnimation($e('#answer-cell'), 'flipB 200ms', target => {
+      $e('#answer-cell').addEventListener('animationend', event => {
+        $d('current-step', 'answer');
         enableButtons();
-        if ($e('#auto-read-aloud-checkbox').checked) readAloud();
-      });
-    });
+        if ($e('#auto-speak-checkbox').checked) speak();
+      }, {once: true});
+      $e('#answer-cell').style.animation = 'flipB 250ms forwards';  
+    }, {once: true});
+    $e('#answer-cell').style.animation = 'flipA 250ms forwards';
   } else {
     $e('#answer-cover').style.visibility = 'hidden';
+    $d('current-step', 'answer');
     enableButtons();
-    if ($e('#auto-read-aloud-checkbox').checked) readAloud();
-  }
-  $d('is-answer-shown', true);
-};
-
-
-
-
-const expandVariables = template => {
-  for (const key in $templateVariables) {
-    template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
-  }
-  return template;
-};
-const playButtonOnClick = event => {
-  if ($d('is-answer-shown')) {
-    resetCard();
-  } else {
-    showAnswer();
+    if ($e('#auto-speak-checkbox').checked) speak();
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList) => {
@@ -203,7 +207,6 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
     adjustHintBalloonPosition(branchElement);
-    branchElement.ontouchstart = '';
   }
   parentPanelElement.addEventListener('scroll', event => {
     const targetBranchElements = parentPanelElement.querySelectorAll('.branch');
@@ -212,16 +215,17 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
     }
   });
 }
-const addAnimation = (target, animation, callback) => {
-  const eventHandler = event => {
-    target.removeEventListener('animationend', eventHandler);
-    target.style.animation = '';
-    callback && callback(target);
-  }
-  target.addEventListener('animationend', eventHandler);
-  target.style.animation = animation;
+const disableButtons = () => {
+  $e('#speak-button').disabled = true;
+  $e('#play-button').disabled = true;
+  $e('#skip-button').disabled = true;
 };
-const readAloud = () => {
+const enableButtons = () => {
+  $e('#speak-button').disabled = false;
+  $e('#play-button').disabled = false;
+  $e('#skip-button').disabled = false;
+};
+const speak = () => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = $d('answer-phrase').text;
@@ -240,15 +244,5 @@ const readAloud = () => {
     utterance.voice = candidateVoices[index];
   }
   window.speechSynthesis.speak(utterance);
-};
-const disableButtons = () => {
-  $e('#read-aloud-button').disabled = true;
-  $e('#play-button').disabled = true;
-  $e('#skip-button').disabled = true;
-};
-const enableButtons = () => {
-  $e('#read-aloud-button').disabled = false;
-  $e('#play-button').disabled = false;
-  $e('#skip-button').disabled = false;
 };
 window.addEventListener('DOMContentLoaded', main);
