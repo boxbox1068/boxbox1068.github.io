@@ -34,11 +34,13 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
   --cell-border-spacing: .25rem;
+  --lead-cell-height: 2.25rem;
+  --fold-lead-checkbox-size: 1.5rem;
+  --footer-cell-height: 2rem;
   --common-padding-width: 1rem;
   --common-padding-height: .5rem;
   --common-line-height: 1.5em;
-  --lead-cell-height: 2.25rem;
-  --footer-cell-height: 2rem;
+  --common-transition-duration: 500ms;
 }
 * {
   box-sizing: border-box;
@@ -50,9 +52,6 @@
 #disable-animation-checkbox:checked ~ * *:after {
   transition-duration: 0ms !important;
   animation-duration: 0ms !important;
-}
-input[type="checkbox"] {
-  display: none;
 }
 svg {
   fill: currentColor;
@@ -123,39 +122,35 @@ body {
   position: relative;
 }
 
-/* ------------------ *
- |  DESCRIPTION CELL  |
- * ------------------ */
+/* ----------- *
+ |  LEAD CELL  |
+ * ----------- */
 #lead-panel {
-  --lead-panel-max-height: calc(100% - var(--footer-cell-height));
-  --transition-duration: 500ms;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: 100%;
-  height: var(--lead-panel-max-height);
+  overflow-y: auto;
   background: var(--lead-panel-background);
 }
 #lead-body {
+  margin-bottom: var(--fold-lead-checkbox-size);
   padding: .5rem 1rem;
-  padding-bottom: 2rem;
-  overflow-y: scroll;
   color: var(--lead-panel-color);
   font-size: 1rem;
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
 [for="fold-lead-checkbox"] {
-  --height: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   right: 1rem;
-  bottom: 0;
-  width: 1.5rem;
-  height: var(--height);
+  z-index: 110;
+  width: var(--fold-lead-checkbox-size);
+  height: var(--fold-lead-checkbox-size);
   background: var(--fold-lead-checkbox-background);
   color: var(--fold-lead-checkbox-color);
 }
@@ -163,22 +158,28 @@ body {
   width: 50%;
   height: 50%;
 }
-#fold-lead-checkbox:checked ~ #lead-panel,
-#fold-lead-checkbox:checked ~ #lead-panel > #lead-body {
+*:checked + [for="fold-lead-checkbox"] ~ #lead-panel {
   height: var(--lead-cell-height);
-  transition: height var(--transition-duration);
+  transition: height var(--common-transition-duration);
 }
-#fold-lead-checkbox:not(:checked) ~ #lead-panel,
-#fold-lead-checkbox:not(:checked) ~ #lead-panel > #lead-body {
-  height: var(--lead-panel-max-height);
-  transition: height var(--transition-duration);
+*:not(:checked) + [for="fold-lead-checkbox"] ~ #lead-panel {
+  height: calc(100% - var(--footer-cell-height));
+  transition: height var(--common-transition-duration);
 }
-#fold-lead-checkbox:checked ~ #lead-panel > [for="fold-lead-checkbox"] {
+*:not(:disabled):not(:checked) + [for="fold-lead-checkbox"] {
+  bottom: var(--footer-cell-height);
+  transform: scale(1, 1);
+  transition: bottom var(--common-transition-duration);
+}
+*:not(:disabled):checked + [for="fold-lead-checkbox"] {
+  bottom: calc(100% - var(--lead-cell-height));
   transform: scale(1, -1);
+  transition: bottom var(--common-transition-duration);
 }
-#fold-lead-checkbox:disabled ~ #lead-panel > [for="fold-lead-checkbox"] {
-  margin-bottom: calc(var(--height) * -1);
-  transition: margin-bottom var(--transition-duration);
+*:disabled + [for="fold-lead-checkbox"] {  
+  opacity: 0;
+  bottom: calc(100% - var(--lead-cell-height));
+  transition: var(--common-transition-duration);
 }
 
 /* ------------------------------- *
@@ -361,19 +362,19 @@ body {
   background: var(--toggle-color);
   content: "";
 }
-#auto-speak-checkbox:not(:checked) ~ [for="auto-speak-checkbox"]::before {
+*:not(:checked) + [for="auto-speak-checkbox"]::before {
   height: var(--toggle-height);
   transition: height 250ms;
 }
-#auto-speak-checkbox:not(:checked) ~ [for="auto-speak-checkbox"]::after {
+*:not(:checked) + [for="auto-speak-checkbox"]::after {
   height: 0;
   transition: height 250ms;
 }
-#auto-speak-checkbox:checked ~ [for="auto-speak-checkbox"]::before {
+*:checked + [for="auto-speak-checkbox"]::before {
   height: 0;
   transition: height 250ms;
 }
-#auto-speak-checkbox:checked ~ [for="auto-speak-checkbox"]::after {
+*:checked + [for="auto-speak-checkbox"]::after {
   height: var(--toggle-height);
   transition: height 250ms;
 }

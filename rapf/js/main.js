@@ -48,6 +48,13 @@ const main = () => {
     jsonpDataScriptElement.src = jsonpSrc;
     document.head.append(jsonpDataScriptElement);
   }
+  $e('#scroll-down-lead-button').addEventListener('click', event => {
+    $e('#lead-body').scrollBy(0, 100);
+  });
+  $e('#scroll-up-lead-button').addEventListener('click', event => {
+    $e('#lead-body').scrollBy(0, -100);
+  });
+    
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
   const expandVariables = template => {
