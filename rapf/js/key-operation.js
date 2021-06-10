@@ -26,5 +26,17 @@ window.addEventListener('keydown', event => {
     case 'L':
       $e('#scroll-up-lead-button').click();
       break;
+    case 'q':
+      $e('#scroll-down-question-button').click();
+      break;
+    case 'Q':
+      $e('#scroll-up-question-button').click();
+      break;
+    case 'a':
+      $e('#scroll-down-answer-button').click();
+      break;
+    case 'A':
+      $e('#scroll-up-answer-button').click();
+      break;
   }
 });

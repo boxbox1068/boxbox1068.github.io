@@ -7,6 +7,7 @@ const main = () => {
       element.remove();
     }
   }
+  $d('app-lang', lang);
   if ($q('iframe') == 'true') {
     window.addEventListener('message', event => {
       if (typeof event.data != 'object') {
@@ -49,12 +50,23 @@ const main = () => {
     document.head.append(jsonpDataScriptElement);
   }
   $e('#scroll-down-lead-button').addEventListener('click', event => {
-    $e('#lead-body').scrollBy(0, 100);
+    $e('#lead-panel').scrollBy(0, 100);
   });
   $e('#scroll-up-lead-button').addEventListener('click', event => {
-    $e('#lead-body').scrollBy(0, -100);
+    $e('#lead-panel').scrollBy(0, -100);
   });
-    
+  $e('#scroll-down-question-button').addEventListener('click', event => {
+    $e('#question-panel').scrollBy(0, 100);
+  });
+  $e('#scroll-up-question-button').addEventListener('click', event => {
+    $e('#question-panel').scrollBy(0, -100);
+  });
+  $e('#scroll-down-answer-button').addEventListener('click', event => {
+    $e('#answer-panel').scrollBy(0, 100);
+  });
+  $e('#scroll-up-answer-button').addEventListener('click', event => {
+    $e('#answer-panel').scrollBy(0, -100);
+  });
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
   const expandVariables = template => {
