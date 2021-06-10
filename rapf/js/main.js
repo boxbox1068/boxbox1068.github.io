@@ -50,22 +50,22 @@ const main = () => {
     document.head.append(jsonpDataScriptElement);
   }
   $e('#scroll-down-lead-button').addEventListener('click', event => {
-    $e('#lead-panel').scrollBy(0, 100);
+    $e('#lead-panel').scrollBy(0, 50);
   });
   $e('#scroll-up-lead-button').addEventListener('click', event => {
-    $e('#lead-panel').scrollBy(0, -100);
+    $e('#lead-panel').scrollBy(0, -50);
   });
   $e('#scroll-down-question-button').addEventListener('click', event => {
-    $e('#question-panel').scrollBy(0, 100);
+    $e('#question-panel').scrollBy(0, 50);
   });
   $e('#scroll-up-question-button').addEventListener('click', event => {
-    $e('#question-panel').scrollBy(0, -100);
+    $e('#question-panel').scrollBy(0, -50);
   });
   $e('#scroll-down-answer-button').addEventListener('click', event => {
-    $e('#answer-panel').scrollBy(0, 100);
+    $e('#answer-panel').scrollBy(0, 50);
   });
   $e('#scroll-up-answer-button').addEventListener('click', event => {
-    $e('#answer-panel').scrollBy(0, -100);
+    $e('#answer-panel').scrollBy(0, -50);
   });
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
