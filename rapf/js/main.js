@@ -115,6 +115,16 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
     $e('#disable-animation-checkbox').checked = true;
   }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
+    $e('#auto-speak-checkbox').addEventListener('change', event => {
+      if ($e('#auto-speak-checkbox').checked) {
+        const lang = $d('app-lang');
+        const text = {
+          'en': 'Answers will automatically be read aloud.',
+          'ja': '自動的に答えを読み上げます。'
+        }[lang];
+        readAloud(text, lang);
+      }
+    });
     $e('#speak-button').addEventListener('click', event => {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -273,6 +283,29 @@ const enableButtons = () => {
   $e('#play-button').disabled = false;
   $e('#skip-button').disabled = false;
 };
+const readAloud = (text, lang) => {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance();
+  utterance.text = text;
+  utterance.lang = lang;
+  utterance.volume = 1;
+  utterance.rate = 1;
+  utterance.pitch = 1;
+  const candidateVoices = [];
+  for (const voice of window.speechSynthesis.getVoices()) {
+    if (new RegExp(`^${lang}`, 'i').test(voice.lang)) {
+      candidateVoices.push(voice);
+    }
+  }
+  if (candidateVoices.length) {
+    const index = Math.floor(candidateVoices.length * Math.random());
+    utterance.voice = candidateVoices[index];
+  }
+  window.speechSynthesis.speak(utterance);
+};
+
+
+
 const speak = () => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
@@ -291,7 +324,6 @@ const speak = () => {
     const index = Math.floor(candidateVoices.length * Math.random());
     utterance.voice = candidateVoices[index];
   }
-alert(1)
   window.speechSynthesis.speak(utterance);
 };
 window.addEventListener('DOMContentLoaded', main);
