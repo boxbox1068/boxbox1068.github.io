@@ -115,12 +115,22 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
     $e('#disable-animation-checkbox').checked = true;
   }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
-    $e('#auto-speak-checkbox').addEventListener('change', event => {
-      if ($e('#auto-speak-checkbox').checked) {
+    $e('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
+      if ($e('#enable-automatic-question-reading-checkbox').checked) {
         const lang = $d('app-lang');
         const text = {
-          'en': 'Answers will automatically be read aloud.',
-          'ja': '自動的に答えを読み上げます。'
+          'en': 'Automatic question reading enabled.',
+          'ja': '問題の自動読み上げ、オン。'
+        }[lang];
+        readAloud(text, lang);
+      }
+    });
+    $e('#enable-automatic-answer-reading-checkbox').addEventListener('change', event => {
+      if ($e('#enable-automatic-answer-reading-checkbox').checked) {
+        const lang = $d('app-lang');
+        const text = {
+          'en': 'Automatic answer reading enabled.',
+          'ja': '答えの自動読み上げ、オン。'
         }[lang];
         readAloud(text, lang);
       }
@@ -223,7 +233,7 @@ const showAnswer = () => {
     $e('#answer-cover').addEventListener('animationend', event => {
       $d('current-step', 'answer');
       enableButtons();
-      if ($e('#auto-speak-checkbox').checked) speak();
+      if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
     }, {once: true});
     $e('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
   } else if ($d('animation') == 'flip') {
@@ -232,7 +242,7 @@ const showAnswer = () => {
       $e('#answer-cell').addEventListener('animationend', event => {
         $d('current-step', 'answer');
         enableButtons();
-        if ($e('#auto-speak-checkbox').checked) speak();
+        if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
       }, {once: true});
       $e('#answer-cell').style.animation = 'flipB 250ms forwards';  
     }, {once: true});
@@ -241,7 +251,7 @@ const showAnswer = () => {
     $e('#answer-cover').style.visibility = 'hidden';
     $d('current-step', 'answer');
     enableButtons();
-    if ($e('#auto-speak-checkbox').checked) speak();
+    if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList) => {

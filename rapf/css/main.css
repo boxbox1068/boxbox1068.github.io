@@ -15,9 +15,10 @@
   --q-and-a-cover-background: #3F51B5;
   --q-and-a-cover-color: #3949AB;
   --controller-color: #455A64;
-  --toggle-color: #FFB74D;
-  --control-background: #CFD8DC;
-  --disabled-control-background: #ECEFF1;
+  --on-toggle-color: #FFC107;
+  --off-toggle-color: #607D8B;
+  --controller-background: #CFD8DC;
+  --disabled-controller-background: #ECEFF1;
   --footer-background: #37474F;
   --footer-color: #CFD8DC;
   --branch-number-1-background: #EF9A9A99;
@@ -36,12 +37,16 @@
   --cell-border-spacing: .25rem;
   --lead-cell-height: 2.25rem;
   --fold-lead-checkbox-size: 1.5rem;
+  --controller-height: 2rem;
   --footer-cell-height: 2rem;
   --common-padding: .5rem 1rem;
+  --common-border-width: 1px;
   --common-line-height: 1.5em;
   --common-transition-duration: 500ms;
 }
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   overflow: hidden;
   cursor: default;
@@ -331,64 +336,65 @@ body {
   justify-content: flex-end;
   padding: var(--common-padding);
 }
-#controller-body > * {
-  height: 2rem;
-  border: 1px solid var(--controller-color);
-}
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
-[for="auto-speak-checkbox"] {
-  --border-width: 1px;
-  --toggle-height: 1.5rem;
+:root .toggle {
+  --this-toggle-height: 80%;
+}
+.toggle {
   position: relative;
   width: 1.5rem;
-  background: var(--control-background);
+  height: var(--controller-height);
+  border: var(--common-border-width) solid var(--controller-color);
+  background: var(--controller-background);
 }
-[for="auto-speak-checkbox"]::before {
+.toggle::before {
+  top: calc(var(--this-toggle-height) * -1);
+  border-bottom: var(--common-border-width) solid var(--controller-color);
+  background: var(--on-toggle-color);
+  color: var(--controller-color);
+}
+.toggle::after {
+  top: calc(100% - var(--this-toggle-height));
+  border-top: var(--common-border-width) solid var(--controller-color);
+  background: var(--off-toggle-color);
+  color: var(--controller-background);
+}
+.toggle::before,
+.toggle::after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  top: calc(var(--border-width) * -1);
   left: 0;
   width: 100%;
-  height: var(--toggle-height);
-  border-bottom: 1px solid var(--controller-color);
-  background: var(--controller-color);
-  content: "";
-}
-[for="auto-speak-checkbox"]::after {
-  position: absolute;
-  bottom: calc(var(--border-width) * -1);
-  left: 0;
-  width: 100%;
-  height: 0;
-  border-top: 1px solid var(--controller-color);
-  background: var(--toggle-color);
-  content: "";
-}
-*:not(:checked) + [for="auto-speak-checkbox"]::before {
-  height: var(--toggle-height);
+  height: var(--this-toggle-height);
+  font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-*:not(:checked) + [for="auto-speak-checkbox"]::after {
-  height: 0;
-  transition-duration: calc(var(--common-transition-duration) / 2);
+*:checked + .toggle::before {
+  top: 0;
 }
-*:checked + [for="auto-speak-checkbox"]::before {
-  height: 0;
-  transition-duration: calc(var(--common-transition-duration) / 2);
+*:checked + .toggle::after {
+  top: 100%;
 }
-*:checked + [for="auto-speak-checkbox"]::after {
-  height: var(--toggle-height);
-  transition-duration: calc(var(--common-transition-duration) / 2);
+.toggle[for="enable-automatic-question-reading-checkbox"]::before,
+.toggle[for="enable-automatic-question-reading-checkbox"]::after {
+  content: "Q";
+}
+.toggle[for="enable-automatic-answer-reading-checkbox"]::before,
+.toggle[for="enable-automatic-answer-reading-checkbox"]::after {
+  content: "A";
 }
 #speak-button {
-  width: 4rem;
+  width: 3.5rem;
 }
 #play-button {
-  width: 6rem;
+  width: 5.5rem;
 }
 #skip-button {
-  width: 4rem;
+  width: 3.5rem;
 }
 #speak-button,
 #play-button,
@@ -396,13 +402,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--control-background);
+  height: var(--controller-height);
+  border: var(--common-border-width) solid var(--controller-color);
+  background: var(--controller-background);
   color: var(--controller-color);
 }
 #speak-button:disabled,
 #play-button:disabled,
 #skip-button:disabled {
-  background: var(--disabled-control-background);
+  background: var(--disabled-controller-background);
 }
 #speak-button > svg,
 #play-button > svg,
