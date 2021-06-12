@@ -1,7 +1,8 @@
-/* --------- *
- |  GENERAL  |
- * --------- */
+/* ------- *
+ |  COLOR  |
+ * ------- */
 :root {
+  --html-background: #CFD8DC;
   --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
   --app-color: #263238;
   --app-font-size: 4vmin;
@@ -34,6 +35,17 @@
   --hint-balloon-background: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    
+  }
+}
+
+/* --------- *
+ |  GENERAL  |
+ * --------- */
+:root {
   --cell-border-spacing: .25rem;
   --lead-cell-height: 2.25rem;
   --fold-lead-checkbox-size: 1.5rem;
@@ -67,8 +79,7 @@ svg {
  * ------------- */
 html {
   height: 100%;
-  background: var(--app-background);
-background: gray;
+  background: var(--html-background);
   color: var(--app-color);
   font-size: var(--app-font-size);
   font-family: var(--app-font-family);
@@ -85,6 +96,7 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  background: var(--app-background);
 }
 @media screen and (orientation: portrait) {
   body {
