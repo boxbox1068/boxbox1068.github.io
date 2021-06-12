@@ -2,50 +2,44 @@
  |  COLOR  |
  * ------- */
 :root {
-  --html-background: #CFD8DC;
-  --app-background: repeating-linear-gradient(90deg, #CFD8DC 0px, #ECEFF1 4px, #CFD8DC 8px);
+  --app-background-color: #CFD8DC;
   --app-color: #263238;
-  --app-font-size: 4vmin;
-  --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
-  --lead-panel-background: #C5CAE9EE;
+  --lead-panel-background-color: #C5CAE9EE;
   --lead-panel-color: #263238;
-  --fold-lead-checkbox-background: #455A64;
+  --fold-lead-checkbox-background-color: #455A64;
   --fold-lead-checkbox-color: #CFD8DC;
-  --q-and-a-panel-background: #FFFC;
+  --q-and-a-panel-background-color: #FFFC;
   --q-and-a-panel-color: #263238;
-  --q-and-a-cover-background: #3F51B5;
+  --q-and-a-cover-background-color: #3F51B5;
   --q-and-a-cover-color: #3949AB;
   --controller-color: #455A64;
   --on-toggle-color: #FFC107;
   --off-toggle-color: #607D8B;
-  --controller-background: #CFD8DC;
-  --disabled-controller-background: #ECEFF1;
-  --footer-background: #37474F;
+  --controller-background-color: #CFD8DC;
+  --disabled-controller-background-color: #ECEFF1;
+  --footer-background-color: #37474F;
   --footer-color: #CFD8DC;
-  --branch-number-1-background: #EF9A9A99;
-  --branch-number-2-background: #90CAF999;
-  --branch-number-3-background: #FFF59D99;
-  --branch-number-4-background: #A5D6A799;
-  --branch-number-5-background: #CE93D899;
-  --branch-number-6-background: #FFCC8099;
-  --branch-number-7-background: #80DEEA99;
-  --branch-number-8-background: #F48FB199;
-  --branch-number-9-background: #BCAAA499;
-  --branch-number-0-background: #B0BEC599;
-  --hint-balloon-background: #FFF;
+  --branch-number-1-background-color: #EF9A9A99;
+  --branch-number-2-background-color: #90CAF999;
+  --branch-number-3-background-color: #FFF59D99;
+  --branch-number-4-background-color: #A5D6A799;
+  --branch-number-5-background-color: #CE93D899;
+  --branch-number-6-background-color: #FFCC8099;
+  --branch-number-7-background-color: #80DEEA99;
+  --branch-number-8-background-color: #F48FB199;
+  --branch-number-9-background-color: #BCAAA499;
+  --branch-number-0-background-color: #B0BEC599;
+  --hint-balloon-background-color: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    
-  }
 }
 
 /* --------- *
  |  GENERAL  |
  * --------- */
 :root {
+  --app-font-size: 4vmin;
+  --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --cell-border-spacing: .25rem;
   --lead-cell-height: 2.25rem;
   --fold-lead-checkbox-size: 1.5rem;
@@ -63,11 +57,19 @@
   overflow: hidden;
   cursor: default;
 }
-#disable-animation-checkbox:checked ~ * *,
-#disable-animation-checkbox:checked ~ * *:before,
-#disable-animation-checkbox:checked ~ * *:after {
+.disable-animation *,
+.disable-animation *:before,
+.disable-animation *:after {
   transition-duration: 0ms !important;
   animation-duration: 0ms !important;
+}
+html {
+  height: 100%;
+  background-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
+  background-color: var(--app-background-color);
+  color: var(--app-color);
+  font-size: var(--app-font-size);
+  font-family: var(--app-font-family);
 }
 svg {
   fill: currentColor;
@@ -77,13 +79,6 @@ svg {
 /* ------------- *
  |  GRID LAYOUT  |
  * ------------- */
-html {
-  height: 100%;
-  background: var(--html-background);
-  color: var(--app-color);
-  font-size: var(--app-font-size);
-  font-family: var(--app-font-family);
-}
 body {
   display: grid;
   grid-template:
@@ -96,7 +91,6 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--app-background);
 }
 @media screen and (orientation: portrait) {
   body {
@@ -149,7 +143,7 @@ body {
   z-index: 100;
   width: 100%;
   overflow-y: auto;
-  background: var(--lead-panel-background);
+  background-color: var(--lead-panel-background-color);
 }
 #lead-body {
   margin-bottom: var(--fold-lead-checkbox-size);
@@ -168,7 +162,7 @@ body {
   z-index: 110;
   width: var(--fold-lead-checkbox-size);
   height: var(--fold-lead-checkbox-size);
-  background: var(--fold-lead-checkbox-background);
+  background-color: var(--fold-lead-checkbox-background-color);
   color: var(--fold-lead-checkbox-color);
 }
 [for="fold-lead-checkbox"] > svg {
@@ -215,7 +209,7 @@ body {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  background: var(--q-and-a-panel-background);
+  background-color: var(--q-and-a-panel-background-color);
 }
 #question-body,
 #answer-body {
@@ -235,7 +229,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--q-and-a-cover-background);
+  background-color: var(--q-and-a-cover-background-color);
   color: var(--q-and-a-cover-color);
   font-weight: bold;
   font-size: 10rem;
@@ -244,34 +238,34 @@ body {
   font-weight: bold;
 }
 .branch[data-branch-number="1"] {
-  background: var(--branch-number-1-background);
+  background-color: var(--branch-number-1-background-color);
 }
 .branch[data-branch-number="2"] {
-  background: var(--branch-number-2-background);
+  background-color: var(--branch-number-2-background-color);
 }
 .branch[data-branch-number="3"] {
-  background: var(--branch-number-3-background);
+  background-color: var(--branch-number-3-background-color);
 }
 .branch[data-branch-number="4"] {
-  background: var(--branch-number-4-background);
+  background-color: var(--branch-number-4-background-color);
 }
 .branch[data-branch-number="5"] {
-  background: var(--branch-number-5-background);
+  background-color: var(--branch-number-5-background-color);
 }
 .branch[data-branch-number="6"] {
-  background: var(--branch-number-6-background);
+  background-color: var(--branch-number-6-background-color);
 }
 .branch[data-branch-number="7"] {
-  background: var(--branch-number-7-background);
+  background-color: var(--branch-number-7-background-color);
 }
 .branch[data-branch-number="8"] {
-  background: var(--branch-number-8-background);
+  background-color: var(--branch-number-8-background-color);
 }
 .branch[data-branch-number="9"] {
-  background: var(--branch-number-9-background);
+  background-color: var(--branch-number-9-background-color);
 }
 .branch[data-branch-number="0"] {
-  background: var(--branch-number-0-background);
+  background-color: var(--branch-number-0-background-color);
 }
 :root .hint-balloon-panel {
   --hint-balloon-height: 1.5em;
@@ -311,7 +305,7 @@ body {
   top: calc(100% - .2rem * 2);
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background-color);
   content: "";
 }
 .hint-balloon-body {
@@ -320,7 +314,7 @@ body {
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
   border: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
-  background: var(--hint-balloon-background);
+  background-color: var(--hint-balloon-background-color);
   white-space: nowrap;
 }
 
@@ -352,38 +346,32 @@ body {
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
-:root [for="enable-automatic-question-reading-checkbox"],
-:root [for="enable-automatic-answer-reading-checkbox"] {
+:root .toggle-label {
   --this-toggle-height: .25rem;
 }
-[for="enable-automatic-question-reading-checkbox"],
-[for="enable-automatic-answer-reading-checkbox"] {
+.toggle-label {
   position: relative;
   width: 1.5rem;
   height: var(--controller-height);
   border: var(--common-border-width) solid var(--controller-color);
-  background: var(--controller-background);
+  background-color: var(--controller-background-color);
 }
-[for="enable-automatic-question-reading-checkbox"]::before,
-[for="enable-automatic-answer-reading-checkbox"]::before {
+.toggle-label::before {
   top: 0;
   border-top: var(--this-toggle-height) solid transparent;
   border-bottom: var(--common-border-width) solid var(--controller-color);
-  background: var(--off-toggle-color);
-  color: var(--controller-background);
+  background-color: var(--off-toggle-color);
+  color: var(--controller-background-color);
 }
-[for="enable-automatic-question-reading-checkbox"]::after,
-[for="enable-automatic-answer-reading-checkbox"]::after {
+.toggle-label::after {
   top: 100%;
   border-top: var(--common-border-width) solid var(--controller-color);
   border-bottom: var(--this-toggle-height) solid transparent;
-  background: var(--on-toggle-color);
+  background-color: var(--on-toggle-color);
   color: var(--controller-color);
 }
-[for="enable-automatic-question-reading-checkbox"]::before,
-[for="enable-automatic-question-reading-checkbox"]::after,
-[for="enable-automatic-answer-reading-checkbox"]::before,
-[for="enable-automatic-answer-reading-checkbox"]::after {
+.toggle-label::before,
+.toggle-label::after {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -394,20 +382,18 @@ body {
   font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-[for="enable-automatic-question-reading-checkbox"]::before,
-[for="enable-automatic-question-reading-checkbox"]::after {
+.toggle-label[for="enable-automatic-question-reading-checkbox"]::before,
+.toggle-label[for="enable-automatic-question-reading-checkbox"]::after {
   content: "Q";
 }
-[for="enable-automatic-answer-reading-checkbox"]::before,
-[for="enable-automatic-answer-reading-checkbox"]::after {
+.toggle-label[for="enable-automatic-answer-reading-checkbox"]::before,
+.toggle-label[for="enable-automatic-answer-reading-checkbox"]::after {
   content: "A";
 }
-*:checked + [for="enable-automatic-question-reading-checkbox"]::before,
-*:checked + [for="enable-automatic-answer-reading-checkbox"]::before {
+*:checked + .toggle-label::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-*:checked + [for="enable-automatic-question-reading-checkbox"]::after,
-*:checked + [for="enable-automatic-answer-reading-checkbox"]::after {
+*:checked + .toggle-label::after {
   top: var(--this-toggle-height);
 }
 #speak-button {
@@ -427,13 +413,13 @@ body {
   align-items: center;
   height: var(--controller-height);
   border: var(--common-border-width) solid var(--controller-color);
-  background: var(--controller-background);
+  background-color: var(--controller-background-color);
   color: var(--controller-color);
 }
 #speak-button:disabled,
 #play-button:disabled,
 #skip-button:disabled {
-  background: var(--disabled-controller-background);
+  background-color: var(--disabled-controller-background-color);
 }
 #speak-button > svg,
 #play-button > svg,
@@ -448,7 +434,7 @@ body {
 #footer-panel {
   width: 100%;
   height: 100%;
-  background: var(--footer-background);
+  background-color: var(--footer-background-color);
 }
 #footer-body {
   display: flex;

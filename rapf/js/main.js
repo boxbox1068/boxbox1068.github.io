@@ -46,7 +46,8 @@ const main = () => {
         event.data['lead'],
         event.data['question'],
         event.data['answer'],
-        event.data['lang'],
+        event.data['q-lang'],
+        event.data['a-lang'],
         event.data['animation']
       );
     }, {once: true});
@@ -55,7 +56,8 @@ const main = () => {
       $q('lead'),
       $q('question'),
       $q('answer'),
-      $q('lang'),
+      $q('q-lang'),
+      $q('a-lang'),
       $q('animation')
     );
   } else {
@@ -68,7 +70,8 @@ const main = () => {
           jsonData['lead'],
           jsonData['question'],
           jsonData['answer'],
-          jsonData['lang'],
+          jsonData['q-lang'],
+          jsonData['a-lang'],
           jsonData['animation']
         );
       };
@@ -97,7 +100,7 @@ const main = () => {
     $e('#answer-panel').scrollBy(0, -50);
   });
 };
-const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang, animation) => {
+const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -107,12 +110,13 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
   $d('lead-text', leadText, '');
   $d('question-template', expandVariables(questionTemplate), '');
   $d('answer-template', expandVariables(answerTemplate), '');
+  $d('question-lang', questionLang, 'en');
   $d('answer-lang', answerLang, 'en');
   $d('animation', animation, 'slide');
   $d('refill-count', 0);
   $d('current-step', 'startup');
   if ($d('animation') == 'none') {
-    $e('#disable-animation-checkbox').checked = true;
+    $e(':root').classList.add('disable-animation');
   }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
     $e('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
@@ -123,6 +127,10 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
           'ja': '問題の自動読み上げ、オン。'
         }[lang];
         readAloud(text, lang);
+      } else {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
       }
     });
     $e('#enable-automatic-answer-reading-checkbox').addEventListener('change', event => {
@@ -133,6 +141,10 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
           'ja': '答えの自動読み上げ、オン。'
         }[lang];
         readAloud(text, lang);
+      } else {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+        }
       }
     });
     $e('#speak-button').addEventListener('click', event => {
@@ -162,9 +174,6 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, answerLang
   }
 }
 const resetCard = () => {
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
   const pathIdSeed = Math.random();
   $d('question-phrase', new RabbitPhrase($d('question-template'), pathIdSeed));
   $d('answer-phrase', new RabbitPhrase($d('answer-template'), pathIdSeed));
@@ -181,6 +190,14 @@ const showQuestion = () => {
     addHintBalloons($e('#question-panel'), $d('answer-phrase').chosenBranchTexts);
   };
   disableButtons();
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  if ($e('#enable-automatic-question-reading-checkbox').checked) {
+    window.setTimeout(() => {
+      readAloud($d('question-phrase').text, $d('question-lang'));
+    }, 500);
+  }
   if ($d('animation') == 'slide') {
     $e('#question-cover').addEventListener('animationend', event => {
       resetQuestionPanel();
@@ -229,11 +246,18 @@ const showAnswer = () => {
   $e('#answer-panel').scrollTop = 0;
   $e('#answer-body').innerHTML = $d('answer-phrase').html;
   addHintBalloons($e('#answer-panel'), $d('question-phrase').chosenBranchTexts);
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  if ($e('#enable-automatic-answer-reading-checkbox').checked) {
+    window.setTimeout(() => {
+      readAloud($d('answer-phrase').text, $d('answer-lang'));
+    }, 500);
+  }
   if ($d('animation') == 'slide') {
     $e('#answer-cover').addEventListener('animationend', event => {
       $d('current-step', 'answer');
       enableButtons();
-      if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
     }, {once: true});
     $e('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
   } else if ($d('animation') == 'flip') {
@@ -242,7 +266,6 @@ const showAnswer = () => {
       $e('#answer-cell').addEventListener('animationend', event => {
         $d('current-step', 'answer');
         enableButtons();
-        if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
       }, {once: true});
       $e('#answer-cell').style.animation = 'flipB 250ms forwards';  
     }, {once: true});
@@ -251,7 +274,6 @@ const showAnswer = () => {
     $e('#answer-cover').style.visibility = 'hidden';
     $d('current-step', 'answer');
     enableButtons();
-    if ($e('#enable-automatic-answer-reading-checkbox').checked) speak();
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList) => {
