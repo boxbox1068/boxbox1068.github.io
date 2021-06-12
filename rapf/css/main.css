@@ -339,45 +339,45 @@ body {
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
-:root .toggle {
-  --this-toggle-height: 80%;
+:root [for="enable-automatic-question-reading-checkbox"],
+:root [for="enable-automatic-answer-reading-checkbox"] {
+  --this-toggle-height: .25rem;
 }
-.toggle {
+[for="enable-automatic-question-reading-checkbox"],
+[for="enable-automatic-answer-reading-checkbox"] {
   position: relative;
   width: 1.5rem;
   height: var(--controller-height);
   border: var(--common-border-width) solid var(--controller-color);
   background: var(--controller-background);
 }
-.toggle::before {
-  top: calc(var(--this-toggle-height) * -1);
+[for="enable-automatic-question-reading-checkbox"]::before,
+[for="enable-automatic-answer-reading-checkbox"]::before {
+  top: calc(var(--this-toggle-height) - 100%);
   border-bottom: var(--common-border-width) solid var(--controller-color);
   background: var(--on-toggle-color);
   color: var(--controller-color);
 }
-.toggle::after {
-  top: calc(100% - var(--this-toggle-height));
+[for="enable-automatic-question-reading-checkbox"]::after,
+[for="enable-automatic-answer-reading-checkbox"]::after {
+  top: var(--this-toggle-height);
   border-top: var(--common-border-width) solid var(--controller-color);
   background: var(--off-toggle-color);
   color: var(--controller-background);
 }
-.toggle::before,
-.toggle::after {
+[for="enable-automatic-question-reading-checkbox"]::before,
+[for="enable-automatic-question-reading-checkbox"]::after,
+[for="enable-automatic-answer-reading-checkbox"]::before,
+[for="enable-automatic-answer-reading-checkbox"]::after {
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   left: 0;
   width: 100%;
-  height: var(--this-toggle-height);
+  height: calc(100% - var(--this-toggle-height));
   font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
-}
-*:checked + .toggle::before {
-  top: 0;
-}
-*:checked + .toggle::after {
-  top: 100%;
 }
 .toggle[for="enable-automatic-question-reading-checkbox"]::before,
 .toggle[for="enable-automatic-question-reading-checkbox"]::after {
@@ -386,6 +386,12 @@ body {
 .toggle[for="enable-automatic-answer-reading-checkbox"]::before,
 .toggle[for="enable-automatic-answer-reading-checkbox"]::after {
   content: "A";
+}
+*:checked + [for="enable-automatic-question-reading-checkbox"]::before,
+*:checked + [for="enable-automatic-question-reading-checkbox"]::after,
+*:checked + [for="enable-automatic-answer-reading-checkbox"]::before,
+*:checked + [for="enable-automatic-answer-reading-checkbox"]::after {
+    margin-top: calc(var(--this-toggle-height) + 100%);
 }
 #speak-button {
   width: 3.5rem;
