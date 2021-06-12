@@ -68,6 +68,7 @@ svg {
 html {
   height: 100%;
   background: var(--app-background);
+background: gray;
   color: var(--app-color);
   font-size: var(--app-font-size);
   font-family: var(--app-font-family);
@@ -353,17 +354,19 @@ body {
 }
 [for="enable-automatic-question-reading-checkbox"]::before,
 [for="enable-automatic-answer-reading-checkbox"]::before {
-  top: calc(var(--this-toggle-height) - 100%);
+  top: 0;
+  border-top: var(--this-toggle-height) solid transparent;
   border-bottom: var(--common-border-width) solid var(--controller-color);
-  background: var(--on-toggle-color);
-  color: var(--controller-color);
+  background: var(--off-toggle-color);
+  color: var(--controller-background);
 }
 [for="enable-automatic-question-reading-checkbox"]::after,
 [for="enable-automatic-answer-reading-checkbox"]::after {
-  top: var(--this-toggle-height);
+  top: 100%;
   border-top: var(--common-border-width) solid var(--controller-color);
-  background: var(--off-toggle-color);
-  color: var(--controller-background);
+  border-bottom: var(--this-toggle-height) solid transparent;
+  background: var(--on-toggle-color);
+  color: var(--controller-color);
 }
 [for="enable-automatic-question-reading-checkbox"]::before,
 [for="enable-automatic-question-reading-checkbox"]::after,
@@ -379,19 +382,21 @@ body {
   font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.toggle[for="enable-automatic-question-reading-checkbox"]::before,
-.toggle[for="enable-automatic-question-reading-checkbox"]::after {
+[for="enable-automatic-question-reading-checkbox"]::before,
+[for="enable-automatic-question-reading-checkbox"]::after {
   content: "Q";
 }
-.toggle[for="enable-automatic-answer-reading-checkbox"]::before,
-.toggle[for="enable-automatic-answer-reading-checkbox"]::after {
+[for="enable-automatic-answer-reading-checkbox"]::before,
+[for="enable-automatic-answer-reading-checkbox"]::after {
   content: "A";
 }
 *:checked + [for="enable-automatic-question-reading-checkbox"]::before,
+*:checked + [for="enable-automatic-answer-reading-checkbox"]::before {
+  top: calc(var(--this-toggle-height) - 100%);
+}
 *:checked + [for="enable-automatic-question-reading-checkbox"]::after,
-*:checked + [for="enable-automatic-answer-reading-checkbox"]::before,
 *:checked + [for="enable-automatic-answer-reading-checkbox"]::after {
-    margin-top: calc(var(--this-toggle-height) + 100%);
+  top: var(--this-toggle-height);
 }
 #speak-button {
   width: 3.5rem;
