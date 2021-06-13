@@ -49,7 +49,7 @@ const main = () => {
         event.data['q-lang'],
         event.data['a-lang'],
         event.data['animation'],
-        event.data['auto-reading-delay']
+        event.data['reading-delay']
       );
     }, {once: true});
   } else if ($q('question')) {
@@ -60,7 +60,7 @@ const main = () => {
       $q('q-lang'),
       $q('a-lang'),
       $q('animation'),
-      $q('auto-reading-delay')
+      $q('reading-delay')
     );
   } else {
     const demoJsonpSrc = {'en': './data/demo.en.jsonp', 'ja': './data/demo.ja.jsonp'}[lang];
@@ -75,7 +75,7 @@ const main = () => {
           jsonData['q-lang'],
           jsonData['a-lang'],
           jsonData['animation'],
-          jsonData['auto-reading-delay']
+          jsonData['reading-delay']
         );
       };
     `;
@@ -103,7 +103,7 @@ const main = () => {
     $e('#answer-panel').scrollBy(0, -50);
   });
 };
-const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, autoReadingDelay) => {
+const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -116,7 +116,7 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   $d('question-lang', questionLang, 'en');
   $d('answer-lang', answerLang, 'en');
   $d('animation', animation, 'slide');
-  $d('auto-reading-delay', autoReadingDelay, 250);
+  $d('reading-delay', readingDelay, 250);
   $d('refill-count', 0);
   $d('current-step', 'startup');
   if ($d('animation') == 'none') {
@@ -143,20 +143,6 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
         const text = {
           'en': 'Automatic answer reading enabled.',
           'ja': '答えの自動読み上げ、オン。'
-        }[lang];
-        readAloud(text, lang);
-      } else {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.cancel();
-        }
-      }
-    });
-    $e('#enable-option-reading-checkbox').addEventListener('change', event => {
-      if (event.target.checked) {
-        const lang = $d('app-lang');
-        const text = {
-          'en': 'Option reading enabled.',
-          'ja': 'オプションの読み上げ、オン。'
         }[lang];
         readAloud(text, lang);
       } else {
@@ -222,7 +208,7 @@ const showQuestion = () => {
   if ($e('#enable-automatic-question-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud($d('question-phrase').text, $d('question-lang'));
-    }, $d('auto-reading-delay'));
+    }, $d('reading-delay'));
   }
   if ($d('animation') == 'slide') {
     $e('#question-cover').addEventListener('animationend', event => {
@@ -278,7 +264,7 @@ const showAnswer = () => {
   if ($e('#enable-automatic-answer-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud($d('answer-phrase').text, $d('answer-lang'));
-    }, $d('auto-reading-delay'));
+    }, $d('reading-delay'));
   }
   if ($d('animation') == 'slide') {
     $e('#answer-cover').addEventListener('animationend', event => {
@@ -303,11 +289,17 @@ const showAnswer = () => {
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
-  const adjustHintBalloonPosition = optionElement => {
+  const setHintBalloonPosition = optionElement => {
     const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
     const optionRect = optionElement.getClientRects()[0];
     hintBalloonPanelElement.style.top = `${optionRect.top}px`;
     hintBalloonPanelElement.style.left = `${optionRect.left}px`;
+  };
+  const updateHintBalloonPositions = () => {
+    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
+    for (const optionElement of targetOptionElements) {
+      setHintBalloonPosition(optionElement);
+    }
   };
   const targetOptionElements = parentPanelElement.querySelectorAll('.option');
   for (const optionElement of targetOptionElements) {
@@ -323,19 +315,10 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
     const hintBalloonRight = optionElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-    adjustHintBalloonPosition(optionElement);
-    optionElement.addEventListener('mouseenter', event => {
-      if ($e('#enable-option-reading-checkbox').checked) {
-        readAloud(hintText, hintLang);
-      }
-    });
+    setHintBalloonPosition(optionElement);
   }
-  parentPanelElement.addEventListener('scroll', event => {
-    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-    for (const optionElement of targetOptionElements) {
-      adjustHintBalloonPosition(optionElement);
-    }
-  });
+  parentPanelElement.addEventListener('scroll', updateHintBalloonPositions);
+  window.addEventListener('resize', updateHintBalloonPositions);
 }
 const disableButtons = () => {
   $e('#read-aloud-button').disabled = true;

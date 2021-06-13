@@ -8,10 +8,10 @@
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <link rel="stylesheet" href="./css/main.css">
+<script src="./data/template-variables.json"></script>
 <script src="./js/key-operation.js"></script>
 <script src="./js/touch-operation.js"></script>
 <script src="./js/rabbit-phrase.js"></script>
-<script src="./js/template-variables.js"></script>
 <script src="./js/main.js"></script>
 <div id="lead-cell">
   <input type="checkbox" id="fold-lead-checkbox" hidden>
@@ -46,22 +46,20 @@
     </div>
   </div>
 </div>
-<div id="controller-cell">
-  <div id="controller-panel">
-    <div id="controller-body">
+<div id="control-cell">
+  <div id="control-panel">
+    <div id="control-body">
       <input type="checkbox" id="enable-automatic-question-reading-checkbox" hidden>
-      <label for="enable-automatic-question-reading-checkbox" class="reading-toggle"></label>
+      <label class="reading-toggle" for="enable-automatic-question-reading-checkbox"></label>
       <input type="checkbox" id="enable-automatic-answer-reading-checkbox" hidden>
-      <label for="enable-automatic-answer-reading-checkbox" class="reading-toggle"></label>
-      <input type="checkbox" id="enable-option-reading-checkbox" hidden>
-      <label for="enable-option-reading-checkbox" class="reading-toggle"></label>
-      <button id="read-aloud-button">
+      <label class="reading-toggle" for="enable-automatic-answer-reading-checkbox"></label>
+      <button class="operation-button" id="read-aloud-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M520 290L640 290L640 350L520 350L520 290Z" id="i1C11dDKKa"></path><path d="M130 220L430 60L430 580L130 420L30 460L30 180L130 220Z" id="a2oF37ZwQz"></path><path d="M502.94 87.02L608.89 30.69L637.06 83.66L531.11 140L502.94 87.02Z" id="a1ZzuoI9NI"></path><path d="M531.11 505.34L637.06 561.68L608.89 614.66L502.94 558.32L531.11 505.34Z" id="abtgQWi9P"></path></defs><g><g><use xlink:href="#i1C11dDKKa" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="1"></use><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="0" stroke-width="60" stroke-opacity="1"></use></g></g><g><use xlink:href="#a1ZzuoI9NI" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#abtgQWi9P" opacity="1" fill-opacity="1"></use></g></g></svg>
       </button>
-      <button id="play-button">
+      <button class="operation-button" id="play-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M320 480L0 640L0 319.99L0 0L320 159.98L640 319.99L320 480Z" id="cioIEjTok"></path></defs><g><g><use xlink:href="#cioIEjTok" opacity="1" fill-opacity="1"></use></g></g></svg>
       </button>
-      <button id="skip-button">
+      <button class="operation-button" id="skip-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M145 480L0 640L0 319.99L0 0L145 159.98L290 319.99L145 480Z" id="jspDtsqqj"></path><path d="M435 480L290 640L290 319.99L290 0L435 159.98L580 319.99L435 480Z" id="cD7GQ8efP"></path><path d="M600 20L600 620L620 620L620 20L600 20Z" id="bmW0NmDZt"></path></defs><g><g><use xlink:href="#jspDtsqqj" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#cD7GQ8efP" opacity="1" fill-opacity="1"></use></g><g><g><use xlink:href="#bmW0NmDZt" opacity="1" fill-opacity="0" stroke-width="40" stroke-opacity="1"></use></g></g></g></svg>
       </button>
     </div>
