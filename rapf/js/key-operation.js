@@ -1,9 +1,9 @@
 'use strict';
 window.addEventListener('keydown', event => {
-  if (event.ctrlKey || event.altKey || event.metaKey) {
+  if (/^F\d+$/.test(event.key)) {
     return;
   }
-  if (/^F\d+$/.test(event.key)) {
+  if (event.ctrlKey || event.altKey || event.metaKey) {
     return;
   }
   event.preventDefault();
@@ -37,6 +37,9 @@ window.addEventListener('keydown', event => {
       break;
     case 'A':
       document.querySelector('#scroll-up-answer-button').click();
+      break;
+    case 'r':
+      document.querySelector('#read-aloud-button').click();
       break;
   }
 });

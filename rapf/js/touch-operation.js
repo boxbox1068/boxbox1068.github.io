@@ -4,20 +4,24 @@
   let firstTouch = null;
   let lastTouch = null;
   window.addEventListener('touchstart', event => {
-    if (event.touches.length == 1) {
+    if (event.touches.length > 1) {
+      firstTouchPostion = null;
+      lastTouch = null;
+      touchMoveDirection = 'none';
+    } else {
       const currentTouch = event.touches[0];
       firstTouch = {
         'pageX': currentTouch.pageX,
         'pageY': currentTouch.pageY
       };
       lastTouch = {...firstTouch};
-    } else {
-      firstTouchPostion = null;
-      lastTouch = null;
-      touchMoveDirection = 'none';
     }
   }, {capture: true});
   window.addEventListener('touchmove', event => {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+      return;
+    }
     if (firstTouch && lastTouch) {
       const currentTouch = event.touches[0];
       const shortMoveX = currentTouch.pageX - lastTouch.pageX;
@@ -64,6 +68,9 @@
     }
   };
   const onSwipeToLeft = () => {
+    if (! document.querySelector('#enable-skip-by-swipe-checkbox').checked) {
+      return;
+    }
     const foldLeadCheckboxElement = document.querySelector('#fold-lead-checkbox');
     if (foldLeadCheckboxElement.checked) {
       document.querySelector('#skip-button').click();

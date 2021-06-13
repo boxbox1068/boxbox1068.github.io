@@ -49,7 +49,8 @@ const main = () => {
         event.data['q-lang'],
         event.data['a-lang'],
         event.data['animation'],
-        event.data['reading-delay']
+        event.data['reading-delay'],
+        event.data['enable-skip-by-swipe']
       );
     }, {once: true});
   } else if ($q('question')) {
@@ -60,7 +61,8 @@ const main = () => {
       $q('q-lang'),
       $q('a-lang'),
       $q('animation'),
-      $q('reading-delay')
+      $q('reading-delay'),
+      $q('enable-skip-by-swipe')
     );
   } else {
     const demoJsonpSrc = {'en': './data/demo.en.jsonp', 'ja': './data/demo.ja.jsonp'}[lang];
@@ -75,7 +77,8 @@ const main = () => {
           jsonData['q-lang'],
           jsonData['a-lang'],
           jsonData['animation'],
-          jsonData['reading-delay']
+          jsonData['reading-delay'],
+          jsonData['enable-skip-by-swipe']
         );
       };
     `;
@@ -103,7 +106,7 @@ const main = () => {
     $e('#answer-panel').scrollBy(0, -50);
   });
 };
-const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay) => {
+const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -116,13 +119,16 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   $d('question-lang', questionLang, 'en');
   $d('answer-lang', answerLang, 'en');
   $d('animation', animation, 'slide');
-  $d('reading-delay', readingDelay, 250);
-  $d('refill-count', 0);
-  $d('current-step', 'startup');
   if ($d('animation') == 'none') {
     $e(':root').classList.add('disable-animation');
   }
+  $d('reading-delay', readingDelay, 250);
+  if (/^\s*true\s*$/i.test(enableSkipBySwipe)) {
+    $e('#enable-skip-by-swipe-checkbox').checked = true;
+  }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
+    $d('refill-count', 0);
+    $d('current-step', 'startup');
     $e('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
       if (event.target.checked) {
         const lang = $d('app-lang');
