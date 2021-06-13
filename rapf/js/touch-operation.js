@@ -1,48 +1,48 @@
 'use strict';
 {
   const MIN_VALID_MOVE_X = 25;
-  let firstTouchPosition = null;
-  let lastTouchPosition = null;
+  let firstTouch = null;
+  let lastTouch = null;
   window.addEventListener('touchstart', event => {
     if (event.touches.length == 1) {
       const currentTouch = event.touches[0];
-      firstTouchPosition = {
-        'x': currentTouch.pageX,
-        'y': currentTouch.pageY
-      }
-      lastTouchPosition = {...firstTouchPosition};
+      firstTouch = {
+        'pageX': currentTouch.pageX,
+        'pageY': currentTouch.pageY
+      };
+      lastTouch = {...firstTouch};
     } else {
       firstTouchPostion = null;
-      lastTouchPosition = null;
+      lastTouch = null;
       touchMoveDirection = 'none';
     }
   }, {capture: true});
   window.addEventListener('touchmove', event => {
-    if (firstTouchPosition && lastTouchPosition) {
+    if (firstTouch && lastTouch) {
       const currentTouch = event.touches[0];
-      const shortMoveX = currentTouch.pageX - lastTouchPosition.x;
-      const shortMoveY = currentTouch.pageY - lastTouchPosition.y;
+      const shortMoveX = currentTouch.pageX - lastTouch.pageX;
+      const shortMoveY = currentTouch.pageY - lastTouch.pageY;
       if (Math.abs(shortMoveX) > Math.abs(shortMoveY)) {
-        const longMoveX = currentTouch.pageX - firstTouchPosition.x;
-        const longMoveY = currentTouch.pageY - firstTouchPosition.y;
+        const longMoveX = currentTouch.pageX - firstTouch.pageX;
+        const longMoveY = currentTouch.pageY - firstTouch.pageY;
         if ((longMoveX > 0 && shortMoveX > 0) || (longMoveX < 0 && shortMoveX < 0)) {
-          lastTouchPosition = {
-            'x': currentTouch.pageX,
-            'y': currentTouch.pageY
-          }
+          lastTouch = {
+            'pageX': currentTouch.pageX,
+            'pageY': currentTouch.pageY
+          };
         } else {
-          firstTouchPosition = null;
-          lastTouchPosition = null;
+          firstTouch = null;
+          lastTouch = null;
         }
       } else {
-        firstTouchPosition = null;
-        lastTouchPosition = null;
+        firstTouch = null;
+        lastTouch = null;
       }
     }
   }, {capture: true});
   window.addEventListener('touchend', event => {
-    if (firstTouchPosition && lastTouchPosition) {
-      const longMoveX = lastTouchPosition.x - firstTouchPosition.x;
+    if (firstTouch && lastTouch) {
+      const longMoveX = lastTouch.pageX - firstTouch.pageX;
       if (longMoveX >= MIN_VALID_MOVE_X) {
         event.preventDefault();
         onSwipeToRight();
@@ -50,14 +50,26 @@
         event.preventDefault();
         onSwipeToLeft();
       }
-      firstTouchPosition = null;
-      lastTouchPosition = null;
+      firstTouch = null;
+      lastTouch = null;
     }
   }, {capture: true});
   const onSwipeToRight = () => {
-    document.querySelector('#play-button').click();
+    const foldLeadCheckboxElement = document.querySelector('#fold-lead-checkbox');
+    if (foldLeadCheckboxElement.checked) {
+      document.querySelector('#play-button').click();
+    } else {
+      foldLeadCheckboxElement.checked = true;
+      foldLeadCheckboxElement.dispatchEvent(new Event('change'));
+    }
   };
   const onSwipeToLeft = () => {
-    document.querySelector('#skip-button').click();
+    const foldLeadCheckboxElement = document.querySelector('#fold-lead-checkbox');
+    if (foldLeadCheckboxElement.checked) {
+      document.querySelector('#skip-button').click();
+    } else {
+      foldLeadCheckboxElement.checked = true;
+      foldLeadCheckboxElement.dispatchEvent(new Event('change'));
+    }
   };
 }
