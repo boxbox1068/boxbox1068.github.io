@@ -3,68 +3,68 @@ class RabbitPhrase {
   constructor(template, pathIdSeed) {
     if (typeof template != 'string') template = '';
     if (! (0 <= pathIdSeed && pathIdSeed < 1)) pathIdSeed = Math.random();
-    const replaceBranchParts = (template, callback) => {
+    const replaceOptionParts = (template, callback) => {
       const path = /(\^+)\[([^^]*?)\]/;
       const replacer = (match, p1, p2, offset, string) => {
-        const branchNumber = p1.length;
-        const branchTexts  = p2.split('|');
-        for (let i = 1; i < branchTexts.length; i++) {
-          if (branchTexts[i] == '-') {
-            branchTexts[i] = branchTexts[i - 1];
+        const optionNumber = p1.length;
+        const optionTexts  = p2.split('|');
+        for (let i = 1; i < optionTexts.length; i++) {
+          if (optionTexts[i] == '-') {
+            optionTexts[i] = optionTexts[i - 1];
           }
         }
-        const firstBranchPartOffset = string.indexOf('^');
-        const isMainBranch = firstBranchPartOffset == offset;
-        return callback(branchNumber, branchTexts, isMainBranch) || '';
+        const firstOptionPartOffset = string.indexOf('^');
+        const isMainOption = firstOptionPartOffset == offset;
+        return callback(optionNumber, optionTexts, isMainOption) || '';
       };
       while (template != (template = template.replace(path, replacer)));
       return template;
     };
-    const branchCounts = [];
-    replaceBranchParts(template, (branchNumber, branchTexts, isMainBranch) => {
-      const branchCount = branchTexts.length;
-      const existingBranchCount = branchCounts[branchNumber] || Infinity;
-      branchCounts[branchNumber] = Math.min(branchCount, existingBranchCount);
+    const optionCounts = [];
+    replaceOptionParts(template, (optionNumber, optionTexts, isMainOption) => {
+      const optionCount = optionTexts.length;
+      const existingOptionCount = optionCounts[optionNumber] || Infinity;
+      optionCounts[optionNumber] = Math.min(optionCount, existingOptionCount);
     });
     let possiblePathCount = 1;
-    for (let branchCount of branchCounts) {
-      possiblePathCount *= branchCount || 1;
+    for (let optionCount of optionCounts) {
+      possiblePathCount *= optionCount || 1;
     }
     const pathId = Math.ceil(possiblePathCount * pathIdSeed);
     let tempPathId = pathId;
-    const chosenBranchIds = [];
-    for (let branchCount of branchCounts) {
-      if (branchCount) {
-        const chosenBranchId = tempPathId % branchCount;
-        chosenBranchIds.push(chosenBranchId);
-        tempPathId = Math.ceil(tempPathId / branchCount);
+    const chosenOptionIds = [];
+    for (let optionCount of optionCounts) {
+      if (optionCount) {
+        const chosenOptionId = tempPathId % optionCount;
+        chosenOptionIds.push(chosenOptionId);
+        tempPathId = Math.ceil(tempPathId / optionCount);
       } else {
-        chosenBranchIds.push(undefined);
+        chosenOptionIds.push(undefined);
       }
     }
-    const chosenBranchTexts = [];
-    const text = replaceBranchParts(template, (branchNumber, branchTexts, isMainBranch) => {
-      const chosenBranchId = chosenBranchIds[branchNumber];
-      const chosenBranch = branchTexts[chosenBranchId];
-      if (isMainBranch && chosenBranch) {
-        const existingValidBranch = chosenBranchTexts[branchNumber];
-        chosenBranchTexts[branchNumber] = (existingValidBranch ? existingValidBranch + ' ~ ' : '') + chosenBranch;
+    const chosenOptionTexts = [];
+    const text = replaceOptionParts(template, (optionNumber, optionTexts, isMainOption) => {
+      const chosenOptionId = chosenOptionIds[optionNumber];
+      const chosenOption = optionTexts[chosenOptionId];
+      if (isMainOption && chosenOption) {
+        const existingValidOption = chosenOptionTexts[optionNumber];
+        chosenOptionTexts[optionNumber] = (existingValidOption ? existingValidOption + ' ~ ' : '') + chosenOption;
       }
-      return chosenBranch;
+      return chosenOption;
     });
     const htmlTemplate = template;
-    const html = replaceBranchParts(htmlTemplate, (branchNumber, branchTexts, isMainBranch) => {
-      const chosenBranchId = chosenBranchIds[branchNumber];
-      const chosenBranch = branchTexts[chosenBranchId];
-      if (chosenBranch && isMainBranch) {
-        return `<a class="branch" data-branch-number="${branchNumber}" ontouchstart="">${chosenBranch}</a>`;
+    const html = replaceOptionParts(htmlTemplate, (optionNumber, optionTexts, isMainOption) => {
+      const chosenOptionId = chosenOptionIds[optionNumber];
+      const chosenOption = optionTexts[chosenOptionId];
+      if (chosenOption && isMainOption) {
+        return `<a class="option" data-option-number="${optionNumber}" ontouchstart="">${chosenOption}</a>`;
       } else {
-        return chosenBranch;
+        return chosenOption;
       }
     });
     this._possiblePathCount = possiblePathCount;
     this._pathId = pathId;
-    this._chosenBranchTexts = chosenBranchTexts;
+    this._chosenOptionTexts = chosenOptionTexts;
     this._text = text;
     this._html = html;
   }
@@ -74,8 +74,8 @@ class RabbitPhrase {
   get pathId() {
     return this._pathId;
   }
-  get chosenBranchTexts() {
-    return this._chosenBranchTexts;
+  get chosenOptionTexts() {
+    return this._chosenOptionTexts;
   }
   get text() {
     return this._text;

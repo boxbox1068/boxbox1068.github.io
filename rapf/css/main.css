@@ -8,27 +8,27 @@
   --lead-panel-color: #263238;
   --fold-lead-checkbox-background-color: #455A64;
   --fold-lead-checkbox-color: #CFD8DC;
-  --q-and-a-panel-background-color: #FFFC;
-  --q-and-a-panel-color: #263238;
-  --q-and-a-cover-background-color: #3F51B5;
-  --q-and-a-cover-color: #3949AB;
-  --controller-color: #455A64;
-  --on-toggle-color: #FFC107;
-  --off-toggle-color: #607D8B;
+  --main-panel-background-color: #FFFC;
+  --main-panel-color: #263238;
+  --main-cover-background-color: #3F51B5;
+  --main-cover-color: #3949AB;
   --controller-background-color: #CFD8DC;
   --disabled-controller-background-color: #ECEFF1;
+  --controller-color: #455A64;
+  --toggle-color: #607D8B;
+  --on-toggle-color: #FFC107;
   --footer-background-color: #37474F;
   --footer-color: #CFD8DC;
-  --branch-number-1-background-color: #EF9A9A99;
-  --branch-number-2-background-color: #90CAF999;
-  --branch-number-3-background-color: #FFF59D99;
-  --branch-number-4-background-color: #A5D6A799;
-  --branch-number-5-background-color: #CE93D899;
-  --branch-number-6-background-color: #FFCC8099;
-  --branch-number-7-background-color: #80DEEA99;
-  --branch-number-8-background-color: #F48FB199;
-  --branch-number-9-background-color: #BCAAA499;
-  --branch-number-0-background-color: #B0BEC599;
+  --option-number-1-background-color: #EF9A9A99;
+  --option-number-2-background-color: #90CAF999;
+  --option-number-3-background-color: #FFF59D99;
+  --option-number-4-background-color: #A5D6A799;
+  --option-number-5-background-color: #CE93D899;
+  --option-number-6-background-color: #FFCC8099;
+  --option-number-7-background-color: #80DEEA99;
+  --option-number-8-background-color: #F48FB199;
+  --option-number-9-background-color: #BCAAA499;
+  --option-number-0-background-color: #B0BEC599;
   --hint-balloon-background-color: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
@@ -209,13 +209,13 @@ body {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  background-color: var(--q-and-a-panel-background-color);
+  background-color: var(--main-panel-background-color);
 }
 #question-body,
 #answer-body {
   margin: auto;
   padding: var(--common-padding);
-  color: var(--q-and-a-panel-color);
+  color: var(--main-panel-color);
   font-size: 1.5rem;
   line-height: var(--common-line-height);
 }
@@ -229,43 +229,43 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--q-and-a-cover-background-color);
-  color: var(--q-and-a-cover-color);
+  background-color: var(--main-cover-background-color);
+  color: var(--main-cover-color);
   font-weight: bold;
   font-size: 10rem;
 }
-.branch {
+.option {
   font-weight: bold;
 }
-.branch[data-branch-number="1"] {
-  background-color: var(--branch-number-1-background-color);
+.option[data-option-number="1"] {
+  background-color: var(--option-number-1-background-color);
 }
-.branch[data-branch-number="2"] {
-  background-color: var(--branch-number-2-background-color);
+.option[data-option-number="2"] {
+  background-color: var(--option-number-2-background-color);
 }
-.branch[data-branch-number="3"] {
-  background-color: var(--branch-number-3-background-color);
+.option[data-option-number="3"] {
+  background-color: var(--option-number-3-background-color);
 }
-.branch[data-branch-number="4"] {
-  background-color: var(--branch-number-4-background-color);
+.option[data-option-number="4"] {
+  background-color: var(--option-number-4-background-color);
 }
-.branch[data-branch-number="5"] {
-  background-color: var(--branch-number-5-background-color);
+.option[data-option-number="5"] {
+  background-color: var(--option-number-5-background-color);
 }
-.branch[data-branch-number="6"] {
-  background-color: var(--branch-number-6-background-color);
+.option[data-option-number="6"] {
+  background-color: var(--option-number-6-background-color);
 }
-.branch[data-branch-number="7"] {
-  background-color: var(--branch-number-7-background-color);
+.option[data-option-number="7"] {
+  background-color: var(--option-number-7-background-color);
 }
-.branch[data-branch-number="8"] {
-  background-color: var(--branch-number-8-background-color);
+.option[data-option-number="8"] {
+  background-color: var(--option-number-8-background-color);
 }
-.branch[data-branch-number="9"] {
-  background-color: var(--branch-number-9-background-color);
+.option[data-option-number="9"] {
+  background-color: var(--option-number-9-background-color);
 }
-.branch[data-branch-number="0"] {
-  background-color: var(--branch-number-0-background-color);
+.option[data-option-number="0"] {
+  background-color: var(--option-number-0-background-color);
 }
 :root .hint-balloon-panel {
   --hint-balloon-height: 1.5em;
@@ -280,12 +280,12 @@ body {
   color: var(--hint-balloon-color);
   font-weight: bold;
 }
-.branch:hover .hint-balloon-panel {
+.option:hover .hint-balloon-panel {
   visibility: visible;
   opacity: 1;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.branch:not(:hover) .hint-balloon-panel {
+.option:not(:hover) .hint-balloon-panel {
   visibility: hidden;
   opacity: 0;
   transition-duration: calc(var(--common-transition-duration) / 2);
@@ -346,32 +346,32 @@ body {
 #controller-body > *:not(:last-child) {
   border-right: 0;
 }
-:root .toggle-label {
+:root .reading-toggle {
   --this-toggle-height: .25rem;
 }
-.toggle-label {
+.reading-toggle {
   position: relative;
   width: 1.5rem;
   height: var(--controller-height);
   border: var(--common-border-width) solid var(--controller-color);
   background-color: var(--controller-background-color);
 }
-.toggle-label::before {
+.reading-toggle::before {
   top: 0;
   border-top: var(--this-toggle-height) solid transparent;
   border-bottom: var(--common-border-width) solid var(--controller-color);
-  background-color: var(--off-toggle-color);
+  background-color: var(--toggle-color);
   color: var(--controller-background-color);
 }
-.toggle-label::after {
+.reading-toggle::after {
   top: 100%;
   border-top: var(--common-border-width) solid var(--controller-color);
   border-bottom: var(--this-toggle-height) solid transparent;
   background-color: var(--on-toggle-color);
   color: var(--controller-color);
 }
-.toggle-label::before,
-.toggle-label::after {
+.reading-toggle::before,
+.reading-toggle::after {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -382,21 +382,25 @@ body {
   font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.toggle-label[for="enable-automatic-question-reading-checkbox"]::before,
-.toggle-label[for="enable-automatic-question-reading-checkbox"]::after {
+.reading-toggle[for="enable-automatic-question-reading-checkbox"]::before,
+.reading-toggle[for="enable-automatic-question-reading-checkbox"]::after {
   content: "Q";
 }
-.toggle-label[for="enable-automatic-answer-reading-checkbox"]::before,
-.toggle-label[for="enable-automatic-answer-reading-checkbox"]::after {
+.reading-toggle[for="enable-automatic-answer-reading-checkbox"]::before,
+.reading-toggle[for="enable-automatic-answer-reading-checkbox"]::after {
   content: "A";
 }
-*:checked + .toggle-label::before {
+.reading-toggle[for="enable-option-reading-checkbox"]::before,
+.reading-toggle[for="enable-option-reading-checkbox"]::after {
+  content: "o";
+}
+*:checked + .reading-toggle::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-*:checked + .toggle-label::after {
+*:checked + .reading-toggle::after {
   top: var(--this-toggle-height);
 }
-#speak-button {
+#read-aloud-button {
   width: 3.5rem;
 }
 #play-button {
@@ -405,7 +409,7 @@ body {
 #skip-button {
   width: 3.5rem;
 }
-#speak-button,
+#read-aloud-button,
 #play-button,
 #skip-button {
   display: flex;
@@ -416,12 +420,12 @@ body {
   background-color: var(--controller-background-color);
   color: var(--controller-color);
 }
-#speak-button:disabled,
+#read-aloud-button:disabled,
 #play-button:disabled,
 #skip-button:disabled {
   background-color: var(--disabled-controller-background-color);
 }
-#speak-button > svg,
+#read-aloud-button > svg,
 #play-button > svg,
 #skip-button > svg {
   width: 50%;
