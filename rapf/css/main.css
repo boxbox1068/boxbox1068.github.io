@@ -33,6 +33,18 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
+:root.disable-option-marking {
+  --option-number-1-background-color: unset;
+  --option-number-2-background-color: unset;
+  --option-number-3-background-color: unset;
+  --option-number-4-background-color: unset;
+  --option-number-5-background-color: unset;
+  --option-number-6-background-color: unset;
+  --option-number-7-background-color: unset;
+  --option-number-8-background-color: unset;
+  --option-number-9-background-color: unset;
+  --option-number-0-background-color: unset;
+}
 
 /* --------- *
  |  GENERAL  |

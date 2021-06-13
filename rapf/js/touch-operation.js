@@ -68,7 +68,7 @@
     }
   };
   const onSwipeToLeft = () => {
-    if (! document.querySelector('#enable-skip-by-swipe-checkbox').checked) {
+    if (! document.querySelector(':root.enable-skip-by-swipe')) {
       return;
     }
     const foldLeadCheckboxElement = document.querySelector('#fold-lead-checkbox');
