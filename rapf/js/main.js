@@ -367,26 +367,4 @@ const readAloud = (text, lang) => {
   }
   window.speechSynthesis.speak(utterance);
 };
-/*
-const speak = () => {
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance();
-  utterance.text = $d('answer-phrase').text;
-  utterance.lang = 'en-US';
-  utterance.volume = 1;
-  utterance.rate = 1;
-  utterance.pitch = 1;
-  const candidateVoices = [];
-  for (const voice of window.speechSynthesis.getVoices()) {
-    if (new RegExp(`^${$d('answer-lang')}`, 'i').test(voice.lang)) {
-      candidateVoices.push(voice);
-    }
-  }
-  if (candidateVoices.length) {
-    const index = Math.floor(candidateVoices.length * Math.random());
-    utterance.voice = candidateVoices[index];
-  }
-  window.speechSynthesis.speak(utterance);
-};
-*/
 window.addEventListener('DOMContentLoaded', main);
