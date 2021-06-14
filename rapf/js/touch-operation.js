@@ -16,7 +16,7 @@
       };
       lastTouch = {...firstTouch};
     }
-  }, {capture: true});
+  }, {capture: true, passive: false});
   window.addEventListener('touchmove', event => {
     if (event.touches.length > 1) {
       event.preventDefault();
@@ -34,16 +34,20 @@
             'pageX': currentTouch.pageX,
             'pageY': currentTouch.pageY
           };
+          event.preventDefault();
+          return;
         } else {
           firstTouch = null;
           lastTouch = null;
+          return;
         }
       } else {
         firstTouch = null;
         lastTouch = null;
+        return;
       }
     }
-  }, {capture: true});
+  }, {capture: true, passive: false});
   window.addEventListener('touchend', event => {
     if (firstTouch && lastTouch) {
       const longMoveX = lastTouch.pageX - firstTouch.pageX;
@@ -57,7 +61,7 @@
       firstTouch = null;
       lastTouch = null;
     }
-  }, {capture: true});
+  }, {capture: true, passive: false});
   const onSwipeToRight = () => {
     const foldLeadCheckboxElement = document.querySelector('#fold-lead-checkbox');
     if (foldLeadCheckboxElement.checked) {

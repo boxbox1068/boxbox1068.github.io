@@ -15,7 +15,7 @@ window.addEventListener('keydown', event => {
       document.querySelector('#skip-button').click();
       break;
     case 'Enter':
-      document.querySelector('#speak-button').click();
+      document.querySelector('#read-aloud-button').click();
       break;
     case 'Escape':
       document.querySelector('#fold-lead-checkbox').click();
@@ -37,9 +37,6 @@ window.addEventListener('keydown', event => {
       break;
     case 'A':
       document.querySelector('#scroll-up-answer-button').click();
-      break;
-    case 'r':
-      document.querySelector('#read-aloud-button').click();
       break;
   }
 });
