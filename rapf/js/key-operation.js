@@ -42,4 +42,4 @@ window.addEventListener('keydown', event => {
       document.querySelector('#read-aloud-button').click();
       break;
   }
-});
+}, {passive: false});
