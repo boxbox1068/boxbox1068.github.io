@@ -108,6 +108,16 @@ const main = () => {
   $e('#scroll-up-answer-button').addEventListener('click', event => {
     $e('#answer-panel').scrollBy(0, -50);
   });
+
+  addSwipeEventListener(document.body, 25, () => {
+    alert('right');
+  });
+  addSwipeEventListener(document.body, -25, () => {
+    alert('left');
+  });
+  addDoubleTapEventListener(document.body, 250, () => {
+alert('double');
+  });
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
   const expandVariables = template => {
