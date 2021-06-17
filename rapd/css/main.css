@@ -68,6 +68,7 @@
   box-sizing: border-box;
   overflow: hidden;
   cursor: default;
+  user-select: none;
 }
 .disable-animation *,
 .disable-animation *:before,
@@ -446,16 +447,17 @@ body {
   font-size: .75rem;
   white-space: nowrap;
 }
-#home-link {
+#visit-home-link,
+#show-settings-link {
   display: flex;
   align-items: center;
 }
-#home-link > svg {
-  width: 1em;
+#visit-home-link > svg,
+#show-settings-link > svg {
+    width: 1em;
   height: 1em;
   color: var(--footer-color);
 }
-
 /*-----------------*
  |  SETTINGS CELL  |
  *-----------------*/
@@ -471,6 +473,9 @@ display: none;
   height: 100%;
   background-color: #0009;
   z-index: 300;
+}
+:root.is-settings-shown #settings-cell {
+  display: flex;
 }
 #settings-panel {
   display: flex;
