@@ -1,4 +1,31 @@
 'use strict';
+const addKeyDownListener = (listeners) => {
+  window.addEventListener('keydown', event => {
+    if (/^F\d+$/.test(event.key)) {
+      return;
+    }
+    if (event.ctrlKey || event.altKey || event.metaKey) {
+      return;
+    }
+    event.preventDefault();
+    const listener = listeners[event.key];
+    if (listener) {
+      listener();
+    }
+  }, {passive: false});
+};
+
+
+
+
+
+
+
+
+
+
+
+/*
 window.addEventListener('keydown', event => {
   if (/^F\d+$/.test(event.key)) {
     return;
@@ -40,3 +67,4 @@ window.addEventListener('keydown', event => {
       break;
   }
 });
+*/

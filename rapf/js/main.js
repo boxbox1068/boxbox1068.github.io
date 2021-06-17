@@ -108,15 +108,59 @@ const main = () => {
   $e('#scroll-up-answer-button').addEventListener('click', event => {
     $e('#answer-panel').scrollBy(0, -50);
   });
-
-  addSwipeEventListener(document.body, 25, () => {
-    alert('right');
+  addKeyDownListener({
+    ' ': () => {
+      document.querySelector('#play-button').click();
+    },
+    'Tab': () => {
+      document.querySelector('#skip-button').click();
+    },
+    'Enter': () => {
+      document.querySelector('#read-aloud-button').click();
+    },
+    'Escape': () => {
+      document.querySelector('#fold-lead-checkbox').click();
+    },
+    'l': () => {
+      document.querySelector('#scroll-down-lead-button').click();
+    },
+    'L': () => {
+      document.querySelector('#scroll-up-lead-button').click();
+    },
+    'q': () => {
+      document.querySelector('#scroll-down-question-button').click();
+    },
+    'Q': () => {
+      document.querySelector('#scroll-up-question-button').click();
+    },
+    'a': () => {
+      document.querySelector('#scroll-down-answer-button').click();
+    },
+    'A': () => {
+      document.querySelector('#scroll-up-answer-button').click();
+    }
   });
-  addSwipeEventListener(document.body, -25, () => {
-    alert('left');
+  addSwipeListener(document.body, 25, () => {
+    if ($e('#fold-lead-checkbox').checked) {
+      $e('#play-button').click();
+    } else {
+      $e('#fold-lead-checkbox').checked = true;
+      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+    }
   });
-  addDoubleTapEventListener(document.body, 250, () => {
-alert('double');
+  addSwipeListener(document.body, -25, () => {
+    if (! $e(':root.enable-skip-by-swipe')) {
+      return;
+    }
+    if ($e('#fold-lead-checkbox').checked) {
+      $e('#skip-button').click();
+    } else {
+      $e('#fold-lead-checkbox').checked = true;
+      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+    }
+  });
+  addDoubleTapListener(document.body, 300, () => {
+    $e('#read-aloud-button').click();
   });
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
