@@ -12,9 +12,9 @@
   --main-panel-color: #263238;
   --main-cover-background-color: #3F51B5;
   --main-cover-color: #3949AB;
-  --control-background-color: #CFD8DC;
-  --disabled-control-background-color: #ECEFF1;
-  --control-color: #455A64;
+  --controls-background-color: #CFD8DC;
+  --disabled-controls-background-color: #ECEFF1;
+  --controls-color: #455A64;
   --toggle-color: #607D8B;
   --on-toggle-color: #FFC107;
   --footer-background-color: #37474F;
@@ -33,6 +33,18 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
+:root.disable-option-marking {
+  --option-number-1-background-color: unset;
+  --option-number-2-background-color: unset;
+  --option-number-3-background-color: unset;
+  --option-number-4-background-color: unset;
+  --option-number-5-background-color: unset;
+  --option-number-6-background-color: unset;
+  --option-number-7-background-color: unset;
+  --option-number-8-background-color: unset;
+  --option-number-9-background-color: unset;
+  --option-number-0-background-color: unset;
+}
 
 /* --------- *
  |  GENERAL  |
@@ -43,7 +55,7 @@
   --cell-border-spacing: .25rem;
   --lead-cell-height: 2.25rem;
   --fold-lead-checkbox-size: 1.5rem;
-  --control-height: 2rem;
+  --controls-height: 2rem;
   --footer-cell-height: 2rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 1px;
@@ -76,16 +88,16 @@ svg {
   stroke: currentColor;
 }
 
-/* ------------- *
- |  GRID LAYOUT  |
- * ------------- */
+/* ----------- *
+ |  HTML BODY  |
+ * ----------- */
 body {
   display: grid;
   grid-template:
     "lead lead lead" var(--lead-cell-height)
     "... ... ..." var(--cell-border-spacing)
     "question ... answer" 1fr
-    "statistic ... control" min-content
+    "statistics ... control" min-content
     "footer footer footer" var(--footer-cell-height)
     / 1fr var(--cell-border-spacing) 1fr;
   height: 100%;
@@ -100,7 +112,7 @@ body {
       "question" 1fr
       "..." var(--cell-border-spacing)
       "answer" 1fr
-      "statistic" min-content
+      "statistics" min-content
       "control" min-content
       "footer" var(--footer-cell-height)
       / 100%;
@@ -115,10 +127,10 @@ body {
 #answer-cell {
   grid-area: answer;
 }
-#statistic-cell {
-  grid-area: statistic;
+#statistics-cell {
+  grid-area: statistics;
 }
-#control-cell {
+#controls-cell {
   grid-area: control;
 }
 #footer-cell {
@@ -127,8 +139,8 @@ body {
 #lead-cell,
 #question-cell,
 #answer-cell,
-#statistic-cell,
-#control-cell,
+#statistics-cell,
+#controls-cell,
 #footer-cell {
   position: relative;
 }
@@ -321,11 +333,11 @@ body {
 /* ---------------- *
  |  STATISTIC CELL  |
  * ---------------- */
-#statistic-panel {
+#statistics-panel {
   width: 100%;
   height: 100%;
 }
-#statistic-body {
+#statistics-body {
   padding: var(--common-padding);
   font-size: .75rem;
 }
@@ -333,17 +345,17 @@ body {
 /* ----------------- *
  |  CONTROLLER CELL  |
  * ----------------- */
-#control-panel {
+#controls-panel {
   width: 100%;
   height: 100%;
 }
-#control-body {
+#controls-body {
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
   padding: var(--common-padding);
 }
-#control-body > *:not(:last-child) {
+#controls-body > *:not(:last-child) {
   border-right: 0;
 }
 :root .reading-toggle {
@@ -352,23 +364,23 @@ body {
 .reading-toggle {
   position: relative;
   width: 1.5rem;
-  height: var(--control-height);
-  border: var(--common-border-width) solid var(--control-color);
-  background-color: var(--control-background-color);
+  height: var(--controls-height);
+  border: var(--common-border-width) solid var(--controls-color);
+  background-color: var(--controls-background-color);
 }
 .reading-toggle::before {
   top: 0;
   border-top: var(--this-toggle-height) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--control-color);
+  border-bottom: var(--common-border-width) solid var(--controls-color);
   background-color: var(--toggle-color);
-  color: var(--control-background-color);
+  color: var(--controls-background-color);
 }
 .reading-toggle::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--control-color);
+  border-top: var(--common-border-width) solid var(--controls-color);
   border-bottom: var(--this-toggle-height) solid transparent;
   background-color: var(--on-toggle-color);
-  color: var(--control-color);
+  color: var(--controls-color);
 }
 .reading-toggle::before,
 .reading-toggle::after {
@@ -401,16 +413,16 @@ body {
   justify-content: center;
   align-items: center;
   width: 3.5rem;
-  height: var(--control-height);
-  border: var(--common-border-width) solid var(--control-color);
-  background-color: var(--control-background-color);
-  color: var(--control-color);
+  height: var(--controls-height);
+  border: var(--common-border-width) solid var(--controls-color);
+  background-color: var(--controls-background-color);
+  color: var(--controls-color);
 }
 .operation-button#play-button {
   width: 5.5rem;
 }
 .operation-button:disabled {
-  background-color: var(--disabled-control-background-color);
+  background-color: var(--disabled-controls-background-color);
 }
 .operation-button > svg {
   width: 50%;
@@ -442,6 +454,41 @@ body {
   width: 1em;
   height: 1em;
   color: var(--footer-color);
+}
+
+/*-----------------*
+ |  SETTINGS CELL  |
+ *-----------------*/
+#settings-cell {
+  display: flex;
+display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0009;
+  z-index: 300;
+}
+#settings-panel {
+  display: flex;
+  flex-direction: column;
+max-height: calc(100% - 5rem);
+  width: calc(100% - 5rem);
+  background-color: white;
+}
+#settings-header {
+  flex-shrink: 0;
+  background-color: black;
+  color: white;
+  height: 2rem;
+}
+#settings-body {
+  padding: var(--common-padding);
+  background: blue;
+  overflow-y: auto;
 }
 
 /* ----------- *

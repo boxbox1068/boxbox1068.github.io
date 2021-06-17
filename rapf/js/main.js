@@ -50,7 +50,8 @@ const main = () => {
         event.data['a-lang'],
         event.data['animation'],
         event.data['reading-delay'],
-        event.data['enable-skip-by-swipe']
+        event.data['enable-skip-by-swipe'],
+        event.data['disable-option-marking']
       );
     }, {once: true});
   } else if ($q('question')) {
@@ -62,7 +63,8 @@ const main = () => {
       $q('a-lang'),
       $q('animation'),
       $q('reading-delay'),
-      $q('enable-skip-by-swipe')
+      $q('enable-skip-by-swipe'),
+      $q('disable-option-marking')
     );
   } else {
     const demoJsonpSrc = {'en': './data/demo.en.jsonp', 'ja': './data/demo.ja.jsonp'}[lang];
@@ -78,7 +80,8 @@ const main = () => {
           jsonData['a-lang'],
           jsonData['animation'],
           jsonData['reading-delay'],
-          jsonData['enable-skip-by-swipe']
+          jsonData['enable-skip-by-swipe'],
+          jsonData['disable-option-marking']
         );
       };
     `;
@@ -105,8 +108,62 @@ const main = () => {
   $e('#scroll-up-answer-button').addEventListener('click', event => {
     $e('#answer-panel').scrollBy(0, -50);
   });
+  addKeyDownListener({
+    ' ': () => {
+      document.querySelector('#play-button').click();
+    },
+    'Tab': () => {
+      document.querySelector('#skip-button').click();
+    },
+    'Enter': () => {
+      document.querySelector('#read-aloud-button').click();
+    },
+    'Escape': () => {
+      document.querySelector('#fold-lead-checkbox').click();
+    },
+    'l': () => {
+      document.querySelector('#scroll-down-lead-button').click();
+    },
+    'L': () => {
+      document.querySelector('#scroll-up-lead-button').click();
+    },
+    'q': () => {
+      document.querySelector('#scroll-down-question-button').click();
+    },
+    'Q': () => {
+      document.querySelector('#scroll-up-question-button').click();
+    },
+    'a': () => {
+      document.querySelector('#scroll-down-answer-button').click();
+    },
+    'A': () => {
+      document.querySelector('#scroll-up-answer-button').click();
+    }
+  });
+  addSwipeListener(document.body, 25, () => {
+    if ($e('#fold-lead-checkbox').checked) {
+      $e('#play-button').click();
+    } else {
+      $e('#fold-lead-checkbox').checked = true;
+      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+    }
+  });
+  addSwipeListener(document.body, -25, () => {
+    if (! $e(':root.enable-skip-by-swipe')) {
+      return;
+    }
+    if ($e('#fold-lead-checkbox').checked) {
+      $e('#skip-button').click();
+    } else {
+      $e('#fold-lead-checkbox').checked = true;
+      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+    }
+  });
+  addDoubleTapListener(document.body, 300, () => {
+    $e('#read-aloud-button').click();
+  });
 };
-const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe) => {
+const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -124,7 +181,10 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   }
   $d('reading-delay', readingDelay, 250);
   if (/^\s*true\s*$/i.test(enableSkipBySwipe)) {
-    $e('#enable-skip-by-swipe-checkbox').checked = true;
+    $e(':root').classList.add('enable-skip-by-swipe');
+  }
+  if (/^\s*true\s*$/i.test(disableOptionMarking)) {
+    $e(':root').classList.add('disable-option-marking');
   }
   $e('#fold-lead-checkbox').addEventListener('change', event => {
     $d('refill-count', 0);
