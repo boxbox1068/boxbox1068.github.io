@@ -159,7 +159,7 @@ const main = () => {
       $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
     }
   });
-  addDoubleTapListener(document.body, 300, () => {
+  addDoubleTapListener(document.body, 250, () => {
     $e('#read-aloud-button').click();
   });
 };
