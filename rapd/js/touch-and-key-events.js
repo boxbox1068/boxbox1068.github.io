@@ -76,8 +76,8 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     event.preventDefault();
   }, {passive: false});
 };
-const addKeyDownListener = (listeners) => {
-  window.addEventListener('keydown', event => {
+const addKeyDownListener = (targetElement, listeners) => {
+  targetElement.addEventListener('keydown', event => {
     if (/^F\d+$/.test(event.key)) {
       return;
     }
@@ -85,9 +85,34 @@ const addKeyDownListener = (listeners) => {
       return;
     }
     event.preventDefault();
-    const listener = listeners[event.key];
-    if (listener) {
-      listener();
+    for (const listenerKey in listeners) {
+      const targetKeys = listenerKey.split('|');
+      const targetKey = event.key;
+      if (targetKeys.indexOf(targetKey) >= 0) {
+        const listener = listeners[listenerKey];
+        listener(targetKey);
+        break;
+      }
     }
   }, {passive: false});
 };
+
+
+/*
+const addKeyDownListener = (targetElement, listeners) => {
+  targetElement.addEventListener('keydown', event => {
+    if (/^F\d+$/.test(event.key)) {
+      return;
+    }
+    if (event.ctrlKey || event.altKey || event.metaKey) {
+      return;
+    }
+    event.preventDefault();
+    const targetKey = event.key;
+    const listener = listeners[targetKey];
+    if (listener) {
+      listener(targetKey);
+    }
+  }, {passive: false});
+};
+*/

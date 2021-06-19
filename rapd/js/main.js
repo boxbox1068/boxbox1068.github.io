@@ -69,61 +69,91 @@ const main = () => {
     jsonpDataScriptElement.src = jsonpSrc;
     document.head.append(jsonpDataScriptElement);
   }
-  addSwipeListener(document.body, 25, () => {
-    if ($e('#fold-lead-checkbox').checked) {
+  ['mousemove', 'touchstart'].forEach(eventType => {
+    $e('body').addEventListener(eventType, event => {
+      $e('.active', true).forEach(element => element.classList.remove('active'));
+      event.target.classList.add('active');
+    }, {capture: true});  
+  });
+  addSwipeListener($e('body'), 25, () => {
+    if ($e(':root.is-lead-folded')) {
       $e('#play-button').click();
     } else {
-      $e('#fold-lead-checkbox').checked = true;
-      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+      $e('#fold-lead-button').click();
     }
   });
-  addSwipeListener(document.body, -25, () => {
+  addSwipeListener($e('body'), -25, () => {
     if (! $e(':root.enable-skip-by-swipe')) {
       return;
     }
-    if ($e('#fold-lead-checkbox').checked) {
+    if ($e(':root.is-lead-folded')) {
       $e('#skip-button').click();
     } else {
-      $e('#fold-lead-checkbox').checked = true;
-      $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
+      $e('#fold-lead-button').click();
     }
   });
-  addDoubleTapListener(document.body, 250, () => {
+  addDoubleTapListener($e('body'), 250, () => {
     $e('#read-aloud-button').click();
   });
-  addKeyDownListener({
-    ' ': () => {
+  addKeyDownListener($e('body'), {
+    ' ': targetKey => {
       $e('#play-button').click();
     },
-    'Tab': () => {
+    'Tab': targetKey => {
       $e('#skip-button').click();
     },
-    'Enter': () => {
+    'Enter': targetKey => {
       $e('#read-aloud-button').click();
     },
-    'Escape': () => {
-      $e('#fold-lead-checkbox').click();
+    'Escape': targetKey => {
+      $e('#fold-lead-button').click();
     },
-    'l': () => {
-      $e('#lead-panel').scrollBy(0, 50);
+    'l|L': targetKey => {
+      $e('#lead-panel').scrollBy(0, {'l': 50, 'L': -50}[targetKey]);
     },
-    'L': () => {
-      $e('#lead-panel').scrollBy(0, -50);
+    'q|Q': targetKey => {
+      $e('#question-panel').scrollBy(0, {'q': 50, 'Q': -50}[targetKey]);
     },
-    'q': () => {
-      $e('#lead-question').scrollBy(0, 50);
+    'a|A': targetKey => {
+      $e('#answer-panel').scrollBy(0, {'a': 50, 'A': -50}[targetKey]);
     },
-    'Q': () => {
-      $e('#lead-question').scrollBy(0, -50);
-    },
-    'a': () => {
-      $e('#lead-answer').scrollBy(0, 50);
-    },
-    'A': () => {
-      $e('#lead-answer').scrollBy(0, -50);
+    'h|H': targetKey => {
+      const optionElements = $e('.option', true);
+      if (! optionElements.length) {
+        return;
+      }
+      for (let i = 0; i < optionElements.length; i++) {
+        if (optionElements[i] == $e('.option.active')) {
+          const targetOptionElementIndex = (optionElements.length + i + {'h': 1, 'H': -1}[targetKey]) % optionElements.length;
+          $e('.active', true).forEach(element => element.classList.remove('active'));
+          optionElements[targetOptionElementIndex].classList.add('active');
+          break;
+        }
+      }
+
+
     }
+
+
+
+/*
+    'h|H': targetKey => {
+      const targetOptionElement = $e('.option.active') ? $e('.option.active + .option') : $e('.option');
+      $e('.active', true).forEach(element => element.classList.remove('active'));
+      if (targetOptionElement) {
+        targetOptionElement.classList.add('active');
+      }
+    }
+*/
   });
-  $e('#show-settings-link').addEventListener('click', event => {
+  $e('#visit-home-button').addEventListener('click', event => {
+    const message = 'サイトを移動します。';
+    if (! window.confirm(message)) {
+      return;
+    }
+    window.location.href = 'https://twitter.com/shikaku1068/';
+  });
+  $e('#show-settings-button').addEventListener('click', event => {
     $e(':root').classList.add('is-settings-shown');
   });
 };
@@ -150,7 +180,10 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   if (/^\s*true\s*$/i.test(disableOptionMarking)) {
     $e(':root').classList.add('disable-option-marking');
   }
-  $e('#fold-lead-checkbox').addEventListener('change', event => {
+  $e('#fold-lead-button').addEventListener('click', event => {
+    $e(':root').classList.toggle('is-lead-folded');
+  });
+  $e('#fold-lead-button').addEventListener('click', event => {
     $d('refill-count', 0);
     $d('current-step', 'startup');
     $e('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
@@ -210,9 +243,8 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   }, {once: true});
   $e('#lead-body').innerHTML = $d('lead-text');
   if (! $d('lead-text')) {
-    $e('#fold-lead-checkbox').checked = true;
-    $e('#fold-lead-checkbox').dispatchEvent(new Event('change'));
-    $e('#fold-lead-checkbox').disabled = true;
+    $e('#fold-lead-button').click();
+    $e('#fold-lead-button').disabled = true;
   }
 }
 const resetCard = () => {

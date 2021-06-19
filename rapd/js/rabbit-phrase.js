@@ -57,7 +57,7 @@ class RabbitPhrase {
       const chosenOptionId = chosenOptionIds[optionNumber];
       const chosenOption = optionTexts[chosenOptionId];
       if (chosenOption && isMainOption) {
-        return `<a class="option" data-option-number="${optionNumber}" ontouchstart="">${chosenOption}</a>`;
+        return `<a class="option" data-option-number="${optionNumber}">${chosenOption}</a>`;
       } else {
         return chosenOption;
       }

@@ -33,7 +33,7 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
-:root.disable-option-marking {
+.disable-option-marking {
   --option-number-1-background-color: unset;
   --option-number-2-background-color: unset;
   --option-number-3-background-color: unset;
@@ -54,7 +54,8 @@
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --cell-border-spacing: .25rem;
   --lead-cell-height: 2.25rem;
-  --fold-lead-checkbox-size: 1.5rem;
+  --hint-balloon-height: 1.5em;
+  --hint-balloon-border-width: .2rem;
   --controls-height: 2rem;
   --footer-cell-height: 2rem;
   --common-padding: .5rem 1rem;
@@ -69,10 +70,11 @@
   overflow: hidden;
   cursor: default;
   user-select: none;
+  touch-action: none;
 }
-.disable-animation *,
-.disable-animation *:before,
-.disable-animation *:after {
+:root.disable-animation *,
+:root.disable-animation *:before,
+:root.disable-animation *:after {
   transition-duration: 0ms !important;
   animation-duration: 0ms !important;
 }
@@ -84,7 +86,18 @@ html {
   font-size: var(--app-font-size);
   font-family: var(--app-font-family);
 }
-svg {
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: var(--common-border-width) solid transparent;
+  background-color: inherit;
+  color: inherit;
+}
+button > svg {
+  width: 75%;
+  height: 75%;
   fill: currentColor;
   stroke: currentColor;
 }
@@ -149,65 +162,52 @@ body {
 /* ----------- *
  |  LEAD CELL  |
  * ----------- */
+#lead-cell {
+  --fold-lead-button-size: 1.5rem;
+}
 #lead-panel {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: 100%;
+  height: calc(100% - var(--footer-cell-height));
   overflow-y: auto;
   background-color: var(--lead-panel-background-color);
+  transition-duration: var(--common-transition-duration);
+}
+.is-lead-folded #lead-panel {
+  height: var(--lead-cell-height);
 }
 #lead-body {
-  margin-bottom: var(--fold-lead-checkbox-size);
+  margin-bottom: var(--fold-lead-button-size);
   padding: var(--common-padding);
   color: var(--lead-panel-color);
   font-size: 1rem;
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
-[for="fold-lead-checkbox"] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#fold-lead-button {
   position: fixed;
   right: 1rem;
+  bottom: var(--footer-cell-height);
   z-index: 110;
-  width: var(--fold-lead-checkbox-size);
-  height: var(--fold-lead-checkbox-size);
+  width: var(--fold-lead-button-size);
+  height: var(--fold-lead-button-size);
   background-color: var(--fold-lead-checkbox-background-color);
   color: var(--fold-lead-checkbox-color);
-}
-[for="fold-lead-checkbox"] > svg {
-  width: 50%;
-  height: 50%;
-}
-*:checked + [for="fold-lead-checkbox"] ~ #lead-panel {
-  height: var(--lead-cell-height);
   transition-duration: var(--common-transition-duration);
 }
-*:not(:checked) + [for="fold-lead-checkbox"] ~ #lead-panel {
-  height: calc(100% - var(--footer-cell-height));
-  transition-duration: var(--common-transition-duration);
-}
-*:not(:disabled):not(:checked) + [for="fold-lead-checkbox"] {
-  bottom: var(--footer-cell-height);
-  transform: scale(1, 1);
-  transition-property: bottom;
-  transition-duration: var(--common-transition-duration);
-}
-*:not(:disabled):checked + [for="fold-lead-checkbox"] {
+.is-lead-folded #fold-lead-button {
   bottom: calc(100% - var(--lead-cell-height));
   transform: scale(1, -1);
-  transition-property: bottom;
-  transition-duration: var(--common-transition-duration);
 }
-*:disabled + [for="fold-lead-checkbox"] {  
+#fold-lead-button:disabled {
   opacity: 0;
-  bottom: calc(100% - var(--lead-cell-height));
-  transform: scale(1, -1);
-  transition-property: opacity, bottom;
-  transition-duration: var(--common-transition-duration);
+}
+#fold-lead-button > svg {
+  width: 60%;
+  height: 60%;
 }
 
 /* ------------------------------- *
@@ -280,11 +280,9 @@ body {
 .option[data-option-number="0"] {
   background-color: var(--option-number-0-background-color);
 }
-:root .hint-balloon-panel {
-  --hint-balloon-height: 1.5em;
-  --hint-balloon-border-width: .2rem;
-}
 .hint-balloon-panel {
+  visibility: hidden;
+  opacity: 0;
   position: fixed;
   z-index: 200;
   height: var(--hint-balloon-height);
@@ -292,16 +290,11 @@ body {
   overflow: visible;
   color: var(--hint-balloon-color);
   font-weight: bold;
+  transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.option:hover .hint-balloon-panel {
+.option.active .hint-balloon-panel {
   visibility: visible;
   opacity: 1;
-  transition-duration: calc(var(--common-transition-duration) / 2);
-}
-.option:not(:hover) .hint-balloon-panel {
-  visibility: hidden;
-  opacity: 0;
-  transition-duration: calc(var(--common-transition-duration) / 2);
 }
 .hint-balloon-panel::before {
   display: block;
@@ -447,6 +440,14 @@ body {
   font-size: .75rem;
   white-space: nowrap;
 }
+#visit-home-button,
+#show-settings-button {
+  width: 1rem;
+  height: 1rem;
+}
+
+
+/*
 #visit-home-link,
 #show-settings-link {
   display: flex;
@@ -458,6 +459,7 @@ body {
   height: 1em;
   color: var(--footer-color);
 }
+*/
 /*-----------------*
  |  SETTINGS CELL  |
  *-----------------*/
