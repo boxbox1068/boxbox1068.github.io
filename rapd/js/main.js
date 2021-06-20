@@ -1,7 +1,10 @@
 'use strict';
 const main = () => {
 
-$c('foo', '1hohohoaadsafsda2')
+alert($c('foo', '1hohohoaadsafsda2'))
+alert($c('hoge'));
+$c('hoge', 'tendon');
+alert($c('hoge'))
 
 
   const lang = {'ja': 'ja'}[window.navigator.language] || 'en';

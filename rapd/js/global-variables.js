@@ -15,26 +15,21 @@ const $e = (selectors, returnMultiple) => {
   }
 };
 const $c = (key, value) => {
-  const maxAge = 60 * 60 * 24 * 365;
-  document.cookie = 'hoge=aaa;max-age=' + maxAge;
-  document.cookie = 'fuga=bbb;max-age=' + maxAge;
-
-  document.cookie = "name=oeschger";
-  document.cookie = "favorite_food=tripe";
-    alert(document.cookie);
-
-alert(document.cookie);
   if (value !== undefined) {
-/*
-    const cookie = 'hoge=true; fuga=hage; foo=ahoaho';
-    const newCookie = cookie.replace(new RegExp(`(^|; )${key}=[^;]*`), `$1${key}=${value}`);
-    alert(newCookie);
-*/
+    const maxAge = 60 * 60 * 24 * 365;
+    const encodedValue = encodeURIComponent(value);
+    document.cookie = `${key}=${encodedValue}; max-age=${maxAge}`;
   }
-
+  let cookieValue = '';
+  document.cookie.split(';').forEach(element => {
+    if (! element.trim().startsWith(`${key}=`)) {
+      return;
+    }
+    const encodedCookieValue = element.split('=')[1];
+    cookieValue = decodeURIComponent(encodedCookieValue);
+  });
+  return cookieValue;
 };
-
-
 const $f = (key, value) => {
   const rootElement = document.querySelector(':root');
   if (value === null) {
