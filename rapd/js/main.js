@@ -1,5 +1,9 @@
 'use strict';
 const main = () => {
+
+$c('foo', '1hohohoaadsafsda2')
+
+
   const lang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
     'en': 'Rabbity Phrases Flashcards',
@@ -16,7 +20,7 @@ const main = () => {
       if (typeof event.data != 'object') {
         return;
       }
-      initializeScreen(
+      readInput(
         event.data['lead'],
         event.data['question'],
         event.data['answer'],
@@ -29,7 +33,7 @@ const main = () => {
       );
     }, {once: true});
   } else if ($q('question')) {
-    initializeScreen(
+    readInput(
       $q('lead'),
       $q('question'),
       $q('answer'),
@@ -49,7 +53,7 @@ const main = () => {
     const jsonpCallbackScriptElement = document.createElement('script');
     jsonpCallbackScriptElement.innerHTML = `
       const jsonpCallback = jsonData => {
-        initializeScreen(
+        readInput(
           jsonData['lead'],
           jsonData['question'],
           jsonData['answer'],
@@ -67,82 +71,11 @@ const main = () => {
     jsonpDataScriptElement.src = jsonpSrc;
     document.head.append(jsonpDataScriptElement);
   }
-  ['mousemove', 'touchstart'].forEach(eventType => {
-    $e('body').addEventListener(eventType, event => {
-      $e('.active', true).forEach(element => element.classList.remove('active'));
-      event.target.classList.add('active');
-    }, {capture: true});  
-  });
-  addSwipeListener($e('body'), 25, () => {
-    if ($e(':root.is-lead-folded')) {
-      $e('#play-button').click();
-    } else {
-      $e('#fold-lead-button').click();
-    }
-  });
-  addSwipeListener($e('body'), -25, () => {
-    if (! $e(':root.enable-skip-by-swipe')) {
-      return;
-    }
-    if ($e(':root.is-lead-folded')) {
-      $e('#skip-button').click();
-    } else {
-      $e('#fold-lead-button').click();
-    }
-  });
-  addDoubleTapListener($e('body'), 250, () => {
-    $e('#read-aloud-button').click();
-  });
-  addKeyDownListener($e('body'), ' ', targetKey => {
-    $e('#play-button').click();
-  });
-  addKeyDownListener($e('body'), 'Tab', targetKey => {
-    $e('#skip-button').click();
-  });
-  addKeyDownListener($e('body'), 'Enter', targetKey => {
-    $e('#read-aloud-button').click();
-  });
-  addKeyDownListener($e('body'), 'Escape', targetKey => {
-    $e('#fold-lead-button').click();
-  });
-  ['l', 'L'].forEach(targetKey => {
-    const scrollY = {'l': 50, 'L': -50}[targetKey];
-    addKeyDownListener($e('body'), targetKey, targetKey => {
-      $e('#lead-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['q', 'Q'].forEach(targetKey => {
-    const scrollY = {'q': 50, 'Q': -50}[targetKey];
-    addKeyDownListener($e('body'), targetKey, targetKey => {
-      $e('#question-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['a', 'A'].forEach(targetKey => {
-    const scrollY = {'a': 50, 'A': -50}[targetKey];
-    addKeyDownListener($e('body'), targetKey, targetKey => {
-      $e('#answer-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['h', 'H'].forEach(targetKey => {
-    const reverse = {'h': false, 'H': true}[targetKey];
-    addKeyDownListener($e('body'), targetKey, targetKey => {
-      const optionElements = $e('.option', true);
-      if (! optionElements.length) {
-        return;
-      }
-      let activeOptionElementIndex = (reverse ? optionElements.length : -1);
-      for (let i = 0; i < optionElements.length; i++) {
-        const currentOptionElement = optionElements[i];
-        if (currentOptionElement.classList.contains('active')) {
-          activeOptionElementIndex = i;
-        }
-      }
-      const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
-      setActiveElement(targetOptionElement);
-    });
-  });
 };
-const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
+const readCookie = () => {
+
+};
+const readInput = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -245,6 +178,84 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
     $e('#fold-lead-button').disabled = true;
   }
 }
+const initializeOperation = () => {
+  ['mousemove', 'touchstart'].forEach(eventType => {
+    $e('body').addEventListener(eventType, event => {
+      $e('.active', true).forEach(element => element.classList.remove('active'));
+      event.target.classList.add('active');
+    }, {capture: true});  
+  });
+  addSwipeListener($e('body'), 25, () => {
+    if ($e(':root.is-lead-folded')) {
+      $e('#play-button').click();
+    } else {
+      $e('#fold-lead-button').click();
+    }
+  });
+  addSwipeListener($e('body'), -25, () => {
+    if (! $e(':root.enable-skip-by-swipe')) {
+      return;
+    }
+    if ($e(':root.is-lead-folded')) {
+      $e('#skip-button').click();
+    } else {
+      $e('#fold-lead-button').click();
+    }
+  });
+  addDoubleTapListener($e('body'), 250, () => {
+    $e('#read-aloud-button').click();
+  });
+  addKeyDownListener($e('body'), ' ', targetKey => {
+    $e('#play-button').click();
+  });
+  addKeyDownListener($e('body'), 'Tab', targetKey => {
+    $e('#skip-button').click();
+  });
+  addKeyDownListener($e('body'), 'Enter', targetKey => {
+    $e('#read-aloud-button').click();
+  });
+  addKeyDownListener($e('body'), 'Escape', targetKey => {
+    $e('#fold-lead-button').click();
+  });
+  ['l', 'L'].forEach(targetKey => {
+    const scrollY = {'l': 50, 'L': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#lead-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['q', 'Q'].forEach(targetKey => {
+    const scrollY = {'q': 50, 'Q': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#question-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['a', 'A'].forEach(targetKey => {
+    const scrollY = {'a': 50, 'A': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#answer-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['h', 'H'].forEach(targetKey => {
+    const reverse = {'h': false, 'H': true}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      const optionElements = $e('.option', true);
+      if (! optionElements.length) {
+        return;
+      }
+      let activeOptionElementIndex = (reverse ? optionElements.length : -1);
+      for (let i = 0; i < optionElements.length; i++) {
+        const currentOptionElement = optionElements[i];
+        if (currentOptionElement.classList.contains('active')) {
+          activeOptionElementIndex = i;
+        }
+      }
+      const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
+      setActiveElement(targetOptionElement);
+    });
+  });
+};
+
+
 const resetCard = () => {
   const pathIdSeed = Math.random();
   $d('question-phrase', new RabbitPhrase($d('question-template'), pathIdSeed));

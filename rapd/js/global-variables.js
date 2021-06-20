@@ -14,10 +14,31 @@ const $e = (selectors, returnMultiple) => {
     return document.querySelector(selectors);
   }
 };
+const $c = (key, value) => {
+  const maxAge = 60 * 60 * 24 * 365;
+  document.cookie = 'hoge=aaa;max-age=' + maxAge;
+  document.cookie = 'fuga=bbb;max-age=' + maxAge;
+
+  document.cookie = "name=oeschger";
+  document.cookie = "favorite_food=tripe";
+    alert(document.cookie);
+
+alert(document.cookie);
+  if (value !== undefined) {
+/*
+    const cookie = 'hoge=true; fuga=hage; foo=ahoaho';
+    const newCookie = cookie.replace(new RegExp(`(^|; )${key}=[^;]*`), `$1${key}=${value}`);
+    alert(newCookie);
+*/
+  }
+
+};
+
+
 const $f = (key, value) => {
   const rootElement = document.querySelector(':root');
   if (value === null) {
-    value = !(rootElement.classList.contains(key));
+    value = ! rootElement.classList.contains(key);
   }
   if (value) {
     rootElement.classList.add(key);
