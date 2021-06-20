@@ -156,14 +156,14 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   $d('answer-lang', answerLang, 'en');
   $d('animation', animation, 'slide');
   if ($d('animation') == 'none') {
-    $e(':root').classList.add('disable-animation');
+    $f('disable-animation', true);
   }
   $d('reading-delay', readingDelay, 250);
   if (/^\s*true\s*$/i.test(enableSkipBySwipe)) {
-    $e(':root').classList.add('enable-skip-by-swipe');
+    $f('enable-skip-by-swipe', true);
   }
   if (/^\s*true\s*$/i.test(disableOptionMarking)) {
-    $e(':root').classList.add('disable-option-marking');
+    $f('disable-option-marking', true);
   }
   $e('#fold-lead-button').addEventListener('click', event => {
     $e(':root').classList.toggle('is-lead-folded');

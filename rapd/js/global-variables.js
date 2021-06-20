@@ -14,6 +14,18 @@ const $e = (selectors, returnMultiple) => {
     return document.querySelector(selectors);
   }
 };
+const $f = (key, value) => {
+  const rootElement = document.querySelector(':root');
+  if (value === null) {
+    value = !(rootElement.classList.contains(key));
+  }
+  if (value) {
+    rootElement.classList.add(key);
+  } else if (value !== undefined) {
+    rootElement.classList.remove(key);
+  }
+  return rootElement.classList.contains(key);
+};
 const $q = (field, toLowerCase) => {
   let value = undefined;
   const queryString = window.location.search.replace(/^\?/, '');

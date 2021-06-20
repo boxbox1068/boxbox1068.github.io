@@ -163,7 +163,7 @@ body {
  |  LEAD CELL  |
  * ----------- */
 #lead-cell {
-  --fold-lead-button-size: 1.5rem;
+  --fold-lead-button-height: 1.5rem;
 }
 #lead-panel {
   position: fixed;
@@ -180,7 +180,7 @@ body {
   height: var(--lead-cell-height);
 }
 #lead-body {
-  margin-bottom: var(--fold-lead-button-size);
+  margin-bottom: var(--fold-lead-button-height);
   padding: var(--common-padding);
   color: var(--lead-panel-color);
   font-size: 1rem;
@@ -192,8 +192,8 @@ body {
   right: 1rem;
   bottom: var(--footer-cell-height);
   z-index: 110;
-  width: var(--fold-lead-button-size);
-  height: var(--fold-lead-button-size);
+  width: 2rem;
+  height: var(--fold-lead-button-height);
   background-color: var(--fold-lead-checkbox-background-color);
   color: var(--fold-lead-checkbox-color);
   transition-duration: var(--common-transition-duration);
