@@ -165,6 +165,9 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
   if (/^\s*true\s*$/i.test(disableOptionMarking)) {
     $f('disable-option-marking', true);
   }
+
+
+
   $e('#fold-lead-button').addEventListener('click', event => {
     $e(':root').classList.toggle('is-lead-folded');
   });
@@ -246,9 +249,9 @@ const resetCard = () => {
   const pathIdSeed = Math.random();
   $d('question-phrase', new RabbitPhrase($d('question-template'), pathIdSeed));
   $d('answer-phrase', new RabbitPhrase($d('answer-template'), pathIdSeed));
-  $e('.pattern-count').innerHTML = $d('question-phrase').possiblePathCount.toLocaleString();
-  $e('.pattern-id').innerHTML = $d('question-phrase').pathId.toLocaleString();
-  $e('.refill-count').innerHTML = ($d('refill-count')).toLocaleString();
+  $e('#pattern-count').innerHTML = $d('question-phrase').possiblePathCount.toLocaleString();
+  $e('#pattern-id').innerHTML = $d('question-phrase').pathId.toLocaleString();
+  $e('#refill-count').innerHTML = ($d('refill-count')).toLocaleString();
   $d('refill-count', $d('refill-count') + 1);
   showQuestion();
 };
