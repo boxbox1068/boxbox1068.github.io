@@ -1,8 +1,6 @@
 'use strict';
 const main = () => {
-  const lang = {
-    'ja': 'ja'
-  }[window.navigator.language] || 'en';
+  const lang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
     'en': 'Rabbity Phrases Flashcards',
     'ja': '鼠算式フレーズ練習帳'
@@ -95,66 +93,56 @@ const main = () => {
   addDoubleTapListener($e('body'), 250, () => {
     $e('#read-aloud-button').click();
   });
-  addKeyDownListener($e('body'), {
-    ' ': targetKey => {
-      $e('#play-button').click();
-    },
-    'Tab': targetKey => {
-      $e('#skip-button').click();
-    },
-    'Enter': targetKey => {
-      $e('#read-aloud-button').click();
-    },
-    'Escape': targetKey => {
-      $e('#fold-lead-button').click();
-    },
-    'l|L': targetKey => {
-      $e('#lead-panel').scrollBy(0, {'l': 50, 'L': -50}[targetKey]);
-    },
-    'q|Q': targetKey => {
-      $e('#question-panel').scrollBy(0, {'q': 50, 'Q': -50}[targetKey]);
-    },
-    'a|A': targetKey => {
-      $e('#answer-panel').scrollBy(0, {'a': 50, 'A': -50}[targetKey]);
-    },
-    'h|H': targetKey => {
+  addKeyDownListener($e('body'), ' ', targetKey => {
+    $e('#play-button').click();
+  });
+  addKeyDownListener($e('body'), 'Tab', targetKey => {
+    $e('#skip-button').click();
+  });
+  addKeyDownListener($e('body'), 'Enter', targetKey => {
+    $e('#read-aloud-button').click();
+  });
+  addKeyDownListener($e('body'), 'Escape', targetKey => {
+    $e('#fold-lead-button').click();
+  });
+  ['l', 'L'].forEach(targetKey => {
+    const scrollY = {'l': 50, 'L': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#lead-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['q', 'Q'].forEach(targetKey => {
+    const scrollY = {'q': 50, 'Q': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#question-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['a', 'A'].forEach(targetKey => {
+    const scrollY = {'a': 50, 'A': -50}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
+      $e('#answer-panel').scrollBy(0, scrollY);
+    });
+  });
+  ['h', 'H'].forEach(targetKey => {
+    const reverse = {'h': false, 'H': true}[targetKey];
+    addKeyDownListener($e('body'), targetKey, targetKey => {
       const optionElements = $e('.option', true);
       if (! optionElements.length) {
         return;
       }
+      let activeOptionElementIndex = (reverse ? optionElements.length : -1);
       for (let i = 0; i < optionElements.length; i++) {
-        if (optionElements[i] == $e('.option.active')) {
-          const targetOptionElementIndex = (optionElements.length + i + {'h': 1, 'H': -1}[targetKey]) % optionElements.length;
-          $e('.active', true).forEach(element => element.classList.remove('active'));
-          optionElements[targetOptionElementIndex].classList.add('active');
-          break;
+        const currentOptionElement = optionElements[i];
+        if (currentOptionElement.classList.contains('active')) {
+          activeOptionElementIndex = i;
+          currentOptionElement.classList.remove('active');
         }
       }
-
-
-    }
-
-
-
-/*
-    'h|H': targetKey => {
-      const targetOptionElement = $e('.option.active') ? $e('.option.active + .option') : $e('.option');
-      $e('.active', true).forEach(element => element.classList.remove('active'));
+      const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
       if (targetOptionElement) {
         targetOptionElement.classList.add('active');
       }
-    }
-*/
-  });
-  $e('#visit-home-button').addEventListener('click', event => {
-    const message = 'サイトを移動します。';
-    if (! window.confirm(message)) {
-      return;
-    }
-    window.location.href = 'https://twitter.com/shikaku1068/';
-  });
-  $e('#show-settings-button').addEventListener('click', event => {
-    $e(':root').classList.add('is-settings-shown');
+    });
   });
 };
 const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLang, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
@@ -238,6 +226,16 @@ const initializeScreen = (leadText, questionTemplate, answerTemplate, questionLa
     });
     $e('#skip-button').addEventListener('click', event => {
       resetCard();
+    });
+    $e('#visit-home-button').addEventListener('click', event => {
+      const message = 'サイトを移動します。';
+      if (! window.confirm(message)) {
+        return;
+      }
+      window.location.href = 'https://twitter.com/shikaku1068/';
+    });
+    $e('#show-settings-button').addEventListener('click', event => {
+      $e(':root').classList.add('is-settings-shown');
     });
     resetCard();
   }, {once: true});
@@ -382,6 +380,15 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   parentPanelElement.addEventListener('scroll', updateHintBalloonPositions);
   window.addEventListener('resize', updateHintBalloonPositions);
 }
+const setActiveElement = targetElement => {
+  for (const element of $e('.active')) {
+    element.classList.remove('active');
+  }
+  if (! targetElement) {
+    return;
+  }
+  targetElement.classList.add('active');
+};
 const disableButtons = () => {
   $e('#read-aloud-button').disabled = true;
   $e('#play-button').disabled = true;

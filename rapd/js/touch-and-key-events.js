@@ -76,17 +76,34 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     event.preventDefault();
   }, {passive: false});
 };
-const addKeyDownListener = (targetElement, listeners) => {
+const addKeyDownListener = (targetElement, targetKey, listener) => {
   targetElement.addEventListener('keydown', event => {
-    if (/^F\d+$/.test(event.key)) {
+    if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
       return;
     }
-    if (event.ctrlKey || event.altKey || event.metaKey) {
+    event.preventDefault();
+    if (event.key == targetKey) {
+      listener(targetKey);
+    }
+  }, {passive: false});
+};
+
+
+
+
+
+
+
+
+/*
+const addKeyDownListener = (targetElement, listeners, listenerKeySeparator) => {
+  targetElement.addEventListener('keydown', event => {
+    if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
       return;
     }
     event.preventDefault();
     for (const listenerKey in listeners) {
-      const targetKeys = listenerKey.split('|');
+      const targetKeys = listenerKey.split(listenerKeySeparator || '|');
       const targetKey = event.key;
       if (targetKeys.indexOf(targetKey) >= 0) {
         const listener = listeners[listenerKey];
@@ -96,7 +113,7 @@ const addKeyDownListener = (targetElement, listeners) => {
     }
   }, {passive: false});
 };
-
+*/
 
 /*
 const addKeyDownListener = (targetElement, listeners) => {
