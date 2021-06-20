@@ -135,13 +135,10 @@ const main = () => {
         const currentOptionElement = optionElements[i];
         if (currentOptionElement.classList.contains('active')) {
           activeOptionElementIndex = i;
-          currentOptionElement.classList.remove('active');
         }
       }
       const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
-      if (targetOptionElement) {
-        targetOptionElement.classList.add('active');
-      }
+      setActiveElement(targetOptionElement);
     });
   });
 };
@@ -381,9 +378,9 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   window.addEventListener('resize', updateHintBalloonPositions);
 }
 const setActiveElement = targetElement => {
-  for (const element of $e('.active')) {
+  $e('.active', true).forEach(element => {
     element.classList.remove('active');
-  }
+  });
   if (! targetElement) {
     return;
   }
