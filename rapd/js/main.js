@@ -2,6 +2,8 @@
 let appLang;
 let questionPhrase;
 let answerPhrase;
+const dqs = document.querySelector.bind(document);
+const dqsa = document.querySelectorAll.bind(document);
 const main = () => {
   appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
@@ -11,32 +13,14 @@ const main = () => {
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
-  readCookies(cookies => {
-    cookies['disabled-animation'] || (cookies['disabled-animation'] = 'false');
-    cookies['reading-speed'] || (cookies['reading-speed'] = '1');
-    cookies['reading-pitch'] || (cookies['reading-pitch'] = '1');
-    cookies['reading-delay'] || (cookies['reading-delay'] = '0');
-    cookies['voice-number'] || (cookies['voice-number'] = '1');
-    cookies['disable-option-highlight'] || (cookies['disable-option-highlight'] = 'false');
-    cookies['disable-hint-balloon'] || (cookies['disable-hint-balloon'] = 'false');
-    cookies['disable-swipe-to-left'] || (cookies['disable-swipe-to-left'] = 'true');
-    for(const key in cookies) {
-      const value = cookies[key];
-      dqs(':root').setAttribute(`data-${key}`, value);
-      switch (value) {
-        case 'true':
-        case 'false':
-          dqsa(`[type="checkbox"][name="${key}"]`).forEach(element => {
-            element.checked = value == 'true';
-          });
-          break;
-        default:
-          dqsa(`[type="radio"][name="${key}"][value="${value}"]`).forEach(element => {
-            element.checked = true;
-          });
-      }
-    }
-  });
+  setSetting('disable-animation', getSetting('disable-animation') || 'true');
+  setSetting('reading-speed', getSetting('reading-speed') || '1');
+  setSetting('reading-pitch', getSetting('reading-pitch') || '1');
+  setSetting('reading-delay', getSetting('reading-delay') || '1');
+  setSetting('voice-number', getSetting('voice-number') || '1');
+  setSetting('disable-option-highlight', getSetting('disable-option-highlight') || '1');
+  setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || '1');
+  setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || '1');
   const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
   if (usp.get('iframe') == 'true') {
     window.addEventListener('message', event => {
