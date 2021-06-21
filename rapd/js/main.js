@@ -6,7 +6,7 @@ let rabbitVariables;
 const main = () => {
   appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
-    'en': 'Rabbity Phrases Flashcards',
+    'en': 'Rabbity Phrase Drills',
     'ja': '鼠算式フレーズ練習帳'
   }[appLang];
   dqsa('[lang]').forEach(element => {
