@@ -1,20 +1,28 @@
 'use strict';
-const $d = (key, value, defaultValue) => {
-  if (value !== undefined) {
-    $d[key] = value;
-  } else if (defaultValue !== undefined) {
-    $d[key] = defaultValue;
+const $qs = document.querySelector.bind(document);
+const $qsa = document.querySelectorAll.bind(document);
+
+
+
+const $dt = (key, value, onChangeCallback) => {
+  $dt._onChangeCallbacks || ($dt._onChangeCallbacks = {});
+  if (onChangeCallback !== undefined) {
+    $dt._onChangeCallbacks[key] = onChangeCallback;
   }
-  return $d[key];
+  if (value !== undefined) {
+    $dt[key] = value;
+    $dt._onChangeCallbacks[key] && $dt._onChangeCallbacks[key](key, value);
+  }
+  return $dt[key];
 };
-const $e = (selectors, returnMultiple) => {
+const $el = (selectors, returnMultiple) => {
   if (returnMultiple) {
     return document.querySelectorAll(selectors);
   } else {
     return document.querySelector(selectors);
   }
 };
-const $c = (key, value) => {
+const $ck = (key, value) => {
   if (value !== undefined) {
     const maxAge = 60 * 60 * 24 * 365;
     const encodedValue = encodeURIComponent(value);
@@ -30,7 +38,7 @@ const $c = (key, value) => {
   });
   return cookieValue;
 };
-const $f = (key, value) => {
+const $fl = (key, value) => {
   const rootElement = document.querySelector(':root');
   if (value === null) {
     value = ! rootElement.classList.contains(key);
@@ -42,7 +50,7 @@ const $f = (key, value) => {
   }
   return rootElement.classList.contains(key);
 };
-const $q = (field, toLowerCase) => {
+const $qr = (field, toLowerCase) => {
   let value = undefined;
   const queryString = window.location.search.replace(/^\?/, '');
   const parameters = queryString.split('&');
