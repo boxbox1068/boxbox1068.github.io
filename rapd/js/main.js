@@ -12,8 +12,10 @@ const main = () => {
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
-  setSetting('animation-type', getSetting('animation-type') || 'slide');
-  setSetting('disable-animation', getSetting('disable-animation') || 'true');
+  setSetting('enable-automatic-question-reading', getSetting('enable-automatic-question-reading') || 'true');
+  setSetting('enable-automatic-answer-reading', getSetting('enable-automatic-answer-reading') || 'true');
+  setSetting('animation-type', getSetting('animation-type') || 'flip');
+  setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
   setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
@@ -82,24 +84,6 @@ const processInput = (leadText, questionTemplate, questionLang, answerTemplate, 
   const expandedAnswerTemplate = expandRabbitVariablesTo(answerTemplate);
   answerPhrase = new RabbitPhrase(expandedAnswerTemplate, answerLang);
 
-
-
-
-  let animation, readingDelay, enableSkipBySwipe, disableOptionMarking;
-
-  $dt('animation', animation || 'slide');
-/*
-  if ($dt('animation') == 'none') {
-    $fl('disable-animation', true);
-  }
-  $dt('reading-delay', readingDelay !== undefined ? readingDelay : 250);
-  if (/^\s*true\s*$/i.test(enableSkipBySwipe)) {
-    $fl('enable-skip-by-swipe', true);
-  }
-  if (/^\s*true\s*$/i.test(disableOptionMarking)) {
-    $fl('disable-option-marking', true);
-  }
-*/
 
 
 
@@ -277,9 +261,9 @@ const showQuestion = () => {
   if (dqs('#enable-automatic-question-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud(questionPhrase.text, questionPhrase.lang);
-    }, $dt('reading-delay'));
+    }, getSetting('question-voice-delay', 'integer'));
   }
-  if ($dt('animation') == 'slide') {
+  if (getSetting('animation-type') == 'slide') {
     dqs('#question-cover').addEventListener('animationend', event => {
       resetQuestionPanel();
       dqs('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
@@ -298,7 +282,7 @@ const showQuestion = () => {
     } else {
       dqs('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
     }
-  } else if ($dt('animation') == 'flip') {
+  } else if (getSetting('animation-type') == 'flip') {
     dqs('#question-cell').addEventListener('animationend', event => {
       resetQuestionPanel();
       dqs('#question-cover').style.visibility = 'hidden';
@@ -333,15 +317,15 @@ const showAnswer = () => {
   if (dqs('#enable-automatic-answer-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud(answerPhrase.text, answerPhrase.lang);
-    }, $dt('reading-delay'));
+    }, getSetting('answer-voice-delay', 'integer'));
   }
-  if ($dt('animation') == 'slide') {
+  if (getSetting('animation-type') == 'slide') {
     dqs('#answer-cover').addEventListener('animationend', event => {
       $dt('current-step', 'answer');
       enableButtons();
     }, {once: true});
     dqs('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
-  } else if ($dt('animation') == 'flip') {
+  } else if (getSetting('animation-type') == 'flip') {
     dqs('#answer-cell').addEventListener('animationend', event => {
       dqs('#answer-cover').style.visibility = 'hidden';
       dqs('#answer-cell').addEventListener('animationend', event => {

@@ -19,7 +19,26 @@ const setSetting = (key, value) => {
     });
   }
 };
-const getSetting = key => {
+const getSetting = (key, valueType) => {
+  const convertValue = (srcValue, valueType) => {
+    switch (valueType) {
+      case 'number':
+        return Number(srcValue);
+        break;
+      case 'integer':
+        return Math.round(Number(srcValue));
+        break;
+      case 'boolean':
+        return /^true$/i.test(srcValue);
+        break;
+      default:
+        return srcValue;
+    }
+  };
+  const candidateValueA = dqs(':root').getAttribute(`data-${key}`);
+  if (candidateValueA != null) {
+    return candidateValueA;
+  }
   const cookies = {};
   document.cookie.split(';').forEach(parameter => {
     if (! /=/.test(parameter)) {
@@ -29,8 +48,8 @@ const getSetting = key => {
     const encodedValue = parameter.replace(/^.*?=/, '').trim();
     cookies[key] = decodeURIComponent(encodedValue);
   });
-  const value = cookies[key];
-  return value;
+  const candidateValueB = cookies[key];
+  return candidateValueB;
 };
 const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
   const jsonpCallbackScriptElement = document.createElement('script');
