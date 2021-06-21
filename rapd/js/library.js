@@ -1,16 +1,7 @@
 'use strict';
-const readCookies = callback => {
-  const cookies = {};
-  document.cookie.split(';').forEach(parameter => {
-    if (! /=/.test(parameter)) {
-      return;
-    }
-    const key = parameter.replace(/=.*$/, '').trim();
-    const value = decodeURIComponent(parameter.replace(/^.*?=/, '').trim());
-    cookies[key] = value;
-  });
-  callback(cookies);
-};
+const dqs = document.querySelector.bind(document);
+const dqsa = document.querySelectorAll.bind(document);
+const dce = document.createElement.bind(document);
 const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
@@ -41,6 +32,23 @@ const getSetting = key => {
   const value = cookies[key];
   return value;
 };
+const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
+  const jsonpCallbackScriptElement = document.createElement('script');
+  window[jsonpCallbackName] = jsonData => {
+    delete window[jsonpCallbackName];
+    dqs('#jsonp-data').remove();
+    callback(jsonData);
+  };
+  const jsonpDataScriptElement = dce('script');
+  jsonpDataScriptElement.id = 'jsonp-data';
+  jsonpDataScriptElement.src = jsonpSrc;
+  document.head.append(jsonpDataScriptElement);
+};
+
+
+
+
+
 const $dt = (key, value, onChangeCallback) => {
   $dt._onChangeCallbacks || ($dt._onChangeCallbacks = {});
   if (onChangeCallback !== undefined) {

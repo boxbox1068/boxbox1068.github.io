@@ -2,8 +2,7 @@
 let appLang;
 let questionPhrase;
 let answerPhrase;
-const dqs = document.querySelector.bind(document);
-const dqsa = document.querySelectorAll.bind(document);
+let rabbitVariables;
 const main = () => {
   appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
@@ -13,21 +12,33 @@ const main = () => {
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
+  setSetting('animation-type', getSetting('animation-type') || 'slide');
   setSetting('disable-animation', getSetting('disable-animation') || 'true');
-  setSetting('reading-speed', getSetting('reading-speed') || '1');
-  setSetting('reading-pitch', getSetting('reading-pitch') || '1');
-  setSetting('reading-delay', getSetting('reading-delay') || '1');
-  setSetting('voice-number', getSetting('voice-number') || '1');
-  setSetting('disable-option-highlight', getSetting('disable-option-highlight') || '1');
-  setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || '1');
-  setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || '1');
+  setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
+  setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
+  setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
+  setSetting('app-voice-number', getSetting('app-voice-number') || '1');
+  setSetting('question-voice-number', getSetting('question-voice-number') || '1');
+  setSetting('question-voice-rate', getSetting('question-voice-rate') || '1');
+  setSetting('question-voice-pitch', getSetting('question-voice-pitch') || '1');
+  setSetting('question-voice-delay', getSetting('quesetion-voice-delay') || '0');
+  setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
+  setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
+  setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
+  setSetting('answer-voice-delay', getSetting('answer-voice-delay') || '0');
+  requestJsonp('./data/rabbit-variables.jsonp', 'jsonpCallback', jsonData => {
+    rabbitVariables = jsonData;
+    acceptInput();
+  });
+};
+const acceptInput = () => {
   const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
   if (usp.get('iframe') == 'true') {
     window.addEventListener('message', event => {
       if (typeof event.data != 'object') {
         return;
       }
-      readInput(
+      processInput(
         event.data['l-text'],
         event.data['q-temp'],
         event.data['q-lang'],
@@ -36,7 +47,7 @@ const main = () => {
       );
     }, {once: true});
   } else if (usp.has('question')) {
-    readInput(
+    processInput(
       usp.get('l-text'),
       usp.get('q-temp'),
       usp.get('q-lang'),
@@ -48,32 +59,28 @@ const main = () => {
       'en': './data/demo.en.jsonp',
       'ja': './data/demo.ja.jsonp'
     }[appLang];
-    const jsonpDataScriptElement = document.createElement('script');
-    jsonpDataScriptElement.src = jsonpSrc;
-    document.head.append(jsonpDataScriptElement);
+    requestJsonp(jsonpSrc, 'jsonpCallback', jsonData => {
+      processInput(
+        jsonData['l-text'],
+        jsonData['q-temp'],
+        jsonData['q-lang'],
+        jsonData['a-temp'],
+        jsonData['a-lang']
+      );
+    });
   }
-};
-const jsonpCallback = jsonData => {
-  readInput(
-    jsonData['l-text'],
-    jsonData['q-temp'],
-    jsonData['q-lang'],
-    jsonData['a-temp'],
-    jsonData['a-lang']
-  );
-};
-
-
-
-const readInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang) => {
-  const expandVariables = template => {
-    for (const key in $templateVariables) {
-      template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
+}
+const processInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang) => {
+  const expandRabbitVariablesTo = rabbitTemplate => {
+    for (const key in rabbitVariables) {
+      rabbitTemplate = rabbitTemplate.replace(new RegExp(`%${key}%`, 'ig'), rabbitVariables[key]);
     }
-    return template;
+    return rabbitTemplate;
   };
-  questionPhrase = new RabbitPhrase(questionTemplate, questionLang);
-  answerPhrase = new RabbitPhrase(answerTemplate, answerLang);
+  const expandedQuestionTemplate = expandRabbitVariablesTo(questionTemplate);
+  questionPhrase = new RabbitPhrase(expandedQuestionTemplate, questionLang);
+  const expandedAnswerTemplate = expandRabbitVariablesTo(answerTemplate);
+  answerPhrase = new RabbitPhrase(expandedAnswerTemplate, answerLang);
 
 
 
@@ -367,10 +374,10 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   for (const optionElement of targetOptionElements) {
     const optionNumber = Number(optionElement.dataset.optionNumber);
     const hintText = hintTextList[optionNumber];
-    const hintBalloonBodyElement = document.createElement('span');
+    const hintBalloonBodyElement = dce('span');
     hintBalloonBodyElement.className = 'hint-balloon-body';
     hintBalloonBodyElement.innerText = hintText;
-    const hintBalloonPanelElement = document.createElement('span');
+    const hintBalloonPanelElement = dce('span');
     hintBalloonPanelElement.className = 'hint-balloon-panel';
     hintBalloonPanelElement.append(hintBalloonBodyElement);
     optionElement.append(hintBalloonPanelElement);
