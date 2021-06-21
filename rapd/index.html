@@ -87,16 +87,18 @@
     <div id="settings-body">
       <dl>
         <dt>
-          <input type="checkbox"><label></label><span>アニメーションを無効化</span>
+          <input type="checkbox" name="disable-animation" id="disable-animation-checkbox"><label for="disable-animation-checkbox"></label><span>アニメーションを無効化</span>
         </dt>
         <dt>
           <span>読み上げ速度:</span>
-          <label><input type="radio" name="hoge">0.5</label>
-          <label><input type="radio" name="hoge">0.75</label>
-          <label><input type="radio" name="hoge">1</label>
-          <label><input type="radio" name="hoge">1.25</label>
-          <label><input type="radio" name="hoge">1.5</label>
         </dt>
+        <dd>
+          <label><input type="radio" name="reading-speed" value="0.5">0.5</label>
+          <label><input type="radio" name="reading-speed" value="0.75">0.75</label>
+          <label><input type="radio" name="reading-speed" value="1">1</label>
+          <label><input type="radio" name="reading-speed" value="1.25">1.25</label>
+          <label><input type="radio" name="reading-speed" value="1.5">1.5</label>
+        </dd>
         <dt>
           <span>読み上げピッチ:</span>
         </dt>

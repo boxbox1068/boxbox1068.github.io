@@ -1,54 +1,69 @@
 'use strict';
-const $dic = {};
+let appLang;
 let questionPhrase;
 let answerPhrase;
 const main = () => {
-  $dic.appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
+  appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
     'en': 'Rabbity Phrases Flashcards',
     'ja': '鼠算式フレーズ練習帳'
-  }[$dic.appLang];
-  $qsa('[lang]').forEach(element => {
-    (element.lang != $dic.appLang) && element.remove();
+  }[appLang];
+  dqsa('[lang]').forEach(element => {
+    element.lang != appLang && element.remove();
   });
-  $dt('disable-animation', $ck('disable-animation') == 'true', (key, value) => {
-    $fl(key, value);
-    $ck(key, value);
+  readCookies(cookies => {
+    cookies['disabled-animation'] || (cookies['disabled-animation'] = 'false');
+    cookies['reading-speed'] || (cookies['reading-speed'] = '1');
+    cookies['reading-pitch'] || (cookies['reading-pitch'] = '1');
+    cookies['reading-delay'] || (cookies['reading-delay'] = '0');
+    cookies['voice-number'] || (cookies['voice-number'] = '1');
+    cookies['disable-option-highlight'] || (cookies['disable-option-highlight'] = 'false');
+    cookies['disable-hint-balloon'] || (cookies['disable-hint-balloon'] = 'false');
+    cookies['disable-swipe-to-left'] || (cookies['disable-swipe-to-left'] = 'true');
+    for(const key in cookies) {
+      const value = cookies[key];
+      dqs(':root').setAttribute(`data-${key}`, value);
+      switch (value) {
+        case 'true':
+        case 'false':
+          dqsa(`[type="checkbox"][name="${key}"]`).forEach(element => {
+            element.checked = value == 'true';
+          });
+          break;
+        default:
+          dqsa(`[type="radio"][name="${key}"][value="${value}"]`).forEach(element => {
+            element.checked = true;
+          });
+      }
+    }
   });
-  if ($qr('iframe') == 'true') {
+  const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
+  if (usp.get('iframe') == 'true') {
     window.addEventListener('message', event => {
       if (typeof event.data != 'object') {
         return;
       }
       readInput(
-        event.data['lead'],
-        event.data['question'],
+        event.data['l-text'],
+        event.data['q-temp'],
         event.data['q-lang'],
-        event.data['answer'],
-        event.data['a-lang'],
-        event.data['animation'],
-        event.data['reading-delay'],
-        event.data['enable-skip-by-swipe'],
-        event.data['disable-option-marking']
+        event.data['a-temp'],
+        event.data['a-lang']
       );
     }, {once: true});
-  } else if ($qr('question')) {
+  } else if (usp.has('question')) {
     readInput(
-      $qr('lead'),
-      $qr('question'),
-      $qr('q-lang'),
-      $qr('answer'),
-      $qr('a-lang'),
-      $qr('animation'),
-      $qr('reading-delay'),
-      $qr('enable-skip-by-swipe'),
-      $qr('disable-option-marking')
+      usp.get('l-text'),
+      usp.get('q-temp'),
+      usp.get('q-lang'),
+      usp.get('a-temp'),
+      usp.get('a-lang')
     );
   } else {
-    const jsonpSrc = $qr('jsonp') || {
+    const jsonpSrc = usp.get('jsonp') || {
       'en': './data/demo.en.jsonp',
       'ja': './data/demo.ja.jsonp'
-    }[$dic.appLang];
+    }[appLang];
     const jsonpDataScriptElement = document.createElement('script');
     jsonpDataScriptElement.src = jsonpSrc;
     document.head.append(jsonpDataScriptElement);
@@ -56,21 +71,17 @@ const main = () => {
 };
 const jsonpCallback = jsonData => {
   readInput(
-    jsonData['lead'],
-    jsonData['question'],
+    jsonData['l-text'],
+    jsonData['q-temp'],
     jsonData['q-lang'],
-    jsonData['answer'],
-    jsonData['a-lang'],
-    jsonData['animation'],
-    jsonData['reading-delay'],
-    jsonData['enable-skip-by-swipe'],
-    jsonData['disable-option-marking']
+    jsonData['a-temp'],
+    jsonData['a-lang']
   );
 };
 
 
 
-const readInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang, animation, readingDelay, enableSkipBySwipe, disableOptionMarking) => {
+const readInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang) => {
   const expandVariables = template => {
     for (const key in $templateVariables) {
       template = template.replace(new RegExp(`%${key}%`, 'ig'), $templateVariables[key]);
@@ -80,12 +91,16 @@ const readInput = (leadText, questionTemplate, questionLang, answerTemplate, ans
   questionPhrase = new RabbitPhrase(questionTemplate, questionLang);
   answerPhrase = new RabbitPhrase(answerTemplate, answerLang);
 
+
+
+
+  let animation, readingDelay, enableSkipBySwipe, disableOptionMarking;
+
   $dt('animation', animation || 'slide');
 /*
   if ($dt('animation') == 'none') {
     $fl('disable-animation', true);
   }
-*/
   $dt('reading-delay', readingDelay !== undefined ? readingDelay : 250);
   if (/^\s*true\s*$/i.test(enableSkipBySwipe)) {
     $fl('enable-skip-by-swipe', true);
@@ -93,21 +108,21 @@ const readInput = (leadText, questionTemplate, questionLang, answerTemplate, ans
   if (/^\s*true\s*$/i.test(disableOptionMarking)) {
     $fl('disable-option-marking', true);
   }
+*/
 
 
 
-  $el('#fold-lead-button').addEventListener('click', event => {
-    $el(':root').classList.toggle('is-lead-folded');
+  dqs('#fold-lead-button').addEventListener('click', event => {
+    dqs(':root').classList.toggle('is-lead-folded');
   });
-  $el('#fold-lead-button').addEventListener('click', event => {
-    $dt('refill-count', 0);
+  dqs('#fold-lead-button').addEventListener('click', event => {
     $dt('current-step', 'startup');
-    $el('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
+    dqs('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
       if (event.target.checked) {
         const text = {
           'en': 'Automatic question reading enabled.',
           'ja': '問題の自動読み上げ、オン。'
-        }[$dic.appLang];
+        }[appLang];
         readAloud(text, lang);
       } else {
         if (window.speechSynthesis.speaking) {
@@ -115,12 +130,12 @@ const readInput = (leadText, questionTemplate, questionLang, answerTemplate, ans
         }
       }
     });
-    $el('#enable-automatic-answer-reading-checkbox').addEventListener('change', event => {
+    dqs('#enable-automatic-answer-reading-checkbox').addEventListener('change', event => {
       if (event.target.checked) {
         const text = {
           'en': 'Automatic answer reading enabled.',
           'ja': '答えの自動読み上げ、オン。'
-        }[$dic.appLang];
+        }[appLang];
         readAloud(text, lang);
       } else {
         if (window.speechSynthesis.speaking) {
@@ -128,7 +143,7 @@ const readInput = (leadText, questionTemplate, questionLang, answerTemplate, ans
         }
       }
     });
-    $el('#read-aloud-button').addEventListener('click', event => {
+    dqs('#read-aloud-button').addEventListener('click', event => {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
       } else {
@@ -143,95 +158,95 @@ const readInput = (leadText, questionTemplate, questionLang, answerTemplate, ans
         readAloud(text, lang);
       }
     });
-    $el('#play-button').addEventListener('click', event => {
+    dqs('#play-button').addEventListener('click', event => {
       if ($dt('current-step') == 'question') {
         showAnswer();
       } else {
         resetCard();
       }
     });
-    $el('#skip-button').addEventListener('click', event => {
+    dqs('#skip-button').addEventListener('click', event => {
       resetCard();
     });
-    $el('#visit-home-button').addEventListener('click', event => {
+    dqs('#visit-home-button').addEventListener('click', event => {
       const message = 'サイトを移動します。';
       if (! window.confirm(message)) {
         return;
       }
       window.location.href = 'https://twitter.com/shikaku1068/';
     });
-    $el('#show-settings-button').addEventListener('click', event => {
-      $el(':root').classList.add('is-settings-shown');
+    dqs('#show-settings-button').addEventListener('click', event => {
+      dqs(':root').classList.add('is-settings-shown');
     });
     resetCard();
   }, {once: true});
-  $el('#lead-body').innerHTML = leadText;
+  dqs('#lead-body').innerHTML = leadText;
   if (! leadText) {
-    $el('#fold-lead-button').click();
-    $el('#fold-lead-button').disabled = true;
+    dqs('#fold-lead-button').click();
+    dqs('#fold-lead-button').disabled = true;
   }
 }
 const initializeOperation = () => {
   ['mousemove', 'touchstart'].forEach(eventType => {
-    $el('body').addEventListener(eventType, event => {
-      $qsa('.active').forEach(element => element.classList.remove('active'));
+    dqs('body').addEventListener(eventType, event => {
+      dqsa('.active').forEach(element => element.classList.remove('active'));
       event.target.classList.add('active');
     }, {capture: true});  
   });
-  addSwipeListener($el('body'), 25, () => {
-    if ($el(':root.is-lead-folded')) {
-      $el('#play-button').click();
+  addSwipeListener(dqs('body'), 25, () => {
+    if (dqs(':root.is-lead-folded')) {
+      dqs('#play-button').click();
     } else {
-      $el('#fold-lead-button').click();
+      dqs('#fold-lead-button').click();
     }
   });
-  addSwipeListener($el('body'), -25, () => {
-    if (! $el(':root.enable-skip-by-swipe')) {
+  addSwipeListener(dqs('body'), -25, () => {
+    if (! dqs(':root.enable-skip-by-swipe')) {
       return;
     }
-    if ($el(':root.is-lead-folded')) {
-      $el('#skip-button').click();
+    if (dqs(':root.is-lead-folded')) {
+      dqs('#skip-button').click();
     } else {
-      $el('#fold-lead-button').click();
+      dqs('#fold-lead-button').click();
     }
   });
-  addDoubleTapListener($el('body'), 250, () => {
-    $el('#read-aloud-button').click();
+  addDoubleTapListener(dqs('body'), 250, () => {
+    dqs('#read-aloud-button').click();
   });
-  addKeyDownListener($el('body'), ' ', targetKey => {
-    $el('#play-button').click();
+  addKeyDownListener(dqs('body'), ' ', targetKey => {
+    dqs('#play-button').click();
   });
-  addKeyDownListener($el('body'), 'Tab', targetKey => {
-    $el('#skip-button').click();
+  addKeyDownListener(dqs('body'), 'Tab', targetKey => {
+    dqs('#skip-button').click();
   });
-  addKeyDownListener($el('body'), 'Enter', targetKey => {
-    $el('#read-aloud-button').click();
+  addKeyDownListener(dqs('body'), 'Enter', targetKey => {
+    dqs('#read-aloud-button').click();
   });
-  addKeyDownListener($el('body'), 'Escape', targetKey => {
-    $el('#fold-lead-button').click();
+  addKeyDownListener(dqs('body'), 'Escape', targetKey => {
+    dqs('#fold-lead-button').click();
   });
   ['l', 'L'].forEach(targetKey => {
     const scrollY = {'l': 50, 'L': -50}[targetKey];
-    addKeyDownListener($el('body'), targetKey, targetKey => {
-      $el('#lead-panel').scrollBy(0, scrollY);
+    addKeyDownListener(dqs('body'), targetKey, targetKey => {
+      dqs('#lead-panel').scrollBy(0, scrollY);
     });
   });
   ['q', 'Q'].forEach(targetKey => {
     const scrollY = {'q': 50, 'Q': -50}[targetKey];
-    addKeyDownListener($el('body'), targetKey, targetKey => {
-      $el('#question-panel').scrollBy(0, scrollY);
+    addKeyDownListener(dqs('body'), targetKey, targetKey => {
+      dqs('#question-panel').scrollBy(0, scrollY);
     });
   });
   ['a', 'A'].forEach(targetKey => {
     const scrollY = {'a': 50, 'A': -50}[targetKey];
-    addKeyDownListener($el('body'), targetKey, targetKey => {
-      $el('#answer-panel').scrollBy(0, scrollY);
+    addKeyDownListener(dqs('body'), targetKey, targetKey => {
+      dqs('#answer-panel').scrollBy(0, scrollY);
     });
   });
   ['h', 'H'].forEach(targetKey => {
     const reverse = {'h': false, 'H': true}[targetKey];
-    addKeyDownListener($el('body'), targetKey, targetKey => {
-      const optionElements = $qsa('.option');
+    addKeyDownListener(dqs('body'), targetKey, targetKey => {
+      const optionElements = dqsa('.option');
       if (! optionElements.length) {
         return;
       }
@@ -253,102 +268,100 @@ const resetCard = () => {
   const pathIdSeed = Math.random();
   questionPhrase.reset(pathIdSeed);
   answerPhrase.reset(pathIdSeed);
-
-  $el('#pattern-count').innerHTML = questionPhrase.possiblePathCount.toLocaleString();
-  $el('#pattern-id').innerHTML = questionPhrase.pathId.toLocaleString();
-  $el('#refill-count').innerHTML = ($dt('refill-count')).toLocaleString();
-  $dt('refill-count', $dt('refill-count') + 1);
+  dqs('#pattern-count').innerHTML = questionPhrase.possiblePathCount.toLocaleString();
+  dqs('#pattern-id').innerHTML = questionPhrase.pathId.toLocaleString();
+  dqs('#refill-count').innerHTML = (questionPhrase.resetCount - 1).toLocaleString();
   showQuestion();
 };
 const showQuestion = () => {
   const resetQuestionPanel = () => {
-    $el('#question-panel').scrollTop = 0;
-    $el('#question-body').innerHTML = questionPhrase.html;
-    addHintBalloons($el('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
+    dqs('#question-panel').scrollTop = 0;
+    dqs('#question-body').innerHTML = questionPhrase.html;
+    addHintBalloons(dqs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
   };
   disableButtons();
   if (window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
   }
-  if ($el('#enable-automatic-question-reading-checkbox').checked) {
+  if (dqs('#enable-automatic-question-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud(questionPhrase.text, questionPhrase.lang);
     }, $dt('reading-delay'));
   }
   if ($dt('animation') == 'slide') {
-    $el('#question-cover').addEventListener('animationend', event => {
+    dqs('#question-cover').addEventListener('animationend', event => {
       resetQuestionPanel();
-      $el('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
-      $el('#question-cover').addEventListener('animationend', event => {
+      dqs('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
+      dqs('#question-cover').addEventListener('animationend', event => {
         $dt('current-step', 'question');
         enableButtons();
       }, {once: true});
     }, {once: true});
     if ($dt('current-step') == 'startup') {
-      $el('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
+      dqs('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
     } else {
-      $el('#question-cover').style.animation =  'slideInFromLeft 500ms forwards';
+      dqs('#question-cover').style.animation =  'slideInFromLeft 500ms forwards';
     }
     if ($dt('current-step') == 'answer') {
-      $el('#answer-cover').style.animation =  'slideInFromLeft 500ms forwards';
+      dqs('#answer-cover').style.animation =  'slideInFromLeft 500ms forwards';
     } else {
-      $el('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
+      dqs('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
     }
   } else if ($dt('animation') == 'flip') {
-    $el('#question-cell').addEventListener('animationend', event => {
+    dqs('#question-cell').addEventListener('animationend', event => {
       resetQuestionPanel();
-      $el('#question-cover').style.visibility = 'hidden';
-      $el('#question-cell').addEventListener('animationend', event => {
+      dqs('#question-cover').style.visibility = 'hidden';
+      dqs('#question-cell').addEventListener('animationend', event => {
         $dt('current-step', 'question');
         enableButtons();
       }, {once: true});
-      $el('#question-cell').style.animation = 'flipB 250ms forwards';
+      dqs('#question-cell').style.animation = 'flipB 250ms forwards';
     }, {once: true});
-    $el('#question-cell').style.animation = 'flipA 250ms forwards';
-    $el('#answer-cell').addEventListener('animationend', event => {
-      $el('#answer-cover').style.visibility = 'visible';
-      $el('#answer-cell').style.animation = 'flipB 250ms forwards';
+    dqs('#question-cell').style.animation = 'flipA 250ms forwards';
+    dqs('#answer-cell').addEventListener('animationend', event => {
+      dqs('#answer-cover').style.visibility = 'visible';
+      dqs('#answer-cell').style.animation = 'flipB 250ms forwards';
     }, {once: true});
-    $el('#answer-cell').style.animation = 'flipA 250ms forwards';
+    dqs('#answer-cell').style.animation = 'flipA 250ms forwards';
   } else {
     resetQuestionPanel();
-    $el('#question-cover').style.visibility = 'hidden';
-    $el('#answer-cover').style.visibility = 'visible';
+    dqs('#question-cover').style.visibility = 'hidden';
+    dqs('#answer-cover').style.visibility = 'visible';
     $dt('current-step', 'question');
     enableButtons();
   }
 };
 const showAnswer = () => {
   disableButtons();
-  $el('#answer-panel').scrollTop = 0;
-  $el('#answer-body').innerHTML = answerPhrase.html;
-  addHintBalloons($el('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
+  dqs('#answer-panel').scrollTop = 0;
+  dqs('#answer-body').innerHTML = answerPhrase.html;
+  addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
   if (window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
   }
-  if ($el('#enable-automatic-answer-reading-checkbox').checked) {
+  if (dqs('#enable-automatic-answer-reading-checkbox').checked) {
     window.setTimeout(() => {
       readAloud(answerPhrase.text, answerPhrase.lang);
     }, $dt('reading-delay'));
   }
   if ($dt('animation') == 'slide') {
-    $el('#answer-cover').addEventListener('animationend', event => {
+    dqs('#answer-cover').addEventListener('animationend', event => {
       $dt('current-step', 'answer');
       enableButtons();
     }, {once: true});
-    $el('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
+    dqs('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
   } else if ($dt('animation') == 'flip') {
-    $el('#answer-cell').addEventListener('animationend', event => {
-      $el('#answer-cover').style.visibility = 'hidden';
-      $el('#answer-cell').addEventListener('animationend', event => {
+    dqs('#answer-cell').addEventListener('animationend', event => {
+      dqs('#answer-cover').style.visibility = 'hidden';
+      dqs('#answer-cell').addEventListener('animationend', event => {
         $dt('current-step', 'answer');
         enableButtons();
       }, {once: true});
-      $el('#answer-cell').style.animation = 'flipB 250ms forwards';  
+      dqs('#answer-cell').style.animation = 'flipB 250ms forwards';  
     }, {once: true});
-    $el('#answer-cell').style.animation = 'flipA 250ms forwards';
+    dqs('#answer-cell').style.animation = 'flipA 250ms forwards';
   } else {
-    $el('#answer-cover').style.visibility = 'hidden';
+    dqs('#answer-cover').style.visibility = 'hidden';
     $dt('current-step', 'answer');
     enableButtons();
   }
@@ -386,7 +399,7 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   window.addEventListener('resize', updateHintBalloonPositions);
 }
 const setActiveElement = targetElement => {
-  $qsa('.active').forEach(element => {
+  dqsa('.active').forEach(element => {
     element.classList.remove('active');
   });
   if (! targetElement) {
@@ -395,14 +408,14 @@ const setActiveElement = targetElement => {
   targetElement.classList.add('active');
 };
 const disableButtons = () => {
-  $el('#read-aloud-button').disabled = true;
-  $el('#play-button').disabled = true;
-  $el('#skip-button').disabled = true;
+  dqs('#read-aloud-button').disabled = true;
+  dqs('#play-button').disabled = true;
+  dqs('#skip-button').disabled = true;
 };
 const enableButtons = () => {
-  $el('#read-aloud-button').disabled = false;
-  $el('#play-button').disabled = false;
-  $el('#skip-button').disabled = false;
+  dqs('#read-aloud-button').disabled = false;
+  dqs('#play-button').disabled = false;
+  dqs('#skip-button').disabled = false;
 };
 const readAloud = (text, lang) => {
   window.speechSynthesis.cancel();

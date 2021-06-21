@@ -72,9 +72,9 @@
   user-select: none;
   touch-action: none;
 }
-:root.disable-animation *,
-:root.disable-animation *:before,
-:root.disable-animation *:after {
+:root[data-disable-animation="true"] *,
+:root[data-disable-animation="true"] *:before,
+:root[data-disable-animation="true"] *:after {
   transition-duration: 0ms !important;
   animation-duration: 0ms !important;
 }

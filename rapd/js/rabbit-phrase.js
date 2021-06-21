@@ -4,9 +4,10 @@ class RabbitPhrase {
   constructor(template, lang) {
     this._template = `${template}`;
     this._lang = `${lang}`;
+    this._resetCount = 0;
   }
   reset(pathIdSeed) {
-    (0 <= pathIdSeed && pathIdSeed < 1) || (pathIdSeed = Math.random());
+    0 <= pathIdSeed && pathIdSeed < 1 || (pathIdSeed = Math.random());
     const replaceOptionParts = (template, callback) => {
       const path = /(\^+)\[([^^]*?)\]/;
       const replacer = (match, p1, p2, offset, string) => {
@@ -71,6 +72,7 @@ class RabbitPhrase {
     this._chosenOptionTexts = chosenOptionTexts;
     this._text = text;
     this._html = html;
+    this._resetCount++;
   }
   get possiblePathCount() {
     return this._possiblePathCount;
@@ -89,6 +91,9 @@ class RabbitPhrase {
   }
   get lang() {
     return this._lang;
+  }
+  get resetCount() {
+    return this._resetCount;
   }
 }
 
