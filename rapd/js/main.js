@@ -12,6 +12,16 @@ const main = () => {
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
+  dqs('#visit-home-button').addEventListener('click', event => {
+    const message = 'サイトを移動します。';
+    if (! window.confirm(message)) {
+      return;
+    }
+    window.location.href = 'https://twitter.com/shikaku1068/';
+  });
+  dqs('#show-settings-button').addEventListener('click', event => {
+    dqs(':root').classList.add('is-settings-shown');
+  });
   setSetting('animation-type', getSetting('animation-type') || 'flip');
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
@@ -24,16 +34,6 @@ const main = () => {
   setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
   setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
   setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
-  dqs('#visit-home-button').addEventListener('click', event => {
-    const message = 'サイトを移動します。';
-    if (! window.confirm(message)) {
-      return;
-    }
-    window.location.href = 'https://twitter.com/shikaku1068/';
-  });
-  dqs('#show-settings-button').addEventListener('click', event => {
-    dqs(':root').classList.add('is-settings-shown');
-  });
   requestJsonp('./data/rabbit-variables.jsonp', 'jsonpCallback', jsonData => {
     rabbitVariables = jsonData;
     acceptInput();
