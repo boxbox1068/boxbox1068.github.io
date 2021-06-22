@@ -12,8 +12,6 @@ const main = () => {
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
-  setSetting('enable-automatic-question-reading', getSetting('enable-automatic-question-reading') || 'true');
-  setSetting('enable-automatic-answer-reading', getSetting('enable-automatic-answer-reading') || 'true');
   setSetting('animation-type', getSetting('animation-type') || 'flip');
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
@@ -23,11 +21,19 @@ const main = () => {
   setSetting('question-voice-number', getSetting('question-voice-number') || '1');
   setSetting('question-voice-rate', getSetting('question-voice-rate') || '1');
   setSetting('question-voice-pitch', getSetting('question-voice-pitch') || '1');
-  setSetting('question-voice-delay', getSetting('quesetion-voice-delay') || '0');
   setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
   setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
   setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
-  setSetting('answer-voice-delay', getSetting('answer-voice-delay') || '0');
+  dqs('#visit-home-button').addEventListener('click', event => {
+    const message = 'サイトを移動します。';
+    if (! window.confirm(message)) {
+      return;
+    }
+    window.location.href = 'https://twitter.com/shikaku1068/';
+  });
+  dqs('#show-settings-button').addEventListener('click', event => {
+    dqs(':root').classList.add('is-settings-shown');
+  });
   requestJsonp('./data/rabbit-variables.jsonp', 'jsonpCallback', jsonData => {
     rabbitVariables = jsonData;
     acceptInput();
@@ -73,20 +79,20 @@ const acceptInput = () => {
   }
 }
 const processInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang) => {
-  const expandRabbitVariablesTo = rabbitTemplate => {
+  const preprocessRabbitTemplate = rabbitTemplate => {
     for (const key in rabbitVariables) {
       rabbitTemplate = rabbitTemplate.replace(new RegExp(`%${key}%`, 'ig'), rabbitVariables[key]);
     }
     return rabbitTemplate;
   };
-  const expandedQuestionTemplate = expandRabbitVariablesTo(questionTemplate);
-  questionPhrase = new RabbitPhrase(expandedQuestionTemplate, questionLang);
-  const expandedAnswerTemplate = expandRabbitVariablesTo(answerTemplate);
-  answerPhrase = new RabbitPhrase(expandedAnswerTemplate, answerLang);
-
-
-
-
+  const preprocessedQuestionTemplate = preprocessRabbitTemplate(questionTemplate);
+  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
+  const preprocessedAnswerTemplate = preprocessRabbitTemplate(answerTemplate);
+  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
+  dqs('#lead-body').innerHTML = leadText;
+  arrangeBehaviors(leadText != '');
+};
+const arrangeBehaviors = hasLead => {
   dqs('#fold-lead-button').addEventListener('click', event => {
     dqs(':root').classList.toggle('is-lead-folded');
   });
@@ -143,20 +149,9 @@ const processInput = (leadText, questionTemplate, questionLang, answerTemplate, 
     dqs('#skip-button').addEventListener('click', event => {
       resetCard();
     });
-    dqs('#visit-home-button').addEventListener('click', event => {
-      const message = 'サイトを移動します。';
-      if (! window.confirm(message)) {
-        return;
-      }
-      window.location.href = 'https://twitter.com/shikaku1068/';
-    });
-    dqs('#show-settings-button').addEventListener('click', event => {
-      dqs(':root').classList.add('is-settings-shown');
-    });
     resetCard();
   }, {once: true});
-  dqs('#lead-body').innerHTML = leadText;
-  if (! leadText) {
+  if (! hasLead) {
     dqs('#fold-lead-button').click();
     dqs('#fold-lead-button').disabled = true;
   }
@@ -255,13 +250,9 @@ const showQuestion = () => {
     addHintBalloons(dqs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
   };
   disableButtons();
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
+  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
   if (dqs('#enable-automatic-question-reading-checkbox').checked) {
-    window.setTimeout(() => {
-      readAloud(questionPhrase.text, questionPhrase.lang);
-    }, getSetting('question-voice-delay', 'integer'));
+    readAloud(questionPhrase.text, questionPhrase.lang);
   }
   if (getSetting('animation-type') == 'slide') {
     dqs('#question-cover').addEventListener('animationend', event => {
@@ -311,13 +302,9 @@ const showAnswer = () => {
   dqs('#answer-panel').scrollTop = 0;
   dqs('#answer-body').innerHTML = answerPhrase.html;
   addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
+  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
   if (dqs('#enable-automatic-answer-reading-checkbox').checked) {
-    window.setTimeout(() => {
-      readAloud(answerPhrase.text, answerPhrase.lang);
-    }, getSetting('answer-voice-delay', 'integer'));
+    readAloud(answerPhrase.text, answerPhrase.lang);
   }
   if (getSetting('animation-type') == 'slide') {
     dqs('#answer-cover').addEventListener('animationend', event => {
