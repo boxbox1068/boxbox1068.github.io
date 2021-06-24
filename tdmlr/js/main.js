@@ -238,6 +238,7 @@ const showQuestion = () => {
       dqs('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
       dqs('#question-cover').addEventListener('animationend', event => {
         $dt('current-step', 'question');
+        
         enableButtons();
       }, {once: true});
     }, {once: true});

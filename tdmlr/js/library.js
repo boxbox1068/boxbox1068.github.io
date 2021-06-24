@@ -9,7 +9,18 @@ const expandStringVariables = (targetString, stringVariables) => {
   return targetString;
 };
 
-
+const setFlag = (key, value) => {
+  if (value === null) {
+    dqs(':root').classList.toggle(key);
+  } else if (value) {
+    dqs(':root').classList.add(key);
+  } else {
+    dqs(':root').classList.remove(key);
+  }
+};
+const getFlag = (key) => {
+  return dqs(':root').classList.contains(key);
+}
 
 const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
