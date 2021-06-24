@@ -6,6 +6,7 @@ let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
+appLang = 'en';
   const urlOfStringResoucesJsonp = `./data/string-resouces-${appLang}.jsonp`;
   await requestJsonp(urlOfStringResoucesJsonp).then(data => {
     stringResouces = data;
