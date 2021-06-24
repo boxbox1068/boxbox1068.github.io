@@ -2,6 +2,15 @@
 const dqs = document.querySelector.bind(document);
 const dqsa = document.querySelectorAll.bind(document);
 const dce = document.createElement.bind(document);
+const expandStringVariables = (targetString, stringVariables) => {
+  for (const key in stringVariables) {
+    targetString = targetString.replace(new RegExp(`%${key}%`, 'ig'), stringVariables[key]);
+  }
+  return targetString;
+};
+
+
+
 const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
@@ -51,6 +60,29 @@ const getSetting = (key, valueType) => {
   const candidateValueB = cookies[key];
   return candidateValueB;
 };
+const requestJsonp = (jsonpSrc, jsonpCallbackName) => {
+  return new Promise((resolve, reject) => {
+    jsonpCallbackName || (jsonpCallbackName = 'jsonpCallback');
+    const jsonpCallbackScriptElement = document.createElement('script');
+    window[jsonpCallbackName] = data => {
+      delete window[jsonpCallbackName];
+      dqs('#jsonp-data').remove();
+      resolve(data);
+    };
+    const jsonpDataScriptElement = dce('script');
+    jsonpDataScriptElement.id = 'jsonp-data';
+    jsonpDataScriptElement.src = jsonpSrc;
+    document.head.append(jsonpDataScriptElement);
+  });
+};
+const waitMessage = () => {
+  return new Promise((resolve, reject) => {
+    window.addEventListener('message', event => {
+      resolve(event.data);
+    }, {once: true});
+  });
+}
+/*
 const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
   const jsonpCallbackScriptElement = document.createElement('script');
   window[jsonpCallbackName] = jsonData => {
@@ -63,6 +95,7 @@ const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
   jsonpDataScriptElement.src = jsonpSrc;
   document.head.append(jsonpDataScriptElement);
 };
+*/
 const addSwipeListener = (targetElement, minValidMoveX, listener) => {
   let firstTouch = null;
   let lastTouch = null;

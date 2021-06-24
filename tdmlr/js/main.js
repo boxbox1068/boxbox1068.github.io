@@ -1,14 +1,16 @@
 'use strict';
 let appLang;
+let stringResouces;
+let rabbitVariables;
 let questionPhrase;
 let answerPhrase;
-let rabbitVariables;
-const main = () => {
-  appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
-  document.title = {
-    'en': 'Rabbity Translation Flashcards',
-    'ja': '鼠算式翻訳練習帳'
-  }[appLang];
+const main = async () => {
+  appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
+  const urlOfStringResoucesJsonp = `./data/string-resouces-${appLang}.jsonp`;
+  await requestJsonp(urlOfStringResoucesJsonp).then(data => {
+    stringResouces = data;
+  });
+  document.title = stringResouces['app-title'];
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
@@ -30,62 +32,53 @@ const main = () => {
   setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
   setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
   setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
-  requestJsonp('./data/rabbit-variables.jsonp', 'jsonpCallback', jsonData => {
-    rabbitVariables = jsonData;
-    acceptInput();
+  await requestJsonp('./data/rabbit-variables.jsonp').then(data => {
+    rabbitVariables = data;
   });
-};
-const acceptInput = () => {
+  let leadText;
+  let questionLang;
+  let questionTemplate;
+  let answerLang;
+  let answerTemplate;
   const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
-  if (usp.get('iframe') == 'true') {
-    window.addEventListener('message', event => {
-      if (typeof event.data != 'object') {
-        return;
-      }
-      processInput(
-        event.data['l-text'],
-        event.data['q-temp'],
-        event.data['q-lang'],
-        event.data['a-temp'],
-        event.data['a-lang']
-      );
-    }, {once: true});
-  } else if (usp.has('question')) {
-    processInput(
-      usp.get('l-text'),
-      usp.get('q-temp'),
-      usp.get('q-lang'),
-      usp.get('a-temp'),
-      usp.get('a-lang')
-    );
+  if (usp.has('question')) {
+    leadText = usp.get('l-text');
+    questionLang = usp.get('q-lang');
+    questionTemplate = usp.get('q-temp');
+    answerLang = usp.get('a-lang');
+    answerTemplate = usp.get('a-temp');
+  } else if (usp.get('iframe') == 'true') {
+    await waitMessage().then(data => {
+      leadText = data['l-text'];
+      questionLang = data['q-lang'];
+      questionTemplate = data['q-temp'];
+      answerLang = data['a-lang'];
+      answerTemplate = data['a-temp'];
+    });
   } else {
-    const jsonpSrc = usp.get('jsonp') || {
-      'en': './data/drills-demo-en.jsonp',
-      'ja': './data/drills-demo-ja.jsonp'
-    }[appLang];
-    requestJsonp(jsonpSrc, 'jsonpCallback', jsonData => {
-      processInput(
-        jsonData['l-text'],
-        jsonData['q-temp'],
-        jsonData['q-lang'],
-        jsonData['a-temp'],
-        jsonData['a-lang']
-      );
+    const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
+    await requestJsonp(urlOfDrillsDemoJsonp).then(data => {
+      leadText = data['l-text'];
+      questionLang = data['q-lang'];
+      questionTemplate = data['q-temp'];
+      answerLang = data['a-lang'];
+      answerTemplate = data['a-temp'];
     });
   }
-}
-const processInput = (leadText, questionTemplate, questionLang, answerTemplate, answerLang) => {
-  const preprocessRabbitTemplate = rabbitTemplate => {
-    for (const key in rabbitVariables) {
-      rabbitTemplate = rabbitTemplate.replace(new RegExp(`%${key}%`, 'ig'), rabbitVariables[key]);
-    }
-    return rabbitTemplate;
-  };
-  const preprocessedQuestionTemplate = preprocessRabbitTemplate(questionTemplate);
-  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
-  const preprocessedAnswerTemplate = preprocessRabbitTemplate(answerTemplate);
-  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   dqs('#lead-body').innerHTML = leadText || '';
+
+
+
+
+
+
+
+
+
+  const preprocessedQuestionTemplate = expandStringVariables(questionTemplate, rabbitVariables);
+  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
+  const preprocessedAnswerTemplate = expandStringVariables(answerTemplate, rabbitVariables);
+  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   arrangeBehaviors();
   if (! leadText) {
     dqs('#fold-lead-button').click();
@@ -94,10 +87,11 @@ const processInput = (leadText, questionTemplate, questionLang, answerTemplate, 
 };
 const arrangeBehaviors = () => {
   dqs('#fold-lead-button').addEventListener('click', event => {
-    dqs(':root').classList.toggle('is-lead-folded');
-  });
-  dqs('#fold-lead-button').addEventListener('click', event => {
     $dt('current-step', 'startup');
+    dqs(':root').classList.add('is-lead-folded');
+    dqs('#fold-lead-button').addEventListener('click', event => {
+      dqs(':root').classList.toggle('is-lead-folded');
+    });
     dqs('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
       if (event.target.checked) {
         const text = {
