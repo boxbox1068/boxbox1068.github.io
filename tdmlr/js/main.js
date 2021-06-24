@@ -65,27 +65,11 @@ const main = async () => {
       answerTemplate = data['a-temp'];
     });
   }
-  dqs('#lead-body').innerHTML = leadText || '';
-
-
-
-
-
-
-
-
-
   const preprocessedQuestionTemplate = expandStringVariables(questionTemplate, rabbitVariables);
   questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
   const preprocessedAnswerTemplate = expandStringVariables(answerTemplate, rabbitVariables);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
-  arrangeBehaviors();
-  if (! leadText) {
-    dqs('#fold-lead-button').click();
-    dqs('#fold-lead-button').disabled = true;
-  }
-};
-const arrangeBehaviors = () => {
+  dqs('#lead-body').innerHTML = leadText || '';
   dqs('#fold-lead-button').addEventListener('click', event => {
     $dt('current-step', 'startup');
     dqs(':root').classList.add('is-lead-folded');
@@ -145,7 +129,11 @@ const arrangeBehaviors = () => {
     });
     resetCard();
   }, {once: true});
-}
+  if (! leadText) {
+    dqs('#fold-lead-button').click();
+    dqs('#fold-lead-button').disabled = true;
+  }
+};
 const initializeOperation = () => {
   ['mousemove', 'touchstart'].forEach(eventType => {
     dqs('body').addEventListener(eventType, event => {
