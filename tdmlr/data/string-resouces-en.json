@@ -1,0 +1,4 @@
+jsonpCallback({
+  "app-title": "Translation Drills Multiplying Like Rabbits",
+  "statistics-body": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%"
+});

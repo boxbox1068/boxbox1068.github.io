@@ -6,17 +6,13 @@ let rabbitVariables;
 const main = () => {
   appLang = {'ja': 'ja'}[window.navigator.language] || 'en';
   document.title = {
-    'en': 'Rabbity Phrase Drills',
-    'ja': '鼠算式フレーズ練習帳'
+    'en': 'Rabbity Translation Flashcards',
+    'ja': '鼠算式翻訳練習帳'
   }[appLang];
   dqsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
   dqs('#visit-home-button').addEventListener('click', event => {
-    const message = 'サイトを移動します。';
-    if (! window.confirm(message)) {
-      return;
-    }
     window.location.href = 'https://twitter.com/shikaku1068/';
   });
   dqs('#show-settings-button').addEventListener('click', event => {
@@ -64,8 +60,8 @@ const acceptInput = () => {
     );
   } else {
     const jsonpSrc = usp.get('jsonp') || {
-      'en': './data/demo.en.jsonp',
-      'ja': './data/demo.ja.jsonp'
+      'en': './data/drills-demo-en.jsonp',
+      'ja': './data/drills-demo-ja.jsonp'
     }[appLang];
     requestJsonp(jsonpSrc, 'jsonpCallback', jsonData => {
       processInput(
@@ -89,10 +85,14 @@ const processInput = (leadText, questionTemplate, questionLang, answerTemplate, 
   questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
   const preprocessedAnswerTemplate = preprocessRabbitTemplate(answerTemplate);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
-  dqs('#lead-body').innerHTML = leadText;
-  arrangeBehaviors(leadText != '');
+  dqs('#lead-body').innerHTML = leadText || '';
+  arrangeBehaviors();
+  if (! leadText) {
+    dqs('#fold-lead-button').click();
+    dqs('#fold-lead-button').disabled = true;
+  }
 };
-const arrangeBehaviors = hasLead => {
+const arrangeBehaviors = () => {
   dqs('#fold-lead-button').addEventListener('click', event => {
     dqs(':root').classList.toggle('is-lead-folded');
   });
@@ -151,10 +151,6 @@ const arrangeBehaviors = hasLead => {
     });
     resetCard();
   }, {once: true});
-  if (! hasLead) {
-    dqs('#fold-lead-button').click();
-    dqs('#fold-lead-button').disabled = true;
-  }
 }
 const initializeOperation = () => {
   ['mousemove', 'touchstart'].forEach(eventType => {
