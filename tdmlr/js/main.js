@@ -20,7 +20,7 @@ const main = async () => {
   dqs('#show-settings-button').addEventListener('click', event => {
     dqs(':root').classList.add('is-settings-shown');
   });
-  setSetting('animation-type', getSetting('animation-type') || 'flip');
+  setSetting('animation-type', getSetting('animation-type') || 'slide');
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
@@ -36,33 +36,33 @@ const main = async () => {
     rabbitVariables = data;
   });
   let leadText;
-  let questionLang;
   let questionTemplate;
-  let answerLang;
+  let questionLang;
   let answerTemplate;
+  let answerLang;
   const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
   if (usp.has('question')) {
     leadText = usp.get('l-text');
-    questionLang = usp.get('q-lang');
     questionTemplate = usp.get('q-temp');
-    answerLang = usp.get('a-lang');
+    questionLang = usp.get('q-lang');
     answerTemplate = usp.get('a-temp');
+    answerLang = usp.get('a-lang');
   } else if (usp.get('iframe') == 'true') {
     await waitMessage().then(data => {
       leadText = data['l-text'];
-      questionLang = data['q-lang'];
       questionTemplate = data['q-temp'];
-      answerLang = data['a-lang'];
+      questionLang = data['q-lang'];
       answerTemplate = data['a-temp'];
+      answerLang = data['a-lang'];
     });
   } else {
     const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
     await requestJsonp(urlOfDrillsDemoJsonp).then(data => {
       leadText = data['l-text'];
-      questionLang = data['q-lang'];
       questionTemplate = data['q-temp'];
-      answerLang = data['a-lang'];
+      questionLang = data['q-lang'];
       answerTemplate = data['a-temp'];
+      answerLang = data['a-lang'];
     });
   }
   const preprocessedQuestionTemplate = expandStringVariables(questionTemplate, rabbitVariables);
@@ -71,7 +71,6 @@ const main = async () => {
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   dqs('#lead-body').innerHTML = leadText || '';
   dqs('#fold-lead-button').addEventListener('click', event => {
-    $dt('current-step', 'startup');
     dqs(':root').classList.add('is-lead-folded');
     dqs('#fold-lead-button').addEventListener('click', event => {
       dqs(':root').classList.toggle('is-lead-folded');
@@ -106,22 +105,18 @@ const main = async () => {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
       } else {
-        const text = {
-          'question': questionPhrase.text,
-          'answer': answerPhrase.text
-        }[$dt('current-step')];
-        const lang = {
-          'question': questionPhrase.lang,
-          'answer': answerPhrase.lang
-        }[$dt('current-step')];
-        readAloud(text, lang);
+        if (getFlag('is-answer-shown')) {
+          readAloud(answerPhrase.text, answerPhrase.lang);
+        } else {
+          readAloud(questionPhrase.text, questionPhrase.lang);
+        }
       }
     });
     dqs('#play-button').addEventListener('click', event => {
-      if ($dt('current-step') == 'question') {
-        showAnswer();
-      } else {
+      if (getFlag('is-answer-shown')) {
         resetCard();
+      } else {
+        showAnswer();
       }
     });
     dqs('#skip-button').addEventListener('click', event => {
@@ -237,17 +232,17 @@ const showQuestion = () => {
       resetQuestionPanel();
       dqs('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
       dqs('#question-cover').addEventListener('animationend', event => {
-        $dt('current-step', 'question');
-        
+        setFlag('is-question-shown', true);
+        setFlag('is-answer-shown', false);
         enableButtons();
       }, {once: true});
     }, {once: true});
-    if ($dt('current-step') == 'startup') {
-      dqs('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
-    } else {
+    if (getFlag('is-question-shown')) {
       dqs('#question-cover').style.animation =  'slideInFromLeft 500ms forwards';
+    } else {
+      dqs('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
     }
-    if ($dt('current-step') == 'answer') {
+    if (getFlag('is-answer-shown')) {
       dqs('#answer-cover').style.animation =  'slideInFromLeft 500ms forwards';
     } else {
       dqs('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
@@ -257,7 +252,8 @@ const showQuestion = () => {
       resetQuestionPanel();
       dqs('#question-cover').style.visibility = 'hidden';
       dqs('#question-cell').addEventListener('animationend', event => {
-        $dt('current-step', 'question');
+        setFlag('is-question-shown', true);
+        setFlag('is-answer-shown', false);
         enableButtons();
       }, {once: true});
       dqs('#question-cell').style.animation = 'flipB 250ms forwards';
@@ -272,7 +268,8 @@ const showQuestion = () => {
     resetQuestionPanel();
     dqs('#question-cover').style.visibility = 'hidden';
     dqs('#answer-cover').style.visibility = 'visible';
-    $dt('current-step', 'question');
+    setFlag('is-question-shown', true);
+    setFlag('is-answer-shown', false);
     enableButtons();
   }
 };
@@ -287,7 +284,7 @@ const showAnswer = () => {
   }
   if (getSetting('animation-type') == 'slide') {
     dqs('#answer-cover').addEventListener('animationend', event => {
-      $dt('current-step', 'answer');
+      setFlag('is-answer-shown', true);
       enableButtons();
     }, {once: true});
     dqs('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
@@ -295,7 +292,7 @@ const showAnswer = () => {
     dqs('#answer-cell').addEventListener('animationend', event => {
       dqs('#answer-cover').style.visibility = 'hidden';
       dqs('#answer-cell').addEventListener('animationend', event => {
-        $dt('current-step', 'answer');
+        setFlag('is-answer-shown', true);
         enableButtons();
       }, {once: true});
       dqs('#answer-cell').style.animation = 'flipB 250ms forwards';  
@@ -303,7 +300,7 @@ const showAnswer = () => {
     dqs('#answer-cell').style.animation = 'flipA 250ms forwards';
   } else {
     dqs('#answer-cover').style.visibility = 'hidden';
-    $dt('current-step', 'answer');
+    setFlag('is-answer-shown', true);
     enableButtons();
   }
 };

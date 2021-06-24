@@ -197,18 +197,3 @@ const addKeyDownListener = (targetElement, targetKey, listener) => {
 };
 
 
-
-
-
-
-const $dt = (key, value, onChangeCallback) => {
-  $dt._onChangeCallbacks || ($dt._onChangeCallbacks = {});
-  if (onChangeCallback !== undefined) {
-    $dt._onChangeCallbacks[key] = onChangeCallback;
-  }
-  if (value !== undefined) {
-    $dt[key] = value;
-    $dt._onChangeCallbacks[key] && $dt._onChangeCallbacks[key](key, value);
-  }
-  return $dt[key];
-};
