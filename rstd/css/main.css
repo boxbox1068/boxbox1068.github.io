@@ -12,9 +12,9 @@
   --main-panel-color: #263238;
   --main-cover-background-color: #3F51B5;
   --main-cover-color: #3949AB;
-  --controls-background-color: #CFD8DC;
+  --control-background-color: #CFD8DC;
   --disabled-controls-background-color: #ECEFF1;
-  --controls-color: #455A64;
+  --control-color: #455A64;
   --toggle-color: #607D8B;
   --on-toggle-color: #FFC107;
   --footer-background-color: #37474F;
@@ -56,7 +56,7 @@
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
-  --controls-height: 2rem;
+  --control-height: 2rem;
   --footer-cell-height: 2rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 1px;
@@ -68,7 +68,6 @@
 *::after {
   box-sizing: border-box;
   overflow: hidden;
-  cursor: default;
   user-select: none;
   touch-action: none;
 }
@@ -196,6 +195,7 @@ body {
   height: var(--fold-lead-button-height);
   background-color: var(--fold-lead-checkbox-background-color);
   color: var(--fold-lead-checkbox-color);
+  cursor: pointer;
   transition-duration: var(--common-transition-duration);
 }
 .is-lead-folded #fold-lead-button {
@@ -246,7 +246,16 @@ body {
   color: var(--main-cover-color);
   font-weight: bold;
   font-size: 10rem;
+  transition: 500ms;
 }
+
+:root.is-question-shown #question-cover,
+:root.is-answer-shown #answer-cover {
+  left: 100%;
+}
+
+
+
 .option {
   font-weight: bold;
 }
@@ -352,32 +361,33 @@ body {
 #controls-body > *:not(:last-child) {
   border-right: 0;
 }
-:root .reading-toggle {
+
+.hoge {
   --this-toggle-height: .25rem;
 }
-.reading-toggle {
+.hoge {
   position: relative;
   width: 1.5rem;
-  height: var(--controls-height);
-  border: var(--common-border-width) solid var(--controls-color);
-  background-color: var(--controls-background-color);
+  height: var(--control-height);
+  border: var(--common-border-width) solid var(--control-color);
+  background-color: var(--control-background-color);
 }
-.reading-toggle::before {
+.hoge::before {
   top: 0;
   border-top: var(--this-toggle-height) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--controls-color);
+  border-bottom: var(--common-border-width) solid var(--control-color);
   background-color: var(--toggle-color);
-  color: var(--controls-background-color);
+  color: var(--control-background-color);
 }
-.reading-toggle::after {
+.hoge::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--controls-color);
+  border-top: var(--common-border-width) solid var(--control-color);
   border-bottom: var(--this-toggle-height) solid transparent;
   background-color: var(--on-toggle-color);
-  color: var(--controls-color);
+  color: var(--control-color);
 }
-.reading-toggle::before,
-.reading-toggle::after {
+.hoge::before,
+.hoge::after {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -386,20 +396,23 @@ body {
   width: 100%;
   height: calc(100% - var(--this-toggle-height));
   font-weight: bold;
+  font-size: 1rem;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.reading-toggle[for="enable-automatic-question-reading-checkbox"]::before,
-.reading-toggle[for="enable-automatic-question-reading-checkbox"]::after {
+.hoge#enable-automatic-question-reading-button::before,
+.hoge#enable-automatic-question-reading-button::after {
   content: "Q";
 }
-.reading-toggle[for="enable-automatic-answer-reading-checkbox"]::before,
-.reading-toggle[for="enable-automatic-answer-reading-checkbox"]::after {
+.hoge#enable-automatic-answer-reading-button::before,
+.hoge#enable-automatic-answer-reading-button::after {
   content: "A";
 }
-*:checked + .reading-toggle::before {
+:root.is-automatic-question-reading-enabled .hoge#enable-automatic-question-reading-button::before,
+:root.is-automatic-answer-reading-enabled .hoge#enable-automatic-answer-reading-button::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-*:checked + .reading-toggle::after {
+:root.is-automatic-question-reading-enabled .hoge#enable-automatic-question-reading-button::after,
+:root.is-automatic-answer-reading-enabled .hoge#enable-automatic-answer-reading-button::after {
   top: var(--this-toggle-height);
 }
 .operation-button {
@@ -407,10 +420,10 @@ body {
   justify-content: center;
   align-items: center;
   width: 3.5rem;
-  height: var(--controls-height);
-  border: var(--common-border-width) solid var(--controls-color);
-  background-color: var(--controls-background-color);
-  color: var(--controls-color);
+  height: var(--control-height);
+  border: var(--common-border-width) solid var(--control-color);
+  background-color: var(--control-background-color);
+  color: var(--control-color);
 }
 .operation-button#play-button {
   width: 5.5rem;
@@ -444,6 +457,7 @@ body {
 #show-settings-button {
   width: 1rem;
   height: 1rem;
+  cursor: pointer;
 }
 
 

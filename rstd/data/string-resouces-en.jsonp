@@ -1,4 +1,4 @@
 jsonpCallback({
   "app-title": "Rabbity Style Translation Drills",
-  "statistics-body": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%"
+  "statistics-text": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%"
 });

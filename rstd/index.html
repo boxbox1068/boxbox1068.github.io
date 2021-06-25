@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>Translation Drills Multiplying Like Rabbits 鼠算式翻訳練習帳</title>
-<meta name="author" content="しかく@shikaku1068">
+<title>Rabbity Style Translation Drills</title>
+<meta name="author" content="shikaku1068">
 <meta name="description" content="">
 <link rel="icon" type="image/png" href="">
 <link rel="canonical" href="https://shikaku1068.github.io/rapf/">
@@ -38,18 +38,18 @@
 <div id="statistics-cell">
   <div id="statistics-panel">
     <div id="statistics-body">
+<!--
       <span lang="en">No. <span id="pattern-id">0</span> out of <span id="pattern-count">0</span> patterns / Refill <span id="refill-count">0</span></span>
       <span lang="ja">全<span id="pattern-count">0</span>通り中第<span id="pattern-id">0</span>番 / おかわり<span id="refill-count">0</span>回目</span>
+-->
     </div>
   </div>
 </div>
 <div id="controls-cell">
   <div id="controls-panel">
     <div id="controls-body">
-      <input type="checkbox" name="enable-automatic-question-reading" id="enable-automatic-question-reading-checkbox" hidden>
-      <label class="reading-toggle" for="enable-automatic-question-reading-checkbox"></label>
-      <input type="checkbox" name="enable-automatic-answer-reading" id="enable-automatic-answer-reading-checkbox" hidden>
-      <label class="reading-toggle" for="enable-automatic-answer-reading-checkbox"></label>
+      <button class="hoge" id="enable-automatic-question-reading-button">q</button>
+      <button class="hoge" id="enable-automatic-answer-reading-button">a</button>
       <button class="operation-button" id="read-aloud-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M520 290L640 290L640 350L520 350L520 290Z" id="i1C11dDKKa"></path><path d="M130 220L430 60L430 580L130 420L30 460L30 180L130 220Z" id="a2oF37ZwQz"></path><path d="M502.94 87.02L608.89 30.69L637.06 83.66L531.11 140L502.94 87.02Z" id="a1ZzuoI9NI"></path><path d="M531.11 505.34L637.06 561.68L608.89 614.66L502.94 558.32L531.11 505.34Z" id="abtgQWi9P"></path></defs><g><g><use xlink:href="#i1C11dDKKa" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="1"></use><g><use xlink:href="#a2oF37ZwQz" opacity="1" fill-opacity="0" stroke-width="60" stroke-opacity="1"></use></g></g><g><use xlink:href="#a1ZzuoI9NI" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#abtgQWi9P" opacity="1" fill-opacity="1"></use></g></g></svg>
       </button>
@@ -71,8 +71,8 @@
       <button id="show-settings-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M580 320C580 463.5 463.5 580 320 580C176.5 580 60 463.5 60 320C60 176.5 176.5 60 320 60C463.5 60 580 176.5 580 320Z" id="c1lByGUXlc"></path><clipPath id="clipa1G4TfmPdA"><use xlink:href="#c1lByGUXlc" opacity="1"></use></clipPath><path d="M80 240L0 280L0 360L80 400L160 360L160 280L80 240Z" id="c2hgb4qMte"></path><path d="M560 240L480 280L480 360L560 400L640 360L640 280L560 240Z" id="a3kkfwhfzJ"></path><path d="M206.86 93.73L122.01 65.44L65.44 122.01L93.73 206.86L178.58 235.15L235.15 178.58L206.86 93.73Z" id="a58z5pHSbb"></path><path d="M546.27 433.14L461.42 404.85L404.85 461.42L433.14 546.27L517.99 574.56L574.56 517.99L546.27 433.14Z" id="f1cVheeGKt"></path><path d="M400 80L360 0L280 0L240 80L280 160L360 160L400 80Z" id="aUtPW7pQt"></path><path d="M400 560L360 480L280 480L240 560L280 640L360 640L400 560Z" id="nWDNJytMj"></path><path d="M546.27 206.86L574.56 122.01L517.99 65.44L433.14 93.73L404.85 178.58L461.42 235.15L546.27 206.86Z" id="a40J1xVaME"></path><path d="M206.86 546.27L235.15 461.42L178.58 404.85L93.73 433.14L65.44 517.99L122.01 574.56L206.86 546.27Z" id="c5DJ6rvCgI"></path></defs><g><g><g clip-path="url(#clipa1G4TfmPdA)"><use xlink:href="#c1lByGUXlc" opacity="1" fill-opacity="0" stroke-width="320" stroke-opacity="1"></use></g></g><g><use xlink:href="#c2hgb4qMte" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a3kkfwhfzJ" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a58z5pHSbb" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#f1cVheeGKt" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#aUtPW7pQt" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#nWDNJytMj" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a40J1xVaME" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#c5DJ6rvCgI" opacity="1" fill-opacity="1"></use></g></g></svg>
       </button>
-      <span lang="en"><b>Rabbity Style Translation Drills</b> &copy; 2021 SHIKAKU</span>
-      <span lang="ja"><b>鼠算式翻訳練習帳</b> &copy; 2021 しかく</span>
+      <span lang="en"><b>Rabbity Style Translation Drills</b> &copy; 2021 shikaku1068</span>
+      <span lang="ja"><b>鼠算式翻訳練習帳</b> &copy; 2021 shikaku1068</span>
     </div>
   </div>
 </div>

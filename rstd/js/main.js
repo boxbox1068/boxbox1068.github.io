@@ -1,12 +1,11 @@
 'use strict';
 let appLang;
 let stringResouces;
-let rabbitVariables;
+let templateVariableValues;
 let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
-appLang = 'en';
   const urlOfStringResoucesJsonp = `./data/string-resouces-${appLang}.jsonp`;
   await requestJsonp(urlOfStringResoucesJsonp).then(data => {
     stringResouces = data;
@@ -19,10 +18,10 @@ appLang = 'en';
     window.location.href = 'https://twitter.com/shikaku1068/';
   });
   dqs('#show-settings-button').addEventListener('click', event => {
-    dqs(':root').classList.add('is-settings-shown');
+    setFlag('is-settings-shown', true);
   });
-  setSetting('animation-type', getSetting('animation-type') || 'slide');
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
+  setSetting('animation-duration', getSetting('animation-duration') || '500');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
   setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
@@ -34,7 +33,7 @@ appLang = 'en';
   setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
   setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
   await requestJsonp('./data/rabbit-variables.jsonp').then(data => {
-    rabbitVariables = data;
+    templateVariableValues = data;
   });
   let leadText;
   let questionTemplate;
@@ -66,36 +65,37 @@ appLang = 'en';
       answerLang = data['a-lang'];
     });
   }
-  const preprocessedQuestionTemplate = expandStringVariables(questionTemplate, rabbitVariables);
+  const preprocessedQuestionTemplate = expandVariablesInString(questionTemplate, templateVariableValues);
   questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
-  const preprocessedAnswerTemplate = expandStringVariables(answerTemplate, rabbitVariables);
+  const preprocessedAnswerTemplate = expandVariablesInString(answerTemplate, templateVariableValues);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   dqs('#lead-body').innerHTML = leadText || '';
   dqs('#fold-lead-button').addEventListener('click', event => {
-    dqs(':root').classList.add('is-lead-folded');
     dqs('#fold-lead-button').addEventListener('click', event => {
-      dqs(':root').classList.toggle('is-lead-folded');
+      setFlag('is-lead-folded', null);
     });
-    dqs('#enable-automatic-question-reading-checkbox').addEventListener('change', event => {
-      if (event.target.checked) {
+    dqs('#enable-automatic-question-reading-button').addEventListener('click', event => {
+      setFlag('is-automatic-question-reading-enabled', null);
+      if (getFlag('is-automatic-question-reading-enabled')) {
         const text = {
           'en': 'Automatic question reading enabled.',
           'ja': '問題の自動読み上げ、オン。'
         }[appLang];
-        readAloud(text, lang);
+        readAloud(text, appLang);
       } else {
         if (window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
         }
       }
     });
-    dqs('#enable-automatic-answer-reading-checkbox').addEventListener('change', event => {
-      if (event.target.checked) {
+    dqs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
+      setFlag('is-automatic-answer-reading-enabled', null);
+      if (getFlag('is-automatic-answer-reading-enabled')) {
         const text = {
           'en': 'Automatic answer reading enabled.',
           'ja': '答えの自動読み上げ、オン。'
         }[appLang];
-        readAloud(text, lang);
+        readAloud(text, appLang);
       } else {
         if (window.speechSynthesis.speaking) {
           window.speechSynthesis.cancel();
@@ -123,7 +123,10 @@ appLang = 'en';
     dqs('#skip-button').addEventListener('click', event => {
       resetCard();
     });
-    resetCard();
+    setFlag('is-lead-folded', true);
+//    resetCard();
+    window.setTimeout(() => {resetCard();}, 500);
+    //    window.setTimeout(() => resetCard(), 500);
   }, {once: true});
   if (! leadText) {
     dqs('#fold-lead-button').click();
@@ -138,17 +141,17 @@ const initializeOperation = () => {
     }, {capture: true});  
   });
   addSwipeListener(dqs('body'), 25, () => {
-    if (dqs(':root.is-lead-folded')) {
+    if (getFlag('is-lead-folded')) {
       dqs('#play-button').click();
     } else {
       dqs('#fold-lead-button').click();
     }
   });
   addSwipeListener(dqs('body'), -25, () => {
-    if (! dqs(':root.enable-skip-by-swipe')) {
+    if (! getFlag('enable-skip-by-swipe')) {
       return;
     }
-    if (dqs(':root.is-lead-folded')) {
+    if (getFlag('is-lead-folded')) {
       dqs('#skip-button').click();
     } else {
       dqs('#fold-lead-button').click();
@@ -206,81 +209,57 @@ const initializeOperation = () => {
     });
   });
 };
-
-
-const resetCard = () => {
+const resetCard = async () => {
+  disableButtons();
+  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
   const pathIdSeed = Math.random();
   questionPhrase.reset(pathIdSeed);
   answerPhrase.reset(pathIdSeed);
-  dqs('#pattern-count').innerHTML = questionPhrase.possiblePathCount.toLocaleString();
-  dqs('#pattern-id').innerHTML = questionPhrase.pathId.toLocaleString();
-  dqs('#refill-count').innerHTML = (questionPhrase.resetCount - 1).toLocaleString();
-  showQuestion();
-};
-const showQuestion = () => {
-  const resetQuestionPanel = () => {
-    dqs('#question-panel').scrollTop = 0;
-    dqs('#question-body').innerHTML = questionPhrase.html;
-    addHintBalloons(dqs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
+  const variableValues = {
+    'pattern-count': questionPhrase.possiblePathCount.toLocaleString(),
+    'pattern-id': questionPhrase.pathId.toLocaleString(),
+    'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
   };
-  disableButtons();
-  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
-  if (dqs('#enable-automatic-question-reading-checkbox').checked) {
+  const statisticsText = expandVariablesInString(stringResouces['statistics-text'], variableValues);
+  dqs('#statistics-body').innerHTML = statisticsText;
+  setFlag('is-answer-shown', false);
+  if (getFlag('is-question-shown')) {
+    setFlag('is-question-shown', false);
+    await setTimeout(getSetting('animation-duration', 'number'));
+  }
+  dqs('#question-panel').scrollTop = 0;
+  dqs('#question-body').innerHTML = questionPhrase.html;
+  addHintBalloons(dqs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
+  dqs('#answer-panel').scrollTop = 0;
+  dqs('#answer-body').innerHTML = answerPhrase.html;
+  addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
+  setFlag('is-question-shown', true);
+  await setTimeout(getSetting('animation-duration', 'number'));
+  if (getFlag('is-automatic-question-reading-enabled')) {
     readAloud(questionPhrase.text, questionPhrase.lang);
   }
-  if (getSetting('animation-type') == 'slide') {
-    dqs('#question-cover').addEventListener('animationend', event => {
-      resetQuestionPanel();
-      dqs('#question-cover').style.animation = 'slideOutToRight 500ms ease-in-out forwards';
-      dqs('#question-cover').addEventListener('animationend', event => {
-        setFlag('is-question-shown', true);
-        setFlag('is-answer-shown', false);
-        enableButtons();
-      }, {once: true});
-    }, {once: true});
-    if (getFlag('is-question-shown')) {
-      dqs('#question-cover').style.animation =  'slideInFromLeft 500ms forwards';
-    } else {
-      dqs('#question-cover').style.animation =  'slideInFromLeft 0ms forwards';
-    }
-    if (getFlag('is-answer-shown')) {
-      dqs('#answer-cover').style.animation =  'slideInFromLeft 500ms forwards';
-    } else {
-      dqs('#answer-cover').style.animation =  'slideInFromLeft 0ms forwards';
-    }
-  } else if (getSetting('animation-type') == 'flip') {
-    dqs('#question-cell').addEventListener('animationend', event => {
-      resetQuestionPanel();
-      dqs('#question-cover').style.visibility = 'hidden';
-      dqs('#question-cell').addEventListener('animationend', event => {
-        setFlag('is-question-shown', true);
-        setFlag('is-answer-shown', false);
-        enableButtons();
-      }, {once: true});
-      dqs('#question-cell').style.animation = 'flipB 250ms forwards';
-    }, {once: true});
-    dqs('#question-cell').style.animation = 'flipA 250ms forwards';
-    dqs('#answer-cell').addEventListener('animationend', event => {
-      dqs('#answer-cover').style.visibility = 'visible';
-      dqs('#answer-cell').style.animation = 'flipB 250ms forwards';
-    }, {once: true});
-    dqs('#answer-cell').style.animation = 'flipA 250ms forwards';
-  } else {
-    resetQuestionPanel();
-    dqs('#question-cover').style.visibility = 'hidden';
-    dqs('#answer-cover').style.visibility = 'visible';
-    setFlag('is-question-shown', true);
-    setFlag('is-answer-shown', false);
-    enableButtons();
-  }
+  enableButtons();
 };
+const showAnswer = async () => {
+  disableButtons();
+  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
+  setFlag('is-answer-shown', true);
+  await setTimeout(getSetting('animation-duration', 'number'));
+  if (getFlag('is-automatic-answer-reading-enabled')) {
+    readAloud(answerPhrase.text, answerPhrase.lang);
+  }
+  enableButtons();
+};
+
+
+/*
 const showAnswer = () => {
   disableButtons();
   dqs('#answer-panel').scrollTop = 0;
   dqs('#answer-body').innerHTML = answerPhrase.html;
   addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
   window.speechSynthesis.speaking && window.speechSynthesis.cancel();
-  if (dqs('#enable-automatic-answer-reading-checkbox').checked) {
+  if (getFlag('is-automatic-answer-reading-enabled')) {
     readAloud(answerPhrase.text, answerPhrase.lang);
   }
   if (getSetting('animation-type') == 'slide') {
@@ -305,6 +284,8 @@ const showAnswer = () => {
     enableButtons();
   }
 };
+*/
+
 const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   const setHintBalloonPosition = optionElement => {
     const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');

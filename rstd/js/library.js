@@ -2,9 +2,11 @@
 const dqs = document.querySelector.bind(document);
 const dqsa = document.querySelectorAll.bind(document);
 const dce = document.createElement.bind(document);
-const expandStringVariables = (targetString, stringVariables) => {
-  for (const key in stringVariables) {
-    targetString = targetString.replace(new RegExp(`%${key}%`, 'ig'), stringVariables[key]);
+const expandVariablesInString = (targetString, variableValues, symbolForVariables) => {
+  symbolForVariables || (symbolForVariables = '%');
+  for (const key in variableValues) {
+    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
+    targetString = targetString.replace(variableExpression, variableValues[key]);
   }
   return targetString;
 };
@@ -57,7 +59,7 @@ const getSetting = (key, valueType) => {
   };
   const candidateValueA = dqs(':root').getAttribute(`data-${key}`);
   if (candidateValueA != null) {
-    return candidateValueA;
+    return convertValue(candidateValueA, valueType);
   }
   const cookies = {};
   document.cookie.split(';').forEach(parameter => {
@@ -69,7 +71,14 @@ const getSetting = (key, valueType) => {
     cookies[key] = decodeURIComponent(encodedValue);
   });
   const candidateValueB = cookies[key];
-  return candidateValueB;
+  return convertValue(candidateValueB, valueType);
+};
+const setTimeout = delay => {
+  return new Promise((resolve, reject) => {
+    window.setTimeout(() => {
+      resolve();
+    }, delay);
+  });
 };
 const requestJsonp = (jsonpSrc, jsonpCallbackName) => {
   return new Promise((resolve, reject) => {
