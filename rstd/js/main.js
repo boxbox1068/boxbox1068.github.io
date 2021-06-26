@@ -20,11 +20,12 @@ const main = async () => {
   qs('#show-settings-button').addEventListener('click', event => {
     setFlag('is-settings-shown', true);
   });
-  setSetting('disable-animation', getSetting('disable-animation') || 'true');
+  setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('animation-duration', getSetting('animation-duration') || '500');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
   setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
+  setSetting('voice-volume', getSetting('voice-volume') || '1');
   setSetting('app-voice-number', getSetting('app-voice-number') || '1');
   setSetting('question-voice-number', getSetting('question-voice-number') || '1');
   setSetting('question-voice-rate', getSetting('question-voice-rate') || '1');
@@ -71,65 +72,80 @@ const main = async () => {
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   qs('#lead-body').innerHTML = leadText || '';
   qs('#fold-lead-button').addEventListener('click', event => {
+    setFlag('is-lead-folded', null);
+  });
+  await new Promise((resolve, reject) => {
     qs('#fold-lead-button').addEventListener('click', event => {
-      setFlag('is-lead-folded', null);
-    });
-    qs('#enable-automatic-question-reading-button').addEventListener('click', event => {
-      setFlag('is-automatic-question-reading-enabled', null);
-      if (getFlag('is-automatic-question-reading-enabled')) {
-        const text = {
-          'en': 'Automatic question reading enabled.',
-          'ja': '問題の自動読み上げ、オン。'
-        }[appLang];
-        readAloud(text, appLang);
-      } else {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.cancel();
-        }
-      }
-    });
-    qs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
-      setFlag('is-automatic-answer-reading-enabled', null);
-      if (getFlag('is-automatic-answer-reading-enabled')) {
-        const text = {
-          'en': 'Automatic answer reading enabled.',
-          'ja': '答えの自動読み上げ、オン。'
-        }[appLang];
-        readAloud(text, appLang);
-      } else {
-        if (window.speechSynthesis.speaking) {
-          window.speechSynthesis.cancel();
-        }
-      }
-    });
-    qs('#read-aloud-button').addEventListener('click', event => {
+      resolve();
+    }, {once: true});
+    if (! leadText) {
+      qs('#fold-lead-button').click();
+      qs('#fold-lead-button').disabled = true;
+    }
+  });
+  qs('#enable-automatic-question-reading-button').addEventListener('click', event => {
+    setFlag('is-automatic-question-reading-enabled', null);
+    if (getFlag('is-automatic-question-reading-enabled')) {
+      const text = {
+        'en': 'Automatic question reading enabled.',
+        'ja': '問題の自動読み上げ、オン。'
+      }[appLang];
+      readAloud(text, appLang, getSetting('voice-volume', 'number'), 1, 1);
+    } else {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
-      } else {
-        if (getFlag('is-answer-shown')) {
-          readAloud(answerPhrase.text, answerPhrase.lang);
-        } else {
-          readAloud(questionPhrase.text, questionPhrase.lang);
-        }
       }
-    });
-    qs('#play-button').addEventListener('click', event => {
+    }
+  });
+  qs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
+    setFlag('is-automatic-answer-reading-enabled', null);
+    if (getFlag('is-automatic-answer-reading-enabled')) {
+      const text = {
+        'en': 'Automatic answer reading enabled.',
+        'ja': '答えの自動読み上げ、オン。'
+      }[appLang];
+      readAloud(text, appLang, getSetting('voice-volume', 'number'), 1, 1);
+    } else {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  });
+  qs('#read-aloud-button').addEventListener('click', event => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+    } else {
       if (getFlag('is-answer-shown')) {
-        resetCard();
+        readAloud(
+          answerPhrase.text,
+          answerPhrase.lang,
+          getSetting('voice-volume', 'number'),
+          getSetting('answer-voice-rate', 'number'),
+          getSetting('answer-voice-pitch', 'number')
+        );
       } else {
-        showAnswer();
+        readAloud(
+          questionPhrase.text,
+          questionPhrase.lang,
+          getSetting('voice-volume', 'number'),
+          getSetting('question-voice-rate', 'number'),
+          getSetting('question-voice-pitch', 'number')
+        );
       }
-    });
-    qs('#skip-button').addEventListener('click', event => {
+    }
+  });
+  qs('#play-button').addEventListener('click', event => {
+    if (getFlag('is-answer-shown')) {
       resetCard();
-    });
-    setFlag('is-lead-folded', true);
+    } else {
+      showAnswer();
+    }
+  });
+  qs('#skip-button').addEventListener('click', event => {
     resetCard();
-  }, {once: true});
-  if (! leadText) {
-    qs('#fold-lead-button').click();
-    qs('#fold-lead-button').disabled = true;
-  }
+  });
+  setFlag('is-lead-folded', true);
+  resetCard();
 };
 const initializeOperation = () => {
   ['mousemove', 'touchstart'].forEach(eventType => {
@@ -317,14 +333,14 @@ const enableButtons = () => {
   qs('#play-button').disabled = false;
   qs('#skip-button').disabled = false;
 };
-const readAloud = (text, lang) => {
+const readAloud = (text, lang, volume, rate, pitch) => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
-  utterance.text = text;
-  utterance.lang = lang;
-  utterance.volume = 1;
-  utterance.rate = 1;
-  utterance.pitch = 1;
+  utterance.text = text || '';
+  utterance.lang = lang || 'en';
+  utterance.volume = volume || 1;
+  utterance.rate = rate || 1;
+  utterance.pitch = pitch || 1;
   const candidateVoices = [];
   for (const voice of window.speechSynthesis.getVoices()) {
     if (new RegExp(`^${lang}`, 'i').test(voice.lang)) {
