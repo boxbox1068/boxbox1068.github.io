@@ -20,7 +20,7 @@ const main = async () => {
   qs('#show-settings-button').addEventListener('click', event => {
     setFlag('is-settings-shown', true);
   });
-  setSetting('disable-animation', getSetting('disable-animation') || 'false');
+  setSetting('disable-animation', getSetting('disable-animation') || 'true');
   setSetting('animation-duration', getSetting('animation-duration') || '500');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
@@ -212,39 +212,41 @@ const resetCard = async () => {
   if (window.speechSynthesis.speaking) {
     window.speechSynthesis.cancel();
   }
+  qs('#question-cover').style.left = '0';
+  qs('#answer-cover').style.left = '0';
+  const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
+  const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
+  if (commonTimeoutDelay) {
+    await setTimeout(commonTimeoutDelay);
+  }
   const pathIdSeed = Math.random();
   questionPhrase.reset(pathIdSeed);
   answerPhrase.reset(pathIdSeed);
-  const variableValues = {
+  const statisticVariableValues = {
     'pattern-count': questionPhrase.possiblePathCount.toLocaleString(),
     'pattern-id': questionPhrase.pathId.toLocaleString(),
     'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
   };
-  const statisticsText = expandVariables(stringResouces['statistics-text'], variableValues);
+  const statisticsText = expandVariables(stringResouces['statistics-text'], statisticVariableValues);
   qs('#statistics-body').innerHTML = statisticsText;
-  if (getFlag('is-question-shown')) {
-    qs('#question-cover').style.left = '0';
-  }
-  if (getFlag('is-answer-shown')) {
-    qs('#answer-cover').style.left = '0';
-  }
-  const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
-  const timeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
-  await setTimeout(timeoutDelay);
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
   addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
   addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
-  await setTimeout(200);
+  if (commonTimeoutDelay) {
+    await setTimeout(commonTimeoutDelay / 2);
+  }
   qs('#question-cover').style.left = '-100%';
-  await setTimeout(timeoutDelay);
+  if (commonTimeoutDelay) {
+    await setTimeout(commonTimeoutDelay);
+  }
   setFlag('is-question-shown', true);
   setFlag('is-answer-shown', false);
   enableButtons();
   if (getFlag('is-automatic-question-reading-enabled')) {
-    readAloud(questionPhrase.text, questionPhrase.lang);
+    qs('#read-aloud-button').click();
   }
 };
 const showAnswer = async () => {
@@ -253,11 +255,15 @@ const showAnswer = async () => {
     window.speechSynthesis.cancel();
   }
   qs('#answer-cover').style.left = '100%';
-  await setTimeout(getSetting('animation-duration', 'number'));
+  const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
+  const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
+  if (commonTimeoutDelay) {
+    await setTimeout(commonTimeoutDelay);
+  }
   setFlag('is-answer-shown', true);
   enableButtons();
   if (getFlag('is-automatic-answer-reading-enabled')) {
-    readAloud(answerPhrase.text, answerPhrase.lang);
+    qs('#read-aloud-button').click();
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
