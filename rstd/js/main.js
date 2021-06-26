@@ -25,7 +25,7 @@ const main = async () => {
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
   setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
-  setSetting('voice-volume', getSetting('voice-volume') || '1');
+  setSetting('common-voice-volume', getSetting('common-voice-volume') || '1');
   setSetting('app-voice-number', getSetting('app-voice-number') || '1');
   setSetting('question-voice-number', getSetting('question-voice-number') || '1');
   setSetting('question-voice-rate', getSetting('question-voice-rate') || '1');
@@ -90,7 +90,12 @@ const main = async () => {
         'en': 'Automatic question reading enabled.',
         'ja': '問題の自動読み上げ、オン。'
       }[appLang];
-      readAloud(text, appLang, getSetting('voice-volume', 'number'), 1, 1);
+      readAloud(
+        text,
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('app-voice-number', 'number')
+      );
     } else {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -104,7 +109,12 @@ const main = async () => {
         'en': 'Automatic answer reading enabled.',
         'ja': '答えの自動読み上げ、オン。'
       }[appLang];
-      readAloud(text, appLang, getSetting('voice-volume', 'number'), 1, 1);
+      readAloud(
+        text,
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('app-voice-number', 'number')
+      );
     } else {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -119,7 +129,8 @@ const main = async () => {
         readAloud(
           answerPhrase.text,
           answerPhrase.lang,
-          getSetting('voice-volume', 'number'),
+          getSetting('common-voice-volume', 'number'),
+          getSetting('answer-voice-number', 'number'),
           getSetting('answer-voice-rate', 'number'),
           getSetting('answer-voice-pitch', 'number')
         );
@@ -127,7 +138,8 @@ const main = async () => {
         readAloud(
           questionPhrase.text,
           questionPhrase.lang,
-          getSetting('voice-volume', 'number'),
+          getSetting('common-voice-volume', 'number'),
+          getSetting('question-voice-number', 'number'),
           getSetting('question-voice-rate', 'number'),
           getSetting('question-voice-pitch', 'number')
         );
@@ -333,7 +345,7 @@ const enableButtons = () => {
   qs('#play-button').disabled = false;
   qs('#skip-button').disabled = false;
 };
-const readAloud = (text, lang, volume, rate, pitch) => {
+const readAloud = (text, lang, volume, number, rate, pitch) => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text || '';
@@ -348,7 +360,12 @@ const readAloud = (text, lang, volume, rate, pitch) => {
     }
   }
   if (candidateVoices.length) {
-    const index = Math.floor(candidateVoices.length * Math.random());
+    let index;
+    if (number) {
+      index = number % candidateVoices.length;
+    } else {
+      index = Math.floor(candidateVoices.length * Math.random());
+    }
     utterance.voice = candidateVoices[index];
   }
   window.speechSynthesis.speak(utterance);

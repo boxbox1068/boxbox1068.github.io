@@ -95,10 +95,15 @@ button {
   color: inherit;
   cursor: pointer;
 }
-button:hover,
-button:hover::before,
-button:hover::after {
-  background-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
+button:disabled,
+button:disabled::before,
+button:disabled::after {
+  background-image: linear-gradient(#0003,#0003);
+}
+button:not(:disabled):hover,
+button:not(:disabled):hover::before,
+button:not(:disabled):hover::after {
+  background-image: linear-gradient(#FFF3,#FFF3);
 }
 button > svg {
   width: 75%;
@@ -417,9 +422,11 @@ body > * {
 .operation-button#play-button {
   width: 5.5rem;
 }
+/*
 .operation-button:disabled {
   background-color: var(--disabled-controls-background-color);
 }
+*/
 .operation-button > svg {
   width: 50%;
   height: 50%;
