@@ -18,6 +18,8 @@ const main = async () => {
     const resourceKey = element.dataset.resourceKey;
     element.innerHTML = stringResources[resourceKey];
   });
+
+  // fontSize??
   setSetting('disable-animation', getSetting('disable-animation') || 'true');
   setSetting('animation-duration', getSetting('animation-duration') || '500');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');

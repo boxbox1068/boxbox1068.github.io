@@ -2,15 +2,13 @@
 const qs = document.querySelector.bind(document);
 const qsa = document.querySelectorAll.bind(document);
 const ce = document.createElement.bind(document);
-const expandVariables = (targetString, variableValues, symbolForVariables) => {
-  symbolForVariables || (symbolForVariables = '%');
-  for (const key in variableValues) {
-    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
-    targetString = targetString.replace(variableExpression, variableValues[key]);
-  }
-  return targetString;
+const setTimeout = delay => {
+  return new Promise(resolve => {
+    window.setTimeout(() => {
+      resolve();
+    }, delay);
+  });
 };
-
 const setFlag = (key, value) => {
   if (value === null) {
     qs(':root').classList.toggle(key);
@@ -23,11 +21,6 @@ const setFlag = (key, value) => {
 const getFlag = (key) => {
   return qs(':root').classList.contains(key);
 }
-
-
-
-
-
 const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
@@ -77,15 +70,6 @@ const getSetting = (key, valueType) => {
   const candidateValueB = cookies[key];
   return convertValue(candidateValueB, valueType);
 };
-const setTimeout = delay => {
-  return new Promise((resolve, reject) => {
-    window.setTimeout(() => {
-      resolve();
-    }, delay);
-  });
-};
-
-
 const requestJsonp = (jsonpSrc, callback) => {
   const jsonpCallbackName = 'jsonpCallback';
   window[jsonpCallbackName] = data => {
@@ -98,34 +82,30 @@ const requestJsonp = (jsonpSrc, callback) => {
   jsonpDataScriptElement.src = jsonpSrc;
   document.head.append(jsonpDataScriptElement);
 };
-
-
-/*
-const requestJsonp = (jsonpSrc, jsonpCallbackName) => {
-  return new Promise((resolve, reject) => {
-    jsonpCallbackName || (jsonpCallbackName = 'jsonpCallback');
-    window[jsonpCallbackName] = data => {
-      delete window[jsonpCallbackName];
-      qs('#jsonp-data').remove();
-      resolve(data);
-    };
-    const jsonpDataScriptElement = ce('script');
-    jsonpDataScriptElement.id = 'jsonp-data';
-    jsonpDataScriptElement.src = jsonpSrc;
-    document.head.append(jsonpDataScriptElement);
-  });
+const expandVariables = (targetString, variableValues, symbolForVariables) => {
+  symbolForVariables || (symbolForVariables = '%');
+  for (const key in variableValues) {
+    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
+    targetString = targetString.replace(variableExpression, variableValues[key]);
+  }
+  return targetString;
 };
-*/
-
-/*
-const waitMessage = () => {
-  return new Promise((resolve, reject) => {
-    window.addEventListener('message', event => {
-      resolve(event.data);
-    }, {once: true});
-  });
-}
-*/
+const addKeyDownListener = (targetElement, targetKeys, listener) => {
+  if (! Array.isArray(targetKeys)) {
+    targetKeys = [targetKeys];
+  }
+  targetElement.addEventListener('keydown', event => {
+    if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    targetKeys.forEach(targetKey => {
+      if (event.key == targetKey) {
+        listener(targetKey);
+      }
+    });
+  }, {passive: false});
+};
 const addSwipeListener = (targetElement, minValidMoveX, listener) => {
   let firstTouch = null;
   let lastTouch = null;
@@ -203,21 +183,5 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     if (tapCount) {
       event.preventDefault();
     }
-  }, {passive: false});
-};
-const addKeyDownListener = (targetElement, targetKeys, listener) => {
-  if (! Array.isArray(targetKeys)) {
-    targetKeys = [targetKeys];
-  }
-  targetElement.addEventListener('keydown', event => {
-    if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
-      return;
-    }
-    event.preventDefault();
-    targetKeys.forEach(targetKey => {
-      if (event.key == targetKey) {
-        listener(targetKey);
-      }
-    });
   }, {passive: false});
 };
