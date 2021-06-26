@@ -1,7 +1,7 @@
 'use strict';
 const qs = document.querySelector.bind(document);
 const qsa = document.querySelectorAll.bind(document);
-const dce = document.createElement.bind(document);
+const ce = document.createElement.bind(document);
 const expandVariables = (targetString, variableValues, symbolForVariables) => {
   symbolForVariables || (symbolForVariables = '%');
   for (const key in variableValues) {
@@ -84,21 +84,40 @@ const setTimeout = delay => {
     }, delay);
   });
 };
+
+
+const requestJsonp = (jsonpSrc, callback) => {
+  const jsonpCallbackName = 'jsonpCallback';
+  window[jsonpCallbackName] = data => {
+    delete window[jsonpCallbackName];
+    qs('#jsonp-data').remove();
+    callback(data);
+  };
+  const jsonpDataScriptElement = ce('script');
+  jsonpDataScriptElement.id = 'jsonp-data';
+  jsonpDataScriptElement.src = jsonpSrc;
+  document.head.append(jsonpDataScriptElement);
+};
+
+
+/*
 const requestJsonp = (jsonpSrc, jsonpCallbackName) => {
   return new Promise((resolve, reject) => {
     jsonpCallbackName || (jsonpCallbackName = 'jsonpCallback');
-    const jsonpCallbackScriptElement = document.createElement('script');
     window[jsonpCallbackName] = data => {
       delete window[jsonpCallbackName];
       qs('#jsonp-data').remove();
       resolve(data);
     };
-    const jsonpDataScriptElement = dce('script');
+    const jsonpDataScriptElement = ce('script');
     jsonpDataScriptElement.id = 'jsonp-data';
     jsonpDataScriptElement.src = jsonpSrc;
     document.head.append(jsonpDataScriptElement);
   });
 };
+*/
+
+/*
 const waitMessage = () => {
   return new Promise((resolve, reject) => {
     window.addEventListener('message', event => {
@@ -106,6 +125,7 @@ const waitMessage = () => {
     }, {once: true});
   });
 }
+*/
 const addSwipeListener = (targetElement, minValidMoveX, listener) => {
   let firstTouch = null;
   let lastTouch = null;

@@ -7,15 +7,18 @@ let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
   const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
-  await requestJsonp(urlOfStringResourcesJsonp).then(data => {
-    stringResources = data;
+  await new Promise(resolve => {
+    requestJsonp(urlOfStringResourcesJsonp, data => {
+      stringResources = data;
+      resolve();
+    });
   });
   document.title = stringResources['app-title'];
   qsa('.placeholder').forEach(element => {
     const resourceKey = element.dataset.resourceKey;
     element.innerHTML = stringResources[resourceKey];
   });
-  setSetting('disable-animation', getSetting('disable-animation') || 'false');
+  setSetting('disable-animation', getSetting('disable-animation') || 'true');
   setSetting('animation-duration', getSetting('animation-duration') || '500');
   setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
   setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
@@ -44,6 +47,8 @@ const main = async () => {
         stringResources['automatic-question-speaking-enabled-notice'],
         appLang,
         getSetting('common-voice-volume', 'number'),
+        1,
+        1,
         getSetting('app-voice-number', 'number')
       );
     } else {
@@ -61,8 +66,10 @@ const main = async () => {
       speak(
         stringResources['automatic-answer-speaking-enabled-notice'],
         appLang,
-        getSetting('common-voice-volume', 'number'),
-        getSetting('app-voice-number', 'number')
+        1,
+        1,
+        getSetting('app-voice-number', 'number'),
+        getSetting('common-voice-volume', 'number')
       );
     } else {
       if (window.speechSynthesis.speaking) {
@@ -83,18 +90,18 @@ const main = async () => {
         answerPhrase.text,
         answerPhrase.lang,
         getSetting('common-voice-volume', 'number'),
-        getSetting('answer-voice-number', 'number'),
         getSetting('answer-voice-rate', 'number'),
-        getSetting('answer-voice-pitch', 'number')
+        getSetting('answer-voice-pitch', 'number'),
+        getSetting('answer-voice-number', 'number')
       );
     } else {
       speak(
         questionPhrase.text,
         questionPhrase.lang,
         getSetting('common-voice-volume', 'number'),
-        getSetting('question-voice-number', 'number'),
         getSetting('question-voice-rate', 'number'),
-        getSetting('question-voice-pitch', 'number')
+        getSetting('question-voice-pitch', 'number'),
+        getSetting('question-voice-number', 'number')
       );
     }
   });
@@ -208,23 +215,22 @@ const main = async () => {
     }
   });
   addDoubleTapListener(qs('body'), 250, () => {
+    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
+      return;
+    }
     qs('#speak-button').click();
   });
-
-
-
-
-
-  ['mousemove', 'touchstart'].forEach(eventType => {
-    qs('body').addEventListener(eventType, event => {
-      qsa('.active').forEach(element => element.classList.remove('active'));
-      event.target.classList.add('active');
-    }, {capture: true});  
-  });
-
-
-  await requestJsonp('./data/rabbit-variables.jsonp').then(data => {
-    templateVariableValues = data;
+  qs('body').addEventListener('mousemove', event => {
+    setActiveElement(event.target);
+  }, {capture: true});  
+  qs('body').addEventListener('touchstart', event => {
+    setActiveElement(event.target);
+  }, {capture: true});  
+  await new Promise(resolve => {
+    requestJsonp('./data/rabbit-variables.jsonp', data => {
+      templateVariableValues = data;
+      resolve();
+    });
   });
   let leadText;
   let questionTemplate;
@@ -239,25 +245,31 @@ const main = async () => {
     answerTemplate = usp.get('a-temp');
     answerLang = usp.get('a-lang');
   } else if (usp.get('iframe') == 'true') {
-    await waitMessage().then(data => {
-      leadText = data['l-text'];
-      questionTemplate = data['q-temp'];
-      questionLang = data['q-lang'];
-      answerTemplate = data['a-temp'];
-      answerLang = data['a-lang'];
+    await new Promise(resolve => {
+      window.addEventListener('message', event => {
+        leadText = event.data['l-text'];
+        questionTemplate = event.data['q-temp'];
+        questionLang = event.data['q-lang'];
+        answerTemplate = event.data['a-temp'];
+        answerLang = event.data['a-lang'];
+        resolve();
+      }, {once: true});
     });
   } else {
     const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
-    await requestJsonp(urlOfDrillsDemoJsonp).then(data => {
-      leadText = data['l-text'];
-      questionTemplate = data['q-temp'];
-      questionLang = data['q-lang'];
-      answerTemplate = data['a-temp'];
-      answerLang = data['a-lang'];
+    await new Promise(resolve => {
+      requestJsonp(urlOfDrillsDemoJsonp, data => {
+        leadText = data['l-text'];
+        questionTemplate = data['q-temp'];
+        questionLang = data['q-lang'];
+        answerTemplate = data['a-temp'];
+        answerLang = data['a-lang'];
+        resolve();
+      });
     });
   }
   qs('#lead-body').innerHTML = leadText || '';
-  await new Promise((resolve, reject) => {
+  await new Promise(resolve => {
     qs('#fold-lead-button').addEventListener('click', event => {
       resolve();
     }, {once: true});
@@ -296,12 +308,14 @@ const resetCard = async () => {
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
-  addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
+  addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
-  addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
+  addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay / 2);
+  } else {
+    await setTimeout(500);
   }
   qs('#question-cover').style.left = '-100%';
   if (commonTimeoutDelay) {
@@ -331,7 +345,7 @@ const showAnswer = async () => {
     qs('#speak-button').click();
   }
 };
-const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
+const addHintBalloons = (parentPanelElement, hintTextList) => {
   const setHintBalloonPosition = optionElement => {
     const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
     const optionRect = optionElement.getClientRects()[0];
@@ -348,10 +362,10 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   for (const optionElement of targetOptionElements) {
     const optionNumber = Number(optionElement.dataset.optionNumber);
     const hintText = hintTextList[optionNumber];
-    const hintBalloonBodyElement = dce('span');
+    const hintBalloonBodyElement = ce('span');
     hintBalloonBodyElement.className = 'hint-balloon-body';
     hintBalloonBodyElement.innerText = hintText;
-    const hintBalloonPanelElement = dce('span');
+    const hintBalloonPanelElement = ce('span');
     hintBalloonPanelElement.className = 'hint-balloon-panel';
     hintBalloonPanelElement.append(hintBalloonBodyElement);
     optionElement.append(hintBalloonPanelElement);
@@ -382,7 +396,7 @@ const enableButtons = () => {
   qs('#play-button').disabled = false;
   qs('#skip-button').disabled = false;
 };
-const speak = (text, lang, volume, number, rate, pitch) => {
+const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text || '';
@@ -398,8 +412,8 @@ const speak = (text, lang, volume, number, rate, pitch) => {
   }
   if (candidateVoices.length) {
     let index;
-    if (number) {
-      index = number % candidateVoices.length;
+    if (voiceNumber) {
+      index = (voiceNumber - 1) % candidateVoices.length;
     } else {
       index = Math.floor(candidateVoices.length * Math.random());
     }
