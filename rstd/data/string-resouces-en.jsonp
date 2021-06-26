@@ -1,4 +1,7 @@
 jsonpCallback({
   "app-title": "Rabbity Style Translation Drills",
-  "statistics-text": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%"
+  "copyright-notice": "<b>Rabbity Style Translation Drills</b> &copy; 2021 shikaku1068",
+  "statistics-output": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
+  "automatic-question-reading-enabled-notice": "Automatic question reading enabled.",
+  "automatic-answer-reading-enabled-notice": "Automatic answer reading enabled."
 });

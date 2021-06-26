@@ -1,4 +1,7 @@
 jsonpCallback({
   "app-title": "ねずみ算式翻訳練習帳",
-  "statistics-text": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目"
+  "copyright-notice": "<b>ねずみ算式翻訳練習帳</b> &copy; 2021 shikaku1068",
+  "statistics-output": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
+  "automatic-question-reading-enabled-notice": "問題の自動読み上げ、オン。",
+  "automatic-answer-reading-enabled-notice": "答えの自動読み上げ、オン。"
 });

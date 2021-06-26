@@ -180,7 +180,9 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
       }
       tapCount = 0;
     }, maxValidInterval);
-    event.preventDefault();
+    if (tapCount) {
+      event.preventDefault();
+    }
   }, {passive: false});
 };
 const addKeyDownListener = (targetElement, targetKey, listener) => {

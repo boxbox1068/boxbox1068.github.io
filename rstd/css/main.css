@@ -49,7 +49,7 @@
 /* --------- *
  |  GENERAL  |
  * --------- */
-:root {
+ :root {
   --app-font-size: 4vmin;
   --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --cell-border-spacing: .25rem;
@@ -69,7 +69,7 @@
   box-sizing: border-box;
   overflow: hidden;
   user-select: none;
-  touch-action: none;
+  touch-action: pan-y;
 }
 :root[data-disable-animation="true"] *,
 :root[data-disable-animation="true"] *:before,
@@ -338,6 +338,11 @@ body > * {
 #statistics-body {
   padding: var(--common-padding);
   font-size: .75rem;
+  line-height: 1rem;
+}
+#statistics-body::after {
+  visibility: hidden;
+  content: "dummy";
 }
 
 /* --------------- *
@@ -449,8 +454,8 @@ body > * {
   font-size: .75rem;
   white-space: nowrap;
 }
-#visit-home-button,
-#show-settings-button {
+#show-settings-button,
+#visit-home-button {
   width: 1rem;
   height: 1rem;
 }

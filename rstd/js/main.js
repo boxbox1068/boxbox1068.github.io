@@ -11,9 +11,16 @@ const main = async () => {
     stringResouces = data;
   });
   document.title = stringResouces['app-title'];
+  qsa('.hogehoge').forEach(element => {
+    const hogehoge = element.dataset.hogehoge;
+    element.innerHTML = stringResouces[hogehoge];
+  });
+
+/*
   qsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
+*/
   qs('#visit-home-button').addEventListener('click', event => {
     window.location.href = 'https://twitter.com/shikaku1068/';
   });
@@ -71,10 +78,6 @@ const main = async () => {
   const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   qs('#lead-body').innerHTML = leadText || '';
-
-alert(1)
-return;
-
   qs('#fold-lead-button').addEventListener('click', event => {
     setFlag('is-lead-folded', null);
   });
@@ -90,12 +93,8 @@ return;
   qs('#enable-automatic-question-reading-button').addEventListener('click', event => {
     setFlag('is-automatic-question-reading-enabled', null);
     if (getFlag('is-automatic-question-reading-enabled')) {
-      const text = {
-        'en': 'Automatic question reading enabled.',
-        'ja': '問題の自動読み上げ、オン。'
-      }[appLang];
       readAloud(
-        text,
+        stringResouces['automatic-question-reading-enabled-notice'],
         appLang,
         getSetting('common-voice-volume', 'number'),
         getSetting('app-voice-number', 'number')
@@ -109,12 +108,8 @@ return;
   qs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
     setFlag('is-automatic-answer-reading-enabled', null);
     if (getFlag('is-automatic-answer-reading-enabled')) {
-      const text = {
-        'en': 'Automatic answer reading enabled.',
-        'ja': '答えの自動読み上げ、オン。'
-      }[appLang];
       readAloud(
-        text,
+        stringResouces['automatic-answer-reading-enabled-notice'],
         appLang,
         getSetting('common-voice-volume', 'number'),
         getSetting('app-voice-number', 'number')
@@ -256,8 +251,8 @@ const resetCard = async () => {
     'pattern-id': questionPhrase.pathId.toLocaleString(),
     'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
   };
-  const statisticsText = expandVariables(stringResouces['statistics-text'], statisticVariableValues);
-  qs('#statistics-body').innerHTML = statisticsText;
+  const statisticsOutput = expandVariables(stringResouces['statistics-output'], statisticVariableValues);
+  qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
   addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
