@@ -156,10 +156,9 @@ const main = async () => {
   qs('#skip-button').addEventListener('click', event => {
     resetCard();
   });
-  setFlag('is-lead-folded', true);
-  resetCard();
-};
-const initializeOperation = () => {
+
+
+
   ['mousemove', 'touchstart'].forEach(eventType => {
     qs('body').addEventListener(eventType, event => {
       qsa('.active').forEach(element => element.classList.remove('active'));
@@ -234,6 +233,7 @@ const initializeOperation = () => {
       setActiveElement(targetOptionElement);
     });
   });
+  resetCard();
 };
 const resetCard = async () => {
   disableButtons();

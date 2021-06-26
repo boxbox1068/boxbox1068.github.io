@@ -6,7 +6,7 @@ jsonpCallback({
   "a-temp": "^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].",
   "q-lang": "ja-JP",
   "a-lang": "en-GB",
- // "l-text": "<b>鼠算式フレーズ練習帳</b>のデモへようこそ！<br>このウェブアプリは、主に外国語のフレーズを練習するため、指定されたテンプレートから、様々な組合せのフレーズを生成し、ランダムに出題してくれます。<br><br>このセッションは次のようなテンプレートを基にしたものです。<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].<br>詳しい使い方は<a href='https://shikaku1068.github.io/webapp/rpf.html'>このページ</a>を参照してください。",
+  "l-text": "<b>鼠算式フレーズ練習帳</b>のデモへようこそ！<br>このウェブアプリは、主に外国語のフレーズを練習するため、指定されたテンプレートから、様々な組合せのフレーズを生成し、ランダムに出題してくれます。<br><br>このセッションは次のようなテンプレートを基にしたものです。<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates.en%].<br>詳しい使い方は<a href='https://shikaku1068.github.io/webapp/rpf.html'>このページ</a>を参照してください。",
 //  "q-temp": "^[私|あなた|彼|おじいさん|おばあさん]は、^^[髪を切りに|芝を刈りに|洗濯に]、^^^[犬|猫|キジ|うさぎ]を連れて^^^^[街|村|鬼ヶ島]に行きました。"
 });
 /*
