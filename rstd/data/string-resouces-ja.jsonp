@@ -1,4 +1,4 @@
 jsonpCallback({
-  "app-title": "鼠算式翻訳練習帳",
+  "app-title": "ねずみ算式翻訳練習帳",
   "statistics-text": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目"
 });

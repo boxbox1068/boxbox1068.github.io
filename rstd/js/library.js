@@ -1,8 +1,8 @@
 'use strict';
-const dqs = document.querySelector.bind(document);
-const dqsa = document.querySelectorAll.bind(document);
+const qs = document.querySelector.bind(document);
+const qsa = document.querySelectorAll.bind(document);
 const dce = document.createElement.bind(document);
-const expandVariablesInString = (targetString, variableValues, symbolForVariables) => {
+const expandVariables = (targetString, variableValues, symbolForVariables) => {
   symbolForVariables || (symbolForVariables = '%');
   for (const key in variableValues) {
     const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
@@ -13,30 +13,34 @@ const expandVariablesInString = (targetString, variableValues, symbolForVariable
 
 const setFlag = (key, value) => {
   if (value === null) {
-    dqs(':root').classList.toggle(key);
+    qs(':root').classList.toggle(key);
   } else if (value) {
-    dqs(':root').classList.add(key);
+    qs(':root').classList.add(key);
   } else {
-    dqs(':root').classList.remove(key);
+    qs(':root').classList.remove(key);
   }
 };
 const getFlag = (key) => {
-  return dqs(':root').classList.contains(key);
+  return qs(':root').classList.contains(key);
 }
+
+
+
+
 
 const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
   document.cookie = `${key}=${encodedValue}; max-age=${maxAge};`;
-  dqs(':root').setAttribute(`data-${key}`, value);
+  qs(':root').setAttribute(`data-${key}`, value);
   if (/^true|false$/i.test(value)) {
     const selector = `[type="checkbox"][name="${key}"]`;
-    dqsa(selector).forEach(element => {
+    qsa(selector).forEach(element => {
       element.checked = value == 'true';
     });
   } else {
     const selector = `[type="radio"][name="${key}"][value="${value}"]`;
-    dqsa(selector).forEach(element => {
+    qsa(selector).forEach(element => {
       element.checked = true;
     });
   }
@@ -57,7 +61,7 @@ const getSetting = (key, valueType) => {
         return srcValue;
     }
   };
-  const candidateValueA = dqs(':root').getAttribute(`data-${key}`);
+  const candidateValueA = qs(':root').getAttribute(`data-${key}`);
   if (candidateValueA != null) {
     return convertValue(candidateValueA, valueType);
   }
@@ -86,7 +90,7 @@ const requestJsonp = (jsonpSrc, jsonpCallbackName) => {
     const jsonpCallbackScriptElement = document.createElement('script');
     window[jsonpCallbackName] = data => {
       delete window[jsonpCallbackName];
-      dqs('#jsonp-data').remove();
+      qs('#jsonp-data').remove();
       resolve(data);
     };
     const jsonpDataScriptElement = dce('script');
@@ -107,7 +111,7 @@ const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
   const jsonpCallbackScriptElement = document.createElement('script');
   window[jsonpCallbackName] = jsonData => {
     delete window[jsonpCallbackName];
-    dqs('#jsonp-data').remove();
+    qs('#jsonp-data').remove();
     callback(jsonData);
   };
   const jsonpDataScriptElement = dce('script');

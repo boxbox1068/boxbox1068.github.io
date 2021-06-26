@@ -246,14 +246,14 @@ body {
   color: var(--main-cover-color);
   font-weight: bold;
   font-size: 10rem;
-  transition: 500ms;
+  transition-duration: var(--common-transition-duration);
 }
-
+/*
 :root.is-question-shown #question-cover,
 :root.is-answer-shown #answer-cover {
   left: 100%;
 }
-
+*/
 
 
 .option {
@@ -515,6 +515,7 @@ max-height: calc(100% - 5rem);
 /* ----------- *
  |  ANIMATION  |
  * ----------- */
+/*
 @keyframes slideInFromLeft {
   0% {
     left: -100%;
@@ -563,3 +564,4 @@ max-height: calc(100% - 5rem);
     transform: rotateX(0);
   }
 }
+*/

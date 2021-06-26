@@ -11,13 +11,13 @@ const main = async () => {
     stringResouces = data;
   });
   document.title = stringResouces['app-title'];
-  dqsa('[lang]').forEach(element => {
+  qsa('[lang]').forEach(element => {
     element.lang != appLang && element.remove();
   });
-  dqs('#visit-home-button').addEventListener('click', event => {
+  qs('#visit-home-button').addEventListener('click', event => {
     window.location.href = 'https://twitter.com/shikaku1068/';
   });
-  dqs('#show-settings-button').addEventListener('click', event => {
+  qs('#show-settings-button').addEventListener('click', event => {
     setFlag('is-settings-shown', true);
   });
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
@@ -65,16 +65,16 @@ const main = async () => {
       answerLang = data['a-lang'];
     });
   }
-  const preprocessedQuestionTemplate = expandVariablesInString(questionTemplate, templateVariableValues);
+  const preprocessedQuestionTemplate = expandVariables(questionTemplate, templateVariableValues);
   questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
-  const preprocessedAnswerTemplate = expandVariablesInString(answerTemplate, templateVariableValues);
+  const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
-  dqs('#lead-body').innerHTML = leadText || '';
-  dqs('#fold-lead-button').addEventListener('click', event => {
-    dqs('#fold-lead-button').addEventListener('click', event => {
+  qs('#lead-body').innerHTML = leadText || '';
+  qs('#fold-lead-button').addEventListener('click', event => {
+    qs('#fold-lead-button').addEventListener('click', event => {
       setFlag('is-lead-folded', null);
     });
-    dqs('#enable-automatic-question-reading-button').addEventListener('click', event => {
+    qs('#enable-automatic-question-reading-button').addEventListener('click', event => {
       setFlag('is-automatic-question-reading-enabled', null);
       if (getFlag('is-automatic-question-reading-enabled')) {
         const text = {
@@ -88,7 +88,7 @@ const main = async () => {
         }
       }
     });
-    dqs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
+    qs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
       setFlag('is-automatic-answer-reading-enabled', null);
       if (getFlag('is-automatic-answer-reading-enabled')) {
         const text = {
@@ -102,7 +102,7 @@ const main = async () => {
         }
       }
     });
-    dqs('#read-aloud-button').addEventListener('click', event => {
+    qs('#read-aloud-button').addEventListener('click', event => {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
       } else {
@@ -113,87 +113,85 @@ const main = async () => {
         }
       }
     });
-    dqs('#play-button').addEventListener('click', event => {
+    qs('#play-button').addEventListener('click', event => {
       if (getFlag('is-answer-shown')) {
         resetCard();
       } else {
         showAnswer();
       }
     });
-    dqs('#skip-button').addEventListener('click', event => {
+    qs('#skip-button').addEventListener('click', event => {
       resetCard();
     });
     setFlag('is-lead-folded', true);
-//    resetCard();
-    window.setTimeout(() => {resetCard();}, 500);
-    //    window.setTimeout(() => resetCard(), 500);
+    resetCard();
   }, {once: true});
   if (! leadText) {
-    dqs('#fold-lead-button').click();
-    dqs('#fold-lead-button').disabled = true;
+    qs('#fold-lead-button').click();
+    qs('#fold-lead-button').disabled = true;
   }
 };
 const initializeOperation = () => {
   ['mousemove', 'touchstart'].forEach(eventType => {
-    dqs('body').addEventListener(eventType, event => {
-      dqsa('.active').forEach(element => element.classList.remove('active'));
+    qs('body').addEventListener(eventType, event => {
+      qsa('.active').forEach(element => element.classList.remove('active'));
       event.target.classList.add('active');
     }, {capture: true});  
   });
-  addSwipeListener(dqs('body'), 25, () => {
+  addSwipeListener(qs('body'), 25, () => {
     if (getFlag('is-lead-folded')) {
-      dqs('#play-button').click();
+      qs('#play-button').click();
     } else {
-      dqs('#fold-lead-button').click();
+      qs('#fold-lead-button').click();
     }
   });
-  addSwipeListener(dqs('body'), -25, () => {
+  addSwipeListener(qs('body'), -25, () => {
     if (! getFlag('enable-skip-by-swipe')) {
       return;
     }
     if (getFlag('is-lead-folded')) {
-      dqs('#skip-button').click();
+      qs('#skip-button').click();
     } else {
-      dqs('#fold-lead-button').click();
+      qs('#fold-lead-button').click();
     }
   });
-  addDoubleTapListener(dqs('body'), 250, () => {
-    dqs('#read-aloud-button').click();
+  addDoubleTapListener(qs('body'), 250, () => {
+    qs('#read-aloud-button').click();
   });
-  addKeyDownListener(dqs('body'), ' ', targetKey => {
-    dqs('#play-button').click();
+  addKeyDownListener(qs('body'), ' ', targetKey => {
+    qs('#play-button').click();
   });
-  addKeyDownListener(dqs('body'), 'Tab', targetKey => {
-    dqs('#skip-button').click();
+  addKeyDownListener(qs('body'), 'Tab', targetKey => {
+    qs('#skip-button').click();
   });
-  addKeyDownListener(dqs('body'), 'Enter', targetKey => {
-    dqs('#read-aloud-button').click();
+  addKeyDownListener(qs('body'), 'Enter', targetKey => {
+    qs('#read-aloud-button').click();
   });
-  addKeyDownListener(dqs('body'), 'Escape', targetKey => {
-    dqs('#fold-lead-button').click();
+  addKeyDownListener(qs('body'), 'Escape', targetKey => {
+    qs('#fold-lead-button').click();
   });
   ['l', 'L'].forEach(targetKey => {
     const scrollY = {'l': 50, 'L': -50}[targetKey];
-    addKeyDownListener(dqs('body'), targetKey, targetKey => {
-      dqs('#lead-panel').scrollBy(0, scrollY);
+    addKeyDownListener(qs('body'), targetKey, targetKey => {
+      qs('#lead-panel').scrollBy(0, scrollY);
     });
   });
   ['q', 'Q'].forEach(targetKey => {
     const scrollY = {'q': 50, 'Q': -50}[targetKey];
-    addKeyDownListener(dqs('body'), targetKey, targetKey => {
-      dqs('#question-panel').scrollBy(0, scrollY);
+    addKeyDownListener(qs('body'), targetKey, targetKey => {
+      qs('#question-panel').scrollBy(0, scrollY);
     });
   });
   ['a', 'A'].forEach(targetKey => {
     const scrollY = {'a': 50, 'A': -50}[targetKey];
-    addKeyDownListener(dqs('body'), targetKey, targetKey => {
-      dqs('#answer-panel').scrollBy(0, scrollY);
+    addKeyDownListener(qs('body'), targetKey, targetKey => {
+      qs('#answer-panel').scrollBy(0, scrollY);
     });
   });
   ['h', 'H'].forEach(targetKey => {
     const reverse = {'h': false, 'H': true}[targetKey];
-    addKeyDownListener(dqs('body'), targetKey, targetKey => {
-      const optionElements = dqsa('.option');
+    addKeyDownListener(qs('body'), targetKey, targetKey => {
+      const optionElements = qsa('.option');
       if (! optionElements.length) {
         return;
       }
@@ -211,7 +209,9 @@ const initializeOperation = () => {
 };
 const resetCard = async () => {
   disableButtons();
-  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
   const pathIdSeed = Math.random();
   questionPhrase.reset(pathIdSeed);
   answerPhrase.reset(pathIdSeed);
@@ -220,72 +220,46 @@ const resetCard = async () => {
     'pattern-id': questionPhrase.pathId.toLocaleString(),
     'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
   };
-  const statisticsText = expandVariablesInString(stringResouces['statistics-text'], variableValues);
-  dqs('#statistics-body').innerHTML = statisticsText;
-  setFlag('is-answer-shown', false);
+  const statisticsText = expandVariables(stringResouces['statistics-text'], variableValues);
+  qs('#statistics-body').innerHTML = statisticsText;
   if (getFlag('is-question-shown')) {
-    setFlag('is-question-shown', false);
-    await setTimeout(getSetting('animation-duration', 'number'));
+    qs('#question-cover').style.left = '0';
   }
-  dqs('#question-panel').scrollTop = 0;
-  dqs('#question-body').innerHTML = questionPhrase.html;
-  addHintBalloons(dqs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
-  dqs('#answer-panel').scrollTop = 0;
-  dqs('#answer-body').innerHTML = answerPhrase.html;
-  addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
+  if (getFlag('is-answer-shown')) {
+    qs('#answer-cover').style.left = '0';
+  }
+  const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
+  const timeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
+  await setTimeout(timeoutDelay);
+  qs('#question-panel').scrollTop = 0;
+  qs('#question-body').innerHTML = questionPhrase.html;
+  addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts, answerPhrase.lang);
+  qs('#answer-panel').scrollTop = 0;
+  qs('#answer-body').innerHTML = answerPhrase.html;
+  addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
+  await setTimeout(200);
+  qs('#question-cover').style.left = '-100%';
+  await setTimeout(timeoutDelay);
   setFlag('is-question-shown', true);
-  await setTimeout(getSetting('animation-duration', 'number'));
+  setFlag('is-answer-shown', false);
+  enableButtons();
   if (getFlag('is-automatic-question-reading-enabled')) {
     readAloud(questionPhrase.text, questionPhrase.lang);
   }
-  enableButtons();
 };
 const showAnswer = async () => {
   disableButtons();
-  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
-  setFlag('is-answer-shown', true);
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+  }
+  qs('#answer-cover').style.left = '100%';
   await setTimeout(getSetting('animation-duration', 'number'));
-  if (getFlag('is-automatic-answer-reading-enabled')) {
-    readAloud(answerPhrase.text, answerPhrase.lang);
-  }
+  setFlag('is-answer-shown', true);
   enableButtons();
-};
-
-
-/*
-const showAnswer = () => {
-  disableButtons();
-  dqs('#answer-panel').scrollTop = 0;
-  dqs('#answer-body').innerHTML = answerPhrase.html;
-  addHintBalloons(dqs('#answer-panel'), questionPhrase.chosenOptionTexts, questionPhrase.lang);
-  window.speechSynthesis.speaking && window.speechSynthesis.cancel();
   if (getFlag('is-automatic-answer-reading-enabled')) {
     readAloud(answerPhrase.text, answerPhrase.lang);
   }
-  if (getSetting('animation-type') == 'slide') {
-    dqs('#answer-cover').addEventListener('animationend', event => {
-      setFlag('is-answer-shown', true);
-      enableButtons();
-    }, {once: true});
-    dqs('#answer-cover').style.animation = 'slideOutToRight 500ms forwards';
-  } else if (getSetting('animation-type') == 'flip') {
-    dqs('#answer-cell').addEventListener('animationend', event => {
-      dqs('#answer-cover').style.visibility = 'hidden';
-      dqs('#answer-cell').addEventListener('animationend', event => {
-        setFlag('is-answer-shown', true);
-        enableButtons();
-      }, {once: true});
-      dqs('#answer-cell').style.animation = 'flipB 250ms forwards';  
-    }, {once: true});
-    dqs('#answer-cell').style.animation = 'flipA 250ms forwards';
-  } else {
-    dqs('#answer-cover').style.visibility = 'hidden';
-    setFlag('is-answer-shown', true);
-    enableButtons();
-  }
 };
-*/
-
 const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   const setHintBalloonPosition = optionElement => {
     const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
@@ -319,7 +293,7 @@ const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
   window.addEventListener('resize', updateHintBalloonPositions);
 }
 const setActiveElement = targetElement => {
-  dqsa('.active').forEach(element => {
+  qsa('.active').forEach(element => {
     element.classList.remove('active');
   });
   if (! targetElement) {
@@ -328,14 +302,14 @@ const setActiveElement = targetElement => {
   targetElement.classList.add('active');
 };
 const disableButtons = () => {
-  dqs('#read-aloud-button').disabled = true;
-  dqs('#play-button').disabled = true;
-  dqs('#skip-button').disabled = true;
+  qs('#read-aloud-button').disabled = true;
+  qs('#play-button').disabled = true;
+  qs('#skip-button').disabled = true;
 };
 const enableButtons = () => {
-  dqs('#read-aloud-button').disabled = false;
-  dqs('#play-button').disabled = false;
-  dqs('#skip-button').disabled = false;
+  qs('#read-aloud-button').disabled = false;
+  qs('#play-button').disabled = false;
+  qs('#skip-button').disabled = false;
 };
 const readAloud = (text, lang) => {
   window.speechSynthesis.cancel();
