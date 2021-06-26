@@ -106,20 +106,6 @@ const waitMessage = () => {
     }, {once: true});
   });
 }
-/*
-const requestJsonp = (jsonpSrc, jsonpCallbackName, callback) => {
-  const jsonpCallbackScriptElement = document.createElement('script');
-  window[jsonpCallbackName] = jsonData => {
-    delete window[jsonpCallbackName];
-    qs('#jsonp-data').remove();
-    callback(jsonData);
-  };
-  const jsonpDataScriptElement = dce('script');
-  jsonpDataScriptElement.id = 'jsonp-data';
-  jsonpDataScriptElement.src = jsonpSrc;
-  document.head.append(jsonpDataScriptElement);
-};
-*/
 const addSwipeListener = (targetElement, minValidMoveX, listener) => {
   let firstTouch = null;
   let lastTouch = null;
@@ -208,5 +194,3 @@ const addKeyDownListener = (targetElement, targetKey, listener) => {
     }
   }, {passive: false});
 };
-
-

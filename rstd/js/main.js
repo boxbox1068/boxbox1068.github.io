@@ -71,6 +71,10 @@ const main = async () => {
   const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
   answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   qs('#lead-body').innerHTML = leadText || '';
+
+alert(1)
+return;
+
   qs('#fold-lead-button').addEventListener('click', event => {
     setFlag('is-lead-folded', null);
   });
@@ -156,9 +160,6 @@ const main = async () => {
   qs('#skip-button').addEventListener('click', event => {
     resetCard();
   });
-
-
-
   ['mousemove', 'touchstart'].forEach(eventType => {
     qs('body').addEventListener(eventType, event => {
       qsa('.active').forEach(element => element.classList.remove('active'));
