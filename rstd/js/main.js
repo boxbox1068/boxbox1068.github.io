@@ -1,31 +1,19 @@
 'use strict';
 let appLang;
-let stringResouces;
+let stringResources;
 let templateVariableValues;
 let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
-  const urlOfStringResoucesJsonp = `./data/string-resouces-${appLang}.jsonp`;
-  await requestJsonp(urlOfStringResoucesJsonp).then(data => {
-    stringResouces = data;
+  const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
+  await requestJsonp(urlOfStringResourcesJsonp).then(data => {
+    stringResources = data;
   });
-  document.title = stringResouces['app-title'];
-  qsa('.hogehoge').forEach(element => {
-    const hogehoge = element.dataset.hogehoge;
-    element.innerHTML = stringResouces[hogehoge];
-  });
-
-/*
-  qsa('[lang]').forEach(element => {
-    element.lang != appLang && element.remove();
-  });
-*/
-  qs('#visit-home-button').addEventListener('click', event => {
-    window.location.href = 'https://twitter.com/shikaku1068/';
-  });
-  qs('#show-settings-button').addEventListener('click', event => {
-    setFlag('is-settings-shown', true);
+  document.title = stringResources['app-title'];
+  qsa('.placeholder').forEach(element => {
+    const resourceKey = element.dataset.resourceKey;
+    element.innerHTML = stringResources[resourceKey];
   });
   setSetting('disable-animation', getSetting('disable-animation') || 'false');
   setSetting('animation-duration', getSetting('animation-duration') || '500');
@@ -40,6 +28,201 @@ const main = async () => {
   setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
   setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
   setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
+  qs('#fold-lead-button').addEventListener('click', event => {
+    if (getFlag('is-setings-shown')) {
+      return;
+    }
+    setFlag('is-lead-folded', null);
+  });
+  qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    setFlag('is-automatic-question-speaking-enabled', null);
+    if (getFlag('is-automatic-question-speaking-enabled')) {
+      speak(
+        stringResources['automatic-question-speaking-enabled-notice'],
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('app-voice-number', 'number')
+      );
+    } else {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  });
+  qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    setFlag('is-automatic-answer-speaking-enabled', null);
+    if (getFlag('is-automatic-answer-speaking-enabled')) {
+      speak(
+        stringResources['automatic-answer-speaking-enabled-notice'],
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('app-voice-number', 'number')
+      );
+    } else {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+    }
+  });
+  qs('#speak-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      return;
+    }
+    if (getFlag('is-answer-shown')) {
+      speak(
+        answerPhrase.text,
+        answerPhrase.lang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('answer-voice-number', 'number'),
+        getSetting('answer-voice-rate', 'number'),
+        getSetting('answer-voice-pitch', 'number')
+      );
+    } else {
+      speak(
+        questionPhrase.text,
+        questionPhrase.lang,
+        getSetting('common-voice-volume', 'number'),
+        getSetting('question-voice-number', 'number'),
+        getSetting('question-voice-rate', 'number'),
+        getSetting('question-voice-pitch', 'number')
+      );
+    }
+  });
+  qs('#play-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    if (getFlag('is-answer-shown')) {
+      resetCard();
+    } else {
+      showAnswer();
+    }
+  });
+  qs('#skip-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    resetCard();
+  });
+  qs('#show-settings-button').addEventListener('click', event => {
+    setFlag('is-settings-shown', true);
+  });
+  qs('#visit-home-button').addEventListener('click', event => {
+    window.location.href = 'https://twitter.com/shikaku1068/';
+  });
+  addKeyDownListener(qs('body'), 'Escape', targetKey => {
+    qs('#fold-lead-button').click();
+  });
+  addKeyDownListener(qs('body'), 'Enter', targetKey => {
+    qs('#speak-button').click();
+  });
+  addKeyDownListener(qs('body'), ' ', targetKey => {
+    if (getFlag('is-lead-folded')) {
+      qs('#play-button').click();
+    } else {
+      qs('#fold-lead-button').click();
+    }
+  });
+  addKeyDownListener(qs('body'), 'Tab', targetKey => {
+    if (getFlag('is-lead-folded')) {
+      qs('#skip-button').click();
+    } else {
+      qs('#fold-lead-button').click();
+    }
+  });
+  addKeyDownListener(qs('body'), ['l', 'L'], targetKey => {
+    if (getFlag('is-setting-shown')) {
+      return;
+    }
+    let scrollY;
+    if (getFlag('is-lead-folded')) {
+      scrollY = {'l': 25, 'L': -25}[targetKey];
+    } else {
+      scrollY = {'l': 50, 'L': -50}[targetKey];
+    }
+    qs('#lead-panel').scrollBy(0, scrollY);
+  });
+  addKeyDownListener(qs('body'), ['q', 'Q'], targetKey => {
+    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
+      return;
+    }
+    const scrollY = {'q': 50, 'Q': -50}[targetKey];
+    qs('#question-panel').scrollBy(0, scrollY);
+  });
+  addKeyDownListener(qs('body'), ['a', 'A'], targetKey => {
+    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
+      return;
+    }
+    const scrollY = {'a': 50, 'A': -50}[targetKey];
+    qs('#answer-panel').scrollBy(0, scrollY);
+  });
+  addKeyDownListener(qs('body'), ['h', 'H'], targetKey => {
+    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
+      return;
+    }
+    let optionElements;
+    if (getFlag('is-answer-shown')) {
+      optionElements = qsa('.option');
+    } else {
+      optionElements = qsa('#question-panel .option');
+    }
+    if (! optionElements.length) {
+      return;
+    }
+    const reverse = {'h': false, 'H': true}[targetKey];
+    let activeOptionElementIndex = (reverse ? optionElements.length : -1);
+    for (let i = 0; i < optionElements.length; i++) {
+      const currentOptionElement = optionElements[i];
+      if (currentOptionElement.classList.contains('active')) {
+        activeOptionElementIndex = i;
+      }
+    }
+    const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
+    setActiveElement(targetOptionElement);
+  });
+  addSwipeListener(qs('body'), 25, () => {
+    if (getFlag('is-lead-folded')) {
+      qs('#play-button').click();
+    } else {
+      qs('#fold-lead-button').click();
+    }
+  });
+  addSwipeListener(qs('body'), -25, () => {
+    if (! getFlag('enable-skip-by-swipe')) {
+      return;
+    }
+    if (getFlag('is-lead-folded')) {
+      qs('#skip-button').click();
+    } else {
+      qs('#fold-lead-button').click();
+    }
+  });
+  addDoubleTapListener(qs('body'), 250, () => {
+    qs('#speak-button').click();
+  });
+
+
+
+
+
+  ['mousemove', 'touchstart'].forEach(eventType => {
+    qs('body').addEventListener(eventType, event => {
+      qsa('.active').forEach(element => element.classList.remove('active'));
+      event.target.classList.add('active');
+    }, {capture: true});  
+  });
+
+
   await requestJsonp('./data/rabbit-variables.jsonp').then(data => {
     templateVariableValues = data;
   });
@@ -73,14 +256,7 @@ const main = async () => {
       answerLang = data['a-lang'];
     });
   }
-  const preprocessedQuestionTemplate = expandVariables(questionTemplate, templateVariableValues);
-  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
-  const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
-  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   qs('#lead-body').innerHTML = leadText || '';
-  qs('#fold-lead-button').addEventListener('click', event => {
-    setFlag('is-lead-folded', null);
-  });
   await new Promise((resolve, reject) => {
     qs('#fold-lead-button').addEventListener('click', event => {
       resolve();
@@ -90,145 +266,10 @@ const main = async () => {
       qs('#fold-lead-button').disabled = true;
     }
   });
-  qs('#enable-automatic-question-reading-button').addEventListener('click', event => {
-    setFlag('is-automatic-question-reading-enabled', null);
-    if (getFlag('is-automatic-question-reading-enabled')) {
-      readAloud(
-        stringResouces['automatic-question-reading-enabled-notice'],
-        appLang,
-        getSetting('common-voice-volume', 'number'),
-        getSetting('app-voice-number', 'number')
-      );
-    } else {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
-    }
-  });
-  qs('#enable-automatic-answer-reading-button').addEventListener('click', event => {
-    setFlag('is-automatic-answer-reading-enabled', null);
-    if (getFlag('is-automatic-answer-reading-enabled')) {
-      readAloud(
-        stringResouces['automatic-answer-reading-enabled-notice'],
-        appLang,
-        getSetting('common-voice-volume', 'number'),
-        getSetting('app-voice-number', 'number')
-      );
-    } else {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
-    }
-  });
-  qs('#read-aloud-button').addEventListener('click', event => {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-    } else {
-      if (getFlag('is-answer-shown')) {
-        readAloud(
-          answerPhrase.text,
-          answerPhrase.lang,
-          getSetting('common-voice-volume', 'number'),
-          getSetting('answer-voice-number', 'number'),
-          getSetting('answer-voice-rate', 'number'),
-          getSetting('answer-voice-pitch', 'number')
-        );
-      } else {
-        readAloud(
-          questionPhrase.text,
-          questionPhrase.lang,
-          getSetting('common-voice-volume', 'number'),
-          getSetting('question-voice-number', 'number'),
-          getSetting('question-voice-rate', 'number'),
-          getSetting('question-voice-pitch', 'number')
-        );
-      }
-    }
-  });
-  qs('#play-button').addEventListener('click', event => {
-    if (getFlag('is-answer-shown')) {
-      resetCard();
-    } else {
-      showAnswer();
-    }
-  });
-  qs('#skip-button').addEventListener('click', event => {
-    resetCard();
-  });
-  ['mousemove', 'touchstart'].forEach(eventType => {
-    qs('body').addEventListener(eventType, event => {
-      qsa('.active').forEach(element => element.classList.remove('active'));
-      event.target.classList.add('active');
-    }, {capture: true});  
-  });
-  addSwipeListener(qs('body'), 25, () => {
-    if (getFlag('is-lead-folded')) {
-      qs('#play-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
-  });
-  addSwipeListener(qs('body'), -25, () => {
-    if (! getFlag('enable-skip-by-swipe')) {
-      return;
-    }
-    if (getFlag('is-lead-folded')) {
-      qs('#skip-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
-  });
-  addDoubleTapListener(qs('body'), 250, () => {
-    qs('#read-aloud-button').click();
-  });
-  addKeyDownListener(qs('body'), ' ', targetKey => {
-    qs('#play-button').click();
-  });
-  addKeyDownListener(qs('body'), 'Tab', targetKey => {
-    qs('#skip-button').click();
-  });
-  addKeyDownListener(qs('body'), 'Enter', targetKey => {
-    qs('#read-aloud-button').click();
-  });
-  addKeyDownListener(qs('body'), 'Escape', targetKey => {
-    qs('#fold-lead-button').click();
-  });
-  ['l', 'L'].forEach(targetKey => {
-    const scrollY = {'l': 50, 'L': -50}[targetKey];
-    addKeyDownListener(qs('body'), targetKey, targetKey => {
-      qs('#lead-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['q', 'Q'].forEach(targetKey => {
-    const scrollY = {'q': 50, 'Q': -50}[targetKey];
-    addKeyDownListener(qs('body'), targetKey, targetKey => {
-      qs('#question-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['a', 'A'].forEach(targetKey => {
-    const scrollY = {'a': 50, 'A': -50}[targetKey];
-    addKeyDownListener(qs('body'), targetKey, targetKey => {
-      qs('#answer-panel').scrollBy(0, scrollY);
-    });
-  });
-  ['h', 'H'].forEach(targetKey => {
-    const reverse = {'h': false, 'H': true}[targetKey];
-    addKeyDownListener(qs('body'), targetKey, targetKey => {
-      const optionElements = qsa('.option');
-      if (! optionElements.length) {
-        return;
-      }
-      let activeOptionElementIndex = (reverse ? optionElements.length : -1);
-      for (let i = 0; i < optionElements.length; i++) {
-        const currentOptionElement = optionElements[i];
-        if (currentOptionElement.classList.contains('active')) {
-          activeOptionElementIndex = i;
-        }
-      }
-      const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
-      setActiveElement(targetOptionElement);
-    });
-  });
+  const preprocessedQuestionTemplate = expandVariables(questionTemplate, templateVariableValues);
+  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
+  const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
+  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
   resetCard();
 };
 const resetCard = async () => {
@@ -251,7 +292,7 @@ const resetCard = async () => {
     'pattern-id': questionPhrase.pathId.toLocaleString(),
     'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
   };
-  const statisticsOutput = expandVariables(stringResouces['statistics-output'], statisticVariableValues);
+  const statisticsOutput = expandVariables(stringResources['statistics-output'], statisticVariableValues);
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
@@ -269,8 +310,8 @@ const resetCard = async () => {
   setFlag('is-question-shown', true);
   setFlag('is-answer-shown', false);
   enableButtons();
-  if (getFlag('is-automatic-question-reading-enabled')) {
-    qs('#read-aloud-button').click();
+  if (getFlag('is-automatic-question-speaking-enabled')) {
+    qs('#speak-button').click();
   }
 };
 const showAnswer = async () => {
@@ -286,8 +327,8 @@ const showAnswer = async () => {
   }
   setFlag('is-answer-shown', true);
   enableButtons();
-  if (getFlag('is-automatic-answer-reading-enabled')) {
-    qs('#read-aloud-button').click();
+  if (getFlag('is-automatic-answer-speaking-enabled')) {
+    qs('#speak-button').click();
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList, hintLang) => {
@@ -332,16 +373,16 @@ const setActiveElement = targetElement => {
   targetElement.classList.add('active');
 };
 const disableButtons = () => {
-  qs('#read-aloud-button').disabled = true;
+  qs('#speak-button').disabled = true;
   qs('#play-button').disabled = true;
   qs('#skip-button').disabled = true;
 };
 const enableButtons = () => {
-  qs('#read-aloud-button').disabled = false;
+  qs('#speak-button').disabled = false;
   qs('#play-button').disabled = false;
   qs('#skip-button').disabled = false;
 };
-const readAloud = (text, lang, volume, number, rate, pitch) => {
+const speak = (text, lang, volume, number, rate, pitch) => {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text || '';

@@ -68,6 +68,7 @@
 *::after {
   box-sizing: border-box;
   overflow: hidden;
+  outline: none;
   user-select: none;
   touch-action: pan-y;
 }
@@ -341,8 +342,7 @@ body > * {
   line-height: 1rem;
 }
 #statistics-body::after {
-  visibility: hidden;
-  content: "dummy";
+  content: "\200B";
 }
 
 /* --------------- *
@@ -398,20 +398,20 @@ body > * {
   font-size: 1rem;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-#enable-automatic-question-reading-button::before,
-#enable-automatic-question-reading-button::after {
+#enable-automatic-question-speaking-button::before,
+#enable-automatic-question-speaking-button::after {
   content: "Q";
 }
-#enable-automatic-answer-reading-button::before,
-#enable-automatic-answer-reading-button::after {
+#enable-automatic-answer-speaking-button::before,
+#enable-automatic-answer-speaking-button::after {
   content: "A";
 }
-:root.is-automatic-question-reading-enabled #enable-automatic-question-reading-button::before,
-:root.is-automatic-answer-reading-enabled #enable-automatic-answer-reading-button::before {
+:root.is-automatic-question-speaking-enabled #enable-automatic-question-speaking-button::before,
+:root.is-automatic-answer-speaking-enabled #enable-automatic-answer-speaking-button::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-:root.is-automatic-question-reading-enabled #enable-automatic-question-reading-button::after,
-:root.is-automatic-answer-reading-enabled #enable-automatic-answer-reading-button::after {
+:root.is-automatic-question-speaking-enabled #enable-automatic-question-speaking-button::after,
+:root.is-automatic-answer-speaking-enabled #enable-automatic-answer-speaking-button::after {
   top: var(--this-toggle-height);
 }
 .operation-button {

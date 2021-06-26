@@ -185,14 +185,19 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     }
   }, {passive: false});
 };
-const addKeyDownListener = (targetElement, targetKey, listener) => {
+const addKeyDownListener = (targetElement, targetKeys, listener) => {
+  if (! Array.isArray(targetKeys)) {
+    targetKeys = [targetKeys];
+  }
   targetElement.addEventListener('keydown', event => {
     if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
       return;
     }
     event.preventDefault();
-    if (event.key == targetKey) {
-      listener(targetKey);
-    }
+    targetKeys.forEach(targetKey => {
+      if (event.key == targetKey) {
+        listener(targetKey);
+      }
+    });
   }, {passive: false});
 };
