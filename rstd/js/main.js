@@ -18,21 +18,18 @@ const main = async () => {
     const resourceKey = element.dataset.resourceKey;
     element.innerHTML = stringResources[resourceKey];
   });
-
-  // fontSize??
-  setSetting('disable-animation', getSetting('disable-animation') || 'true');
-  setSetting('animation-duration', getSetting('animation-duration') || '500');
-  setSetting('disable-option-highlight', getSetting('disable-option-highlight') || 'false');
-  setSetting('disable-hint-balloon', getSetting('disable-hint-balloon') || 'false');
-  setSetting('disable-swipe-to-left', getSetting('disable-swipe-to-left') || 'false');
-  setSetting('common-voice-volume', getSetting('common-voice-volume') || '1');
-  setSetting('app-voice-number', getSetting('app-voice-number') || '1');
-  setSetting('question-voice-number', getSetting('question-voice-number') || '1');
-  setSetting('question-voice-rate', getSetting('question-voice-rate') || '1');
-  setSetting('question-voice-pitch', getSetting('question-voice-pitch') || '1');
-  setSetting('answer-voice-number', getSetting('answer-voice-number') || '1');
-  setSetting('answer-voice-rate', getSetting('answer-voice-rate') || '1');
-  setSetting('answer-voice-pitch', getSetting('answer-voice-pitch') || '1');
+  loadSetting('animation-duration', '500');
+  loadSetting('disable-option-highlight', 'false');
+  loadSetting('disable-hint-balloon', 'false');
+  loadSetting('enable-swipe-to-right', 'true');
+  loadSetting('common-voice-volume', '1');
+  loadSetting('app-voice-number', '1');
+  loadSetting('question-voice-number', '1');
+  loadSetting('question-voice-rate', '1');
+  loadSetting('question-voice-pitch', '1');
+  loadSetting('answer-voice-number', '1');
+  loadSetting('answer-voice-rate', '1');
+  loadSetting('answer-voice-pitch', '1');
   qs('#fold-lead-button').addEventListener('click', event => {
     if (getFlag('is-setings-shown')) {
       return;
@@ -54,9 +51,7 @@ const main = async () => {
         getSetting('app-voice-number', 'number')
       );
     } else {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
+      window.speechSynthesis.cancel();
     }
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
@@ -74,9 +69,7 @@ const main = async () => {
         getSetting('common-voice-volume', 'number')
       );
     } else {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-      }
+      window.speechSynthesis.cancel();
     }
   });
   qs('#speak-button').addEventListener('click', event => {
@@ -199,15 +192,15 @@ const main = async () => {
     const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
     setActiveElement(targetOptionElement);
   });
-  addSwipeListener(qs('body'), 25, () => {
+  addSwipeListener(qs('body'), -25, () => {
     if (getFlag('is-lead-folded')) {
       qs('#play-button').click();
     } else {
       qs('#fold-lead-button').click();
     }
   });
-  addSwipeListener(qs('body'), -25, () => {
-    if (! getFlag('enable-skip-by-swipe')) {
+  addSwipeListener(qs('body'), 25, () => {
+    if (! getSetting('enable-swipe-to-right', 'boolean')) {
       return;
     }
     if (getFlag('is-lead-folded')) {
@@ -261,7 +254,7 @@ const main = async () => {
     const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
     await new Promise(resolve => {
       requestJsonp(urlOfDrillsDemoJsonp, data => {
-        leadText = data['l-text'];
+        leadText = `${data['l-text']}<br>____<br><small>このセッションのソース：<a href="${urlOfDrillsDemoJsonp}">${urlOfDrillsDemoJsonp}</a></small>`;
         questionTemplate = data['q-temp'];
         questionLang = data['q-lang'];
         answerTemplate = data['a-temp'];
@@ -288,9 +281,7 @@ const main = async () => {
 };
 const resetCard = async () => {
   disableButtons();
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
+  window.speechSynthesis.cancel();
   qs('#question-cover').style.left = '0';
   qs('#answer-cover').style.left = '0';
   const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
@@ -332,9 +323,7 @@ const resetCard = async () => {
 };
 const showAnswer = async () => {
   disableButtons();
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-  }
+  window.speechSynthesis.cancel();
   qs('#answer-cover').style.left = '100%';
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);

@@ -70,6 +70,9 @@ const getSetting = (key, valueType) => {
   const candidateValueB = cookies[key];
   return convertValue(candidateValueB, valueType);
 };
+const loadSetting = (key, defaultValue) => {
+  setSetting(key, getSetting(key) || defaultValue);
+};
 const requestJsonp = (jsonpSrc, callback) => {
   const jsonpCallbackName = 'jsonpCallback';
   window[jsonpCallbackName] = data => {
@@ -181,6 +184,7 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
       tapCount = 0;
     }, maxValidInterval);
     if (tapCount) {
+      event.target.blur();
       event.preventDefault();
     }
   }, {passive: false});
