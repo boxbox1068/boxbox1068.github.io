@@ -49,6 +49,24 @@ const main = async () => {
       setFlag('fold-lead', null);
     }
   };
+  const _enableAutomaticSpeaking = (flagKey, noticeToSpeak) => {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+      return;
+    }
+    setFlag(flagKey, null);
+    if (getFlag(flagKey)) {
+      speak(
+        noticeToSpeak,
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        1,
+        1,
+        getSetting('app-voice-number', 'number')
+      );
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  };
   const _speakDrill = () => {
     if (getFlag('disable-operation')) {
       return;
@@ -148,40 +166,10 @@ const main = async () => {
     _switchDisplay();
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
-      return;
-    }
-    setFlag('is-automatic-question-speaking-enabled', null);
-    if (getFlag('is-automatic-question-speaking-enabled')) {
-      speak(
-        stringResources['-automatic-question-speaking-enabled'],
-        appLang,
-        getSetting('common-voice-volume', 'number'),
-        1,
-        1,
-        getSetting('app-voice-number', 'number')
-      );
-    } else {
-      window.speechSynthesis.cancel();
-    }
+    _enableAutomaticSpeaking('enable-automatic-question-speaking', stringResources['-automatic-question-speaking-enabled']);
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
-      return;
-    }
-    setFlag('is-automatic-answer-speaking-enabled', null);
-    if (getFlag('is-automatic-answer-speaking-enabled')) {
-      speak(
-        stringResources['-automatic-answer-speaking-enabled'],
-        appLang,
-        1,
-        1,
-        getSetting('app-voice-number', 'number'),
-        getSetting('common-voice-volume', 'number')
-      );
-    } else {
-      window.speechSynthesis.cancel();
-    }
+    _enableAutomaticSpeaking('enable-automatic-answer-speaking', stringResources['-automatic-answer-speaking-enabled']);
   });
   qs('#speak-button').addEventListener('click', event => {
     _speakDrill();
@@ -198,6 +186,18 @@ const main = async () => {
   qs('#visit-home-button').addEventListener('click', event => {
     _visitHome();
   });
+
+  qsa('.setting-checkbox').forEach(element => {
+    element.addEventListener('click', event => {
+      const settingKey = element.getAttribute('data-setting-key');
+      if (getSetting(settingKey, 'boolean')) {
+        setSetting(settingKey, 'false');
+      } else {
+        setSetting(settingKey, 'true');
+      }
+    });
+  });
+
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
     _switchDisplay();
   });
@@ -253,7 +253,9 @@ const main = async () => {
     _playDrill();
   });
   addSwipeListener(qs('body'), 25, () => {
-    _skipDrill();
+    if (getSetting('enable-swipe-to-right', 'boolean')) {
+      _skipDrill();
+    }
   });
   addDoubleTapListener(qs('body'), 250, () => {
     _speakDrill();
@@ -398,7 +400,7 @@ const resetCard = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   setFlag('disable-operation', false);
-  if (getFlag('is-automatic-question-speaking-enabled')) {
+  if (getFlag('enable-automatic-question-speaking')) {
     qs('#speak-button').click();
   }
 };
@@ -412,7 +414,7 @@ const showAnswer = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   setFlag('disable-operation', false);
-  if (getFlag('is-automatic-answer-speaking-enabled')) {
+  if (getFlag('enable-automatic-answer-speaking')) {
     qs('#speak-button').click();
   }
 };

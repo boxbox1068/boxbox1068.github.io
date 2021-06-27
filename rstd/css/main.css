@@ -410,12 +410,12 @@ body > * {
 #enable-automatic-answer-speaking-button::after {
   content: "A";
 }
-:root.enable-automatic-question-reading #enable-automatic-question-speaking-button::before,
-:root.enable-automatic-answer-reading #enable-automatic-answer-speaking-button::before {
+:root.enable-automatic-question-speaking #enable-automatic-question-speaking-button::before,
+:root.enable-automatic-answer-speaking #enable-automatic-answer-speaking-button::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-:root.enable-automatic-question-reading #enable-automatic-question-speaking-button::after,
-:root.enable-automatic-answer-reading #enable-automatic-answer-speaking-button::after {
+:root.enable-automatic-question-speaking #enable-automatic-question-speaking-button::after,
+:root.enable-automatic-answer-speaking #enable-automatic-answer-speaking-button::after {
   top: var(--this-toggle-height);
 }
 .operation-button {
@@ -509,11 +509,11 @@ body > * {
   margin: 0;
   padding-left: 1.5rem;
 }
-.checkbox {
+.setting-checkbox {
   width: .75rem;
   height: .75rem;
   border: 1px solid black;
 }
-:root[data-enable-swipe-to-right="true"] #enable-swipe-to-right-checkbox {
+:root[data-enable-swipe-to-right="true"] [data-setting-key="enable-swipe-to-right"] {
   background: red;
 }
