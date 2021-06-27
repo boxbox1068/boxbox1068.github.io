@@ -4,5 +4,5 @@ jsonpCallback({
   "statistics-output": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
   "-automatic-question-speaking-enabled": "問題の自動読み上げ、オン。",
   "-automatic-answer-speaking-enabled": "答えの自動読み上げ、オン。",
-  "-the-source-of-this-session": "このセッションのソース"
+  "-the-source-of-this-unit": "この単元のソース"
 });

@@ -96,9 +96,9 @@ button {
   color: inherit;
   cursor: pointer;
 }
-:root:not(.are-controls-disabled) button:hover,
-:root:not(.are-controls-disabled) button:hover::before,
-:root:not(.are-controls-disabled) button:hover::after {
+:root:not(.disable-operation) button:hover,
+:root:not(.disable-operation) button:hover::before,
+:root:not(.disable-operation) button:hover::after {
   background-image: linear-gradient(#FFF2,#FFF2);
 }
 button > svg {
@@ -177,7 +177,7 @@ body > * {
   background-color: var(--lead-panel-background-color);
   transition-duration: var(--common-transition-duration);
 }
-.is-lead-folded #lead-panel {
+.fold-lead #lead-panel {
   height: var(--lead-cell-height);
 }
 #lead-body {
@@ -200,7 +200,7 @@ body > * {
   cursor: pointer;
   transition-duration: var(--common-transition-duration);
 }
-.is-lead-folded #fold-lead-button {
+.fold-lead #fold-lead-button {
   bottom: calc(100% - var(--lead-cell-height));
   transform: scale(1, -1);
 }
@@ -401,12 +401,12 @@ body > * {
 #enable-automatic-answer-speaking-button::after {
   content: "A";
 }
-:root.is-automatic-question-speaking-enabled #enable-automatic-question-speaking-button::before,
-:root.is-automatic-answer-speaking-enabled #enable-automatic-answer-speaking-button::before {
+:root.enable-automatic-question-reading #enable-automatic-question-speaking-button::before,
+:root.enable-automatic-answer-reading #enable-automatic-answer-speaking-button::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-:root.is-automatic-question-speaking-enabled #enable-automatic-question-speaking-button::after,
-:root.is-automatic-answer-speaking-enabled #enable-automatic-answer-speaking-button::after {
+:root.enable-automatic-question-reading #enable-automatic-question-speaking-button::after,
+:root.enable-automatic-answer-reading #enable-automatic-answer-speaking-button::after {
   top: var(--this-toggle-height);
 }
 .operation-button {
@@ -422,7 +422,7 @@ body > * {
 .operation-button#play-button {
   width: 5.5rem;
 }
-:root.are-controls-disabled .operation-button {
+:root.disable-operation .operation-button {
   background-image: linear-gradient(#0002,#0002);
 }
 .operation-button > svg {
@@ -469,7 +469,7 @@ display: none;
   background-color: #0009;
   z-index: 300;
 }
-:root.is-settings-shown #settings-cell {
+:root.show-settings #settings-cell {
   display: flex;
 }
 #settings-panel {

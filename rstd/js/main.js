@@ -38,29 +38,29 @@ const main = async () => {
       targetElement.classList.add('active');
     }
   };
-  const _switchLayer = () => {
+  const _switchDisplay = () => {
     _setActiveElement(null);
-    if (getFlag('are-controls-disabled')) {
+    if (getFlag('disable-operation')) {
       return;
     }
-    if (getFlag('is-setings-shown')) {
-      setFlag('is-settings-shown', false);
+    if (getFlag('show-settings')) {
+      setFlag('show-settings', false);
     } else {
-      setFlag('is-lead-folded', null);
+      setFlag('fold-lead', null);
     }
   };
   const _speakDrill = () => {
-    if (getFlag('are-controls-disabled')) {
+    if (getFlag('disable-operation')) {
       return;
     }
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       return;
     }
-    if (getFlag('is-answer-shown')) {
+    if (getFlag('show-answer')) {
       speak(
         answerPhrase.text,
         answerPhrase.lang,
@@ -82,14 +82,14 @@ const main = async () => {
   };
   const _playDrill = () => {
     _setActiveElement(null);
-    if (getFlag('are-controls-disabled')) {
+    if (getFlag('disable-operation')) {
       return;
     }
-    if (getFlag('is-settings-shown')) {
-      setFlag('is-settings-shown', false);
-    } else if (! getFlag('is-lead-folded')) {
-      setFlag('is-lead-folded', true);
-    } else if (getFlag('is-answer-shown')) {
+    if (getFlag('show-settings')) {
+      setFlag('show-settings', false);
+    } else if (! getFlag('fold-lead')) {
+      setFlag('fold-lead', true);
+    } else if (getFlag('show-answer')) {
       resetCard();
     } else {
       showAnswer();
@@ -97,20 +97,20 @@ const main = async () => {
   };
   const _skipDrill = () => {
     _setActiveElement(null);
-    if (getFlag('are-controls-disabled')) {
+    if (getFlag('disable-operation')) {
       return;
     }
-    if (getFlag('is-settings-shown')) {
-      setFlag('is-settings-shown', false);
-    } else if (! getFlag('is-lead-folded')) {
-      setFlag('is-lead-folded', true);
+    if (getFlag('show-settings')) {
+      setFlag('show-settings', false);
+    } else if (! getFlag('fold-lead')) {
+      setFlag('fold-lead', true);
     } else {
       resetCard();
     }
   };
   const _showSettings = () => {
     _setActiveElement(null);
-    setFlag('is-settings-shown', true);
+    setFlag('show-settings', true);
   };
   const _visitHome = () => {
     window.location.href = 'https://twitter.com/shikaku1068/';
@@ -122,11 +122,11 @@ const main = async () => {
     targetPanel.scrollBy(0, scrollY);
   };
   const _showHint = (goBackwards) => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
     let optionElements;
-    if (getFlag('is-answer-shown')) {
+    if (getFlag('show-answer')) {
       optionElements = qsa('.option');
     } else {
       optionElements = qsa('#question-panel .option');
@@ -145,10 +145,10 @@ const main = async () => {
     _setActiveElement(targetOptionElement);
   };
   qs('#fold-lead-button').addEventListener('click', event => {
-    _switchLayer();
+    _switchDisplay();
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
     setFlag('is-automatic-question-speaking-enabled', null);
@@ -166,7 +166,7 @@ const main = async () => {
     }
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
     setFlag('is-automatic-answer-speaking-enabled', null);
@@ -199,10 +199,10 @@ const main = async () => {
     _visitHome();
   });
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
-    _switchLayer();
+    _switchDisplay();
   });
   addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
-    _switchLayer();
+    _switchDisplay();
   });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
     _speakDrill();
@@ -223,10 +223,10 @@ const main = async () => {
     _skipDrill();
   });
   addKeyDownListener(qs('body'), 'l', targetKey => {
-    _scrollPanel(qs('#lead-panel'), getFlag('is-lead-folded') ? 25 : 50);
+    _scrollPanel(qs('#lead-panel'), getFlag('fold-lead') ? 25 : 50);
   });
   addKeyDownListener(qs('body'), 'L', targetKey => {
-    _scrollPanel(qs('#lead-panel'), getFlag('is-lead-folded') ? -25 : -50);
+    _scrollPanel(qs('#lead-panel'), getFlag('fold-lead') ? -25 : -50);
   });
   addKeyDownListener(qs('body'), 'q', targetKey => {
     _scrollPanel(qs('#question-panel'), 50);
@@ -297,7 +297,7 @@ const main = async () => {
         leadText = [
           data['l-text'] || '',
           `${data['l-text'] ? '<br>__<br>' : ''}`,
-          `${stringResources['-the-source-of-this-session']}: `,
+          `${stringResources['-the-source-of-this-unit']}: `,
           `<a href="${urlOfDrillsDemoJsonp}">${urlOfDrillsDemoJsonp}</a>`
         ].join('');
         questionTemplate = data['q-temp'];
@@ -311,7 +311,7 @@ const main = async () => {
   qs('#lead-body').innerHTML = leadText || '';
   await new Promise(resolve => {
     setFlag.listener = (key, value) => {
-      if (key == 'is-lead-folded' && value) {
+      if (key == 'fold-lead' && value) {
         setFlag.listener = null;
         resolve();
       }
@@ -328,7 +328,7 @@ const main = async () => {
   resetCard();
 };
 const resetCard = async () => {
-  setFlag('are-controls-disabled', true);
+  setFlag('disable-operation', true);
   window.speechSynthesis.cancel();
   qs('#question-cover').style.left = '0';
   qs('#answer-cover').style.left = '0';
@@ -362,15 +362,15 @@ const resetCard = async () => {
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('is-question-shown', true);
-  setFlag('is-answer-shown', false);
-  setFlag('are-controls-disabled', false);
+  setFlag('show-question', true);
+  setFlag('show-answer', false);
+  setFlag('disable-operation', false);
   if (getFlag('is-automatic-question-speaking-enabled')) {
     qs('#speak-button').click();
   }
 };
 const showAnswer = async () => {
-  setFlag('are-controls-disabled', true);
+  setFlag('disable-operation', true);
   window.speechSynthesis.cancel();
   qs('#answer-cover').style.left = '100%';
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
@@ -378,8 +378,8 @@ const showAnswer = async () => {
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('is-answer-shown', true);
-  setFlag('are-controls-disabled', false);
+  setFlag('show-answer', true);
+  setFlag('disable-operation', false);
   if (getFlag('is-automatic-answer-speaking-enabled')) {
     qs('#speak-button').click();
   }
