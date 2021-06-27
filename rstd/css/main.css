@@ -2,8 +2,8 @@
  |  COLOR  |
  * ------- */
 :root {
-  --app-background-color: #CFD8DC;
-  --app-color: #263238;
+  --common-background-color: #CFD8DC;
+  --common-color: #263238;
   --lead-panel-background-color: #C5CAE9EE;
   --lead-panel-color: #263238;
   --fold-lead-checkbox-background-color: #455A64;
@@ -19,6 +19,8 @@
   --on-toggle-color: #FFC107;
   --footer-background-color: #37474F;
   --footer-color: #CFD8DC;
+  --settings-header-background-color: #37474F;
+  --settings-header-color: #CFD8DC;
   --option-number-1-background-color: #EF9A9A99;
   --option-number-2-background-color: #90CAF999;
   --option-number-3-background-color: #FFF59D99;
@@ -50,18 +52,19 @@
  |  GENERAL  |
  * --------- */
  :root {
-  --app-font-size: 4vmin;
-  --app-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
-  --cell-border-spacing: .25rem;
+  --stripes-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
+  --common-font-size: 4vmin;
+  --common-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
+  --common-cell-border-spacing: .25rem;
+  --common-padding: .5rem 1rem;
+  --common-border-width: 1px;
+  --common-line-height: 1.5em;
+  --common-transition-duration: 500ms;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
   --control-height: 2rem;
   --footer-cell-height: 2rem;
-  --common-padding: .5rem 1rem;
-  --common-border-width: 1px;
-  --common-line-height: 1.5em;
-  --common-transition-duration: 500ms;
 }
 *,
 *::before,
@@ -80,11 +83,11 @@
 }
 html {
   height: 100%;
-  background-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
-  background-color: var(--app-background-color);
-  color: var(--app-color);
-  font-size: var(--app-font-size);
-  font-family: var(--app-font-family);
+  background-image: var(--stripes-image);
+  background-color: var(--common-background-color);
+  color: var(--common-color);
+  font-size: var(--common-font-size);
+  font-family: var(--common-font-family);
 }
 button {
   display: flex;
@@ -115,11 +118,11 @@ body {
   display: grid;
   grid-template:
     "lead lead lead" var(--lead-cell-height)
-    "... ... ..." var(--cell-border-spacing)
+    "... ... ..." var(--common-cell-border-spacing)
     "question ... answer" 1fr
     "statistics ... controls" min-content
     "footer footer footer" var(--footer-cell-height)
-    / 1fr var(--cell-border-spacing) 1fr;
+    / 1fr var(--common-cell-border-spacing) 1fr;
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -128,9 +131,9 @@ body {
   body {
     grid-template:
       "lead" var(--lead-cell-height)
-      "..." var(--cell-border-spacing)
+      "..." var(--common-cell-border-spacing)
       "question" 1fr
-      "..." var(--cell-border-spacing)
+      "..." var(--common-cell-border-spacing)
       "answer" 1fr
       "statistics" min-content
       "controls" min-content
@@ -464,35 +467,39 @@ body > * {
  *-----------------*/
 #settings-cell {
   display: flex;
-display: none;
   justify-content: center;
   align-items: center;
+  visibility: hidden;
+  opacity: 0;
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 300;
   width: 100%;
   height: 100%;
-  background-color: #0009;
-  z-index: 300;
+  background-color: #000C;
+  transition-duration: calc(var(--common-transition-duration) / 2);
 }
 :root.show-settings #settings-cell {
-  display: flex;
+  visibility: visible;
+  opacity: 1;
 }
 #settings-panel {
   display: flex;
   flex-direction: column;
-max-height: calc(100% - 5rem);
   width: calc(100% - 5rem);
-  background-color: white;
+  max-height: calc(100% - 5rem);
+  background-color: var(--common-background-color);
+  background-image: var(--stripes-image);
 }
 #settings-header {
   flex-shrink: 0;
-  background-color: black;
-  color: white;
+  background-color: var(--settings-header-background-color);
+  color: var(--settings-header-color);
   height: 2rem;
 }
 #settings-body {
   padding: var(--common-padding);
-  background: blue;
+//  background: blue;
   overflow-y: auto;
 }

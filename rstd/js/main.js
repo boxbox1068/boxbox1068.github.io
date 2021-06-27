@@ -246,6 +246,9 @@ const main = async () => {
   addKeyDownListener(qs('body'), 'H', targetKey => {
     _showHint(true);
   });
+  addKeyDownListener(qs('body'), '/', targetKey => {
+    _showSettings();
+  });
   addSwipeListener(qs('body'), -25, () => {
     _playDrill();
   });
@@ -255,10 +258,10 @@ const main = async () => {
   addDoubleTapListener(qs('body'), 250, () => {
     _speakDrill();
   });
-  qs('body').addEventListener('mousemove', event => {
+  qs('body').addEventListener('touchstart', event => {
     _setActiveElement(event.target);
   }, {capture: true});  
-  qs('body').addEventListener('touchstart', event => {
+  qs('body').addEventListener('mousemove', event => {
     _setActiveElement(event.target);
   }, {capture: true});  
   await new Promise(resolve => {
@@ -328,19 +331,19 @@ const main = async () => {
   resetCard();
 };
 const resetCard = async () => {
-  const _setHintBalloonPosition = optionElement => {
-    const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
-    const optionRect = optionElement.getClientRects()[0];
-    hintBalloonPanelElement.style.top = `${optionRect.top}px`;
-    hintBalloonPanelElement.style.left = `${optionRect.left}px`;
-  };
-  const _updateHintBalloonPositions = () => {
-    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-    for (const optionElement of targetOptionElements) {
-      _setHintBalloonPosition(optionElement);
-    }
-  };
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
+    const _setHintBalloonPosition = optionElement => {
+      const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
+      const optionRect = optionElement.getClientRects()[0];
+      hintBalloonPanelElement.style.top = `${optionRect.top}px`;
+      hintBalloonPanelElement.style.left = `${optionRect.left}px`;
+    };
+    const _updateHintBalloonPositions = () => {
+      const targetOptionElements = parentPanelElement.querySelectorAll('.option');
+      for (const optionElement of targetOptionElements) {
+        _setHintBalloonPosition(optionElement);
+      }
+    };
     const targetOptionElements = parentPanelElement.querySelectorAll('.option');
     for (const optionElement of targetOptionElements) {
       const optionNumber = Number(optionElement.dataset.optionNumber);
