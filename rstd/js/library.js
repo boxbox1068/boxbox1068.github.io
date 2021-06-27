@@ -11,11 +11,15 @@ const setTimeout = delay => {
 };
 const setFlag = (key, value) => {
   if (value === null) {
-    qs(':root').classList.toggle(key);
-  } else if (value) {
+    value = ! qs(':root').classList.contains(key);
+  }
+  if (value) {
     qs(':root').classList.add(key);
   } else {
     qs(':root').classList.remove(key);
+  }
+  if (setFlag.listener) {
+    setFlag.listener(key, value);
   }
 };
 const getFlag = (key) => {

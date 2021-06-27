@@ -30,49 +30,28 @@ const main = async () => {
   loadSetting('answer-voice-number', '1');
   loadSetting('answer-voice-rate', '1');
   loadSetting('answer-voice-pitch', '1');
-  qs('#fold-lead-button').addEventListener('click', event => {
+  const _setActiveElement = targetElement => {
+    qsa('.active').forEach(element => {
+      element.classList.remove('active');
+    });
+    if (targetElement) {
+      targetElement.classList.add('active');
+    }
+  };
+  const _switch = () => {
+    if (getFlag('are-controls-disabled')) {
+      return;
+    }
     if (getFlag('is-setings-shown')) {
-      return;
-    }
-    setFlag('is-lead-folded', null);
-  });
-  qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
-      return;
-    }
-    setFlag('is-automatic-question-speaking-enabled', null);
-    if (getFlag('is-automatic-question-speaking-enabled')) {
-      speak(
-        stringResources['automatic-question-speaking-enabled-notice'],
-        appLang,
-        getSetting('common-voice-volume', 'number'),
-        1,
-        1,
-        getSetting('app-voice-number', 'number')
-      );
+      setFlag('is-settings-shown', false);
     } else {
-      window.speechSynthesis.cancel();
+      setFlag('is-lead-folded', null);
     }
-  });
-  qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+  };
+  const _speak = () => {
+    if (getFlag('are-controls-disabled')) {
       return;
     }
-    setFlag('is-automatic-answer-speaking-enabled', null);
-    if (getFlag('is-automatic-answer-speaking-enabled')) {
-      speak(
-        stringResources['automatic-answer-speaking-enabled-notice'],
-        appLang,
-        1,
-        1,
-        getSetting('app-voice-number', 'number'),
-        getSetting('common-voice-volume', 'number')
-      );
-    } else {
-      window.speechSynthesis.cancel();
-    }
-  });
-  qs('#speak-button').addEventListener('click', event => {
     if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
       return;
     }
@@ -99,48 +78,113 @@ const main = async () => {
         getSetting('question-voice-number', 'number')
       );
     }
-  });
-  qs('#play-button').addEventListener('click', event => {
-    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+  };
+  const _play = () => {
+    if (getFlag('are-controls-disabled')) {
       return;
     }
-    if (getFlag('is-answer-shown')) {
+    if (getFlag('is-settings-shown')) {
+      setFlag('is-settings-shown', false);
+    } else if (! getFlag('is-lead-folded')) {
+      setFlag('is-lead-folded', true);
+    } else if (getFlag('is-answer-shown')) {
       resetCard();
     } else {
       showAnswer();
     }
+  };
+  const _skip = () => {
+    if (getFlag('are-controls-disabled')) {
+      return;
+    }
+    if (getFlag('is-settings-shown')) {
+      setFlag('is-settings-shown', false);
+    } else if (! getFlag('is-lead-folded')) {
+      setFlag('is-lead-folded', true);
+    } else {
+      resetCard();
+    }
+  };
+  const _showSettings = () => {
+    setFlag('is-settings-shown', true);
+  };
+  qs('#fold-lead-button').addEventListener('click', event => {
+    _switch();
   });
-  qs('#skip-button').addEventListener('click', event => {
+  qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
     if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
       return;
     }
-    resetCard();
+    setFlag('is-automatic-question-speaking-enabled', null);
+    if (getFlag('is-automatic-question-speaking-enabled')) {
+      speak(
+        stringResources['-automatic-question-speaking-enabled'],
+        appLang,
+        getSetting('common-voice-volume', 'number'),
+        1,
+        1,
+        getSetting('app-voice-number', 'number')
+      );
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  });
+  qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    setFlag('is-automatic-answer-speaking-enabled', null);
+    if (getFlag('is-automatic-answer-speaking-enabled')) {
+      speak(
+        stringResources['-automatic-answer-speaking-enabled'],
+        appLang,
+        1,
+        1,
+        getSetting('app-voice-number', 'number'),
+        getSetting('common-voice-volume', 'number')
+      );
+    } else {
+      window.speechSynthesis.cancel();
+    }
+  });
+  qs('#speak-button').addEventListener('click', event => {
+    _speak();
+  });
+  qs('#play-button').addEventListener('click', event => {
+    _play();
+  });
+  qs('#skip-button').addEventListener('click', event => {
+    _skip();
   });
   qs('#show-settings-button').addEventListener('click', event => {
-    setFlag('is-settings-shown', true);
+    _showSettings();
   });
   qs('#visit-home-button').addEventListener('click', event => {
     window.location.href = 'https://twitter.com/shikaku1068/';
   });
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
-    qs('#fold-lead-button').click();
+    _switch();
+  });
+  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
+    _switch();
   });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
-    qs('#speak-button').click();
+    _speak();
+  });
+  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
+    _speak();
   });
   addKeyDownListener(qs('body'), ' ', targetKey => {
-    if (getFlag('is-lead-folded')) {
-      qs('#play-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
+    _play();
+  });
+  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
+    _play();
   });
   addKeyDownListener(qs('body'), 'Tab', targetKey => {
-    if (getFlag('is-lead-folded')) {
-      qs('#skip-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
+    _skip();
+  });
+  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
+    _skip();
   });
   addKeyDownListener(qs('body'), ['l', 'L'], targetKey => {
     if (getFlag('is-setting-shown')) {
@@ -190,36 +234,22 @@ const main = async () => {
       }
     }
     const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
-    setActiveElement(targetOptionElement);
+    _setActiveElement(targetOptionElement);
   });
   addSwipeListener(qs('body'), -25, () => {
-    if (getFlag('is-lead-folded')) {
-      qs('#play-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
+    _play();
   });
   addSwipeListener(qs('body'), 25, () => {
-    if (! getSetting('enable-swipe-to-right', 'boolean')) {
-      return;
-    }
-    if (getFlag('is-lead-folded')) {
-      qs('#skip-button').click();
-    } else {
-      qs('#fold-lead-button').click();
-    }
+    _skip();
   });
   addDoubleTapListener(qs('body'), 250, () => {
-    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
-      return;
-    }
-    qs('#speak-button').click();
+    _speak();
   });
   qs('body').addEventListener('mousemove', event => {
-    setActiveElement(event.target);
+    _setActiveElement(event.target);
   }, {capture: true});  
   qs('body').addEventListener('touchstart', event => {
-    setActiveElement(event.target);
+    _setActiveElement(event.target);
   }, {capture: true});  
   await new Promise(resolve => {
     requestJsonp('./data/rabbit-variables.jsonp', data => {
@@ -254,7 +284,12 @@ const main = async () => {
     const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
     await new Promise(resolve => {
       requestJsonp(urlOfDrillsDemoJsonp, data => {
-        leadText = `${data['l-text']}<br>____<br><small>このセッションのソース：<a href="${urlOfDrillsDemoJsonp}">${urlOfDrillsDemoJsonp}</a></small>`;
+        leadText = [
+          data['l-text'] || '',
+          `${data['l-text'] ? '<br>__<br>' : ''}`,
+          `${stringResources['-the-source-of-this-session']}: `,
+          `<a href="${urlOfDrillsDemoJsonp}">${urlOfDrillsDemoJsonp}</a>`
+        ].join('');
         questionTemplate = data['q-temp'];
         questionLang = data['q-lang'];
         answerTemplate = data['a-temp'];
@@ -265,9 +300,12 @@ const main = async () => {
   }
   qs('#lead-body').innerHTML = leadText || '';
   await new Promise(resolve => {
-    qs('#fold-lead-button').addEventListener('click', event => {
-      resolve();
-    }, {once: true});
+    setFlag.listener = (key, value) => {
+      if (key == 'is-lead-folded' && value) {
+        setFlag.listener = null;
+        resolve();
+      }
+    }
     if (! leadText) {
       qs('#fold-lead-button').click();
       qs('#fold-lead-button').disabled = true;
@@ -280,7 +318,7 @@ const main = async () => {
   resetCard();
 };
 const resetCard = async () => {
-  disableButtons();
+  setFlag('are-controls-disabled', true);
   window.speechSynthesis.cancel();
   qs('#question-cover').style.left = '0';
   qs('#answer-cover').style.left = '0';
@@ -316,13 +354,13 @@ const resetCard = async () => {
   }
   setFlag('is-question-shown', true);
   setFlag('is-answer-shown', false);
-  enableButtons();
+  setFlag('are-controls-disabled', false);
   if (getFlag('is-automatic-question-speaking-enabled')) {
     qs('#speak-button').click();
   }
 };
 const showAnswer = async () => {
-  disableButtons();
+  setFlag('are-controls-disabled', true);
   window.speechSynthesis.cancel();
   qs('#answer-cover').style.left = '100%';
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
@@ -331,7 +369,7 @@ const showAnswer = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   setFlag('is-answer-shown', true);
-  enableButtons();
+  setFlag('are-controls-disabled', false);
   if (getFlag('is-automatic-answer-speaking-enabled')) {
     qs('#speak-button').click();
   }
@@ -368,15 +406,6 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
   parentPanelElement.addEventListener('scroll', updateHintBalloonPositions);
   window.addEventListener('resize', updateHintBalloonPositions);
 }
-const setActiveElement = targetElement => {
-  qsa('.active').forEach(element => {
-    element.classList.remove('active');
-  });
-  if (! targetElement) {
-    return;
-  }
-  targetElement.classList.add('active');
-};
 const disableButtons = () => {
   qs('#speak-button').disabled = true;
   qs('#play-button').disabled = true;
