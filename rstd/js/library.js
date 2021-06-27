@@ -56,7 +56,7 @@ const setSetting = (key, value) => {
   }
 };
 const getSetting = (key, valueType) => {
-  const convertValue = (srcValue, valueType) => {
+  const _convertValue = (srcValue, valueType) => {
     switch (valueType) {
       case 'number':
         return Number(srcValue);
@@ -73,7 +73,7 @@ const getSetting = (key, valueType) => {
   };
   const candidateValueA = qs(':root').getAttribute(`data-${key}`);
   if (candidateValueA != null) {
-    return convertValue(candidateValueA, valueType);
+    return _convertValue(candidateValueA, valueType);
   }
   const cookies = {};
   document.cookie.split(';').forEach(parameter => {
@@ -85,7 +85,7 @@ const getSetting = (key, valueType) => {
     cookies[key] = decodeURIComponent(encodedValue);
   });
   const candidateValueB = cookies[key];
-  return convertValue(candidateValueB, valueType);
+  return _convertValue(candidateValueB, valueType);
 };
 const loadSetting = (key, defaultValue) => {
   setSetting(key, getSetting(key) || defaultValue);

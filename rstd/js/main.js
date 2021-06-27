@@ -38,7 +38,7 @@ const main = async () => {
       targetElement.classList.add('active');
     }
   };
-  const _switch = () => {
+  const _switchLayer = () => {
     _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
@@ -49,7 +49,7 @@ const main = async () => {
       setFlag('is-lead-folded', null);
     }
   };
-  const _speak = () => {
+  const _speakDrill = () => {
     if (getFlag('are-controls-disabled')) {
       return;
     }
@@ -80,7 +80,7 @@ const main = async () => {
       );
     }
   };
-  const _play = () => {
+  const _playDrill = () => {
     _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
@@ -95,7 +95,7 @@ const main = async () => {
       showAnswer();
     }
   };
-  const _skip = () => {
+  const _skipDrill = () => {
     _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
@@ -145,7 +145,7 @@ const main = async () => {
     _setActiveElement(targetOptionElement);
   };
   qs('#fold-lead-button').addEventListener('click', event => {
-    _switch();
+    _switchLayer();
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
     if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
@@ -184,13 +184,13 @@ const main = async () => {
     }
   });
   qs('#speak-button').addEventListener('click', event => {
-    _speak();
+    _speakDrill();
   });
   qs('#play-button').addEventListener('click', event => {
-    _play();
+    _playDrill();
   });
   qs('#skip-button').addEventListener('click', event => {
-    _skip();
+    _skipDrill();
   });
   qs('#show-settings-button').addEventListener('click', event => {
     _showSettings();
@@ -199,28 +199,28 @@ const main = async () => {
     _visitHome();
   });
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
-    _switch();
+    _switchLayer();
   });
   addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
-    _switch();
+    _switchLayer();
   });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
-    _speak();
+    _speakDrill();
   });
   addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
-    _speak();
+    _speakDrill();
   });
   addKeyDownListener(qs('body'), ' ', targetKey => {
-    _play();
+    _playDrill();
   });
   addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
-    _play();
+    _playDrill();
   });
   addKeyDownListener(qs('body'), 'Tab', targetKey => {
-    _skip();
+    _skipDrill();
   });
   addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
-    _skip();
+    _skipDrill();
   });
   addKeyDownListener(qs('body'), 'l', targetKey => {
     _scrollPanel(qs('#lead-panel'), getFlag('is-lead-folded') ? 25 : 50);
@@ -247,13 +247,13 @@ const main = async () => {
     _showHint(true);
   });
   addSwipeListener(qs('body'), -25, () => {
-    _play();
+    _playDrill();
   });
   addSwipeListener(qs('body'), 25, () => {
-    _skip();
+    _skipDrill();
   });
   addDoubleTapListener(qs('body'), 250, () => {
-    _speak();
+    _speakDrill();
   });
   qs('body').addEventListener('mousemove', event => {
     _setActiveElement(event.target);
@@ -385,16 +385,16 @@ const showAnswer = async () => {
   }
 };
 const addHintBalloons = (parentPanelElement, hintTextList) => {
-  const setHintBalloonPosition = optionElement => {
+  const _setHintBalloonPosition = optionElement => {
     const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
     const optionRect = optionElement.getClientRects()[0];
     hintBalloonPanelElement.style.top = `${optionRect.top}px`;
     hintBalloonPanelElement.style.left = `${optionRect.left}px`;
   };
-  const updateHintBalloonPositions = () => {
+  const _updateHintBalloonPositions = () => {
     const targetOptionElements = parentPanelElement.querySelectorAll('.option');
     for (const optionElement of targetOptionElements) {
-      setHintBalloonPosition(optionElement);
+      _setHintBalloonPosition(optionElement);
     }
   };
   const targetOptionElements = parentPanelElement.querySelectorAll('.option');
@@ -411,10 +411,10 @@ const addHintBalloons = (parentPanelElement, hintTextList) => {
     const hintBalloonRight = optionElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
     const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
     hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-    setHintBalloonPosition(optionElement);
+    _setHintBalloonPosition(optionElement);
   }
-  parentPanelElement.addEventListener('scroll', updateHintBalloonPositions);
-  window.addEventListener('resize', updateHintBalloonPositions);
+  parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
+  window.addEventListener('resize', _updateHintBalloonPositions);
 }
 const disableButtons = () => {
   qs('#speak-button').disabled = true;
