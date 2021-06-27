@@ -73,43 +73,60 @@
 <div id="settings-cell">
   <div id="settings-panel">
     <div id="settings-header">
-      <span lang="en">Settings</span>
-      <span lang="ja">設定</span>
+      <span class="placeholder" data-resource-key="-settings"></span>
     </div>
     <div id="settings-body">
-      <dl>
-        <dt>
+<!--
+  操作
+  表示
+  アニメ
+  読み上げ
+-->
+      <ul>
+        <li>
+          <button class="checkbox" id="enable-swipe-to-right-checkbox"></button>
+          <span class="placeholder" data-resource-key="-enable-swipe-to-right"></span>
+        </li>
+      </ul>
+
+
+<!--
+      <ul>
+        <li>
+          <input type="checkbox" name="enable-swipe-to-right" id="enable-swipe-to-right-checkbox"><label for="enable-swipe-to-right-checkbox"></label><span class="placeholder" data-resource-key=""></span>
+        </li>
+        <li>
           <input type="checkbox" name="disable-animation" id="disable-animation-checkbox"><label for="disable-animation-checkbox"></label><span>アニメーションを無効化</span>
-        </dt>
-        <dt>
+        </li>
+        <li>
           <span>読み上げ速度:</span>
-        </dt>
-        <dd>
+        </li>
+        <li>
           <label><input type="radio" name="speaking-speed" value="0.5">0.5</label>
           <label><input type="radio" name="speaking-speed" value="0.75">0.75</label>
           <label><input type="radio" name="speaking-speed" value="1">1</label>
           <label><input type="radio" name="speaking-speed" value="1.25">1.25</label>
           <label><input type="radio" name="speaking-speed" value="1.5">1.5</label>
-        </dd>
-        <dt>
+        </li>
+        <li>
           <span>読み上げピッチ:</span>
-        </dt>
-        <dd>
+        </li>
+        <li>
           <label><input type="radio" name="hoge">0.5</label>
           <label><input type="radio" name="hoge">0.75</label>
           <label><input type="radio" name="hoge">1</label>
           <label><input type="radio" name="hoge">1.25</label>
           <label><input type="radio" name="hoge">1.5</label>
-        </dd>
-        <dt>
+        </li>
+        <li>
           <span>読み上げ遅延（ミリ秒）:</span>
-        </dt>
-        <dd>
+        </li>
+        <li>
           <label><input type="radio" name="hoge">0</label>
           <label><input type="radio" name="hoge">500</label>
           <label><input type="radio" name="hoge">1000</label>
-        </dd>
-      </dl>
+        </li>
+      </ul>
       <div>
         <input type="checkbox"><label></label><span>ハイライトを無効化</span>
       </div>
@@ -125,6 +142,7 @@
       <div>
         <input type="checkbox"><label></label><span>設定内容をCookieに保存</span>
       </div>
+-->
     </div>
   </div>
 </div>

@@ -4,10 +4,10 @@
 :root {
   --common-background-color: #CFD8DC;
   --common-color: #263238;
-  --lead-panel-background-color: #C5CAE9EE;
+  --lead-panel-background-color: #C5CAE9;
   --lead-panel-color: #263238;
-  --fold-lead-checkbox-background-color: #455A64;
-  --fold-lead-checkbox-color: #CFD8DC;
+  --fold-lead-button-background-color: #455A64;
+  --fold-lead-button-color: #CFD8DC;
   --main-panel-background-color: #FFFC;
   --main-panel-color: #263238;
   --main-cover-background-color: #3F51B5;
@@ -90,7 +90,7 @@ html {
   font-family: var(--common-font-family);
 }
 button {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 0;
@@ -198,8 +198,8 @@ body > * {
   z-index: 110;
   width: 2rem;
   height: var(--fold-lead-button-height);
-  background-color: var(--fold-lead-checkbox-background-color);
-  color: var(--fold-lead-checkbox-color);
+  background-color: var(--fold-lead-button-background-color);
+  color: var(--fold-lead-button-color);
   cursor: pointer;
   transition-duration: var(--common-transition-duration);
 }
@@ -489,17 +489,31 @@ body > * {
   flex-direction: column;
   width: calc(100% - 5rem);
   max-height: calc(100% - 5rem);
-  background-color: var(--common-background-color);
-  background-image: var(--stripes-image);
 }
 #settings-header {
+  display: flex;
   flex-shrink: 0;
+  align-items: center;
+  height: 2rem;
+  padding: var(--common-padding);
   background-color: var(--settings-header-background-color);
   color: var(--settings-header-color);
-  height: 2rem;
 }
 #settings-body {
   padding: var(--common-padding);
-//  background: blue;
   overflow-y: auto;
+  background-color: var(--common-background-color);
+  background-image: var(--stripes-image);
+}
+#settings-body > ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+.checkbox {
+  width: .75rem;
+  height: .75rem;
+  border: 1px solid black;
+}
+:root[data-enable-swipe-to-right="true"] #enable-swipe-to-right-checkbox {
+  background: red;
 }

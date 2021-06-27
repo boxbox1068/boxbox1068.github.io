@@ -4,5 +4,7 @@ jsonpCallback({
   "statistics-output": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "-automatic-question-speaking-enabled": "Automatic question speaking enabled.",
   "-automatic-answer-speaking-enabled": "Automatic answer speaking enabled.",
-  "-the-source-of-this-unit": "The source of this session"
+  "-the-source-of-this-unit": "The source of this session",
+  "-settings": "Settings",
+  "-enable-swipe-to-right": "Enable swipe to right"
 });

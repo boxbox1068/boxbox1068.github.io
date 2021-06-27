@@ -39,9 +39,12 @@ const getFlag = (key) => {
   return qs(':root').classList.contains(key);
 }
 const setSetting = (key, value) => {
+  qs(':root').setAttribute(`data-${key}`, value);
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
   document.cookie = `${key}=${encodedValue}; max-age=${maxAge};`;
+
+/*
   qs(':root').setAttribute(`data-${key}`, value);
   if (/^true|false$/i.test(value)) {
     const selector = `[type="checkbox"][name="${key}"]`;
@@ -54,6 +57,7 @@ const setSetting = (key, value) => {
       element.checked = true;
     });
   }
+*/
 };
 const getSetting = (key, valueType) => {
   const _convertValue = (srcValue, valueType) => {
