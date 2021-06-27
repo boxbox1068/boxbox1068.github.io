@@ -39,6 +39,7 @@ const main = async () => {
     }
   };
   const _switch = () => {
+    _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
     }
@@ -80,6 +81,7 @@ const main = async () => {
     }
   };
   const _play = () => {
+    _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
     }
@@ -94,6 +96,7 @@ const main = async () => {
     }
   };
   const _skip = () => {
+    _setActiveElement(null);
     if (getFlag('are-controls-disabled')) {
       return;
     }
@@ -106,7 +109,40 @@ const main = async () => {
     }
   };
   const _showSettings = () => {
+    _setActiveElement(null);
     setFlag('is-settings-shown', true);
+  };
+  const _visitHome = () => {
+    window.location.href = 'https://twitter.com/shikaku1068/';
+  };
+  const _scrollPanel = (targetPanel, scrollY) => {
+    if (! isForefrontElement(targetPanel)) {
+      return;
+    }
+    targetPanel.scrollBy(0, scrollY);
+  };
+  const _showHint = (goBackwards) => {
+    if (! getFlag('is-lead-folded') || getFlag('is-settings-shown')) {
+      return;
+    }
+    let optionElements;
+    if (getFlag('is-answer-shown')) {
+      optionElements = qsa('.option');
+    } else {
+      optionElements = qsa('#question-panel .option');
+    }
+    if (! optionElements.length) {
+      return;
+    }
+    let activeOptionElementIndex = (goBackwards ? optionElements.length : -1);
+    for (let i = 0; i < optionElements.length; i++) {
+      const currentOptionElement = optionElements[i];
+      if (currentOptionElement.classList.contains('active')) {
+        activeOptionElementIndex = i;
+      }
+    }
+    const targetOptionElement = optionElements[activeOptionElementIndex + (goBackwards ? -1 : 1)];
+    _setActiveElement(targetOptionElement);
   };
   qs('#fold-lead-button').addEventListener('click', event => {
     _switch();
@@ -160,81 +196,55 @@ const main = async () => {
     _showSettings();
   });
   qs('#visit-home-button').addEventListener('click', event => {
-    window.location.href = 'https://twitter.com/shikaku1068/';
+    _visitHome();
   });
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
     _switch();
   });
-  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
+  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
     _switch();
   });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
     _speak();
   });
-  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
+  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
     _speak();
   });
   addKeyDownListener(qs('body'), ' ', targetKey => {
     _play();
   });
-  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
+  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
     _play();
   });
   addKeyDownListener(qs('body'), 'Tab', targetKey => {
     _skip();
   });
-  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
+  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
     _skip();
   });
-  addKeyDownListener(qs('body'), ['l', 'L'], targetKey => {
-    if (getFlag('is-setting-shown')) {
-      return;
-    }
-    let scrollY;
-    if (getFlag('is-lead-folded')) {
-      scrollY = {'l': 25, 'L': -25}[targetKey];
-    } else {
-      scrollY = {'l': 50, 'L': -50}[targetKey];
-    }
-    qs('#lead-panel').scrollBy(0, scrollY);
+  addKeyDownListener(qs('body'), 'l', targetKey => {
+    _scrollPanel(qs('#lead-panel'), getFlag('is-lead-folded') ? 25 : 50);
   });
-  addKeyDownListener(qs('body'), ['q', 'Q'], targetKey => {
-    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
-      return;
-    }
-    const scrollY = {'q': 50, 'Q': -50}[targetKey];
-    qs('#question-panel').scrollBy(0, scrollY);
+  addKeyDownListener(qs('body'), 'L', targetKey => {
+    _scrollPanel(qs('#lead-panel'), getFlag('is-lead-folded') ? -25 : -50);
   });
-  addKeyDownListener(qs('body'), ['a', 'A'], targetKey => {
-    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
-      return;
-    }
-    const scrollY = {'a': 50, 'A': -50}[targetKey];
-    qs('#answer-panel').scrollBy(0, scrollY);
+  addKeyDownListener(qs('body'), 'q', targetKey => {
+    _scrollPanel(qs('#question-panel'), 50);
   });
-  addKeyDownListener(qs('body'), ['h', 'H'], targetKey => {
-    if (! getFlag('is-lead-folded') || getFlag('is-setting-shown')) {
-      return;
-    }
-    let optionElements;
-    if (getFlag('is-answer-shown')) {
-      optionElements = qsa('.option');
-    } else {
-      optionElements = qsa('#question-panel .option');
-    }
-    if (! optionElements.length) {
-      return;
-    }
-    const reverse = {'h': false, 'H': true}[targetKey];
-    let activeOptionElementIndex = (reverse ? optionElements.length : -1);
-    for (let i = 0; i < optionElements.length; i++) {
-      const currentOptionElement = optionElements[i];
-      if (currentOptionElement.classList.contains('active')) {
-        activeOptionElementIndex = i;
-      }
-    }
-    const targetOptionElement = optionElements[activeOptionElementIndex + (reverse ? -1 : 1)];
-    _setActiveElement(targetOptionElement);
+  addKeyDownListener(qs('body'), 'Q', targetKey => {
+    _scrollPanel(qs('#question-panel'), -50);
+  });
+  addKeyDownListener(qs('body'), 'a', targetKey => {
+    _scrollPanel(qs('#answer-panel'), 50);
+  });
+  addKeyDownListener(qs('body'), 'A', targetKey => {
+    _scrollPanel(qs('#answer-panel'), -50);
+  });
+  addKeyDownListener(qs('body'), 'h', targetKey => {
+    _showHint(false);
+  });
+  addKeyDownListener(qs('body'), 'H', targetKey => {
+    _showHint(true);
   });
   addSwipeListener(qs('body'), -25, () => {
     _play();

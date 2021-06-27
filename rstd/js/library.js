@@ -9,6 +9,19 @@ const setTimeout = delay => {
     }, delay);
   });
 };
+const expandVariables = (targetString, variableValues, symbolForVariables) => {
+  symbolForVariables || (symbolForVariables = '%');
+  for (const key in variableValues) {
+    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
+    targetString = targetString.replace(variableExpression, variableValues[key]);
+  }
+  return targetString;
+};
+const isForefrontElement = element => {
+  const rect = element.getClientRects()[0];
+  const forefrontElement = document.elementFromPoint(rect.x, rect.y);
+  return element.contains(forefrontElement);
+};
 const setFlag = (key, value) => {
   if (value === null) {
     value = ! qs(':root').classList.contains(key);
@@ -88,14 +101,6 @@ const requestJsonp = (jsonpSrc, callback) => {
   jsonpDataScriptElement.id = 'jsonp-data';
   jsonpDataScriptElement.src = jsonpSrc;
   document.head.append(jsonpDataScriptElement);
-};
-const expandVariables = (targetString, variableValues, symbolForVariables) => {
-  symbolForVariables || (symbolForVariables = '%');
-  for (const key in variableValues) {
-    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
-    targetString = targetString.replace(variableExpression, variableValues[key]);
-  }
-  return targetString;
 };
 const addKeyDownListener = (targetElement, targetKeys, listener) => {
   if (! Array.isArray(targetKeys)) {
