@@ -247,6 +247,12 @@ body > * {
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
 }
+:root.uncover-question #question-cover {
+  left: -100%;
+}
+:root.uncover-answer #answer-cover {
+  left: 100%;
+}
 .option {
   font-weight: bold;
 }

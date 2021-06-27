@@ -60,7 +60,7 @@ const main = async () => {
       window.speechSynthesis.cancel();
       return;
     }
-    if (getFlag('show-answer')) {
+    if (getFlag('uncover-answer')) {
       speak(
         answerPhrase.text,
         answerPhrase.lang,
@@ -89,7 +89,7 @@ const main = async () => {
       setFlag('show-settings', false);
     } else if (! getFlag('fold-lead')) {
       setFlag('fold-lead', true);
-    } else if (getFlag('show-answer')) {
+    } else if (getFlag('uncover-answer')) {
       resetCard();
     } else {
       showAnswer();
@@ -126,7 +126,7 @@ const main = async () => {
       return;
     }
     let optionElements;
-    if (getFlag('show-answer')) {
+    if (getFlag('uncover-answer')) {
       optionElements = qsa('.option');
     } else {
       optionElements = qsa('#question-panel .option');
@@ -291,14 +291,14 @@ const main = async () => {
       }, {once: true});
     });
   } else {
-    const urlOfDrillsDemoJsonp = `./data/drills-demo-${appLang}.jsonp`;
+    const urlOfDemoUnitJsonp = `./data/demo-unit-${appLang}.jsonp`;
     await new Promise(resolve => {
-      requestJsonp(urlOfDrillsDemoJsonp, data => {
+      requestJsonp(urlOfDemoUnitJsonp, data => {
         leadText = [
           data['l-text'] || '',
           `${data['l-text'] ? '<br>__<br>' : ''}`,
           `${stringResources['-the-source-of-this-unit']}: `,
-          `<a href="${urlOfDrillsDemoJsonp}">${urlOfDrillsDemoJsonp}</a>`
+          `<a href="${urlOfDemoUnitJsonp}">${urlOfDemoUnitJsonp}</a>`
         ].join('');
         questionTemplate = data['q-temp'];
         questionLang = data['q-lang'];
@@ -328,10 +328,42 @@ const main = async () => {
   resetCard();
 };
 const resetCard = async () => {
+  const _setHintBalloonPosition = optionElement => {
+    const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
+    const optionRect = optionElement.getClientRects()[0];
+    hintBalloonPanelElement.style.top = `${optionRect.top}px`;
+    hintBalloonPanelElement.style.left = `${optionRect.left}px`;
+  };
+  const _updateHintBalloonPositions = () => {
+    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
+    for (const optionElement of targetOptionElements) {
+      _setHintBalloonPosition(optionElement);
+    }
+  };
+  const _addHintBalloons = (parentPanelElement, hintTextList) => {
+    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
+    for (const optionElement of targetOptionElements) {
+      const optionNumber = Number(optionElement.dataset.optionNumber);
+      const hintText = hintTextList[optionNumber];
+      const hintBalloonBodyElement = ce('span');
+      hintBalloonBodyElement.className = 'hint-balloon-body';
+      hintBalloonBodyElement.innerText = hintText;
+      const hintBalloonPanelElement = ce('span');
+      hintBalloonPanelElement.className = 'hint-balloon-panel';
+      hintBalloonPanelElement.append(hintBalloonBodyElement);
+      optionElement.append(hintBalloonPanelElement);
+      const hintBalloonRight = optionElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
+      const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
+      hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
+      _setHintBalloonPosition(optionElement);
+    }
+    parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
+    window.addEventListener('resize', _updateHintBalloonPositions);
+  }  
   setFlag('disable-operation', true);
   window.speechSynthesis.cancel();
-  qs('#question-cover').style.left = '0';
-  qs('#answer-cover').style.left = '0';
+  setFlag('uncover-question', false);
+  setFlag('uncover-answer', false);
   const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
   if (commonTimeoutDelay) {
@@ -349,21 +381,19 @@ const resetCard = async () => {
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
-  addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
-  addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay / 2);
   } else {
     await setTimeout(500);
   }
-  qs('#question-cover').style.left = '-100%';
+  setFlag('uncover-question', true);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('show-question', true);
-  setFlag('show-answer', false);
   setFlag('disable-operation', false);
   if (getFlag('is-automatic-question-speaking-enabled')) {
     qs('#speak-button').click();
@@ -372,59 +402,16 @@ const resetCard = async () => {
 const showAnswer = async () => {
   setFlag('disable-operation', true);
   window.speechSynthesis.cancel();
-  qs('#answer-cover').style.left = '100%';
+  setFlag('uncover-answer', true);
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('show-answer', true);
   setFlag('disable-operation', false);
   if (getFlag('is-automatic-answer-speaking-enabled')) {
     qs('#speak-button').click();
   }
-};
-const addHintBalloons = (parentPanelElement, hintTextList) => {
-  const _setHintBalloonPosition = optionElement => {
-    const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
-    const optionRect = optionElement.getClientRects()[0];
-    hintBalloonPanelElement.style.top = `${optionRect.top}px`;
-    hintBalloonPanelElement.style.left = `${optionRect.left}px`;
-  };
-  const _updateHintBalloonPositions = () => {
-    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-    for (const optionElement of targetOptionElements) {
-      _setHintBalloonPosition(optionElement);
-    }
-  };
-  const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-  for (const optionElement of targetOptionElements) {
-    const optionNumber = Number(optionElement.dataset.optionNumber);
-    const hintText = hintTextList[optionNumber];
-    const hintBalloonBodyElement = ce('span');
-    hintBalloonBodyElement.className = 'hint-balloon-body';
-    hintBalloonBodyElement.innerText = hintText;
-    const hintBalloonPanelElement = ce('span');
-    hintBalloonPanelElement.className = 'hint-balloon-panel';
-    hintBalloonPanelElement.append(hintBalloonBodyElement);
-    optionElement.append(hintBalloonPanelElement);
-    const hintBalloonRight = optionElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
-    const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
-    hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-    _setHintBalloonPosition(optionElement);
-  }
-  parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
-  window.addEventListener('resize', _updateHintBalloonPositions);
-}
-const disableButtons = () => {
-  qs('#speak-button').disabled = true;
-  qs('#play-button').disabled = true;
-  qs('#skip-button').disabled = true;
-};
-const enableButtons = () => {
-  qs('#speak-button').disabled = false;
-  qs('#play-button').disabled = false;
-  qs('#skip-button').disabled = false;
 };
 const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
   window.speechSynthesis.cancel();
