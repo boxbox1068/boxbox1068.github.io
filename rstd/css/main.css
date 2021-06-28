@@ -427,12 +427,12 @@ body > * {
 #enable-automatic-answer-speaking-button::after {
   content: "A";
 }
-:root.enable-automatic-question-speaking #enable-automatic-question-speaking-button::before,
-:root.enable-automatic-answer-speaking #enable-automatic-answer-speaking-button::before {
+:root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::before,
+:root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::before {
   top: calc(var(--this-toggle-height) - 100%);
 }
-:root.enable-automatic-question-speaking #enable-automatic-question-speaking-button::after,
-:root.enable-automatic-answer-speaking #enable-automatic-answer-speaking-button::after {
+:root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::after,
+:root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::after {
   top: var(--this-toggle-height);
 }
 .operation-button {

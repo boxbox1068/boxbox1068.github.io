@@ -28,6 +28,8 @@ const main = async () => {
   loadSetting('answer-voice-number', '1');
   loadSetting('answer-voice-rate', '1');
   loadSetting('answer-voice-pitch', '1');
+  setSetting('enable-automatic-question-speaking', 'false');
+  setSetting('enable-automatic-answer-speaking', 'false');
   const _setActiveElement = targetElement => {
     qsa('.active').forEach(element => {
       element.classList.remove('active');
@@ -47,12 +49,12 @@ const main = async () => {
       setFlag('fold-lead', null);
     }
   };
-  const _enableAutomaticSpeaking = (flagKey, noticeToSpeak) => {
+  const _enableAutomaticSpeaking = (settingKey, noticeToSpeak) => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    setFlag(flagKey, null);
-    if (getFlag(flagKey)) {
+    setSetting(settingKey, (! getSetting(settingKey, 'boolean')).toString());
+    if (getSetting(settingKey, 'boolean')) {
       speak(noticeToSpeak, appLang, getSetting('voice-volume', 'number'));
     } else {
       window.speechSynthesis.cancel();
@@ -401,9 +403,16 @@ const resetCard = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   setFlag('disable-operation', false);
+  if (getSetting('enable-automatic-question-speaking', 'boolean')) {
+    qs('#speak-button').click();
+  }
+
+
+/*
   if (getFlag('enable-automatic-question-speaking')) {
     qs('#speak-button').click();
   }
+*/
 };
 const showAnswer = async () => {
   setFlag('disable-operation', true);
@@ -415,9 +424,17 @@ const showAnswer = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   setFlag('disable-operation', false);
+  if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
+    qs('#speak-button').click();
+  }
+
+/*
   if (getFlag('enable-automatic-answer-speaking')) {
     qs('#speak-button').click();
   }
+
+*/
+
 };
 const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
   window.speechSynthesis.cancel();
