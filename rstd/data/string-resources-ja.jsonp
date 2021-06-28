@@ -6,5 +6,6 @@ jsonpCallback({
   "-automatic-answer-speaking-enabled": "答えの自動読み上げ、オン。",
   "-the-source-of-this-unit": "この単元のソース",
   "-settings": "設定",
-  "-enable-swipe-to-right": "右スワイプを有効にする"
+  "-enable-swipe-to-right": "右スワイプを有効にする",
+  "-disable-variable-highlight": "可変部のハイライトを無効にする"
 });

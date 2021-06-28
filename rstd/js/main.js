@@ -19,7 +19,7 @@ const main = async () => {
     element.innerHTML = stringResources[resourceKey];
   });
   loadSetting('animation-duration', '500');
-  loadSetting('disable-option-highlight', 'false');
+  loadSetting('disable-variable-highlight', 'false');
   loadSetting('disable-hint-balloon', 'false');
   loadSetting('enable-swipe-to-right', 'true');
   loadSetting('common-voice-volume', '1');

@@ -35,18 +35,6 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
-.disable-option-marking {
-  --option-number-1-background-color: unset;
-  --option-number-2-background-color: unset;
-  --option-number-3-background-color: unset;
-  --option-number-4-background-color: unset;
-  --option-number-5-background-color: unset;
-  --option-number-6-background-color: unset;
-  --option-number-7-background-color: unset;
-  --option-number-8-background-color: unset;
-  --option-number-9-background-color: unset;
-  --option-number-0-background-color: unset;
-}
 
 /* --------- *
  |  GENERAL  |
@@ -258,6 +246,21 @@ body > * {
 }
 .option {
   font-weight: bold;
+}
+.option:hover {
+  border-bottom: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
+}
+:root[data-disable-variable-highlight="true"] {
+  --option-number-1-background-color: unset;
+  --option-number-2-background-color: unset;
+  --option-number-3-background-color: unset;
+  --option-number-4-background-color: unset;
+  --option-number-5-background-color: unset;
+  --option-number-6-background-color: unset;
+  --option-number-7-background-color: unset;
+  --option-number-8-background-color: unset;
+  --option-number-9-background-color: unset;
+  --option-number-0-background-color: unset;
 }
 .option[data-option-number="1"] {
   background-color: var(--option-number-1-background-color);
@@ -514,6 +517,7 @@ body > * {
   height: .75rem;
   border: 1px solid black;
 }
-:root[data-enable-swipe-to-right="true"] [data-setting-key="enable-swipe-to-right"] {
-  background: red;
+:root[data-enable-swipe-to-right="true"] [data-setting-key="enable-swipe-to-right"],
+:root[data-disable-variable-highlight="true"] [data-setting-key="disable-variable-highlight"] {
+    background: red;
 }
