@@ -1,0 +1,8 @@
+        <li>
+          <span class="placeholder" data-resource-key="--voice-volume"></span><span>: </span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--voice-volume"></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--voice-volume"></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--voice-volume"></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1.25"></button><span class="placeholder" data-resource-key="--a-little-high--voice-volume"></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1.5"></button><span class="placeholder" data-resource-key="--high--voice-volume"></span>
+        </li>

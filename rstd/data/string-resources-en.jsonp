@@ -6,11 +6,58 @@ jsonpCallback({
   "--automatic-answer-speaking-enabled": "Automatic answer speaking enabled.",
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",
+  "--enable-swipe-to-right": "Enable swipe to right",
+
   "--disable-variable-highlight": "Disable variable highlight",
+
+  "--disable-hint-balloon": "Disable hint balloon",
+
   "--animation-duration": "Animation duration",
   "--none--animation-duration": "None",
   "--short--animation-duration": "Short",
   "--normal--animation-duration": "Normal",
   "--long--animation-duration": "Long",
-  "--enable-swipe-to-right": "Enable swipe to right"
+
+  "--voice-volume": "Voice volume",
+  "--low--voice-volume": "Low",
+  "--a-little-low--voice-volume": "A little low",
+  "--normal--voice-volume": "Normal",
+  "--a-little-high--voice-volume": "A little high",
+  "--high--voice-volume": "High",
+
+
+
+  "--question-voice-number": "Question voice number",
+  "--random--question-voice-number": "Random",
+  "--question-voice-rate": "Question voice rate",
+  "--slow--question-voice-rate": "Slow",
+  "--a-little-slow--question-voice-rate": "A little slow",
+  "--normal--question-voice-rate": "Normal",
+  "--a-little-fast--question-voice-rate": "A little fast",
+  "--fast--question-voice-rate": "Fast",
+
+  "--question-voice-pitch": "Question voice pitch",
+  "--low--question-voice-pitch": "Low",
+  "--a-little-low--question-voice-pitch": "A little low",
+  "--normal--question-voice-pitch": "Normal",
+  "--a-little-high--question-voice-pitch": "A little high",
+  "--high--question-voice-pitch": "High",
+
+  "--answer-voice-number": "Answer voice number",
+  "--random--answer-voice-number": "Random",
+  "--answer-voice-rate": "Answer voice rate",
+  "--slow--answer-voice-rate": "Slow",
+  "--a-little-slow--answer-voice-rate": "A little slow",
+  "--normal--answer-voice-rate": "Normal",
+  "--a-little-fast--answer-voice-rate": "A little fast",
+  "--fast--answer-voice-rate": "Fast",
+
+  "--answer-voice-pitch": "Answer voice pitch",
+  "--low--answer-voice-pitch": "Low",
+  "--a-little-low--answer-voice-pitch": "A little low",
+  "--normal--answer-voice-pitch": "Normal",
+  "--a-little-high--answer-voice-pitch": "A little high",
+  "--high--answer-voice-pitch": "High"
+
+
 });

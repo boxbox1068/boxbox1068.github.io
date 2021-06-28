@@ -17,12 +17,11 @@ const main = async () => {
     const resourceKey = element.dataset.resourceKey;
     element.innerHTML = stringResources[resourceKey];
   });
-  loadSetting('animation-duration', 'normal');
+  loadSetting('enable-swipe-to-right', 'true');
   loadSetting('disable-variable-highlight', 'false');
   loadSetting('disable-hint-balloon', 'false');
-  loadSetting('enable-swipe-to-right', 'true');
-  loadSetting('common-voice-volume', '1');
-  loadSetting('app-voice-number', '1');
+  loadSetting('animation-duration', 'normal');
+  loadSetting('voice-volume', '1');
   loadSetting('question-voice-number', '1');
   loadSetting('question-voice-rate', '1');
   loadSetting('question-voice-pitch', '1');
@@ -54,14 +53,7 @@ const main = async () => {
     }
     setFlag(flagKey, null);
     if (getFlag(flagKey)) {
-      speak(
-        noticeToSpeak,
-        appLang,
-        getSetting('common-voice-volume', 'number'),
-        1,
-        1,
-        getSetting('app-voice-number', 'number')
-      );
+      speak(noticeToSpeak, appLang, getSetting('voice-volume', 'number'));
     } else {
       window.speechSynthesis.cancel();
     }
@@ -81,7 +73,7 @@ const main = async () => {
       speak(
         answerPhrase.text,
         answerPhrase.lang,
-        getSetting('common-voice-volume', 'number'),
+        getSetting('voice-volume', 'number'),
         getSetting('answer-voice-rate', 'number'),
         getSetting('answer-voice-pitch', 'number'),
         getSetting('answer-voice-number', 'number')
@@ -90,7 +82,7 @@ const main = async () => {
       speak(
         questionPhrase.text,
         questionPhrase.lang,
-        getSetting('common-voice-volume', 'number'),
+        getSetting('voice-volume', 'number'),
         getSetting('question-voice-rate', 'number'),
         getSetting('question-voice-pitch', 'number'),
         getSetting('question-voice-number', 'number')
@@ -441,9 +433,12 @@ const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
       candidateVoices.push(voice);
     }
   }
+  if (voiceNumber === undefined) {
+    voiceNumber = 1;
+  }
   if (candidateVoices.length) {
     let index;
-    if (voiceNumber) {
+    if (voiceNumber > 0) {
       index = (voiceNumber - 1) % candidateVoices.length;
     } else {
       index = Math.floor(candidateVoices.length * Math.random());

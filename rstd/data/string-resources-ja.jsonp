@@ -6,11 +6,55 @@ jsonpCallback({
   "--automatic-answer-speaking-enabled": "答えの自動読み上げ、オン。",
   "--the-source-of-this-unit": "この単元のソース",
   "--settings": "設定",
+
+
+  "--enable-swipe-to-right": "右スワイプを有効にする",
   "--disable-variable-highlight": "可変部のハイライトを無効にする",
+  "--disable-hint-balloon": "ヒントの吹き出しを無効にする",
+
   "--animation-duration": "アニメーションの持続時間",
   "--none--animation-duration": "なし",
   "--short--animation-duration": "短い",
   "--normal--animation-duration": "標準",
   "--long--animation-duration": "長い",
-  "--enable-swipe-to-right": "右スワイプを有効にする",
+
+  "--voice-volume": "音声音量",
+  "--low--voice-volume": "小さい",
+  "--a-little-low--voice-volume": "少し小さい",
+  "--normal--voice-volume": "標準",
+  "--a-little-high--voice-volume": "少し大きい",
+  "--high--voice-volume": "大きい",
+
+
+  "--question-voice-number": "問題の音声番号",
+  "--random--question-voice-number": "ランダム",
+  "--question-voice-rate": "問題の音声速度",
+  "--slow--question-voice-rate": "ゆっくり",
+  "--a-little-slow--question-voice-rate": "少しゆっくり",
+  "--normal--question-voice-rate": "標準",
+  "--a-little-fast--question-voice-rate": "少し速い",
+  "--fast--question-voice-rate": "速い",
+
+  "--question-voice-pitch": "問題の音声ピッチ",
+  "--low--question-voice-pitch": "低い",
+  "--a-little-low--question-voice-pitch": "少し低い",
+  "--normal--question-voice-pitch": "標準",
+  "--a-little-high--question-voice-pitch": "少し高い",
+  "--high--question-voice-pitch": "高い",
+
+
+  "--answer-voice-number": "答えの音声番号",
+  "--random--answer-voice-number": "ランダム",
+  "--answer-voice-rate": "答えの音声速度",
+  "--slow--answer-voice-rate": "ゆっくり",
+  "--a-little-slow--answer-voice-rate": "少しゆっくり",
+  "--normal--answer-voice-rate": "標準",
+  "--a-little-fast--answer-voice-rate": "少し速い",
+  "--fast--answer-voice-rate": "速い",
+  "--answer-voice-pitch": "答えの音声ピッチ",
+  "--low--answer-voice-pitch": "低い",
+  "--a-little-low--answer-voice-pitch": "少し低い",
+  "--normal--answer-voice-pitch": "標準",
+  "--a-little-high--answer-voice-pitch": "少し高い",
+  "--high--answer-voice-pitch": "高い"
 });

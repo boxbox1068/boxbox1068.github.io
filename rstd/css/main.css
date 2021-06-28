@@ -47,7 +47,7 @@
   --common-padding: .5rem 1rem;
   --common-border-width: 1px;
   --common-line-height: 1.5em;
-  --common-transition-duration: 500ms;
+  --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
@@ -66,22 +66,22 @@
 :root[data-animation-duration="none"] *,
 :root[data-animation="none"] *:before,
 :root[data-animation="none"] *:after {
-  transition-duration: 0;
+  --common-transition-duration: 0;
 }
 :root[data-animation-duration="short"] *,
 :root[data-animation="short"] *:before,
 :root[data-animation="short"] *:after {
-  transition-duration: .25s;
+  --common-transition-duration: .25s;
 }
 :root[data-animation-duration="normal"] *,
 :root[data-animation="normal"] *:before,
 :root[data-animation="normal"] *:after {
-  transition-duration: .5s;
+  --common-transition-duration: .5s;
 }
 :root[data-animation-duration="long"] *,
 :root[data-animation="long"] *:before,
 :root[data-animation="long"] *:after {
-  transition-duration: .75s;
+  --common-transition-duration: .75s;
 }
 html {
   height: 100%;
@@ -536,11 +536,70 @@ body > * {
   height: .75rem;
   border: 1px solid black;
 }
-:root[data-enable-swipe-to-right="true"] [data-setting-key="enable-swipe-to-right"],
-:root[data-disable-variable-highlight="true"] [data-setting-key="disable-variable-highlight"],
-:root[data-animation-duration="none"] [data-setting-key="animation-duration"][data-setting-value="none"],
-:root[data-animation-duration="short"] [data-setting-key="animation-duration"][data-setting-value="short"],
-:root[data-animation-duration="normal"] [data-setting-key="animation-duration"][data-setting-value="normal"],
-:root[data-animation-duration="long"] [data-setting-key="animation-duration"][data-setting-value="long"] {
+:root[data-enable-swipe-to-right="true"] .setting-checkbox[data-setting-key="enable-swipe-to-right"],
+:root[data-disable-variable-highlight="true"] .setting-checkbox[data-setting-key="disable-variable-highlight"],
+:root[data-disable-hint-balloon="true"] .setting-checkbox[data-setting-key="disable-hint-balloon"],
+
+
+:root[data-animation-duration="none"] .setting-radio[data-setting-key="animation-duration"][data-setting-value="none"],
+:root[data-animation-duration="short"] .setting-radio[data-setting-key="animation-duration"][data-setting-value="short"],
+:root[data-animation-duration="normal"] .setting-radio[data-setting-key="animation-duration"][data-setting-value="normal"],
+:root[data-animation-duration="long"] .setting-radio[data-setting-key="animation-duration"][data-setting-value="long"],
+
+
+:root[data-voice-volume=".2"] .setting-radio[data-setting-key="voice-volume"][data-setting-value=".2"],
+:root[data-voice-volume=".6"] .setting-radio[data-setting-key="voice-volume"][data-setting-value=".6"],
+:root[data-voice-volume="1"] .setting-radio[data-setting-key="voice-volume"][data-setting-value="1"],
+:root[data-voice-volume="1.4"] .setting-radio[data-setting-key="voice-volume"][data-setting-value="1.4"],
+:root[data-voice-volume="1.8"] .setting-radio[data-setting-key="voice-volume"][data-setting-value="1.8"],
+
+
+:root[data-question-voice-number="1"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="1"],
+:root[data-question-voice-number="2"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="2"],
+:root[data-question-voice-number="3"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="3"],
+:root[data-question-voice-number="4"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="4"],
+:root[data-question-voice-number="5"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="5"],
+:root[data-question-voice-number="6"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="6"],
+:root[data-question-voice-number="7"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="7"],
+:root[data-question-voice-number="8"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="8"],
+:root[data-question-voice-number="9"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="9"],
+:root[data-question-voice-number="0"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="0"],
+:root[data-question-voice-rate=".5"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value=".5"],
+:root[data-question-voice-rate=".75"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value=".75"],
+:root[data-question-voice-rate="1"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1"],
+:root[data-question-voice-rate="1.25"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1.25"],
+:root[data-question-voice-rate="1.5"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1.5"],
+
+:root[data-question-voice-pitch=".5"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value=".5"],
+:root[data-question-voice-pitch=".75"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value=".75"],
+:root[data-question-voice-pitch="1"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1"],
+:root[data-question-voice-pitch="1.25"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1.25"],
+:root[data-question-voice-pitch="1.5"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1.5"],
+
+
+:root[data-answer-voice-number="1"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="1"],
+:root[data-answer-voice-number="2"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="2"],
+:root[data-answer-voice-number="3"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="3"],
+:root[data-answer-voice-number="4"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="4"],
+:root[data-answer-voice-number="5"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="5"],
+:root[data-answer-voice-number="6"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="6"],
+:root[data-answer-voice-number="7"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="7"],
+:root[data-answer-voice-number="8"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="8"],
+:root[data-answer-voice-number="9"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="9"],
+:root[data-answer-voice-number="0"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="0"],
+:root[data-answer-voice-rate=".5"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value=".5"],
+:root[data-answer-voice-rate=".75"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value=".75"],
+:root[data-answer-voice-rate="1"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1"],
+:root[data-answer-voice-rate="1.25"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1.25"],
+:root[data-answer-voice-rate="1.5"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1.5"],
+
+:root[data-answer-voice-pitch=".5"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value=".5"],
+:root[data-answer-voice-pitch=".75"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value=".75"],
+:root[data-answer-voice-pitch="1"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1"],
+:root[data-answer-voice-pitch="1.25"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1.25"],
+:root[data-answer-voice-pitch="1.5"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1.5"]
+
+
+{
     background: red;
 }
