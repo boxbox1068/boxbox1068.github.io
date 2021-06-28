@@ -1,7 +1,6 @@
 'use strict';
 let appLang;
 let stringResources;
-let templateVariableValues;
 let questionPhrase;
 let answerPhrase;
 const main = async () => {
@@ -266,12 +265,6 @@ const main = async () => {
   qs('body').addEventListener('mousemove', event => {
     _setActiveElement(event.target);
   }, {capture: true});  
-  await new Promise(resolve => {
-    requestJsonp('./data/rabbit-variables.jsonp', data => {
-      templateVariableValues = data;
-      resolve();
-    });
-  });
   let leadText;
   let questionTemplate;
   let questionLang;
@@ -326,10 +319,17 @@ const main = async () => {
       qs('#fold-lead-button').disabled = true;
     }
   });
-  const preprocessedQuestionTemplate = expandVariables(questionTemplate, templateVariableValues);
-  questionPhrase = new RabbitPhrase(preprocessedQuestionTemplate, questionLang);
-  const preprocessedAnswerTemplate = expandVariables(answerTemplate, templateVariableValues);
-  answerPhrase = new RabbitPhrase(preprocessedAnswerTemplate, answerLang);
+  let templateReplacements;
+  await new Promise(resolve => {
+    requestJsonp('./data/template-replacements.jsonp', data => {
+      templateReplacements = data;
+      resolve();
+    });
+  });
+  const processedQuestionTemplate = replaceAll(questionTemplate, templateReplacements);
+  questionPhrase = new RabbitPhrase(processedQuestionTemplate, questionLang);
+  const processedAnswerTemplate = replaceAll(answerTemplate, templateReplacements);
+  answerPhrase = new RabbitPhrase(processedAnswerTemplate, answerLang);
   resetCard();
 };
 const resetCard = async () => {
@@ -377,12 +377,14 @@ const resetCard = async () => {
   const pathIdSeed = Math.random();
   questionPhrase.reset(pathIdSeed);
   answerPhrase.reset(pathIdSeed);
-  const statisticVariableValues = {
-    'pattern-count': questionPhrase.possiblePathCount.toLocaleString(),
-    'pattern-id': questionPhrase.pathId.toLocaleString(),
-    'refill-count': (questionPhrase.resetCount - 1).toLocaleString()
-  };
-  const statisticsOutput = expandVariables(stringResources['statistics-output'], statisticVariableValues);
+  const statisticsOutput = replaceAll(
+    stringResources['statistics-output-template'],
+    {
+      '%pattern-count%': questionPhrase.possiblePathCount.toLocaleString(),
+      '%pattern-id%': questionPhrase.pathId.toLocaleString(),
+      '%refill-count%': (questionPhrase.resetCount - 1).toLocaleString()
+    }
+  );
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;

@@ -9,11 +9,9 @@ const setTimeout = delay => {
     }, delay);
   });
 };
-const expandVariables = (targetString, variableValues, symbolForVariables) => {
-  symbolForVariables || (symbolForVariables = '%');
-  for (const key in variableValues) {
-    const variableExpression = new RegExp(`${symbolForVariables}${key}${symbolForVariables}`, 'ig');
-    targetString = targetString.replace(variableExpression, variableValues[key]);
+const replaceAll = (targetString, replacements) => {
+  for (const key in replacements) {
+    targetString = targetString.replaceAll(key, replacements[key]);
   }
   return targetString;
 };
@@ -43,21 +41,6 @@ const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
   document.cookie = `${key}=${encodedValue}; max-age=${maxAge};`;
-
-/*
-  qs(':root').setAttribute(`data-${key}`, value);
-  if (/^true|false$/i.test(value)) {
-    const selector = `[type="checkbox"][name="${key}"]`;
-    qsa(selector).forEach(element => {
-      element.checked = value == 'true';
-    });
-  } else {
-    const selector = `[type="radio"][name="${key}"][value="${value}"]`;
-    qsa(selector).forEach(element => {
-      element.checked = true;
-    });
-  }
-*/
 };
 const getSetting = (key, valueType) => {
   const _convertValue = (srcValue, valueType) => {
