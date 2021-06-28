@@ -73,23 +73,34 @@
 <div id="settings-cell">
   <div id="settings-panel">
     <div id="settings-header">
-      <span class="placeholder" data-resource-key="-settings"></span>
+      <span class="placeholder" data-resource-key="--settings"></span>
     </div>
     <div id="settings-body">
 <!--
-  操作
   表示
   アニメ
   読み上げ
+  操作
 -->
       <ul>
         <li>
-          <button class="setting-checkbox" data-setting-key="enable-swipe-to-right"></button>
-          <span class="placeholder" data-resource-key="-enable-swipe-to-right"></span>
+          <button class="setting-checkbox" data-setting-key="disable-variable-highlight"></button>
+          <span class="placeholder" data-resource-key="--disable-variable-highlight"></span>
         </li>
         <li>
-          <button class="setting-checkbox" data-setting-key="disable-variable-highlight"></button>
-          <span class="placeholder" data-resource-key="-disable-variable-highlight"></span>
+          <span class="placeholder" data-resource-key="--animation-duration"></span><span>: </span>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="none"></button>
+          <span class="placeholder" data-resource-key="--none--animation-duration"></span>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="short"></button>
+          <span class="placeholder" data-resource-key="--short--animation-duration"></span>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="normal"></button>
+          <span class="placeholder" data-resource-key="--normal--animation-duration"></span>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="long"></button>
+          <span class="placeholder" data-resource-key="--long--animation-duration"></span>
+        </li>
+        <li>
+          <button class="setting-checkbox" data-setting-key="enable-swipe-to-right"></button>
+          <span class="placeholder" data-resource-key="--enable-swipe-to-right"></span>
         </li>
       </ul>
 
@@ -127,12 +138,6 @@
           <label><input type="radio" name="hoge">1000</label>
         </li>
       </ul>
-      <div>
-        <input type="checkbox"><label></label><span>ハイライトを無効化</span>
-      </div>
-      <div>
-        <input type="checkbox"><label></label><span>ヒントバルーンを無効化</span>
-      </div>
       <div>
         <input type="checkbox"><label></label><span>ランダム読み上げを有効化</span>
       </div>

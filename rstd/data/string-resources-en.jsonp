@@ -2,10 +2,15 @@ jsonpCallback({
   "app-title": "Rabbit Style Translation Drills",
   "copyright-notice-html": "<b>Rabbity Style Translation Drills</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
-  "-automatic-question-speaking-enabled": "Automatic question speaking enabled.",
-  "-automatic-answer-speaking-enabled": "Automatic answer speaking enabled.",
-  "-the-source-of-this-unit": "The source of this session",
-  "-settings": "Settings",
-  "-enable-swipe-to-right": "Enable swipe to right",
-  "-disable-variable-highlight": "Disable variable highlight"
+  "--automatic-question-speaking-enabled": "Automatic question speaking enabled.",
+  "--automatic-answer-speaking-enabled": "Automatic answer speaking enabled.",
+  "--the-source-of-this-unit": "The source of this session",
+  "--settings": "Settings",
+  "--disable-variable-highlight": "Disable variable highlight",
+  "--animation-duration": "Animation duration",
+  "--none--animation-duration": "None",
+  "--short--animation-duration": "Short",
+  "--normal--animation-duration": "Normal",
+  "--long--animation-duration": "Long",
+  "--enable-swipe-to-right": "Enable swipe to right"
 });

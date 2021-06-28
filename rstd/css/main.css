@@ -21,16 +21,16 @@
   --footer-color: #CFD8DC;
   --settings-header-background-color: #37474F;
   --settings-header-color: #CFD8DC;
-  --option-number-1-background-color: #EF9A9A99;
-  --option-number-2-background-color: #90CAF999;
-  --option-number-3-background-color: #FFF59D99;
-  --option-number-4-background-color: #A5D6A799;
-  --option-number-5-background-color: #CE93D899;
-  --option-number-6-background-color: #FFCC8099;
-  --option-number-7-background-color: #80DEEA99;
-  --option-number-8-background-color: #F48FB199;
-  --option-number-9-background-color: #BCAAA499;
-  --option-number-0-background-color: #B0BEC599;
+  --variable-number-1-background-color: #EF9A9A99;
+  --variable-number-2-background-color: #90CAF999;
+  --variable-number-3-background-color: #FFF59D99;
+  --variable-number-4-background-color: #A5D6A799;
+  --variable-number-5-background-color: #CE93D899;
+  --variable-number-6-background-color: #FFCC8099;
+  --variable-number-7-background-color: #80DEEA99;
+  --variable-number-8-background-color: #F48FB199;
+  --variable-number-9-background-color: #BCAAA499;
+  --variable-number-0-background-color: #B0BEC599;
   --hint-balloon-background-color: #FFF;
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
@@ -63,11 +63,25 @@
   user-select: none;
   touch-action: pan-y;
 }
-:root[data-disable-animation="true"] *,
-:root[data-disable-animation="true"] *:before,
-:root[data-disable-animation="true"] *:after {
-  transition-duration: 0ms !important;
-  animation-duration: 0ms !important;
+:root[data-animation-duration="none"] *,
+:root[data-animation="none"] *:before,
+:root[data-animation="none"] *:after {
+  transition-duration: 0;
+}
+:root[data-animation-duration="short"] *,
+:root[data-animation="short"] *:before,
+:root[data-animation="short"] *:after {
+  transition-duration: .25s;
+}
+:root[data-animation-duration="normal"] *,
+:root[data-animation="normal"] *:before,
+:root[data-animation="normal"] *:after {
+  transition-duration: .5s;
+}
+:root[data-animation-duration="long"] *,
+:root[data-animation="long"] *:before,
+:root[data-animation="long"] *:after {
+  transition-duration: .75s;
 }
 html {
   height: 100%;
@@ -244,53 +258,53 @@ body > * {
 :root.uncover-answer #answer-cover {
   left: 100%;
 }
-.option {
+.variable {
   font-weight: bold;
 }
-.option:hover {
+.variable:hover {
   border-bottom: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
 }
 :root[data-disable-variable-highlight="true"] {
-  --option-number-1-background-color: unset;
-  --option-number-2-background-color: unset;
-  --option-number-3-background-color: unset;
-  --option-number-4-background-color: unset;
-  --option-number-5-background-color: unset;
-  --option-number-6-background-color: unset;
-  --option-number-7-background-color: unset;
-  --option-number-8-background-color: unset;
-  --option-number-9-background-color: unset;
-  --option-number-0-background-color: unset;
+  --variable-number-1-background-color: unset;
+  --variable-number-2-background-color: unset;
+  --variable-number-3-background-color: unset;
+  --variable-number-4-background-color: unset;
+  --variable-number-5-background-color: unset;
+  --variable-number-6-background-color: unset;
+  --variable-number-7-background-color: unset;
+  --variable-number-8-background-color: unset;
+  --variable-number-9-background-color: unset;
+  --variable-number-0-background-color: unset;
 }
-.option[data-option-number="1"] {
-  background-color: var(--option-number-1-background-color);
+.variable[data-variable-number="1"] {
+  background-color: var(--variable-number-1-background-color);
 }
-.option[data-option-number="2"] {
-  background-color: var(--option-number-2-background-color);
+.variable[data-variable-number="2"] {
+  background-color: var(--variable-number-2-background-color);
 }
-.option[data-option-number="3"] {
-  background-color: var(--option-number-3-background-color);
+.variable[data-variable-number="3"] {
+  background-color: var(--variable-number-3-background-color);
 }
-.option[data-option-number="4"] {
-  background-color: var(--option-number-4-background-color);
+.variable[data-variable-number="4"] {
+  background-color: var(--variable-number-4-background-color);
 }
-.option[data-option-number="5"] {
-  background-color: var(--option-number-5-background-color);
+.variable[data-variable-number="5"] {
+  background-color: var(--variable-number-5-background-color);
 }
-.option[data-option-number="6"] {
-  background-color: var(--option-number-6-background-color);
+.variable[data-variable-number="6"] {
+  background-color: var(--variable-number-6-background-color);
 }
-.option[data-option-number="7"] {
-  background-color: var(--option-number-7-background-color);
+.variable[data-variable-number="7"] {
+  background-color: var(--variable-number-7-background-color);
 }
-.option[data-option-number="8"] {
-  background-color: var(--option-number-8-background-color);
+.variable[data-variable-number="8"] {
+  background-color: var(--variable-number-8-background-color);
 }
-.option[data-option-number="9"] {
-  background-color: var(--option-number-9-background-color);
+.variable[data-variable-number="9"] {
+  background-color: var(--variable-number-9-background-color);
 }
-.option[data-option-number="0"] {
-  background-color: var(--option-number-0-background-color);
+.variable[data-variable-number="0"] {
+  background-color: var(--variable-number-0-background-color);
 }
 .hint-balloon-panel {
   visibility: hidden;
@@ -304,7 +318,7 @@ body > * {
   font-weight: bold;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
-.option.active .hint-balloon-panel {
+.variable.active .hint-balloon-panel {
   visibility: visible;
   opacity: 1;
 }
@@ -517,7 +531,16 @@ body > * {
   height: .75rem;
   border: 1px solid black;
 }
+.setting-radio {
+  width: .75rem;
+  height: .75rem;
+  border: 1px solid black;
+}
 :root[data-enable-swipe-to-right="true"] [data-setting-key="enable-swipe-to-right"],
-:root[data-disable-variable-highlight="true"] [data-setting-key="disable-variable-highlight"] {
+:root[data-disable-variable-highlight="true"] [data-setting-key="disable-variable-highlight"],
+:root[data-animation-duration="none"] [data-setting-key="animation-duration"][data-setting-value="none"],
+:root[data-animation-duration="short"] [data-setting-key="animation-duration"][data-setting-value="short"],
+:root[data-animation-duration="normal"] [data-setting-key="animation-duration"][data-setting-value="normal"],
+:root[data-animation-duration="long"] [data-setting-key="animation-duration"][data-setting-value="long"] {
     background: red;
 }

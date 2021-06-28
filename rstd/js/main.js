@@ -17,7 +17,7 @@ const main = async () => {
     const resourceKey = element.dataset.resourceKey;
     element.innerHTML = stringResources[resourceKey];
   });
-  loadSetting('animation-duration', '500');
+  loadSetting('animation-duration', 'normal');
   loadSetting('disable-variable-highlight', 'false');
   loadSetting('disable-hint-balloon', 'false');
   loadSetting('enable-swipe-to-right', 'true');
@@ -142,33 +142,33 @@ const main = async () => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    let optionElements;
+    let variableElements;
     if (getFlag('uncover-answer')) {
-      optionElements = qsa('.option');
+      variableElements = qsa('.variable');
     } else {
-      optionElements = qsa('#question-panel .option');
+      variableElements = qsa('#question-panel .variable');
     }
-    if (! optionElements.length) {
+    if (! variableElements.length) {
       return;
     }
-    let activeOptionElementIndex = (goBackwards ? optionElements.length : -1);
-    for (let i = 0; i < optionElements.length; i++) {
-      const currentOptionElement = optionElements[i];
-      if (currentOptionElement.classList.contains('active')) {
-        activeOptionElementIndex = i;
+    let activeVariableElementIndex = (goBackwards ? variableElements.length : -1);
+    for (let i = 0; i < variableElements.length; i++) {
+      const currentVariableElement = variableElements[i];
+      if (currentVariableElement.classList.contains('active')) {
+        activeVariableElementIndex = i;
       }
     }
-    const targetOptionElement = optionElements[activeOptionElementIndex + (goBackwards ? -1 : 1)];
-    _setActiveElement(targetOptionElement);
+    const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
+    _setActiveElement(targetVariableElement);
   };
   qs('#fold-lead-button').addEventListener('click', event => {
     _switchDisplay();
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
-    _enableAutomaticSpeaking('enable-automatic-question-speaking', stringResources['-automatic-question-speaking-enabled']);
+    _enableAutomaticSpeaking('enable-automatic-question-speaking', stringResources['--automatic-question-speaking-enabled']);
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
-    _enableAutomaticSpeaking('enable-automatic-answer-speaking', stringResources['-automatic-answer-speaking-enabled']);
+    _enableAutomaticSpeaking('enable-automatic-answer-speaking', stringResources['--automatic-answer-speaking-enabled']);
   });
   qs('#speak-button').addEventListener('click', event => {
     _speakDrill();
@@ -194,6 +194,13 @@ const main = async () => {
       } else {
         setSetting(settingKey, 'true');
       }
+    });
+  });
+  qsa('.setting-radio').forEach(element => {
+    element.addEventListener('click', event => {
+      const settingKey = element.getAttribute('data-setting-key');
+      const settingValue = element.getAttribute('data-setting-value');
+      setSetting(settingKey, settingValue);
     });
   });
 
@@ -295,7 +302,7 @@ const main = async () => {
         leadText = [
           data['l-text'] || '',
           `${data['l-text'] ? '<br>__<br>' : ''}`,
-          `${stringResources['-the-source-of-this-unit']}: `,
+          `${stringResources['--the-source-of-this-unit']}: `,
           `<a href="${urlOfDemoUnitJsonp}">${urlOfDemoUnitJsonp}</a>`
         ].join('');
         questionTemplate = data['q-temp'];
@@ -334,33 +341,33 @@ const main = async () => {
 };
 const resetCard = async () => {
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
-    const _setHintBalloonPosition = optionElement => {
-      const hintBalloonPanelElement = optionElement.querySelector('.hint-balloon-panel');
-      const optionRect = optionElement.getClientRects()[0];
-      hintBalloonPanelElement.style.top = `${optionRect.top}px`;
-      hintBalloonPanelElement.style.left = `${optionRect.left}px`;
+    const _setHintBalloonPosition = variableElement => {
+      const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-panel');
+      const variableRect = variableElement.getClientRects()[0];
+      hintBalloonPanelElement.style.top = `${variableRect.top}px`;
+      hintBalloonPanelElement.style.left = `${variableRect.left}px`;
     };
     const _updateHintBalloonPositions = () => {
-      const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-      for (const optionElement of targetOptionElements) {
-        _setHintBalloonPosition(optionElement);
+      const targetVariableElements = parentPanelElement.querySelectorAll('.variable');
+      for (const variableElement of targetVariableElements) {
+        _setHintBalloonPosition(variableElement);
       }
     };
-    const targetOptionElements = parentPanelElement.querySelectorAll('.option');
-    for (const optionElement of targetOptionElements) {
-      const optionNumber = Number(optionElement.dataset.optionNumber);
-      const hintText = hintTextList[optionNumber];
+    const targetVariableElements = parentPanelElement.querySelectorAll('.variable');
+    for (const variableElement of targetVariableElements) {
+      const variableNumber = Number(variableElement.dataset.variableNumber);
+      const hintText = hintTextList[variableNumber];
       const hintBalloonBodyElement = ce('span');
       hintBalloonBodyElement.className = 'hint-balloon-body';
       hintBalloonBodyElement.innerText = hintText;
       const hintBalloonPanelElement = ce('span');
       hintBalloonPanelElement.className = 'hint-balloon-panel';
       hintBalloonPanelElement.append(hintBalloonBodyElement);
-      optionElement.append(hintBalloonPanelElement);
-      const hintBalloonRight = optionElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
+      variableElement.append(hintBalloonPanelElement);
+      const hintBalloonRight = variableElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
       const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
       hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-      _setHintBalloonPosition(optionElement);
+      _setHintBalloonPosition(variableElement);
     }
     parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
     window.addEventListener('resize', _updateHintBalloonPositions);
@@ -388,10 +395,10 @@ const resetCard = async () => {
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
-  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenVariableTexts);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
-  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenVariableTexts);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay / 2);
   } else {
