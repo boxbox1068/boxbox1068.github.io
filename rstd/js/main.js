@@ -23,7 +23,7 @@ const main = async () => {
   loadSetting('enable-swipe-to-right', 'true');
   loadSetting('disable-variable-highlight', 'false');
   loadSetting('disable-hint-balloon', 'false');
-  loadSetting('animation-duration', 'normal');
+  loadSetting('animation-duration', '.5s');
   loadSetting('voice-volume', '1');
   loadSetting('question-voice-number', '1');
   loadSetting('question-voice-rate', '1');
