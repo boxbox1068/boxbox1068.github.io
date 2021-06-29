@@ -14,13 +14,15 @@
   --main-cover-color: #3949AB;
   --control-background-color: #CFD8DC;
   --disabled-controls-background-color: #ECEFF1;
-  --control-color: #455A64;
-  --toggle-color: #607D8B;
+  --control-color: #546E7A;
+  --toggle-color: #78909C;
   --on-toggle-color: #FFC107;
   --footer-background-color: #37474F;
   --footer-color: #CFD8DC;
   --settings-header-background-color: #37474F;
   --settings-header-color: #CFD8DC;
+  --setting-input-background-color: #ECEFF1;
+  --setting-input-color: #546E7A;
   --variable-number-1-background-color: #EF9A9A99;
   --variable-number-2-background-color: #90CAF999;
   --variable-number-3-background-color: #FFF59D99;
@@ -52,7 +54,7 @@
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
   --control-height: 2rem;
-  --footer-cell-height: 2rem;
+  --footer-cell-height: 2.25rem;
 }
 *,
 *::before,
@@ -317,7 +319,6 @@ body > * {
   overflow: visible;
   color: var(--hint-balloon-color);
   font-weight: bold;
-  transition-duration: calc(var(--common-transition-duration) / 2);
 }
 .variable.active .hint-balloon-panel {
   visibility: visible;
@@ -476,8 +477,8 @@ body > * {
 }
 #show-settings-button,
 #visit-home-button {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 /*-----------------*
@@ -525,7 +526,17 @@ body > * {
 }
 #settings-body > ul {
   margin: 0;
+  padding-left: 0;
+}
+#settings-body > ul > li {
   padding-left: 1.5rem;
+  text-indent: -1.5rem;
+}
+#settings-body > ul > li + li {
+  padding-top: .5rem;
+}
+#settings-body > ul > li span {
+  white-space: nowrap;
 }
 :root[data-enable-swipe-to-right="true"] .setting-checkbox[data-setting-key="enable-swipe-to-right"],
 :root[data-disable-variable-highlight="true"] .setting-checkbox[data-setting-key="disable-variable-highlight"],
@@ -593,7 +604,7 @@ body > * {
 
 {
 //    background: red;
-  --hoge: var(--control-color);
+  --checked-setting-input-color: var(--control-color);
 }
 
 
@@ -601,31 +612,33 @@ body > * {
   width: 1rem;
   height: 1rem;
   border-color: var(--control-color);
-  background-color: var(--control-background-color);
+  background-color: var(--setting-input-background-color);
+  transition-duration: var(--common-transition-duration);
 }
 .setting-checkbox::before {
   width: 100%;
   height: 100%;
-  border-width: calc(var(--common-border-width) * 2);
+  border-width: 10%;
   border-style: solid;
-  border-color: var(--control-background-color);
-  background-color: var(--hoge);
+  border-color: var(--setting-input-background-color);
+  background-color: var(--checked-setting-input-color);
   content: "";
 }
 .setting-radio {
   width: 1rem;
   height: 1rem;
-  border-color: var(--control-color);
+  border-color: var(--setting-input-color);
   border-radius: calc(1rem / 2);
-  background-color: var(--control-background-color);
+  background-color: var(--setting-input-background-color);
+  transition-duration: var(--common-transition-duration);
 }
 .setting-radio::before {
   width: 100%;
   height: 100%;
-  border-width: calc(var(--common-border-width) * 2);
+  border-width: 10%;
   border-style: solid;
-  border-color: var(--control-background-color);
+  border-color: var(--setting-input-background-color);
   border-radius: calc(1rem / 2);
-  background-color: var(--hoge);
+  background-color: var(--checked-setting-input-color);
   content: "";
 }

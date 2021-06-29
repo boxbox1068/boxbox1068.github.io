@@ -5,13 +5,16 @@ let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
-  const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
-  await new Promise(resolve => {
-    requestJsonp(urlOfStringResourcesJsonp, data => {
-      stringResources = data;
-      resolve();
+  stringResources = {};
+  for (const lang of [...new Set(['en', appLang])]) {
+    const urlOfStringResourcesJsonp = `./data/string-resources-${lang}.jsonp`;
+    await new Promise(resolve => {
+      requestJsonp(urlOfStringResourcesJsonp, data => {
+        stringResources = {...stringResources, ...data};
+        resolve();
+      });
     });
-  });
+  }
   document.title = stringResources['app-title'];
   qsa('.placeholder').forEach(element => {
     const resourceKey = element.dataset.resourceKey;
