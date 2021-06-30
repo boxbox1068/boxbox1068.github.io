@@ -158,6 +158,17 @@ const main = async () => {
     const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
     _setActiveElement(targetVariableElement);
   };
+  const _hoge = (targetSettingKey, goBackwards) => {
+    const fuga = getSetting(targetSettingKey, 'string');
+    const hage = qs(`[data-${targetSettingKey}="${fuga}"]`);
+    const hagehage = hage.nextElementSibling;
+    if (hagehage) {
+      hagehage.click();
+    } else {
+      hage.parent.firstElementChild.click();
+    }
+  }
+
   qs('#fold-lead-button').addEventListener('click', event => {
     _switchDisplay();
   });
@@ -182,22 +193,11 @@ const main = async () => {
   qs('#visit-home-button').addEventListener('click', event => {
     _visitHome();
   });
-
-  qsa('.setting-checkbox').forEach(element => {
-    element.addEventListener('click', event => {
-      const settingKey = element.getAttribute('data-setting-key');
-      if (getSetting(settingKey, 'boolean')) {
-        setSetting(settingKey, 'false');
-      } else {
-        setSetting(settingKey, 'true');
-      }
-    });
-  });
   qsa('.setting-radio').forEach(element => {
     element.addEventListener('click', event => {
-      const settingKey = element.getAttribute('data-setting-key');
-      const settingValue = element.getAttribute('data-setting-value');
-      setSetting(settingKey, settingValue);
+      const key = element.getAttribute('data-setting-key');
+      const value = element.getAttribute('data-setting-value');
+      setSetting(key, value);
     });
   });
 
@@ -252,6 +252,14 @@ const main = async () => {
   addKeyDownListener(qs('body'), '/', targetKey => {
     _showSettings();
   });
+
+  addKeyDownListener(qs('body'), '1', targetKey => {
+    _hoge('enable-swipe-to-right');
+  });
+
+
+
+
   addSwipeListener(qs('body'), -25, () => {
     _playDrill();
   });

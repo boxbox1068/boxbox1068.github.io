@@ -24,7 +24,7 @@ jsonpCallback({
 
   "--voice-volume": "音声音量",
   "--low--voice-volume": "小さい",
-  "--a-little-low--voice-volume": "少し小さい",
+  "--a-little-low--voice-volume": "やや小さい",
   "--normal--voice-volume": "標準",
 
 
@@ -32,16 +32,16 @@ jsonpCallback({
   "--random--question-voice-number": "ランダム",
   "--question-voice-rate": "問題の音声速度",
   "--low--question-voice-rate": "遅い",
-  "--a-little-low--question-voice-rate": "少し遅い",
+  "--a-little-low--question-voice-rate": "やや遅い",
   "--normal--question-voice-rate": "標準",
-  "--a-little-high--question-voice-rate": "少し速い",
+  "--a-little-high--question-voice-rate": "やや速い",
   "--high--question-voice-rate": "速い",
 
   "--question-voice-pitch": "問題の音声ピッチ",
   "--low--question-voice-pitch": "低い",
-  "--a-little-low--question-voice-pitch": "少し低い",
+  "--a-little-low--question-voice-pitch": "やや低い",
   "--normal--question-voice-pitch": "標準",
-  "--a-little-high--question-voice-pitch": "少し高い",
+  "--a-little-high--question-voice-pitch": "やや高い",
   "--high--question-voice-pitch": "高い",
 
 
@@ -49,14 +49,14 @@ jsonpCallback({
   "--random--answer-voice-number": "ランダム",
   "--answer-voice-rate": "答えの音声速度",
   "--low--answer-voice-rate": "遅い",
-  "--a-little-low--answer-voice-rate": "少し遅い",
+  "--a-little-low--answer-voice-rate": "やや遅い",
   "--normal--answer-voice-rate": "標準",
-  "--a-little-high--answer-voice-rate": "少し速い",
+  "--a-little-high--answer-voice-rate": "やや速い",
   "--high--answer-voice-rate": "速い",
   "--answer-voice-pitch": "答えの音声ピッチ",
   "--low--answer-voice-pitch": "低い",
-  "--a-little-low--answer-voice-pitch": "少し低い",
+  "--a-little-low--answer-voice-pitch": "やや低い",
   "--normal--answer-voice-pitch": "標準",
-  "--a-little-high--answer-voice-pitch": "少し高い",
+  "--a-little-high--answer-voice-pitch": "やや高い",
   "--high--answer-voice-pitch": "高い"
 });

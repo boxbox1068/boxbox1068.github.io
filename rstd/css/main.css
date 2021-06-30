@@ -540,7 +540,6 @@ body > * {
   white-space: nowrap;
 }
 
-
 :root[data-enable-swipe-to-right="true"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="true"],
 :root[data-enable-swipe-to-right="false"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="false"],
 :root[data-enable-variable-highlight="true"] .setting-radio[data-setting-key="enable-variable-highlight"][data-setting-value="true"],
