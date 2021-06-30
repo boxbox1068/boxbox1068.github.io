@@ -16,13 +16,13 @@ const main = async () => {
     });
   }
   document.title = stringResources['app-title'];
-  qsa('.placeholder').forEach(element => {
-    const resourceKey = element.dataset.resourceKey;
-    element.innerHTML = stringResources[resourceKey];
+  qsa('[data-string-resource-key]').forEach(element => {
+    const key = element.getAttribute('data-string-resource-key');
+    element.innerHTML = stringResources[key];
   });
   loadSetting('enable-swipe-to-right', 'true');
-  loadSetting('disable-variable-highlight', 'false');
-  loadSetting('disable-hint-balloon', 'false');
+  loadSetting('enable-variable-highlight', 'true');
+  loadSetting('enable-hint-balloon', 'true');
   loadSetting('animation-duration', '.5s');
   loadSetting('voice-volume', '1');
   loadSetting('question-voice-number', '1');

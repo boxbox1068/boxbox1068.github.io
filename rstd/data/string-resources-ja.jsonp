@@ -6,11 +6,15 @@ jsonpCallback({
   "--automatic-answer-speaking-enabled": "答えの自動読み上げ、オン。",
   "--the-source-of-this-unit": "この単元のソース",
   "--settings": "設定",
-
-
   "--enable-swipe-to-right": "右スワイプを有効にする",
-  "--disable-variable-highlight": "可変部のハイライトを無効にする",
-  "--disable-hint-balloon": "ヒントの吹き出しを無効にする",
+  "--true--enable-swipe-to-right": "はい",
+  "--false--enable-swipe-to-right": "いいえ",
+  "--enable-variable-highlight": "可変部のハイライトを有効にする",
+  "--true--enable-variable-highlight": "はい",
+  "--false--enable-variable-highlight": "いいえ",
+  "--enable-hint-balloon": "ヒントの吹き出しを有効にする",
+  "--true--enable-hint-balloon": "はい",
+  "--false--enable-hint-balloon": "いいえ",
 
   "--animation-duration": "アニメーションの持続時間",
   "--none--animation-duration": "なし",

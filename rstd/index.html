@@ -8,6 +8,7 @@
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <link rel="stylesheet" href="./css/main.css">
+<script src="./js/string-resources-class.js"></script>
 <script src="./js/rabbit-phrase.js"></script>
 <script src="./js/library.js"></script>
 <script src="./js/main.js"></script>
@@ -66,47 +67,137 @@
       <button id="visit-home-button">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M100 320L220 320L220 640L100 640L100 320Z" id="abevBDXBm"></path><path d="M480 160L640 320L319.99 320L0 320L159.98 160L319.99 0L480 160Z" id="b22dA57uV4"></path><path d="M420 320L540 320L540 640L420 640L420 320Z" id="e2cf38nBlp"></path><path d="M100 520L540 520L540 640L100 640L100 520Z" id="d3xOCzKlki"></path><path d="M100 280L540 280L540 360L100 360L100 280Z" id="a25ysof9y"></path></defs><g><g><use xlink:href="#abevBDXBm" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#b22dA57uV4" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#e2cf38nBlp" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#d3xOCzKlki" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a25ysof9y" opacity="1" fill-opacity="1"></use></g></g></svg>
       </button>
-      <span class="placeholder" data-resource-key="copyright-notice-html"></span>
+      <span data-string-resource-key="copyright-notice-html"></span>
     </div>
   </div>
 </div>
 <div id="settings-cell">
   <div id="settings-panel">
     <div id="settings-header">
-      <b><span class="placeholder" data-resource-key="--settings"></span></b>
+      <b><span data-string-resource-key="--settings"></span></b>
     </div>
     <div id="settings-body">
-<!--
-  表示
-  アニメ
-  読み上げ
-  操作
--->
       <ul>
         <li>
-          <button class="setting-checkbox" data-setting-key="enable-swipe-to-right"></button><b><span class="placeholder" data-resource-key="--enable-swipe-to-right"></span></b>
+          <b data-string-resource-key="--enable-swipe-to-right"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="true" data-string-resource-key="--true--enable-swipe-to-right"></button>
+          <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="false" data-string-resource-key="--false--enable-swipe-to-right"></button>
         </li>
         <li>
-          <button class="setting-checkbox" data-setting-key="disable-variable-highlight"></button><b><span class="placeholder" data-resource-key="--disable-variable-highlight"></span></b>
+          <b data-string-resource-key="--enable-variable-highlight"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="true" data-string-resource-key="--true--enable-variable-highlight"></button>
+          <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="false" data-string-resource-key="--false--enable-variable-highlight"></button>
         </li>
         <li>
-          <button class="setting-checkbox" data-setting-key="disable-hint-balloon"></button><b><span class="placeholder" data-resource-key="--disable-hint-balloon"></span></b>
+          <b data-string-resource-key="--enable-hint-balloon"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="true" data-string-resource-key="--true--enable-hint-balloon"></button>
+          <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="false" data-string-resource-key="--false--enable-hint-balloon"></button>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--animation-duration"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value="0"></button><span class="placeholder" data-resource-key="--none--animation-duration"></span></span>
-          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".25s"></button><span class="placeholder" data-resource-key="--short--animation-duration"></span></span>
-          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".5s"></button><span class="placeholder" data-resource-key="--normal--animation-duration"></span></span>
-          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".75s"></button><span class="placeholder" data-resource-key="--long--animation-duration"></span></span>
+          <b data-string-resource-key="--animation-duration"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="0" data-string-resource-key="--none--animation-duration"></button>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".25s" data-string-resource-key="--short--animation-duration"></button>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".5s" data-string-resource-key="--normal--animation-duration"></button>
+          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".75s" data-string-resource-key="--long--animation-duration"></button>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--voice-volume"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--voice-volume"></span></span>
-          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--voice-volume"></span></span>
-          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--voice-volume"></span></span>
+          <b data-string-resource-key="--voice-volume"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".5" data-string-resource-key="--low--voice-volume"></span></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".75" data-string-resource-key="--a-little-low--voice-volume"></span></span>
+          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1"></button><span data-string-resource-key="--normal--voice-volume"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--question-voice-number"></span></b><span>: </span>
+          <b data-string-resource-key="--question-voice-number"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="1">1</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="2">2</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="3">3</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="4">4</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="5">5</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="6">6</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="7">7</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="8">8</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="9">9</button>
+          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0" data-string-resource-key="--random--question-voice-number"></button>
+        </li>
+        <li>
+          <b data-string-resource-key="--question-voice-rate"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".5" data-string-resource-key="--low--question-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".75" data-string-resource-key="--a-little-low--question-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1" data-string-resource-key="--normal--question-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.25" data-string-resource-key="--a-little-high--question-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.5" data-string-resource-key="--high--question-voice-rate"></button>
+        </li>
+        <li>
+          <b data-string-resource-key="--question-voice-pitch"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".5" data-string-resource-key="--low--question-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".75" data-string-resource-key="--a-little-low--question-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1" data-string-resource-key="--normal--question-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.25" data-string-resource-key="--a-little-high--question-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.5" data-string-resource-key="--high--question-voice-pitch"></button>
+        </li>
+        <li>
+          <b data-string-resource-key="--answer-voice-number"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="1">1</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="2">2</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="3">3</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="4">4</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="5">5</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="6">6</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="7">7</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="8">8</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="9">9</button>
+          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0" data-string-resource-key="--random--answer-voice-number"></button>
+        </li>
+        <li>
+          <b data-string-resource-key="--answer-voice-rate"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".5" data-string-resource-key="--low--answer-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".75" data-string-resource-key="--a-little-low--answer-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1" data-string-resource-key="--normal--answer-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.25" data-string-resource-key="--a-little-high--answer-voice-rate"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.5" data-string-resource-key="--high--answer-voice-rate"></button>
+        </li>
+        <li>
+          <b data-string-resource-key="--answer-voice-pitch"></b><span>:</span>
+          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".5" data-string-resource-key="--low--answer-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".75" data-string-resource-key="--a-little-low--answer-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1" data-string-resource-key="--normal--answer-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.25" data-string-resource-key="--a-little-high--answer-voice-pitch"></button>
+          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.5" data-string-resource-key="--high--answer-voice-pitch"></button>
+        </li>
+      </ul>
+
+
+
+
+
+
+
+<!--
+      <ul>
+        <li>
+          <button class="setting-checkbox" data-setting-key="enable-swipe-to-right"></button><b><span data-string-resource-key="--enable-swipe-to-right"></span></b>
+        </li>
+        <li>
+          <button class="setting-checkbox" data-setting-key="disable-variable-highlight"></button><b><span data-string-resource-key="--disable-variable-highlight"></span></b>
+        </li>
+        <li>
+          <button class="setting-checkbox" data-setting-key="disable-hint-balloon"></button><b><span data-string-resource-key="--disable-hint-balloon"></span></b>
+        </li>
+        <li>
+          <b><span data-string-resource-key="--animation-duration"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value="0"></button><span data-string-resource-key="--none--animation-duration"></span></span>
+          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".25s"></button><span data-string-resource-key="--short--animation-duration"></span></span>
+          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".5s"></button><span data-string-resource-key="--normal--animation-duration"></span></span>
+          <span><button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".75s"></button><span data-string-resource-key="--long--animation-duration"></span></span>
+        </li>
+        <li>
+          <b><span data-string-resource-key="--voice-volume"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".5"></button><span data-string-resource-key="--low--voice-volume"></span></span>
+          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".75"></button><span data-string-resource-key="--a-little-low--voice-volume"></span></span>
+          <span><button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1"></button><span data-string-resource-key="--normal--voice-volume"></span></span>
+        </li>
+        <li>
+          <b><span data-string-resource-key="--question-voice-number"></span></b><span>: </span>
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="1"></button><span>1</span></span>
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="2"></button><span>2</span></span>
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="3"></button><span>3</span></span>
@@ -116,26 +207,26 @@
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="7"></button><span>7</span></span>
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="8"></button><span>8</span></span>
           <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="9"></button><span>9</span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0"></button><span class="placeholder" data-resource-key="--random--question-voice-number"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0"></button><span data-string-resource-key="--random--question-voice-number"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--question-voice-rate"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--question-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--question-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--question-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.25"></button><span class="placeholder" data-resource-key="--a-little-high--question-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.5"></button><span class="placeholder" data-resource-key="--high--question-voice-rate"></span></span>
+          <b><span data-string-resource-key="--question-voice-rate"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".5"></button><span data-string-resource-key="--low--question-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".75"></button><span data-string-resource-key="--a-little-low--question-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1"></button><span data-string-resource-key="--normal--question-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.25"></button><span data-string-resource-key="--a-little-high--question-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.5"></button><span data-string-resource-key="--high--question-voice-rate"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--question-voice-pitch"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--question-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--question-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--question-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.25"></button><span class="placeholder" data-resource-key="--a-little-high--question-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.5"></button><span class="placeholder" data-resource-key="--high--question-voice-pitch"></span></span>
+          <b><span data-string-resource-key="--question-voice-pitch"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".5"></button><span data-string-resource-key="--low--question-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".75"></button><span data-string-resource-key="--a-little-low--question-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1"></button><span data-string-resource-key="--normal--question-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.25"></button><span data-string-resource-key="--a-little-high--question-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.5"></button><span data-string-resource-key="--high--question-voice-pitch"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--answer-voice-number"></span></b><span>: </span>
+          <b><span data-string-resource-key="--answer-voice-number"></span></b><span>: </span>
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="1"></button><span>1</span></span>
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="2"></button><span>2</span></span>
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="3"></button><span>3</span></span>
@@ -145,25 +236,26 @@
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="7"></button><span>7</span></span>
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="8"></button><span>8</span></span>
           <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="9"></button><span>9</span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0"></button><span class="placeholder" data-resource-key="--random--answer-voice-number"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0"></button><span data-string-resource-key="--random--answer-voice-number"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--answer-voice-rate"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--answer-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--answer-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--answer-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.25"></button><span class="placeholder" data-resource-key="--a-little-high--answer-voice-rate"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.5"></button><span class="placeholder" data-resource-key="--high--answer-voice-rate"></span></span>
+          <b><span data-string-resource-key="--answer-voice-rate"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".5"></button><span data-string-resource-key="--low--answer-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".75"></button><span data-string-resource-key="--a-little-low--answer-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1"></button><span data-string-resource-key="--normal--answer-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.25"></button><span data-string-resource-key="--a-little-high--answer-voice-rate"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1.5"></button><span data-string-resource-key="--high--answer-voice-rate"></span></span>
         </li>
         <li>
-          <b><span class="placeholder" data-resource-key="--answer-voice-pitch"></span></b><span>: </span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".5"></button><span class="placeholder" data-resource-key="--low--answer-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".75"></button><span class="placeholder" data-resource-key="--a-little-low--answer-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1"></button><span class="placeholder" data-resource-key="--normal--answer-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.25"></button><span class="placeholder" data-resource-key="--a-little-high--answer-voice-pitch"></span></span>
-          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.5"></button><span class="placeholder" data-resource-key="--high--answer-voice-pitch"></span></span>
+          <b><span data-string-resource-key="--answer-voice-pitch"></span></b><span>: </span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".5"></button><span data-string-resource-key="--low--answer-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value=".75"></button><span data-string-resource-key="--a-little-low--answer-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1"></button><span data-string-resource-key="--normal--answer-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.25"></button><span data-string-resource-key="--a-little-high--answer-voice-pitch"></span></span>
+          <span><button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.5"></button><span data-string-resource-key="--high--answer-voice-pitch"></span></span>
         </li>
       </ul>
+-->
     </div>
   </div>
 </div>

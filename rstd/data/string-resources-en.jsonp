@@ -7,10 +7,14 @@ jsonpCallback({
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",
   "--enable-swipe-to-right": "Enable swipe to right",
-
-  "--disable-variable-highlight": "Disable variable highlight",
-
-  "--disable-hint-balloon": "Disable hint balloon",
+  "--true--enable-swipe-to-right": "True",
+  "--false--enable-swipe-to-right": "False",
+  "--enable-variable-highlight": "Enable variable highlight",
+  "--true--enable-variable-highlight": "True",
+  "--false--enable-variable-highlight": "False",
+  "--enable-hint-balloon": "Enable hint balloon",
+  "--true--enable-hint-balloon": "True",
+  "--false--enable-hint-balloon": "False",
 
   "--animation-duration": "Animation duration",
   "--none--animation-duration": "None",
