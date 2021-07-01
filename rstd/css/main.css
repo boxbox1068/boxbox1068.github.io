@@ -486,9 +486,13 @@ body > * {
  |  SETTINGS CELL  |
  *-----------------*/
 #settings-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template:
+    "... ... ..." 2.5rem 
+    "... settings-header ..." 2rem
+    "... settings-panel ..." 1fr
+    "... ... ..." 2.5rem
+    / 2.5rem 1fr 2.5rem;
   visibility: hidden;
   opacity: 0;
   position: fixed;
@@ -498,47 +502,44 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: #000C;
-  transition-duration: calc(var(--common-transition-duration) / 2);
+  transition-duration: calc(var(--common-transition-duration) / 2);  
 }
 :root.show-settings #settings-cell {
   visibility: visible;
   opacity: 1;
 }
-#settings-panel {
-  display: flex;
-  flex-direction: column;
-  width: calc(100% - 5rem);
-  max-height: calc(100% - 5rem);
-}
 #settings-header {
+  grid-area: settings-header;
   display: flex;
-  flex-shrink: 0;
   align-items: center;
-  height: 2rem;
   padding: var(--common-padding);
   background-color: var(--settings-header-background-color);
   color: var(--settings-header-color);
 }
-#settings-body {
-  padding: var(--common-padding);
+#settings-panel {
+  grid-area: settings-panel;
   overflow-y: auto;
   background-color: var(--common-background-color);
   background-image: var(--stripes-image);
 }
-#settings-body > ul {
+#settings-body {
+  padding: var(--common-padding);
+}
+#settings-body > ol {
   margin: 0;
-  padding-left: 0;
-}
-#settings-body > ul > li {
   padding-left: 1.5rem;
-  text-indent: -1.5rem;
+  list-style-type: lower-latin;
 }
-#settings-body > ul > li + li {
+#settings-body > ol > li {
+  padding-left: 1rem;
+  overflow: visible;
+  text-indent: -1rem;
+}
+#settings-body > ol > li + li {
   padding-top: .5rem;
 }
-#settings-body > ul > li span {
-  white-space: nowrap;
-}
+
+
 
 :root[data-enable-swipe-to-right="true"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="true"],
 :root[data-enable-swipe-to-right="false"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="false"],

@@ -8,7 +8,6 @@
 <meta name="viewport" content="width=device-width">
 <meta name="format-detection" content="telephone=no,address=no,email=no">
 <link rel="stylesheet" href="./css/main.css">
-<script src="./js/string-resources-class.js"></script>
 <script src="./js/rabbit-phrase.js"></script>
 <script src="./js/library.js"></script>
 <script src="./js/main.js"></script>
@@ -72,42 +71,42 @@
   </div>
 </div>
 <div id="settings-cell">
+  <div id="settings-header">
+    <b><span data-string-resource-key="--settings"></span></b>
+  </div>
   <div id="settings-panel">
-    <div id="settings-header">
-      <b><span data-string-resource-key="--settings"></span></b>
-    </div>
     <div id="settings-body">
-      <ul>
+      <ol>
         <li>
-          <b data-string-resource-key="--enable-swipe-to-right"></b><span>(<u>1</u>):</span>
+          <b data-string-resource-key="--enable-swipe-to-right"></b><span>:</span>
           <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="true" data-string-resource-key="--true--enable-swipe-to-right"></button>
           <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="false" data-string-resource-key="--false--enable-swipe-to-right"></button>
         </li>
         <li>
-          <b data-string-resource-key="--enable-variable-highlight"></b><span>(<u>2</u>):</span>
+          <b data-string-resource-key="--enable-variable-highlight"></b><span>:</span>
           <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="true" data-string-resource-key="--true--enable-variable-highlight"></button>
           <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="false" data-string-resource-key="--false--enable-variable-highlight"></button>
         </li>
         <li>
-          <b data-string-resource-key="--enable-hint-balloon"></b><span>(<u>3</u>):</span>
+          <b data-string-resource-key="--enable-hint-balloon"></b><span>:</span>
           <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="true" data-string-resource-key="--true--enable-hint-balloon"></button>
           <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="false" data-string-resource-key="--false--enable-hint-balloon"></button>
         </li>
         <li>
-          <b data-string-resource-key="--animation-duration"></b><span>(<u>4</u>):</span>
+          <b data-string-resource-key="--animation-duration"></b><span>:</span>
           <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="0" data-string-resource-key="--none--animation-duration"></button>
           <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".25s" data-string-resource-key="--short--animation-duration"></button>
           <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".5s" data-string-resource-key="--normal--animation-duration"></button>
           <button class="setting-radio" data-setting-key="animation-duration" data-setting-value=".75s" data-string-resource-key="--long--animation-duration"></button>
         </li>
         <li>
-          <b data-string-resource-key="--voice-volume"></b><span>(<u>5</u>):</span>
+          <b data-string-resource-key="--voice-volume"></b><span>:</span>
           <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".5" data-string-resource-key="--low--voice-volume"></span></span>
           <button class="setting-radio" data-setting-key="voice-volume" data-setting-value=".75" data-string-resource-key="--a-little-low--voice-volume"></span></span>
           <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="1"></button><span data-string-resource-key="--normal--voice-volume"></span></span>
         </li>
         <li>
-          <b data-string-resource-key="--question-voice-number"></b><span>(<u>6</u>):</span>
+          <b data-string-resource-key="--question-voice-number"></b><span>:</span>
           <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="1">1</button>
           <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="2">2</button>
           <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="3">3</button>
@@ -120,7 +119,7 @@
           <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0" data-string-resource-key="--random--question-voice-number"></button>
         </li>
         <li>
-          <b data-string-resource-key="--question-voice-rate"></b><span>(<u>7</u>):</span>
+          <b data-string-resource-key="--question-voice-rate"></b><span>:</span>
           <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".5" data-string-resource-key="--low--question-voice-rate"></button>
           <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value=".75" data-string-resource-key="--a-little-low--question-voice-rate"></button>
           <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1" data-string-resource-key="--normal--question-voice-rate"></button>
@@ -128,7 +127,7 @@
           <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="1.5" data-string-resource-key="--high--question-voice-rate"></button>
         </li>
         <li>
-          <b data-string-resource-key="--question-voice-pitch"></b><span>(<u>8</u>):</span>
+          <b data-string-resource-key="--question-voice-pitch"></b><span>:</span>
           <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".5" data-string-resource-key="--low--question-voice-pitch"></button>
           <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value=".75" data-string-resource-key="--a-little-low--question-voice-pitch"></button>
           <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1" data-string-resource-key="--normal--question-voice-pitch"></button>
@@ -136,7 +135,7 @@
           <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="1.5" data-string-resource-key="--high--question-voice-pitch"></button>
         </li>
         <li>
-          <b data-string-resource-key="--answer-voice-number"></b><span>(<u>9</u>):</span>
+          <b data-string-resource-key="--answer-voice-number"></b><span>:</span>
           <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="1">1</button>
           <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="2">2</button>
           <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="3">3</button>
@@ -149,7 +148,7 @@
           <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0" data-string-resource-key="--random--answer-voice-number"></button>
         </li>
         <li>
-          <b data-string-resource-key="--answer-voice-rate"></b><span>(<u>0</u>):</span>
+          <b data-string-resource-key="--answer-voice-rate"></b><span>:</span>
           <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".5" data-string-resource-key="--low--answer-voice-rate"></button>
           <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value=".75" data-string-resource-key="--a-little-low--answer-voice-rate"></button>
           <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="1" data-string-resource-key="--normal--answer-voice-rate"></button>
@@ -164,7 +163,7 @@
           <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.25" data-string-resource-key="--a-little-high--answer-voice-pitch"></button>
           <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="1.5" data-string-resource-key="--high--answer-voice-pitch"></button>
         </li>
-      </ul>
+      </ol>
     </div>
   </div>
 </div>

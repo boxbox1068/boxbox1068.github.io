@@ -129,12 +129,29 @@ const main = async () => {
   const _visitHome = () => {
     window.location.href = 'https://twitter.com/shikaku1068/';
   };
+
+/*
   const _scrollPanel = (targetPanel, scrollY) => {
     if (! isForefrontElement(targetPanel)) {
       return;
     }
     targetPanel.scrollBy(0, scrollY);
   };
+*/
+  const _scrollPanel = (scrollY) => {
+    let targetPanel;
+    if (getFlag('show-settings')) {
+      targetPanel = qs('#settings-panel');
+    } else if (! getFlag('fold-lead')) {
+      targetPanel = qs('#lead-panel');
+    } else if (getFlag('uncover-answer')) {
+      targetPanel = qs('#answer-panel');
+    } else if (getFlag('uncover-question')) {
+      targetPanel = qs('#question-panel');
+    }
+    targetPanel.scrollBy(0, scrollY);
+  };
+
   const _showHint = (goBackwards) => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
@@ -159,14 +176,16 @@ const main = async () => {
     _setActiveElement(targetVariableElement);
   };
   const _hoge = (targetSettingKey, goBackwards) => {
-    const fuga = getSetting(targetSettingKey, 'string');
-    const hage = qs(`[data-${targetSettingKey}="${fuga}"]`);
-    const hagehage = hage.nextElementSibling;
-    if (hagehage) {
-      hagehage.click();
-    } else {
-      hage.parent.firstElementChild.click();
-    }
+    const currentValue = getSetting(targetSettingKey, 'string');
+    const targetRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
+    let currentIndex = 0;
+    targetRadioElements.forEach((element, index) => {
+      if (element.getAttribute('data-setting-value') == currentValue) {
+        currentIndex = index;
+      }
+    });
+    const hoge = (targetRadioElements.length + currentIndex + (goBackwards ? -1 : 1)) % targetRadioElements.length;
+    targetRadioElements.item(hoge).click();
   }
 
   qs('#fold-lead-button').addEventListener('click', event => {
@@ -204,27 +223,16 @@ const main = async () => {
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
     _switchDisplay();
   });
-  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
-    _switchDisplay();
-  });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
-    _speakDrill();
-  });
-  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
     _speakDrill();
   });
   addKeyDownListener(qs('body'), ' ', targetKey => {
     _playDrill();
   });
-  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
-    _playDrill();
-  });
   addKeyDownListener(qs('body'), 'Tab', targetKey => {
     _skipDrill();
   });
-  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
-    _skipDrill();
-  });
+/*
   addKeyDownListener(qs('body'), 'l', targetKey => {
     _scrollPanel(qs('#lead-panel'), getFlag('fold-lead') ? 25 : 50);
   });
@@ -243,17 +251,23 @@ const main = async () => {
   addKeyDownListener(qs('body'), 'A', targetKey => {
     _scrollPanel(qs('#answer-panel'), -50);
   });
-  addKeyDownListener(qs('body'), 'h', targetKey => {
+*/
+  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
     _showHint(false);
   });
-  addKeyDownListener(qs('body'), 'H', targetKey => {
+  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
     _showHint(true);
+  });
+  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
+    _scrollPanel(50);
+  });
+  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
+    _scrollPanel(-50);
   });
   addKeyDownListener(qs('body'), '/', targetKey => {
     _showSettings();
   });
-
-  addKeyDownListener(qs('body'), '1', targetKey => {
+  addKeyDownListener(qs('body'), 'a', targetKey => {
     _hoge('enable-swipe-to-right');
   });
 
