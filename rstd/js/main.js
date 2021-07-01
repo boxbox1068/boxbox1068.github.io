@@ -151,7 +151,6 @@ const main = async () => {
     }
     targetPanel.scrollBy(0, scrollY);
   };
-
   const _showHint = (goBackwards) => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
@@ -232,26 +231,6 @@ const main = async () => {
   addKeyDownListener(qs('body'), 'Tab', targetKey => {
     _skipDrill();
   });
-/*
-  addKeyDownListener(qs('body'), 'l', targetKey => {
-    _scrollPanel(qs('#lead-panel'), getFlag('fold-lead') ? 25 : 50);
-  });
-  addKeyDownListener(qs('body'), 'L', targetKey => {
-    _scrollPanel(qs('#lead-panel'), getFlag('fold-lead') ? -25 : -50);
-  });
-  addKeyDownListener(qs('body'), 'q', targetKey => {
-    _scrollPanel(qs('#question-panel'), 50);
-  });
-  addKeyDownListener(qs('body'), 'Q', targetKey => {
-    _scrollPanel(qs('#question-panel'), -50);
-  });
-  addKeyDownListener(qs('body'), 'a', targetKey => {
-    _scrollPanel(qs('#answer-panel'), 50);
-  });
-  addKeyDownListener(qs('body'), 'A', targetKey => {
-    _scrollPanel(qs('#answer-panel'), -50);
-  });
-*/
   addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
     _showHint(false);
   });
