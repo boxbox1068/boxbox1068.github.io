@@ -20,7 +20,9 @@ const main = async () => {
     const key = element.getAttribute('data-string-resource-key');
     element.innerHTML = stringResources[key];
   });
-  loadSetting('enable-swipe-to-right', 'true');
+
+
+  loadSetting('app-theme', 'light');
   loadSetting('enable-variable-highlight', 'true');
   loadSetting('enable-hint-balloon', 'true');
   loadSetting('animation-duration', '.5s');
@@ -31,6 +33,7 @@ const main = async () => {
   loadSetting('answer-voice-number', '1');
   loadSetting('answer-voice-rate', '1');
   loadSetting('answer-voice-pitch', '1');
+  loadSetting('enable-swipe-to-right', 'true');
   setSetting('enable-automatic-question-speaking', 'false');
   setSetting('enable-automatic-answer-speaking', 'false');
   const _setActiveElement = targetElement => {
@@ -41,7 +44,7 @@ const main = async () => {
       targetElement.classList.add('active');
     }
   };
-  const _switchDisplay = () => {
+  const _switchPanel = () => {
     _setActiveElement(null);
     if (getFlag('disable-operation')) {
       return;
@@ -174,21 +177,21 @@ const main = async () => {
     const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
     _setActiveElement(targetVariableElement);
   };
-  const _hoge = (targetSettingKey, goBackwards) => {
+  const _switchSetting = (targetSettingKey) => {
     const currentValue = getSetting(targetSettingKey, 'string');
-    const targetRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
-    let currentIndex = 0;
-    targetRadioElements.forEach((element, index) => {
+    const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
+    let currentIndex = -1;
+    settingRadioElements.forEach((element, index) => {
       if (element.getAttribute('data-setting-value') == currentValue) {
         currentIndex = index;
       }
     });
-    const hoge = (targetRadioElements.length + currentIndex + (goBackwards ? -1 : 1)) % targetRadioElements.length;
-    targetRadioElements.item(hoge).click();
+    const nextIndex = (currentIndex + 1) % settingRadioElements.length;
+    settingRadioElements.item(nextIndex).click();
   }
 
   qs('#fold-lead-button').addEventListener('click', event => {
-    _switchDisplay();
+    _switchPanel();
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
     _enableAutomaticSpeaking('enable-automatic-question-speaking', stringResources['--automatic-question-speaking-enabled']);
@@ -211,6 +214,12 @@ const main = async () => {
   qs('#visit-home-button').addEventListener('click', event => {
     _visitHome();
   });
+  qs('#close-settings-button').addEventListener('click', event => {
+    _switchPanel();
+    event.stopPropagation();
+  });
+  qs('#settings-cell').addEventListener('click', event => {
+  }, {capture: true});
   qsa('.setting-radio').forEach(element => {
     element.addEventListener('click', event => {
       const key = element.getAttribute('data-setting-key');
@@ -220,7 +229,7 @@ const main = async () => {
   });
 
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
-    _switchDisplay();
+    _switchPanel();
   });
   addKeyDownListener(qs('body'), 'Enter', targetKey => {
     _speakDrill();
@@ -247,7 +256,7 @@ const main = async () => {
     _showSettings();
   });
   addKeyDownListener(qs('body'), 'a', targetKey => {
-    _hoge('enable-swipe-to-right');
+    _switchSetting('enable-swipe-to-right');
   });
 
 

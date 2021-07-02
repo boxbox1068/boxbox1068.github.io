@@ -265,7 +265,7 @@ body > * {
 .variable {
   font-weight: bold;
 }
-.variable:hover {
+.variable.active {
   border-bottom: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
 }
 :root[data-disable-variable-highlight="true"] {
@@ -511,11 +511,27 @@ body > * {
 #settings-header {
   grid-area: settings-header;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: var(--common-padding);
   background-color: var(--settings-header-background-color);
   color: var(--settings-header-color);
 }
+
+#close-settings-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--settings-header-color);
+  cursor: pointer;
+  transition-duration: var(--common-transition-duration);
+}
+#close-settings-button > svg {
+  width: 60%;
+  height: 60%;
+}
+
+
+
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
@@ -540,62 +556,6 @@ body > * {
 }
 
 
-
-:root[data-enable-swipe-to-right="true"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="true"],
-:root[data-enable-swipe-to-right="false"] .setting-radio[data-setting-key="enable-swipe-to-right"][data-setting-value="false"],
-:root[data-enable-variable-highlight="true"] .setting-radio[data-setting-key="enable-variable-highlight"][data-setting-value="true"],
-:root[data-enable-variable-highlight="false"] .setting-radio[data-setting-key="enable-variable-highlight"][data-setting-value="false"],
-:root[data-enable-hint-balloon="true"] .setting-radio[data-setting-key="enable-hint-balloon"][data-setting-value="true"],
-:root[data-enable-hint-balloon="false"] .setting-radio[data-setting-key="enable-hint-balloon"][data-setting-value="false"],
-:root[data-animation-duration="0"] .setting-radio[data-setting-key="animation-duration"][data-setting-value="0"],
-:root[data-animation-duration=".25s"] .setting-radio[data-setting-key="animation-duration"][data-setting-value=".25s"],
-:root[data-animation-duration=".5s"] .setting-radio[data-setting-key="animation-duration"][data-setting-value=".5s"],
-:root[data-animation-duration=".75s"] .setting-radio[data-setting-key="animation-duration"][data-setting-value=".75s"],
-:root[data-voice-volume=".5"] .setting-radio[data-setting-key="voice-volume"][data-setting-value=".5"],
-:root[data-voice-volume=".75"] .setting-radio[data-setting-key="voice-volume"][data-setting-value=".75"],
-:root[data-voice-volume="1"] .setting-radio[data-setting-key="voice-volume"][data-setting-value="1"],
-:root[data-question-voice-number="1"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="1"],
-:root[data-question-voice-number="2"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="2"],
-:root[data-question-voice-number="3"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="3"],
-:root[data-question-voice-number="4"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="4"],
-:root[data-question-voice-number="5"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="5"],
-:root[data-question-voice-number="6"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="6"],
-:root[data-question-voice-number="7"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="7"],
-:root[data-question-voice-number="8"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="8"],
-:root[data-question-voice-number="9"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="9"],
-:root[data-question-voice-number="0"] .setting-radio[data-setting-key="question-voice-number"][data-setting-value="0"],
-:root[data-question-voice-rate=".5"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value=".5"],
-:root[data-question-voice-rate=".75"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value=".75"],
-:root[data-question-voice-rate="1"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1"],
-:root[data-question-voice-rate="1.25"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1.25"],
-:root[data-question-voice-rate="1.5"] .setting-radio[data-setting-key="question-voice-rate"][data-setting-value="1.5"],
-:root[data-question-voice-pitch=".5"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value=".5"],
-:root[data-question-voice-pitch=".75"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value=".75"],
-:root[data-question-voice-pitch="1"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1"],
-:root[data-question-voice-pitch="1.25"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1.25"],
-:root[data-question-voice-pitch="1.5"] .setting-radio[data-setting-key="question-voice-pitch"][data-setting-value="1.5"],
-:root[data-answer-voice-number="1"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="1"],
-:root[data-answer-voice-number="2"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="2"],
-:root[data-answer-voice-number="3"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="3"],
-:root[data-answer-voice-number="4"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="4"],
-:root[data-answer-voice-number="5"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="5"],
-:root[data-answer-voice-number="6"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="6"],
-:root[data-answer-voice-number="7"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="7"],
-:root[data-answer-voice-number="8"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="8"],
-:root[data-answer-voice-number="9"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="9"],
-:root[data-answer-voice-number="0"] .setting-radio[data-setting-key="answer-voice-number"][data-setting-value="0"],
-:root[data-answer-voice-rate=".5"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value=".5"],
-:root[data-answer-voice-rate=".75"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value=".75"],
-:root[data-answer-voice-rate="1"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1"],
-:root[data-answer-voice-rate="1.25"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1.25"],
-:root[data-answer-voice-rate="1.5"] .setting-radio[data-setting-key="answer-voice-rate"][data-setting-value="1.5"],
-:root[data-answer-voice-pitch=".5"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value=".5"],
-:root[data-answer-voice-pitch=".75"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value=".75"],
-:root[data-answer-voice-pitch="1"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1"],
-:root[data-answer-voice-pitch="1.25"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1.25"],
-:root[data-answer-voice-pitch="1.5"] .setting-radio[data-setting-key="answer-voice-pitch"][data-setting-value="1.5"] {
-  --setting-radio-core-color: var(--control-color);
-}
 .setting-radio {
   --setting-radio-core-color: var(--setting-radio-background-color);
   position: relative;
@@ -604,6 +564,9 @@ body > * {
   padding-left: 1.25rem;
   border: 0;
   font-size: inherit;
+}
+.setting-radio.checked {
+  --setting-radio-core-color: var(--control-color);
 }
 .setting-radio::before {
   position: absolute;

@@ -6,6 +6,15 @@ jsonpCallback({
   "--automatic-answer-speaking-enabled": "Automatic answer speaking enabled.",
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",
+  "--app-theme": "App theme",
+  "--light--app-theme": "Light",
+  "--dark--app-theme": "Dark",
+  "--auto--app-theme": "Auto",
+
+
+
+
+
   "--enable-swipe-to-right": "Enable swipe to right (to skip the question etc.)",
   "--true--enable-swipe-to-right": "True",
   "--false--enable-swipe-to-right": "False",

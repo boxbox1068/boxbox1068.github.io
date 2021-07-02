@@ -41,6 +41,13 @@ const setSetting = (key, value) => {
   const encodedValue = encodeURIComponent(value);
   const maxAge = 60 * 60 * 24 * 365;
   document.cookie = `${key}=${encodedValue}; max-age=${maxAge};`;
+  qsa(`[data-setting-key=${key}]`).forEach(element => {
+    if (element.getAttribute('data-setting-value') == value) {
+      element.classList.add('checked');
+    } else {
+      element.classList.remove('checked');
+    }
+  });
 };
 const getSetting = (key, valueType) => {
   const _convertValue = (srcValue, valueType) => {
