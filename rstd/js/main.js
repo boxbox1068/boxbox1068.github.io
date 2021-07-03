@@ -1,4 +1,5 @@
 'use strict';
+const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "app-theme": "light",
   "enable-variable-highlight": "true",
@@ -53,34 +54,45 @@ const main = async () => {
   }
   setSetting('enable-automatic-question-speaking', 'false');
   setSetting('enable-automatic-answer-speaking', 'false');
-  qs('#fold-lead-button').addEventListener('click', event => {
+  qs('#fold-lead-button').addEventListener('click', () => {
     setFlag('fold-lead', ! getFlag('fold-lead'));
   });
-  qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
+  qs('#enable-automatic-question-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-question-speaking');
   });
-  qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
+  qs('#enable-automatic-answer-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-answer-speaking');
   });
-  qs('#speak-button').addEventListener('click', event => {
-    _speakDrill();
+  qs('#speak-button').addEventListener('click', () => {
+    if (getFlag('uncover-answer')) {
+      speakAnswer();
+    } else {
+      speakQuestion();
+    }
   });
-  qs('#play-button').addEventListener('click', event => {
-    _playDrill();
+  qs('#play-button').addEventListener('click', () => {
+    if (getFlag('uncover-answer')) {
+      resetCard();
+    } else {
+      showAnswer();
+    }
   });
-  qs('#skip-button').addEventListener('click', event => {
-    _skipDrill();
+  qs('#skip-button').addEventListener('click', () => {
+    resetCard();
   });
-  qs('#show-settings-button').addEventListener('click', event => {
-    _showSettings();
+  qs('#show-settings-button').addEventListener('click', () => {
+    setFlag('show-settings', ! getFlag('show-settings'));
   });
-  qs('#visit-home-button').addEventListener('click', event => {
-    _visitHome();
+  qs('#visit-home-button').addEventListener('click', () => {
+    window.location.href = homeUrl;
   });
+
+
+
   qs('#hide-settings-button').addEventListener('click', event => {
     _hideSettings();
   });
-  qs('#settings-cell').addEventListener('click', event => {
+  qs('#settings-background').addEventListener('click', event => {
     if (event.currentTarget != event.target) {
       return;
     }
@@ -93,31 +105,43 @@ const main = async () => {
       setSetting(key, value);
     });
   });
-  addKeyDownListener(qs('body'), 'Escape', targetKey => {
+  addKeyDownListener('Escape', () => {
     _switchPanel();
   });
-  addKeyDownListener(qs('body'), 'Enter', targetKey => {
+  addKeyDownListener('q', () => {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+      return;
+    }
+    toggleSetting('enable-automatic-question-speaking');
+  });
+  addKeyDownListener('a', () => {
+    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+      return;
+    }
+      toggleSetting('enable-automatic-answer-speaking');
+  });
+  addKeyDownListener('Enter', () => {
     _speakDrill();
   });
-  addKeyDownListener(qs('body'), ' ', targetKey => {
+  addKeyDownListener(' ', () => {
     _playDrill();
   });
-  addKeyDownListener(qs('body'), 'Tab', targetKey => {
+  addKeyDownListener('Tab', () => {
     _skipDrill();
   });
-  addKeyDownListener(qs('body'), 'ArrowRight', targetKey => {
+  addKeyDownListener('ArrowRight', () => {
     _showHint(false);
   });
-  addKeyDownListener(qs('body'), 'ArrowLeft', targetKey => {
+  addKeyDownListener('ArrowLeft', () => {
     _showHint(true);
   });
-  addKeyDownListener(qs('body'), 'ArrowDown', targetKey => {
+  addKeyDownListener('ArrowDown', () => {
     _scrollPanel(50);
   });
-  addKeyDownListener(qs('body'), 'ArrowUp', targetKey => {
+  addKeyDownListener('ArrowUp', () => {
     _scrollPanel(-50);
   });
-  addKeyDownListener(qs('body'), '/', targetKey => {
+  addKeyDownListener('/', () => {
     if (getFlag('show-settings')) {
       _hideSettings();
     } else {
@@ -125,7 +149,7 @@ const main = async () => {
     }
   });
   for (const key in settingControlChars) {
-    addKeyDownListener(qs('body'), settingControlChars[key], targetKey => {
+    addKeyDownListener(settingControlChars[key], () => {
       if (! getFlag('show-settings')) {
         return;
       }
@@ -299,6 +323,28 @@ const _enableAutomaticSpeaking = (settingKey, noticeToSpeak) => {
     window.speechSynthesis.cancel();
   }
 };
+const speakQuestion = () => {
+  speak(
+    questionPhrase.text,
+    questionPhrase.lang,
+    getSetting('voice-volume', 'number'),
+    getSetting('question-voice-rate', 'number'),
+    getSetting('question-voice-pitch', 'number'),
+    getSetting('question-voice-number', 'number')
+  );
+};
+const speakAnswer = () => {
+  speak(
+    answerPhrase.text,
+    answerPhrase.lang,
+    getSetting('voice-volume', 'number'),
+    getSetting('answer-voice-rate', 'number'),
+    getSetting('answer-voice-pitch', 'number'),
+    getSetting('answer-voice-number', 'number')
+  );
+}
+
+
 const _speakDrill = () => {
   if (getFlag('disable-operation')) {
     return;
@@ -366,9 +412,6 @@ const _hideSettings = () => {
   _setActiveElement(null);
   setFlag('show-settings', false);
 }
-const _visitHome = () => {
-  window.location.href = 'https://twitter.com/shikaku1068/';
-};
 
 
 

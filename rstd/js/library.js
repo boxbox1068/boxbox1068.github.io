@@ -104,11 +104,11 @@ const requestJsonp = (jsonpSrc, callback) => {
   jsonpDataScriptElement.src = jsonpSrc;
   document.head.append(jsonpDataScriptElement);
 };
-const addKeyDownListener = (targetElement, targetKeys, listener) => {
+const addKeyDownListener = (targetKeys, listener) => {
   if (! Array.isArray(targetKeys)) {
     targetKeys = [targetKeys];
   }
-  targetElement.addEventListener('keydown', event => {
+  qs('body').addEventListener('keydown', event => {
     if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
       return;
     }
@@ -200,17 +200,21 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     }
   }, {passive: false});
 };
-const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
+const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber, interrupt) => {
+  const isSpeaking = window.speechSynthesis.speaking;
   window.speechSynthesis.cancel();
   if (! text) {
-    return false;
+    return;
+  }
+  if (isSpeaking && ! interrupt) {
+    return;
   }
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text || '';
   utterance.lang = lang || 'en';
-  utterance.volume = volume || 1;
-  utterance.rate = rate || 1;
-  utterance.pitch = pitch || 1;
+  utterance.volume = voiceVolume || 1;
+  utterance.rate = voiceRate || 1;
+  utterance.pitch = voicePitch || 1;
   const candidateVoices = [];
   for (const voice of window.speechSynthesis.getVoices()) {
     if (new RegExp(`^${lang}`, 'i').test(voice.lang)) {

@@ -499,19 +499,22 @@ body > * {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 200;
   width: 100%;
   height: 100%;
-  background-color: #000C;
-  transition-duration: calc(var(--common-transition-duration) / 2);  
+  transition-duration: var(--common-transition-duration);  
 }
-
-
-
-
 :root.show-settings #settings-cell {
   visibility: visible;
   opacity: 1;
+}
+#settings-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-color: #000C;
 }
 #settings-header {
   grid-area: settings-header;
