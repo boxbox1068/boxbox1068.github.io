@@ -154,13 +154,13 @@ const main = async () => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    showHint(false);
+    switchActiveVariableElement(false);
   });
   addKeyDownListener('ArrowLeft', () => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    showHint(true);
+    switchActiveVariableElement(true);
   });
   addKeyDownListener('ArrowDown', () => {
     if (getFlag('show-settings')) {
@@ -188,11 +188,18 @@ const main = async () => {
     toggleFlag('show-settings');
   });
   for (const key in settingControlChars) {
-    addKeyDownListener(settingControlChars[key], () => {
+    const settingControlChar = settingControlChars[key];
+    addKeyDownListener(settingControlChar, () => {
       if (! getFlag('show-settings')) {
         return;
       }
-      switchSetting(key);
+      switchSettingRadio(key, false);
+    });
+    addKeyDownListener(settingControlChar.toUpperCase(), () => {
+      if (! getFlag('show-settings')) {
+        return;
+      }
+      switchSettingRadio(key, true);
     });
   }
   addSwipeListener(-25, () => {
@@ -231,10 +238,10 @@ const main = async () => {
     }
   });
   qs('body').addEventListener('touchend', event => {
-    activateElement(event.target);
+    setActiveElement(event.target);
   });
   qs('body').addEventListener('mousemove', () => {
-    activateElement(null);
+    setActiveElement(null);
   });
   let leadText;
   let questionTemplate;
@@ -305,46 +312,24 @@ const main = async () => {
 
 
 
-
-
-
-
-
-
-
-const showHint = (goBackwards) => {
+const switchActiveVariableElement = reverse => {
   let variableElements;
   if (getFlag('uncover-answer')) {
     variableElements = qsa('.variable');
   } else {
     variableElements = qsa('#question-panel .variable');
   }
-  if (! variableElements.length) {
-    return;
-  }
-  let activeVariableElementIndex = (goBackwards ? variableElements.length : -1);
-  for (let i = 0; i < variableElements.length; i++) {
-    const currentVariableElement = variableElements[i];
-    if (currentVariableElement.classList.contains('active')) {
-      activeVariableElementIndex = i;
-    }
-  }
-  const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
-  activateElement(targetVariableElement);
-};
-const switchSetting = (targetSettingKey) => {
-  const currentValue = getSetting(targetSettingKey, 'string');
-  const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
-  let currentIndex = -1;
-  settingRadioElements.forEach((element, index) => {
-    if (element.getAttribute('data-setting-value') == currentValue) {
+  let currentIndex = reverse ? variableElements.length : -1;
+  variableElements.forEach((element, index) => {
+    if (element.classList.contains('active')) {
       currentIndex = index;
     }
   });
-  const nextIndex = (currentIndex + 1) % settingRadioElements.length;
-  settingRadioElements.item(nextIndex).click();
-}
-const activateElement = targetElement => {
+  const nextIndex = currentIndex + (reverse ? -1 : 1);
+  const nextVariableElement = variableElements.item(nextIndex);
+  setActiveElement(nextVariableElement);
+};
+const setActiveElement = targetElement => {
   qsa('.active').forEach(element => {
     element.classList.remove('active');
   });
@@ -355,8 +340,20 @@ const activateElement = targetElement => {
     setFlag('hasActiveElement', false);
   }
 };
+const switchSettingRadio = (targetSettingKey, reverse) => {
+  const currentValue = getSetting(targetSettingKey, 'string');
+  const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
+  let currentIndex = reverse ? settingRadioElements.length : -1;
+  settingRadioElements.forEach((element, index) => {
+    if (element.getAttribute('data-setting-value') == currentValue) {
+      currentIndex = index;
+    }
+  });
+  const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
+  settingRadioElements.item(nextIndex).click();
+}
 const _switchPanel = () => {
-  activateElement(null);
+  setActiveElement(null);
   if (getFlag('disable-operation')) {
     return;
   }
@@ -428,7 +425,7 @@ const _speakDrill = () => {
   }
 };
 const _playDrill = () => {
-  activateElement(null);
+  setActiveElement(null);
   if (getFlag('disable-operation')) {
     return;
   }
@@ -443,7 +440,7 @@ const _playDrill = () => {
   }
 };
 const _skipDrill = () => {
-  activateElement(null);
+  setActiveElement(null);
   if (getFlag('disable-operation')) {
     return;
   }
@@ -456,11 +453,11 @@ const _skipDrill = () => {
   }
 };
 const _showSettings = () => {
-  activateElement(null);
+  setActiveElement(null);
   setFlag('show-settings', true);
 };
 const _hideSettings = () => {
-  activateElement(null);
+  setActiveElement(null);
   setFlag('show-settings', false);
 }
 
