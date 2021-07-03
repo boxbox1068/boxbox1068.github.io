@@ -444,19 +444,12 @@ const resetCard = async () => {
   }
   setFlag('disable-operation', false);
   if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-    qs('#speak-button').click();
+    speakQuestion();
   }
-
-
-/*
-  if (getFlag('enable-automatic-question-speaking')) {
-    qs('#speak-button').click();
-  }
-*/
 };
 const uncoverAnswer = async () => {
+  speak(null);
   setFlag('disable-operation', true);
-  window.speechSynthesis.cancel();
   setFlag('uncover-answer', true);
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
@@ -465,15 +458,7 @@ const uncoverAnswer = async () => {
   }
   setFlag('disable-operation', false);
   if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-    qs('#speak-button').click();
+    speakAnswer();
   }
-
-/*
-  if (getFlag('enable-automatic-answer-speaking')) {
-    qs('#speak-button').click();
-  }
-
-*/
-
 };
 window.addEventListener('DOMContentLoaded', main);

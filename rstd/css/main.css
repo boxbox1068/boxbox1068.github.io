@@ -65,6 +65,8 @@
   outline: none;
   user-select: none;
   touch-action: pan-y;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
 }
 :root[data-animation-duration="0"] *,
 :root[data-animation="0"] *:before,
@@ -275,16 +277,16 @@ body > * {
   --hint-balloon-opacity: 1;
 }
 :root[data-enable-variable-highlight="false"] .variable {
-  --variable-number-1-background-color: unset;
-  --variable-number-2-background-color: unset;
-  --variable-number-3-background-color: unset;
-  --variable-number-4-background-color: unset;
-  --variable-number-5-background-color: unset;
-  --variable-number-6-background-color: unset;
-  --variable-number-7-background-color: unset;
-  --variable-number-8-background-color: unset;
-  --variable-number-9-background-color: unset;
-  --variable-number-0-background-color: unset;
+  --variable-number-1-background-color: transparent;
+  --variable-number-2-background-color: transparent;
+  --variable-number-3-background-color: transparent;
+  --variable-number-4-background-color: transparent;
+  --variable-number-5-background-color: transparent;
+  --variable-number-6-background-color: transparent;
+  --variable-number-7-background-color: transparent;
+  --variable-number-8-background-color: transparent;
+  --variable-number-9-background-color: transparent;
+  --variable-number-0-background-color: transparent;
 }
 .variable[data-variable-number="1"] {
   background-color: var(--variable-number-1-background-color);
@@ -320,7 +322,7 @@ body > * {
   visibility: var(--hint-balloon-visibility);
   opacity: var(--hint-balloon-opacity);
   position: fixed;
-  z-index: 100;
+  z-index: 1;
   height: var(--hint-balloon-height);
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
@@ -399,7 +401,7 @@ body > * {
 }
 .toggle-button::before {
   top: 0;
-  border-top: var(--this-toggle-height) solid transparent;
+  border-top: calc(var(--this-toggle-height) + var(--common-border-width)) solid transparent;
   border-bottom: var(--common-border-width) solid var(--control-border-color);
   background-color: var(--toggle-color);
   color: var(--control-background-color);
@@ -407,7 +409,7 @@ body > * {
 .toggle-button::after {
   top: 100%;
   border-top: var(--common-border-width) solid var(--control-border-color);
-  border-bottom: var(--this-toggle-height) solid transparent;
+  border-bottom: calc(var(--this-toggle-height) + var(--common-border-width)) solid transparent;
   background-color: var(--on-toggle-color);
   color: var(--control-color);
 }
