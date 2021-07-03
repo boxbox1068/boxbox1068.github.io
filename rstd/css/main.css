@@ -268,8 +268,8 @@ body > * {
   border-bottom-color: var(--variable-border-bottom-color);
   font-weight: bold;
 }
-:root .variable.active,
-:root:not(.hasActiveElement) .variable:hover {
+:root.fold-lead:not(.show-settings) .variable.active,
+:root.fold-lead:not(.show-settings):not(.hasActiveElement) .variable:hover {
   --variable-border-bottom-color: var(--hint-balloon-border-color);
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;

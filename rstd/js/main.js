@@ -305,6 +305,13 @@ const main = async () => {
 
 
 
+
+
+
+
+
+
+
 const showHint = (goBackwards) => {
   let variableElements;
   if (getFlag('uncover-answer')) {
