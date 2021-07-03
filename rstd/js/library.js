@@ -84,6 +84,14 @@ const getSetting = (key, valueType) => {
 const loadSetting = (key, defaultValue) => {
   setSetting(key, getSetting(key) || defaultValue);
 };
+const toggleSetting = (key) => {
+  const currentValue = getSetting(key);
+  if (! /^(true|false)$/.test(currentValue)) {
+    return;
+  }
+  const newValue = (! /^true$/i.test(currentValue)).toString(); 
+  setSetting(key, newValue);
+}
 const requestJsonp = (jsonpSrc, callback) => {
   const jsonpCallbackName = 'jsonpCallback';
   window[jsonpCallbackName] = data => {
@@ -191,4 +199,35 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
       event.preventDefault();
     }
   }, {passive: false});
+};
+const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
+  window.speechSynthesis.cancel();
+  if (! text) {
+    return false;
+  }
+  const utterance = new SpeechSynthesisUtterance();
+  utterance.text = text || '';
+  utterance.lang = lang || 'en';
+  utterance.volume = volume || 1;
+  utterance.rate = rate || 1;
+  utterance.pitch = pitch || 1;
+  const candidateVoices = [];
+  for (const voice of window.speechSynthesis.getVoices()) {
+    if (new RegExp(`^${lang}`, 'i').test(voice.lang)) {
+      candidateVoices.push(voice);
+    }
+  }
+  if (voiceNumber === undefined) {
+    voiceNumber = 1;
+  }
+  if (candidateVoices.length) {
+    let index;
+    if (voiceNumber > 0) {
+      index = (voiceNumber - 1) % candidateVoices.length;
+    } else {
+      index = Math.floor(candidateVoices.length * Math.random());
+    }
+    utterance.voice = candidateVoices[index];
+  }
+  window.speechSynthesis.speak(utterance);
 };

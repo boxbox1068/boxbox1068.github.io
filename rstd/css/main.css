@@ -179,7 +179,6 @@ body > * {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
   width: 100%;
   height: calc(100% - var(--footer-cell-height));
   overflow-y: auto;
@@ -201,7 +200,6 @@ body > * {
   position: fixed;
   right: 1rem;
   bottom: var(--footer-cell-height);
-  z-index: 110;
   width: 2rem;
   height: var(--fold-lead-button-height);
   background-color: var(--fold-lead-button-background-color);
@@ -263,10 +261,12 @@ body > * {
   left: 100%;
 }
 .variable {
+  border-bottom: var(--hint-balloon-border-width) solid transparent;
   font-weight: bold;
 }
+.variable:hover,
 .variable.active {
-  border-bottom: var(--hint-balloon-border-width) solid var(--hint-balloon-border-color);
+  border-bottom-color: var(--hint-balloon-border-color);
 }
 :root[data-disable-variable-highlight="true"] {
   --variable-number-1-background-color: unset;
@@ -314,16 +314,12 @@ body > * {
   visibility: hidden;
   opacity: 0;
   position: fixed;
-  z-index: 200;
+  z-index: 100;
   height: var(--hint-balloon-height);
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
   color: var(--hint-balloon-color);
   font-weight: bold;
-}
-.variable.active .hint-balloon-panel {
-  visibility: visible;
-  opacity: 1;
 }
 .hint-balloon-panel::before {
   display: block;
@@ -342,6 +338,11 @@ body > * {
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background-color);
   content: "";
+}
+.variable:hover .hint-balloon-panel,
+.variable.active .hint-balloon-panel {
+  visibility: visible;
+  opacity: 1;
 }
 .hint-balloon-body {
   display: flex;
@@ -498,12 +499,16 @@ body > * {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 300;
+  z-index: 200;
   width: 100%;
   height: 100%;
   background-color: #000C;
   transition-duration: calc(var(--common-transition-duration) / 2);  
 }
+
+
+
+
 :root.show-settings #settings-cell {
   visibility: visible;
   opacity: 1;
@@ -517,15 +522,14 @@ body > * {
   background-color: var(--settings-header-background-color);
   color: var(--settings-header-color);
 }
-
-#close-settings-button {
+#hide-settings-button {
   width: 1.5rem;
   height: 1.5rem;
   color: var(--settings-header-color);
   cursor: pointer;
   transition-duration: var(--common-transition-duration);
 }
-#close-settings-button > svg {
+#hide-settings-button > svg {
   width: 60%;
   height: 60%;
 }

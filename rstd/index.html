@@ -11,14 +11,6 @@
 <script src="./js/rabbit-phrase.js"></script>
 <script src="./js/library.js"></script>
 <script src="./js/main.js"></script>
-<div id="lead-cell">
-  <div id="lead-panel">
-    <div id="lead-body"></div>
-    <button id="fold-lead-button">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M640 320L320 0L0 320" id="byg22QF02"></path><clipPath id="clipbKj6wnzp"><use xlink:href="#byg22QF02" opacity="1"></use></clipPath><path d="M640 640L320 320L0 640" id="c8NIUyK0D"></path><clipPath id="clipb4gFJxRiHQ"><use xlink:href="#c8NIUyK0D" opacity="1"></use></clipPath></defs><g><g><g clip-path="url(#clipbKj6wnzp)"><use xlink:href="#byg22QF02" opacity="1" fill-opacity="0" stroke-width="160" stroke-opacity="1"></use></g></g><g><g clip-path="url(#clipb4gFJxRiHQ)"><use xlink:href="#c8NIUyK0D" opacity="1" fill-opacity="0" stroke-width="160" stroke-opacity="1"></use></g></g></g></svg>
-    </button>
-  </div>
-</div>
 <div id="question-cell">
   <div class="rabbit-panel" id="question-panel">
     <div class="rabbit-body" id="question-body"></div>
@@ -57,6 +49,14 @@
     </div>
   </div>
 </div>
+<div id="lead-cell">
+  <div id="lead-panel">
+    <div id="lead-body"></div>
+    <button id="fold-lead-button">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M640 320L320 0L0 320" id="byg22QF02"></path><clipPath id="clipbKj6wnzp"><use xlink:href="#byg22QF02" opacity="1"></use></clipPath><path d="M640 640L320 320L0 640" id="c8NIUyK0D"></path><clipPath id="clipb4gFJxRiHQ"><use xlink:href="#c8NIUyK0D" opacity="1"></use></clipPath></defs><g><g><g clip-path="url(#clipbKj6wnzp)"><use xlink:href="#byg22QF02" opacity="1" fill-opacity="0" stroke-width="160" stroke-opacity="1"></use></g></g><g><g clip-path="url(#clipb4gFJxRiHQ)"><use xlink:href="#c8NIUyK0D" opacity="1" fill-opacity="0" stroke-width="160" stroke-opacity="1"></use></g></g></g></svg>
+    </button>
+  </div>
+</div>
 <div id="footer-cell">
   <div id="footer-panel">
     <div id="footer-body">
@@ -71,9 +71,10 @@
   </div>
 </div>
 <div id="settings-cell">
+  <div id="settings-background"></div>
   <div id="settings-header">
     <b><span data-string-resource-key="--settings"></span></b>
-    <button id="close-settings-button">
+    <button id="hide-settings-button">
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M600 600L40 40" id="b7TfhAnvd"></path><path d="M40 600L600 40" id="d4kgc90BU"></path></defs><g><g><g><use xlink:href="#b7TfhAnvd" opacity="1" fill-opacity="0" stroke-width="80" stroke-opacity="1"></use></g></g><g><g><use xlink:href="#d4kgc90BU" opacity="1" fill-opacity="0" stroke-width="80" stroke-opacity="1"></use></g></g></g></svg>
     </button>
   </div>
@@ -83,7 +84,7 @@
         <li>
           <b data-string-resource-key="--app-theme"></b><span>:</span>
           <button class="setting-radio" data-setting-key="app-theme" data-setting-value="light" data-string-resource-key="--light--app-theme"></button>
-          <button class="setting-radio" data-setting-key="app-theme" data-setting-value="night" data-string-resource-key="--dark--app-theme"></button>
+          <button class="setting-radio" data-setting-key="app-theme" data-setting-value="dark" data-string-resource-key="--dark--app-theme"></button>
           <button class="setting-radio" data-setting-key="app-theme" data-setting-value="auto" data-string-resource-key="--auto--app-theme"></button>
         </li>
         <li>

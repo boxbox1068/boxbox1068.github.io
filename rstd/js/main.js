@@ -1,4 +1,32 @@
 'use strict';
+const settingDefaultValues = {
+  "app-theme": "light",
+  "enable-variable-highlight": "true",
+  "enable-hint-balloon": "true",
+  "animation-duration": ".5s",
+  "voice-volume": "1",
+  "question-voice-number": "1",
+  "question-voice-rate": "1",
+  "question-voice-pitch": "1",
+  "answer-voice-number": "1",
+  "answer-voice-rate": "1",
+  "answer-voice-pitch": "1",
+  "enable-swipe-to-right": "true"
+};
+const settingControlChars = {
+  "app-theme": "a",
+  "enable-variable-highlight": "b",
+  "enable-hint-balloon": "c",
+  "animation-duration": "d",
+  "voice-volume": "e",
+  "question-voice-number": "f",
+  "question-voice-rate": "g",
+  "question-voice-pitch": "h",
+  "answer-voice-number": "i",
+  "answer-voice-rate": "j",
+  "answer-voice-pitch": "k",
+  "enable-swipe-to-right": "l"
+};
 let appLang;
 let stringResources;
 let questionPhrase;
@@ -20,184 +48,19 @@ const main = async () => {
     const key = element.getAttribute('data-string-resource-key');
     element.innerHTML = stringResources[key];
   });
-
-
-  loadSetting('app-theme', 'light');
-  loadSetting('enable-variable-highlight', 'true');
-  loadSetting('enable-hint-balloon', 'true');
-  loadSetting('animation-duration', '.5s');
-  loadSetting('voice-volume', '1');
-  loadSetting('question-voice-number', '1');
-  loadSetting('question-voice-rate', '1');
-  loadSetting('question-voice-pitch', '1');
-  loadSetting('answer-voice-number', '1');
-  loadSetting('answer-voice-rate', '1');
-  loadSetting('answer-voice-pitch', '1');
-  loadSetting('enable-swipe-to-right', 'true');
+  for (const key in settingDefaultValues) {
+    loadSetting(key, settingDefaultValues[key]);
+  }
   setSetting('enable-automatic-question-speaking', 'false');
   setSetting('enable-automatic-answer-speaking', 'false');
-  const _setActiveElement = targetElement => {
-    qsa('.active').forEach(element => {
-      element.classList.remove('active');
-    });
-    if (targetElement) {
-      targetElement.classList.add('active');
-    }
-  };
-  const _switchPanel = () => {
-    _setActiveElement(null);
-    if (getFlag('disable-operation')) {
-      return;
-    }
-    if (getFlag('show-settings')) {
-      setFlag('show-settings', false);
-    } else {
-      setFlag('fold-lead', null);
-    }
-  };
-  const _enableAutomaticSpeaking = (settingKey, noticeToSpeak) => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
-      return;
-    }
-    setSetting(settingKey, (! getSetting(settingKey, 'boolean')).toString());
-    if (getSetting(settingKey, 'boolean')) {
-      speak(noticeToSpeak, appLang, getSetting('voice-volume', 'number'));
-    } else {
-      window.speechSynthesis.cancel();
-    }
-  };
-  const _speakDrill = () => {
-    if (getFlag('disable-operation')) {
-      return;
-    }
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
-      return;
-    }
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
-      return;
-    }
-    if (getFlag('uncover-answer')) {
-      speak(
-        answerPhrase.text,
-        answerPhrase.lang,
-        getSetting('voice-volume', 'number'),
-        getSetting('answer-voice-rate', 'number'),
-        getSetting('answer-voice-pitch', 'number'),
-        getSetting('answer-voice-number', 'number')
-      );
-    } else {
-      speak(
-        questionPhrase.text,
-        questionPhrase.lang,
-        getSetting('voice-volume', 'number'),
-        getSetting('question-voice-rate', 'number'),
-        getSetting('question-voice-pitch', 'number'),
-        getSetting('question-voice-number', 'number')
-      );
-    }
-  };
-  const _playDrill = () => {
-    _setActiveElement(null);
-    if (getFlag('disable-operation')) {
-      return;
-    }
-    if (getFlag('show-settings')) {
-      setFlag('show-settings', false);
-    } else if (! getFlag('fold-lead')) {
-      setFlag('fold-lead', true);
-    } else if (getFlag('uncover-answer')) {
-      resetCard();
-    } else {
-      showAnswer();
-    }
-  };
-  const _skipDrill = () => {
-    _setActiveElement(null);
-    if (getFlag('disable-operation')) {
-      return;
-    }
-    if (getFlag('show-settings')) {
-      setFlag('show-settings', false);
-    } else if (! getFlag('fold-lead')) {
-      setFlag('fold-lead', true);
-    } else {
-      resetCard();
-    }
-  };
-  const _showSettings = () => {
-    _setActiveElement(null);
-    setFlag('show-settings', true);
-  };
-  const _visitHome = () => {
-    window.location.href = 'https://twitter.com/shikaku1068/';
-  };
-
-/*
-  const _scrollPanel = (targetPanel, scrollY) => {
-    if (! isForefrontElement(targetPanel)) {
-      return;
-    }
-    targetPanel.scrollBy(0, scrollY);
-  };
-*/
-  const _scrollPanel = (scrollY) => {
-    let targetPanel;
-    if (getFlag('show-settings')) {
-      targetPanel = qs('#settings-panel');
-    } else if (! getFlag('fold-lead')) {
-      targetPanel = qs('#lead-panel');
-    } else if (getFlag('uncover-answer')) {
-      targetPanel = qs('#answer-panel');
-    } else if (getFlag('uncover-question')) {
-      targetPanel = qs('#question-panel');
-    }
-    targetPanel.scrollBy(0, scrollY);
-  };
-  const _showHint = (goBackwards) => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
-      return;
-    }
-    let variableElements;
-    if (getFlag('uncover-answer')) {
-      variableElements = qsa('.variable');
-    } else {
-      variableElements = qsa('#question-panel .variable');
-    }
-    if (! variableElements.length) {
-      return;
-    }
-    let activeVariableElementIndex = (goBackwards ? variableElements.length : -1);
-    for (let i = 0; i < variableElements.length; i++) {
-      const currentVariableElement = variableElements[i];
-      if (currentVariableElement.classList.contains('active')) {
-        activeVariableElementIndex = i;
-      }
-    }
-    const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
-    _setActiveElement(targetVariableElement);
-  };
-  const _switchSetting = (targetSettingKey) => {
-    const currentValue = getSetting(targetSettingKey, 'string');
-    const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
-    let currentIndex = -1;
-    settingRadioElements.forEach((element, index) => {
-      if (element.getAttribute('data-setting-value') == currentValue) {
-        currentIndex = index;
-      }
-    });
-    const nextIndex = (currentIndex + 1) % settingRadioElements.length;
-    settingRadioElements.item(nextIndex).click();
-  }
-
   qs('#fold-lead-button').addEventListener('click', event => {
-    _switchPanel();
+    setFlag('fold-lead', ! getFlag('fold-lead'));
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', event => {
-    _enableAutomaticSpeaking('enable-automatic-question-speaking', stringResources['--automatic-question-speaking-enabled']);
+    toggleSetting('enable-automatic-question-speaking');
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', event => {
-    _enableAutomaticSpeaking('enable-automatic-answer-speaking', stringResources['--automatic-answer-speaking-enabled']);
+    toggleSetting('enable-automatic-answer-speaking');
   });
   qs('#speak-button').addEventListener('click', event => {
     _speakDrill();
@@ -214,12 +77,15 @@ const main = async () => {
   qs('#visit-home-button').addEventListener('click', event => {
     _visitHome();
   });
-  qs('#close-settings-button').addEventListener('click', event => {
-    _switchPanel();
-    event.stopPropagation();
+  qs('#hide-settings-button').addEventListener('click', event => {
+    _hideSettings();
   });
   qs('#settings-cell').addEventListener('click', event => {
-  }, {capture: true});
+    if (event.currentTarget != event.target) {
+      return;
+    }
+    _hideSettings();
+  });
   qsa('.setting-radio').forEach(element => {
     element.addEventListener('click', event => {
       const key = element.getAttribute('data-setting-key');
@@ -227,7 +93,6 @@ const main = async () => {
       setSetting(key, value);
     });
   });
-
   addKeyDownListener(qs('body'), 'Escape', targetKey => {
     _switchPanel();
   });
@@ -253,11 +118,22 @@ const main = async () => {
     _scrollPanel(-50);
   });
   addKeyDownListener(qs('body'), '/', targetKey => {
-    _showSettings();
+    if (getFlag('show-settings')) {
+      _hideSettings();
+    } else {
+      _showSettings();
+    }
   });
-  addKeyDownListener(qs('body'), 'a', targetKey => {
-    _switchSetting('enable-swipe-to-right');
-  });
+  for (const key in settingControlChars) {
+    addKeyDownListener(qs('body'), settingControlChars[key], targetKey => {
+      if (! getFlag('show-settings')) {
+        return;
+      }
+      _switchSetting(key);
+    });
+  }
+
+
 
 
 
@@ -273,7 +149,7 @@ const main = async () => {
   addDoubleTapListener(qs('body'), 250, () => {
     _speakDrill();
   });
-  qs('body').addEventListener('touchstart', event => {
+  qs('body').addEventListener('touchend', event => {
     _setActiveElement(event.target);
   }, {capture: true});  
   qs('body').addEventListener('mousemove', event => {
@@ -346,6 +222,158 @@ const main = async () => {
   answerPhrase = new RabbitPhrase(processedAnswerTemplate, answerLang);
   resetCard();
 };
+
+const _scrollPanel = (scrollY) => {
+  let targetPanel;
+  if (getFlag('show-settings')) {
+    targetPanel = qs('#settings-panel');
+  } else if (! getFlag('fold-lead')) {
+    targetPanel = qs('#lead-panel');
+  } else if (getFlag('uncover-answer')) {
+    targetPanel = qs('#answer-panel');
+  } else if (getFlag('uncover-question')) {
+    targetPanel = qs('#question-panel');
+  }
+  targetPanel.scrollBy(0, scrollY);
+};
+const _showHint = (goBackwards) => {
+  if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    return;
+  }
+  let variableElements;
+  if (getFlag('uncover-answer')) {
+    variableElements = qsa('.variable');
+  } else {
+    variableElements = qsa('#question-panel .variable');
+  }
+  if (! variableElements.length) {
+    return;
+  }
+  let activeVariableElementIndex = (goBackwards ? variableElements.length : -1);
+  for (let i = 0; i < variableElements.length; i++) {
+    const currentVariableElement = variableElements[i];
+    if (currentVariableElement.classList.contains('active')) {
+      activeVariableElementIndex = i;
+    }
+  }
+  const targetVariableElement = variableElements[activeVariableElementIndex + (goBackwards ? -1 : 1)];
+  _setActiveElement(targetVariableElement);
+};
+const _switchSetting = (targetSettingKey) => {
+  const currentValue = getSetting(targetSettingKey, 'string');
+  const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
+  let currentIndex = -1;
+  settingRadioElements.forEach((element, index) => {
+    if (element.getAttribute('data-setting-value') == currentValue) {
+      currentIndex = index;
+    }
+  });
+  const nextIndex = (currentIndex + 1) % settingRadioElements.length;
+  settingRadioElements.item(nextIndex).click();
+}
+
+const _setActiveElement = targetElement => {
+  qsa('.active').forEach(element => {
+    element.classList.remove('active');
+  });
+  if (targetElement) {
+    targetElement.classList.add('active');
+  }
+};
+const _switchPanel = () => {
+  _setActiveElement(null);
+  if (getFlag('disable-operation')) {
+    return;
+  }
+  if (getFlag('show-settings')) {
+    setFlag('show-settings', false);
+  } else {
+    setFlag('fold-lead', null);
+  }
+};
+const _enableAutomaticSpeaking = (settingKey, noticeToSpeak) => {
+  setSetting(settingKey, (! getSetting(settingKey, 'boolean')).toString());
+  if (getSetting(settingKey, 'boolean')) {
+    speak(noticeToSpeak, appLang, getSetting('voice-volume', 'number'));
+  } else {
+    window.speechSynthesis.cancel();
+  }
+};
+const _speakDrill = () => {
+  if (getFlag('disable-operation')) {
+    return;
+  }
+  if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    return;
+  }
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    return;
+  }
+  if (getFlag('uncover-answer')) {
+    speak(
+      answerPhrase.text,
+      answerPhrase.lang,
+      getSetting('voice-volume', 'number'),
+      getSetting('answer-voice-rate', 'number'),
+      getSetting('answer-voice-pitch', 'number'),
+      getSetting('answer-voice-number', 'number')
+    );
+  } else {
+    speak(
+      questionPhrase.text,
+      questionPhrase.lang,
+      getSetting('voice-volume', 'number'),
+      getSetting('question-voice-rate', 'number'),
+      getSetting('question-voice-pitch', 'number'),
+      getSetting('question-voice-number', 'number')
+    );
+  }
+};
+const _playDrill = () => {
+  _setActiveElement(null);
+  if (getFlag('disable-operation')) {
+    return;
+  }
+  if (getFlag('show-settings')) {
+    setFlag('show-settings', false);
+  } else if (! getFlag('fold-lead')) {
+    setFlag('fold-lead', true);
+  } else if (getFlag('uncover-answer')) {
+    resetCard();
+  } else {
+    showAnswer();
+  }
+};
+const _skipDrill = () => {
+  _setActiveElement(null);
+  if (getFlag('disable-operation')) {
+    return;
+  }
+  if (getFlag('show-settings')) {
+    setFlag('show-settings', false);
+  } else if (! getFlag('fold-lead')) {
+    setFlag('fold-lead', true);
+  } else {
+    resetCard();
+  }
+};
+const _showSettings = () => {
+  _setActiveElement(null);
+  setFlag('show-settings', true);
+};
+const _hideSettings = () => {
+  _setActiveElement(null);
+  setFlag('show-settings', false);
+}
+const _visitHome = () => {
+  window.location.href = 'https://twitter.com/shikaku1068/';
+};
+
+
+
+
+
 const resetCard = async () => {
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
     const _setHintBalloonPosition = variableElement => {
@@ -448,33 +476,5 @@ const showAnswer = async () => {
 
 */
 
-};
-const speak = (text, lang, volume, rate, pitch, voiceNumber) => {
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance();
-  utterance.text = text || '';
-  utterance.lang = lang || 'en';
-  utterance.volume = volume || 1;
-  utterance.rate = rate || 1;
-  utterance.pitch = pitch || 1;
-  const candidateVoices = [];
-  for (const voice of window.speechSynthesis.getVoices()) {
-    if (new RegExp(`^${lang}`, 'i').test(voice.lang)) {
-      candidateVoices.push(voice);
-    }
-  }
-  if (voiceNumber === undefined) {
-    voiceNumber = 1;
-  }
-  if (candidateVoices.length) {
-    let index;
-    if (voiceNumber > 0) {
-      index = (voiceNumber - 1) % candidateVoices.length;
-    } else {
-      index = Math.floor(candidateVoices.length * Math.random());
-    }
-    utterance.voice = candidateVoices[index];
-  }
-  window.speechSynthesis.speak(utterance);
 };
 window.addEventListener('DOMContentLoaded', main);
