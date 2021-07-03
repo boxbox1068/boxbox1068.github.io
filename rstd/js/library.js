@@ -33,8 +33,11 @@ const setFlag = (key, value) => {
     setFlag.listener(key, value);
   }
 };
-const getFlag = (key) => {
+const getFlag = key => {
   return qs(':root').classList.contains(key);
+}
+const toggleFlag = key => {
+  setFlag(key, ! getFlag(key));
 }
 const setSetting = (key, value) => {
   qs(':root').setAttribute(`data-${key}`, value);
@@ -120,10 +123,10 @@ const addKeyDownListener = (targetKeys, listener) => {
     });
   }, {passive: false});
 };
-const addSwipeListener = (targetElement, minValidMoveX, listener) => {
+const addSwipeListener = (minValidMoveX, listener) => {
   let firstTouch = null;
   let lastTouch = null;
-  targetElement.addEventListener('touchstart', event => {
+  qs('body').addEventListener('touchstart', event => {
     if (event.touches.length > 1) {
       firstTouch = null;
       event.preventDefault();
@@ -136,7 +139,7 @@ const addSwipeListener = (targetElement, minValidMoveX, listener) => {
     };
     lastTouch = {...firstTouch};
   }, {passive: false});
-  targetElement.addEventListener('touchmove', event => {
+  qs('body').addEventListener('touchmove', event => {
     if (! firstTouch) {
       return;
     }
@@ -153,7 +156,7 @@ const addSwipeListener = (targetElement, minValidMoveX, listener) => {
     };
     event.preventDefault();
   }, {passive: false});
-  targetElement.addEventListener('touchend', event => {
+  qs('body').addEventListener('touchend', event => {
     if (! firstTouch) {
       return;
     }
@@ -165,10 +168,10 @@ const addSwipeListener = (targetElement, minValidMoveX, listener) => {
     firstTouch = null;
   }, {passive: false});
 };
-const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
+const addDoubleTapListener = (maxValidInterval, listener) => {
   let tapCount = 0;
   let timeoutId = null;
-  targetElement.addEventListener('touchstart', event => {
+  qs('body').addEventListener('touchstart', event => {
     if (event.touches.length > 1) {
       tapCount = 0;
       event.preventDefault();
@@ -176,10 +179,10 @@ const addDoubleTapListener = (targetElement, maxValidInterval, listener) => {
     }
     tapCount++;
   }, {passive: false});
-  targetElement.addEventListener('touchmove', event => {
+  qs('body').addEventListener('touchmove', event => {
     tapCount = 0;
   });
-  targetElement.addEventListener('touchend', event => {
+  qs('body').addEventListener('touchend', event => {
     window.clearTimeout(timeoutId);
     timeoutId = window.setTimeout(() => {
       timeoutId = null;

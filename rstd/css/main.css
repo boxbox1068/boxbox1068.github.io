@@ -261,14 +261,20 @@ body > * {
   left: 100%;
 }
 .variable {
-  border-bottom: var(--hint-balloon-border-width) solid transparent;
+  --variable-border-bottom-color: transparent;
+  --hint-balloon-visibility: hidden;
+  --hint-balloon-opacity: 0;
+  border-bottom: var(--hint-balloon-border-width) solid;
+  border-bottom-color: var(--variable-border-bottom-color);
   font-weight: bold;
 }
-.variable:hover,
-.variable.active {
-  border-bottom-color: var(--hint-balloon-border-color);
+:root .variable.active,
+:root:not(.hasActiveElement) .variable:hover {
+  --variable-border-bottom-color: var(--hint-balloon-border-color);
+  --hint-balloon-visibility: visible;
+  --hint-balloon-opacity: 1;
 }
-:root[data-disable-variable-highlight="true"] {
+:root[data-enable-variable-highlight="false"] .variable {
   --variable-number-1-background-color: unset;
   --variable-number-2-background-color: unset;
   --variable-number-3-background-color: unset;
@@ -311,8 +317,8 @@ body > * {
   background-color: var(--variable-number-0-background-color);
 }
 .hint-balloon-panel {
-  visibility: hidden;
-  opacity: 0;
+  visibility: var(--hint-balloon-visibility);
+  opacity: var(--hint-balloon-opacity);
   position: fixed;
   z-index: 100;
   height: var(--hint-balloon-height);
@@ -338,11 +344,6 @@ body > * {
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-background-color);
   content: "";
-}
-.variable:hover .hint-balloon-panel,
-.variable.active .hint-balloon-panel {
-  visibility: visible;
-  opacity: 1;
 }
 .hint-balloon-body {
   display: flex;

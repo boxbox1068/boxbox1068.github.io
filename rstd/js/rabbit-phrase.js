@@ -62,7 +62,7 @@ class RabbitPhrase {
       const chosenVariableId = chosenVariableIds[variableNumber];
       const chosenVariable = variableTexts[chosenVariableId];
       if (chosenVariable && isMainVariable) {
-        return `<a class="variable" data-variable-number="${variableNumber}">${chosenVariable}</a>`;
+        return `<span class="variable" data-variable-number="${variableNumber}">${chosenVariable}</span>`;
       } else {
         return chosenVariable;
       }
