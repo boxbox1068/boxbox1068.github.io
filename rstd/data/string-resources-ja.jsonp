@@ -2,8 +2,6 @@ jsonpCallback({
   "app-title": "ねずみ算式翻訳練習帳",
   "copyright-notice-html": "<b>ねずみ算式翻訳練習帳</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
-  "--automatic-question-speaking-enabled": "問題の自動読み上げ、オン。",
-  "--automatic-answer-speaking-enabled": "答えの自動読み上げ、オン。",
   "--the-source-of-this-unit": "この単元のソース",
   "--settings": "設定",
   "--app-theme": "アプリのテーマ",
@@ -11,14 +9,6 @@ jsonpCallback({
   "--dark--app-theme": "ダーク",
   "--auto--app-theme": "自動",
 
-
-
-
-
-
-  "--enable-swipe-to-right": "右スワイプ（問題のスキップ等）",
-  "--true--enable-swipe-to-right": "有効",
-  "--false--enable-swipe-to-right": "無効",
   "--enable-variable-highlight": "可変部のハイライト",
   "--true--enable-variable-highlight": "有効",
   "--false--enable-variable-highlight": "無効",
@@ -38,16 +28,16 @@ jsonpCallback({
   "--normal--voice-volume": "標準",
 
 
-  "--question-voice-number": "問題の音声番号",
+  "--question-voice-number": "問いの音声番号",
   "--random--question-voice-number": "ランダム",
-  "--question-voice-rate": "問題の音声速度",
+  "--question-voice-rate": "問いの音声速度",
   "--low--question-voice-rate": "遅い",
   "--a-little-low--question-voice-rate": "やや遅い",
   "--normal--question-voice-rate": "標準",
   "--a-little-high--question-voice-rate": "やや速い",
   "--high--question-voice-rate": "速い",
 
-  "--question-voice-pitch": "問題の音声ピッチ",
+  "--question-voice-pitch": "問いの音声ピッチ",
   "--low--question-voice-pitch": "低い",
   "--a-little-low--question-voice-pitch": "やや低い",
   "--normal--question-voice-pitch": "標準",
@@ -68,5 +58,8 @@ jsonpCallback({
   "--a-little-low--answer-voice-pitch": "やや低い",
   "--normal--answer-voice-pitch": "標準",
   "--a-little-high--answer-voice-pitch": "やや高い",
-  "--high--answer-voice-pitch": "高い"
+  "--high--answer-voice-pitch": "高い",
+  "--enable-swipe-to-right": "右スワイプ（問題のスキップ等）",
+  "--true--enable-swipe-to-right": "有効",
+  "--false--enable-swipe-to-right": "無効",
 });

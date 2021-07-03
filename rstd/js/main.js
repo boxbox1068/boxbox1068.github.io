@@ -308,10 +308,6 @@ const main = async () => {
   answerPhrase = new RabbitPhrase(processedAnswerTemplate, answerLang);
   resetCard();
 };
-
-
-
-
 const switchActiveVariableElement = reverse => {
   let variableElements;
   if (getFlag('uncover-answer')) {
@@ -352,25 +348,6 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
   settingRadioElements.item(nextIndex).click();
 }
-const _switchPanel = () => {
-  setActiveElement(null);
-  if (getFlag('disable-operation')) {
-    return;
-  }
-  if (getFlag('show-settings')) {
-    setFlag('show-settings', false);
-  } else {
-    setFlag('fold-lead', null);
-  }
-};
-const _enableAutomaticSpeaking = (settingKey, noticeToSpeak) => {
-  setSetting(settingKey, (! getSetting(settingKey, 'boolean')).toString());
-  if (getSetting(settingKey, 'boolean')) {
-    speak(noticeToSpeak, appLang, getSetting('voice-volume', 'number'));
-  } else {
-    window.speechSynthesis.cancel();
-  }
-};
 const speakQuestion = () => {
   speak(
     questionPhrase.text,
@@ -390,75 +367,6 @@ const speakAnswer = () => {
     getSetting('answer-voice-pitch', 'number'),
     getSetting('answer-voice-number', 'number')
   );
-}
-
-
-const _speakDrill = () => {
-  if (getFlag('disable-operation')) {
-    return;
-  }
-  if (! getFlag('fold-lead') || getFlag('show-settings')) {
-    return;
-  }
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-    return;
-  }
-  if (getFlag('uncover-answer')) {
-    speak(
-      answerPhrase.text,
-      answerPhrase.lang,
-      getSetting('voice-volume', 'number'),
-      getSetting('answer-voice-rate', 'number'),
-      getSetting('answer-voice-pitch', 'number'),
-      getSetting('answer-voice-number', 'number')
-    );
-  } else {
-    speak(
-      questionPhrase.text,
-      questionPhrase.lang,
-      getSetting('voice-volume', 'number'),
-      getSetting('question-voice-rate', 'number'),
-      getSetting('question-voice-pitch', 'number'),
-      getSetting('question-voice-number', 'number')
-    );
-  }
-};
-const _playDrill = () => {
-  setActiveElement(null);
-  if (getFlag('disable-operation')) {
-    return;
-  }
-  if (getFlag('show-settings')) {
-    setFlag('show-settings', false);
-  } else if (! getFlag('fold-lead')) {
-    setFlag('fold-lead', true);
-  } else if (getFlag('uncover-answer')) {
-    resetCard();
-  } else {
-    uncoverAnswer();
-  }
-};
-const _skipDrill = () => {
-  setActiveElement(null);
-  if (getFlag('disable-operation')) {
-    return;
-  }
-  if (getFlag('show-settings')) {
-    setFlag('show-settings', false);
-  } else if (! getFlag('fold-lead')) {
-    setFlag('fold-lead', true);
-  } else {
-    resetCard();
-  }
-};
-const _showSettings = () => {
-  setActiveElement(null);
-  setFlag('show-settings', true);
-};
-const _hideSettings = () => {
-  setActiveElement(null);
-  setFlag('show-settings', false);
 }
 
 
@@ -497,9 +405,9 @@ const resetCard = async () => {
     }
     parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
     window.addEventListener('resize', _updateHintBalloonPositions);
-  }  
+  }
+  speak(null);
   setFlag('disable-operation', true);
-  window.speechSynthesis.cancel();
   setFlag('uncover-question', false);
   setFlag('uncover-answer', false);
   const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
