@@ -3,17 +3,17 @@ const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "color-theme": "light", // light|dark|auto
   "font-size": "medium", // very-small|small|medium|large|very-large
-  "enable-variable-highlight": "true", // true|false
-  "enable-hint-balloon": "true", // true|false
-  "animation-duration": "medium", // none|short|medium|long
-  "voice-volume": "medium", // very-small|small|medium
-  "question-voice-number": "1", // 1-9|0
-  "question-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast
-  "question-voice-pitch": "medium", // very-low|low|medium|high|very-high
-  "answer-voice-number": "1", // 1-9|0
-  "answer-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast
-  "answer-voice-pitch": "medium", // very-low|low|medium|high|very-high
-  "enable-swipe-to-right": "true" // true|false
+  "enable-variable-highlight": "true", // true|false => CSS
+  "enable-hint-balloon": "true", // true|false => CSS
+  "animation-duration": "medium", // none|short|medium|long => CSS
+  "voice-volume": "medium", // very-small|small|medium => JS
+  "question-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast => JS
+  "question-voice-pitch": "medium", // very-low|low|medium|high|very-high => JS
+  "question-voice-number": "1", // 1-9|0 => JS
+  "answer-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast => JS
+  "answer-voice-pitch": "medium", // very-low|low|medium|high|very-high => JS
+  "answer-voice-number": "1", // 1-9|0 => JS
+  "enable-swipe-to-right": "true" // true|false => JS
 };
 const settingControlChars = {
   "color-theme": "a",
@@ -22,12 +22,12 @@ const settingControlChars = {
   "enable-hint-balloon": "d",
   "animation-duration": "e",
   "voice-volume": "f",
-  "question-voice-number": "g",
   "question-voice-rate": "h",
   "question-voice-pitch": "i",
-  "answer-voice-number": "j",
+  "question-voice-number": "g",
   "answer-voice-rate": "k",
   "answer-voice-pitch": "l",
+  "answer-voice-number": "j",
   "enable-swipe-to-right": "m"
 };
 let appLang;
@@ -339,7 +339,7 @@ const setActiveElement = targetElement => {
   }
 };
 const switchSettingRadio = (targetSettingKey, reverse) => {
-  const currentValue = getSetting(targetSettingKey, 'string');
+  const currentValue = getSetting(targetSettingKey);
   const settingRadioElements = qsa(`[data-setting-key="${targetSettingKey}"]`);
   let currentIndex = reverse ? settingRadioElements.length : -1;
   settingRadioElements.forEach((element, index) => {
@@ -354,20 +354,20 @@ const speakQuestion = () => {
   speak(
     questionPhrase.text,
     questionPhrase.lang,
-    getSetting('voice-volume', 'number'),
-    getSetting('question-voice-rate', 'number'),
-    getSetting('question-voice-pitch', 'number'),
-    getSetting('question-voice-number', 'number')
+    getSetting('voice-volume'),
+    getSetting('question-voice-rate'),
+    getSetting('question-voice-pitch'),
+    getSetting('question-voice-number')
   );
 };
 const speakAnswer = () => {
   speak(
     answerPhrase.text,
     answerPhrase.lang,
-    getSetting('voice-volume', 'number'),
-    getSetting('answer-voice-rate', 'number'),
-    getSetting('answer-voice-pitch', 'number'),
-    getSetting('answer-voice-number', 'number')
+    getSetting('voice-volume'),
+    getSetting('answer-voice-rate'),
+    getSetting('answer-voice-pitch'),
+    getSetting('answer-voice-number')
   );
 }
 const resetCard = async () => {

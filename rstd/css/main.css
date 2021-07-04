@@ -50,7 +50,6 @@
   --common-padding: .5rem 1rem;
   --common-border-width: 2px;
   --common-line-height: 1.5em;
-  --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
@@ -68,24 +67,56 @@
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
 }
-:root[data-animation-duration="0"] *,
-:root[data-animation="0"] *:before,
-:root[data-animation="0"] *:after {
+:root[data-font-size="very-small"] {
+  --lead-body-font-size: .8rem;
+  --rabbit-body-font-size: 1rem;
+  --settings-body-font-size: .8rem;
+}
+:root[data-font-size="small"] {
+  --lead-body-font-size: .9rem;
+  --rabbit-body-font-size: 1.25rem;
+  --settings-body-font-size: .9rem;
+}
+:root[data-font-size="medium"] {
+  --lead-body-font-size: 1rem;
+  --rabbit-body-font-size: 1.5rem;
+  --settings-body-font-size: 1rem;
+}
+:root[data-font-size="large"] {
+  --lead-body-font-size: 1.15rem;
+  --rabbit-body-font-size: 1.75rem;
+  --settings-body-font-size: 1.15rem;
+}
+:root[data-font-size="very-large"] {
+  --lead-body-font-size: 1.3rem;
+  --rabbit-body-font-size: 2rem;
+  --lead-body-font-size: 1.3rem;
+}
+:root[data-enable-variable-highlight="false"] {
+  --variable-number-1-background-color: transparent;
+  --variable-number-2-background-color: transparent;
+  --variable-number-3-background-color: transparent;
+  --variable-number-4-background-color: transparent;
+  --variable-number-5-background-color: transparent;
+  --variable-number-6-background-color: transparent;
+  --variable-number-7-background-color: transparent;
+  --variable-number-8-background-color: transparent;
+  --variable-number-9-background-color: transparent;
+  --variable-number-0-background-color: transparent;
+}
+:root[data-enable-hint-balloon="false"] {
+  --hint-balloon-panel-display: none;
+}
+:root[data-animation-duration="none"] {
   --common-transition-duration: 0;
 }
-:root[data-animation-duration=".25s"] *,
-:root[data-animation=".25s"] *:before,
-:root[data-animation=".25s"] *:after {
+:root[data-animation-duration="short"] {
   --common-transition-duration: .25s;
 }
-:root[data-animation-duration=".5s"] *,
-:root[data-animation=".5s"] *:before,
-:root[data-animation=".5s"] *:after {
+:root[data-animation-duration="medium"] {
   --common-transition-duration: .5s;
 }
-:root[data-animation-duration=".75s"] *,
-:root[data-animation=".75s"] *:before,
-:root[data-animation=".75s"] *:after {
+:root[data-animation-duration="long"] {
   --common-transition-duration: .75s;
 }
 html {
@@ -238,7 +269,7 @@ body > * {
   margin: auto;
   padding: var(--common-padding);
   color: var(--main-panel-color);
-  font-size: 1.5rem;
+  font-size: var(--rabbit-body-font-size);
   line-height: var(--common-line-height);
 }
 .rabbit-cover {
@@ -276,18 +307,6 @@ body > * {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
 }
-:root[data-enable-variable-highlight="false"] .variable {
-  --variable-number-1-background-color: transparent;
-  --variable-number-2-background-color: transparent;
-  --variable-number-3-background-color: transparent;
-  --variable-number-4-background-color: transparent;
-  --variable-number-5-background-color: transparent;
-  --variable-number-6-background-color: transparent;
-  --variable-number-7-background-color: transparent;
-  --variable-number-8-background-color: transparent;
-  --variable-number-9-background-color: transparent;
-  --variable-number-0-background-color: transparent;
-}
 .variable[data-variable-number="1"] {
   background-color: var(--variable-number-1-background-color);
 }
@@ -319,6 +338,7 @@ body > * {
   background-color: var(--variable-number-0-background-color);
 }
 .hint-balloon-panel {
+  display: var(--hint-balloon-panel-display, block);
   visibility: var(--hint-balloon-visibility);
   opacity: var(--hint-balloon-opacity);
   position: fixed;
@@ -539,9 +559,6 @@ body > * {
   width: 60%;
   height: 60%;
 }
-
-
-
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
@@ -550,6 +567,7 @@ body > * {
 }
 #settings-body {
   padding: var(--common-padding);
+  font-size: 1rem;
 }
 #settings-body > ol {
   margin: 0;
