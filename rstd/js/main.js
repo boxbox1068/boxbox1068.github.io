@@ -1,8 +1,8 @@
 'use strict';
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
-  "color-theme": "light", // light|dark|auto
-  "font-size": "medium", // very-small|small|medium|large|very-large
+  "color-theme": "light", // light|dark|auto => JS
+  "font-size": "medium", // very-small|small|medium|large|very-large => CSS
   "enable-variable-highlight": "true", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
@@ -48,6 +48,15 @@ const main = async () => {
     const key = element.getAttribute('data-string-resource-key');
     element.innerHTML = stringResources[key];
   });
+  const mql = window.matchMedia('(prefers-color-scheme: dark)');
+  mql.addEventListener('change', event => {
+    if (event.matches) {
+      setFlag('prefers-dark-color-theme', true);
+    } else {
+      setFlag('prefers-dark-color-theme', false);
+    }
+  });
+  setFlag('prefers-dark-color-theme', mql.matches);
   for (const key in settingDefaultValues) {
     loadSetting(key, settingDefaultValues[key]);
   }

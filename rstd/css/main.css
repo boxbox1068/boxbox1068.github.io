@@ -1,8 +1,9 @@
-/* ------- *
- |  COLOR  |
- * ------- */
+/* ------------- *
+ |  COLOR THEME  |
+ * ------------- */
 :root {
   --common-background-color: #CFD8DC;
+  --common-background-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
   --common-color: #263238;
   --lead-panel-background-color: #C5CAE9;
   --lead-panel-color: #263238;
@@ -38,12 +39,50 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
+:root[data-color-theme="dark"],
+:root.prefers-dark-color-theme[data-color-theme="auto"] {
+  --common-background-color: #212121;
+  --common-background-image: unset;
+  --common-color: #FFF;
+  --lead-panel-background-color: #455A64;
+  --lead-panel-color: #FFF;
+  --fold-lead-button-background-color: #455A64;
+  --fold-lead-button-color: #CFD8DC;
+  --main-panel-background-color: #000C;
+  --main-panel-color: #FFF;
+  --main-cover-background-color: #37474F;
+  --main-cover-color: #455A64;
+  --control-background-color: #CFD8DC;
+  --disabled-controls-background-color: #ECEFF1;
+  --control-border-color: #546E7A;
+  --control-color: #455A64;
+  --toggle-color: #78909C;
+  --on-toggle-color: #FFC107;
+  --footer-background-color: #37474F;
+  --footer-color: #CFD8DC;
+  --settings-header-background-color: #37474F;
+  --settings-header-color: #CFD8DC;
+  --setting-radio-background-color: #ECEFF1;
+  --setting-radio-color: #455A64;
+  --variable-number-1-background-color: #EF9A9A99;
+  --variable-number-2-background-color: #90CAF999;
+  --variable-number-3-background-color: #FFF59D99;
+  --variable-number-4-background-color: #A5D6A799;
+  --variable-number-5-background-color: #CE93D899;
+  --variable-number-6-background-color: #FFCC8099;
+  --variable-number-7-background-color: #80DEEA99;
+  --variable-number-8-background-color: #F48FB199;
+  --variable-number-9-background-color: #BCAAA499;
+  --variable-number-0-background-color: #B0BEC599;
+  --hint-balloon-background-color: #FFF;
+  --hint-balloon-border-color: #607D8B;
+  --hint-balloon-color: #263238;
+}
 
 /* --------- *
  |  GENERAL  |
  * --------- */
  :root {
-  --stripes-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
   --common-font-size: 4vmin;
   --common-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
   --common-cell-border-spacing: .25rem;
@@ -68,29 +107,19 @@
   -webkit-text-size-adjust: none;
 }
 :root[data-font-size="very-small"] {
-  --lead-body-font-size: .8rem;
   --rabbit-body-font-size: 1rem;
-  --settings-body-font-size: .8rem;
 }
 :root[data-font-size="small"] {
-  --lead-body-font-size: .9rem;
   --rabbit-body-font-size: 1.25rem;
-  --settings-body-font-size: .9rem;
 }
 :root[data-font-size="medium"] {
-  --lead-body-font-size: 1rem;
   --rabbit-body-font-size: 1.5rem;
-  --settings-body-font-size: 1rem;
 }
 :root[data-font-size="large"] {
-  --lead-body-font-size: 1.15rem;
   --rabbit-body-font-size: 1.75rem;
-  --settings-body-font-size: 1.15rem;
 }
 :root[data-font-size="very-large"] {
-  --lead-body-font-size: 1.3rem;
   --rabbit-body-font-size: 2rem;
-  --lead-body-font-size: 1.3rem;
 }
 :root[data-enable-variable-highlight="false"] {
   --variable-number-1-background-color: transparent;
@@ -121,8 +150,8 @@
 }
 html {
   height: 100%;
-  background-image: var(--stripes-image);
   background-color: var(--common-background-color);
+  background-image: var(--common-background-image);
   color: var(--common-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
@@ -225,7 +254,7 @@ body > * {
   margin-bottom: var(--fold-lead-button-height);
   padding: var(--common-padding);
   color: var(--lead-panel-color);
-  font-size: 1rem;
+  font-size: var(--lead-body-font-size);
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
@@ -563,11 +592,10 @@ body > * {
   grid-area: settings-panel;
   overflow-y: auto;
   background-color: var(--common-background-color);
-  background-image: var(--stripes-image);
 }
 #settings-body {
   padding: var(--common-padding);
-  font-size: 1rem;
+  font-size: var(--settings-body-font-size);
 }
 #settings-body > ol {
   margin: 0;
