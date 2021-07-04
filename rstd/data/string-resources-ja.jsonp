@@ -1,5 +1,5 @@
 jsonpCallback({
-  "app-title": "翻訳ドリルbot",
+  "app-title": "翻訳トレーナーbot",
   "copyright-notice-html": "<b>翻訳ドリルbot</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
   "--the-source-of-this-unit": "この単元のソース",
