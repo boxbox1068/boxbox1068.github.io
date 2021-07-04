@@ -44,7 +44,7 @@ class RabbitPhrase {
     const chosenOptionIds = [];
     for (let optionCount of optionCounts) {
       if (optionCount) {
-        const chosenOptionId = temporaryPathId % optionCount;
+        const chosenOptionId = (temporaryPathId - 1) % optionCount;
         chosenOptionIds.push(chosenOptionId);
         temporaryPathId = Math.ceil(temporaryPathId / optionCount);
       } else {

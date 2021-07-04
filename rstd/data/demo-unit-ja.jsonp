@@ -5,8 +5,8 @@ jsonpCallback({
 //  "qtemp": "^[私の|君の|彼の|彼女の|私たちの|君たちの|彼らの]^^[誕生日|結婚記念日|命日]は^^^[%366-dates-ja%]^^^^[です|だった|になる]。asdfadfaあdsファファsdファsdファsdファsdファsfはsぢfはしhf橋dんフィアさsんフィさんfなsdf・sjfンァsんdfjなsjfんkじゃsんdfなjsんdfjなsjdf・jsbdfじゃbsdjファjんdfジャンsjfんさjkんdfジャンdjsfんじゃkんdfジャンsjdfなjksんdfジャンsjdkfなsfんさjんfjだsfなjkんファksjんdfjかんｓｄｆ",
 //  "atemp": "^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates-en%].",
 
-  "qtemp": "^[1|-|3]^^[A|B|C]",
-  "atemp": "^[1|-|3]^^[A|B|C]",
+  "qtemp": "^[1|2|3]^^[A|B|C]",
+  "atemp": "^[1|2|3]^^[A|B|C]",
 
 
   "qlang": "ja-JP",
