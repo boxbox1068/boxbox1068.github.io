@@ -1,32 +1,34 @@
 'use strict';
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
-  "app-theme": "light",
-  "enable-variable-highlight": "true",
-  "enable-hint-balloon": "true",
-  "animation-duration": ".5s",
-  "voice-volume": "1",
-  "question-voice-number": "1",
-  "question-voice-rate": "1",
-  "question-voice-pitch": "1",
-  "answer-voice-number": "1",
-  "answer-voice-rate": "1",
-  "answer-voice-pitch": "1",
-  "enable-swipe-to-right": "true"
+  "color-theme": "light", // light|dark|auto
+  "font-size": "medium", // very-small|small|medium|large|very-large
+  "enable-variable-highlight": "true", // true|false
+  "enable-hint-balloon": "true", // true|false
+  "animation-duration": "medium", // none|short|medium|long
+  "voice-volume": "medium", // very-small|small|medium
+  "question-voice-number": "1", // 1-9|0
+  "question-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast
+  "question-voice-pitch": "medium", // very-low|low|medium|high|very-high
+  "answer-voice-number": "1", // 1-9|0
+  "answer-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast
+  "answer-voice-pitch": "medium", // very-low|low|medium|high|very-high
+  "enable-swipe-to-right": "true" // true|false
 };
 const settingControlChars = {
-  "app-theme": "a",
-  "enable-variable-highlight": "b",
-  "enable-hint-balloon": "c",
-  "animation-duration": "d",
-  "voice-volume": "e",
-  "question-voice-number": "f",
-  "question-voice-rate": "g",
-  "question-voice-pitch": "h",
-  "answer-voice-number": "i",
-  "answer-voice-rate": "j",
-  "answer-voice-pitch": "k",
-  "enable-swipe-to-right": "l"
+  "color-theme": "a",
+  "font-size": "b",
+  "enable-variable-highlight": "c",
+  "enable-hint-balloon": "d",
+  "animation-duration": "e",
+  "voice-volume": "f",
+  "question-voice-number": "g",
+  "question-voice-rate": "h",
+  "question-voice-pitch": "i",
+  "answer-voice-number": "j",
+  "answer-voice-rate": "k",
+  "answer-voice-pitch": "l",
+  "enable-swipe-to-right": "m"
 };
 let appLang;
 let stringResources;
@@ -368,11 +370,6 @@ const speakAnswer = () => {
     getSetting('answer-voice-number', 'number')
   );
 }
-
-
-
-
-
 const resetCard = async () => {
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
     const _setHintBalloonPosition = variableElement => {

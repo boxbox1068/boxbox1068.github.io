@@ -504,7 +504,7 @@ body > * {
   left: 0;
   width: 100%;
   height: 100%;
-  transition-duration: var(--common-transition-duration);  
+  transition-duration: var(--common-transition-duration);
 }
 :root.show-settings #settings-cell {
   visibility: visible;

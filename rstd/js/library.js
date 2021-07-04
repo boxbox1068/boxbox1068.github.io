@@ -15,11 +15,6 @@ const replaceAll = (targetString, replacements) => {
   }
   return targetString;
 };
-const isForefrontElement = element => {
-  const rect = element.getClientRects()[0];
-  const forefrontElement = document.elementFromPoint(rect.x, rect.y);
-  return element.contains(forefrontElement);
-};
 const setFlag = (key, value) => {
   if (value === null) {
     value = ! qs(':root').classList.contains(key);
