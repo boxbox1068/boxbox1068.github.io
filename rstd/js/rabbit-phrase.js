@@ -6,19 +6,27 @@ class RabbitPhrase {
     this._resetCount = 0;
   }
   reset(pathIdSeed) {
-    0 <= pathIdSeed && pathIdSeed < 1 || (pathIdSeed = Math.random());
+    if (pathIdSeed < 0 || 1 <= pathIdSeed) {
+      pathIdSeed = Math.random();
+    };
     const _replaceVariableTags = (template, replacer) => {
+      template = template.replace(/(?!<\/?v[01-9]>)<.*?>/g, '');
+      template = template.replace(/<v0>([^<]*)<\/v0>/ig, (match, p1, offset, string) => {
+        const options = p1.split('|');
+        const index = Math.floor(options.length * Math.random());
+        return options[index];
+      });
       while (true) {
         const lastTemplate = template;
-        template = template.replace(/(\^+)\[([^^]*?)\]/, (match, p1, p2, offset, string) => {
-          const variableNumber = p1.length;
+        template = template.replace(/<v([1-9])>([^<]*)<\/v\1>/i, (match, p1, p2, offset, string) => {
+          const variableNumber = Number(p1);
           const optionTexts  = p2.split('|');
           for (let i = 1; i < optionTexts.length; i++) {
             if (optionTexts[i] == '-') {
               optionTexts[i] = optionTexts[i - 1];
             }
           }
-          const firstVariablePartOffset = string.indexOf('^');
+          const firstVariablePartOffset = string.match(/^.*?(?=<v[1-9]>)/i)[0].length;
           const isTopLevelVariable = firstVariablePartOffset == offset;
           return replacer(variableNumber, optionTexts, isTopLevelVariable) || '';
         });
@@ -26,6 +34,7 @@ class RabbitPhrase {
           break;
         }
       }
+      template = template.replace(/<\/?v[01-9]>/ig, '');
       return template;
     };
     const optionCounts = [];

@@ -2,11 +2,11 @@ jsonpCallback({
   //道案内
 //  question: "もし私が^[鳥|魚|犬|猫|馬]だったら^[空を自由に飛べる|海深くまで泳げる|君の匂いを嗅ぎ分けられる|一日中寝ていられる|風より速く走れる]んだけど。",
 //  answer: "If I were ^[a bird|a fish|a dog|a cat|a horse], I could ^[fly freely in the sky|swim deep in the ocean|pick up your scent|sleep all day long|run faster than wind].",
-//  "qtemp": "^[私の|君の|彼の|彼女の|私たちの|君たちの|彼らの]^^[誕生日|結婚記念日|命日]は^^^[%366-dates-ja%]^^^^[です|だった|になる]。asdfadfaあdsファファsdファsdファsdファsdファsfはsぢfはしhf橋dんフィアさsんフィさんfなsdf・sjfンァsんdfjなsjfんkじゃsんdfなjsんdfjなsjdf・jsbdfじゃbsdjファjんdfジャンsjfんさjkんdfジャンdjsfんじゃkんdfジャンsjdfなjksんdfジャンsjdkfなsfんさjんfjだsfなjkんファksjんdfjかんｓｄｆ",
-//  "atemp": "^[My|Your|His|Her|Our|Your|Their] ^^[birthday|wedding anniversary|death anniversary] ^^^^[is|was|will be] ^^^[%366-dates-en%].",
+  "qtemp": "<v0>私の|君の|彼の|彼女の|私たちの|君たちの|彼らの</v0><v1>誕生日|結婚記念日|命日</v1>は<v2>%366-dates-ja%</v2><v3>です|だった|になる</v3>。asdfadfaあdsファファsdファsdファsdファsdファsfはsぢfはしhf橋dんフィアさsんフィさんfなsdf・sjfンァsんdfjなsjfんkじゃsんdfなjsんdfjなsjdf・jsbdfじゃbsdjファjんdfジャンsjfんさjkんdfジャンdjsfんじゃkんdfジャンsjdfなjksんdfジャンsjdkfなsfんさjんfjだsfなjkんファksjんdfjかんｓｄｆ",
+  "atemp": "<v0>My|Your|His|Her|Our|Your|Their</v0> <v1>birthday|wedding anniversary|death anniversary</v1> <v3>is|was|will be</v3> <v2>%366-dates-en%</v2>.",
 
-  "qtemp": "^[1|2|3]^^[A|B|C]",
-  "atemp": "^[1|2|3]^^[A|B|C]",
+//  "qtemp": "^[1|2|3]^^[A|B|C]",
+//  "atemp": "^私は<V1>%366-dates-ja%</V1>がん&lt;ばり&gt;ました",
 
 
   "qlang": "ja-JP",
