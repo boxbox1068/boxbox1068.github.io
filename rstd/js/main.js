@@ -435,10 +435,10 @@ const resetCard = async () => {
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
-  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenVariableTexts);
+  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
-  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenVariableTexts);
+  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay / 2);
   } else {

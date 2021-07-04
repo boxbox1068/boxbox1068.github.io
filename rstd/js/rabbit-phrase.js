@@ -1,4 +1,3 @@
-
 'use strict';
 class RabbitPhrase {
   constructor(template, lang) {
@@ -8,70 +7,75 @@ class RabbitPhrase {
   }
   reset(pathIdSeed) {
     0 <= pathIdSeed && pathIdSeed < 1 || (pathIdSeed = Math.random());
-    const replaceVariableParts = (template, callback) => {
-      const path = /(\^+)\[([^^]*?)\]/;
-      const replacer = (match, p1, p2, offset, string) => {
-        const variableNumber = p1.length;
-        const variableTexts  = p2.split('|');
-        for (let i = 1; i < variableTexts.length; i++) {
-          if (variableTexts[i] == '-') {
-            variableTexts[i] = variableTexts[i - 1];
+    const _replaceVariableTags = (template, replacer) => {
+      while (true) {
+        const lastTemplate = template;
+        template = template.replace(/(\^+)\[([^^]*?)\]/, (match, p1, p2, offset, string) => {
+          const variableNumber = p1.length;
+          const optionTexts  = p2.split('|');
+          for (let i = 1; i < optionTexts.length; i++) {
+            if (optionTexts[i] == '-') {
+              optionTexts[i] = optionTexts[i - 1];
+            }
           }
+          const firstVariablePartOffset = string.indexOf('^');
+          const isTopLevelVariable = firstVariablePartOffset == offset;
+          return replacer(variableNumber, optionTexts, isTopLevelVariable) || '';
+        });
+        if (template == lastTemplate) {
+          break;
         }
-        const firstVariablePartOffset = string.indexOf('^');
-        const isMainVariable = firstVariablePartOffset == offset;
-        return callback(variableNumber, variableTexts, isMainVariable) || '';
-      };
-      while (template != (template = template.replace(path, replacer)));
+      }
       return template;
     };
-    const variableCounts = [];
-    replaceVariableParts(this._template, (variableNumber, variableTexts, isMainVariable) => {
-      const variableCount = variableTexts.length;
-      const existingVariableCount = variableCounts[variableNumber] || Infinity;
-      variableCounts[variableNumber] = Math.min(variableCount, existingVariableCount);
+    const optionCounts = [];
+    _replaceVariableTags(this._template, (variableNumber, optionTexts) => {
+      const optionCount = optionTexts.length;
+      if (optionCount < (optionCounts[variableNumber] || Infinity)) {
+        optionCounts[variableNumber] = optionCount;
+      }
     });
     let possiblePathCount = 1;
-    for (let variableCount of variableCounts) {
-      possiblePathCount *= variableCount || 1;
+    for (let optionCount of optionCounts) {
+      possiblePathCount *= optionCount || 1;
     }
     const pathId = Math.ceil(possiblePathCount * pathIdSeed);
-    let tempPathId = pathId;
-    const chosenVariableIds = [];
-    for (let variableCount of variableCounts) {
-      if (variableCount) {
-        const chosenVariableId = tempPathId % variableCount;
-        chosenVariableIds.push(chosenVariableId);
-        tempPathId = Math.ceil(tempPathId / variableCount);
+    let temporaryPathId = pathId;
+    const chosenOptionIds = [];
+    for (let optionCount of optionCounts) {
+      if (optionCount) {
+        const chosenOptionId = temporaryPathId % optionCount;
+        chosenOptionIds.push(chosenOptionId);
+        temporaryPathId = Math.ceil(temporaryPathId / optionCount);
       } else {
-        chosenVariableIds.push(undefined);
+        chosenOptionIds.push(undefined);
       }
     }
-    const chosenVariableTexts = [];
-    const text = replaceVariableParts(this._template, (variableNumber, variableTexts, isMainVariable) => {
-      const chosenVariableId = chosenVariableIds[variableNumber];
-      const chosenVariable = variableTexts[chosenVariableId];
-      if (isMainVariable && chosenVariable) {
-        const existingValidVariable = chosenVariableTexts[variableNumber];
-        chosenVariableTexts[variableNumber] = (existingValidVariable ? existingValidVariable + ' ~ ' : '') + chosenVariable;
+    const chosenOptionTexts = [];
+    const phraseText = _replaceVariableTags(this._template, (variableNumber, optionTexts, isTopLevelVariable) => {
+      const chosenOptionId = chosenOptionIds[variableNumber];
+      const chosenOptionText = optionTexts[chosenOptionId];
+      if (isTopLevelVariable && chosenOptionText) {
+        const existingText = chosenOptionTexts[variableNumber];
+        chosenOptionTexts[variableNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
       }
-      return chosenVariable;
+      return chosenOptionText;
     });
     const htmlTemplate = this._template;
-    const html = replaceVariableParts(htmlTemplate, (variableNumber, variableTexts, isMainVariable) => {
-      const chosenVariableId = chosenVariableIds[variableNumber];
-      const chosenVariable = variableTexts[chosenVariableId];
-      if (chosenVariable && isMainVariable) {
-        return `<span class="variable" data-variable-number="${variableNumber}">${chosenVariable}</span>`;
+    const phraseHtml = _replaceVariableTags(htmlTemplate, (variableNumber, optionTexts, isTopLevelVariable) => {
+      const chosenOptionId = chosenOptionIds[variableNumber];
+      const chosenOptionText = optionTexts[chosenOptionId];
+      if (chosenOptionText && isTopLevelVariable) {
+        return `<span class="variable" data-variable-number="${variableNumber}">${chosenOptionText}</span>`;
       } else {
-        return chosenVariable;
+        return chosenOptionText;
       }
     });
     this._possiblePathCount = possiblePathCount;
     this._pathId = pathId;
-    this._chosenVariableTexts = chosenVariableTexts;
-    this._text = text;
-    this._html = html;
+    this._chosenOptionTexts = chosenOptionTexts;
+    this._text = phraseText;
+    this._html = phraseHtml;
     this._resetCount++;
   }
   get possiblePathCount() {
@@ -80,8 +84,8 @@ class RabbitPhrase {
   get pathId() {
     return this._pathId;
   }
-  get chosenVariableTexts() {
-    return this._chosenVariableTexts;
+  get chosenOptionTexts() {
+    return this._chosenOptionTexts;
   }
   get text() {
     return this._text;
@@ -96,97 +100,3 @@ class RabbitPhrase {
     return this._resetCount;
   }
 }
-
-
-
-/*
-'use strict';
-class RabbitPhrase {
-  constructor(this._template, pathIdSeed) {
-    if (typeof this._template != 'string') this._template = '';
-    if (! (0 <= pathIdSeed && pathIdSeed < 1)) pathIdSeed = Math.random();
-    const replaceVariableParts = (this._template, callback) => {
-      const path = /(\^+)\[([^^]*?)\]/;
-      const replacer = (match, p1, p2, offset, string) => {
-        const variableNumber = p1.length;
-        const variableTexts  = p2.split('|');
-        for (let i = 1; i < variableTexts.length; i++) {
-          if (variableTexts[i] == '-') {
-            variableTexts[i] = variableTexts[i - 1];
-          }
-        }
-        const firstVariablePartOffset = string.indexOf('^');
-        const isMainVariable = firstVariablePartOffset == offset;
-        return callback(variableNumber, variableTexts, isMainVariable) || '';
-      };
-      while (this._template != (this._template = this._template.replace(path, replacer)));
-      return this._template;
-    };
-    const variableCounts = [];
-    replaceVariableParts(this._template, (variableNumber, variableTexts, isMainVariable) => {
-      const variableCount = variableTexts.length;
-      const existingVariableCount = variableCounts[variableNumber] || Infinity;
-      variableCounts[variableNumber] = Math.min(variableCount, existingVariableCount);
-    });
-    let possiblePathCount = 1;
-    for (let variableCount of variableCounts) {
-      possiblePathCount *= variableCount || 1;
-    }
-    const pathId = Math.ceil(possiblePathCount * pathIdSeed);
-    let tempPathId = pathId;
-    const chosenVariableIds = [];
-    for (let variableCount of variableCounts) {
-      if (variableCount) {
-        const chosenVariableId = tempPathId % variableCount;
-        chosenVariableIds.push(chosenVariableId);
-        tempPathId = Math.ceil(tempPathId / variableCount);
-      } else {
-        chosenVariableIds.push(undefined);
-      }
-    }
-    const chosenVariableTexts = [];
-    const text = replaceVariableParts(this._template, (variableNumber, variableTexts, isMainVariable) => {
-      const chosenVariableId = chosenVariableIds[variableNumber];
-      const chosenVariable = variableTexts[chosenVariableId];
-      if (isMainVariable && chosenVariable) {
-        const existingValidVariable = chosenVariableTexts[variableNumber];
-        chosenVariableTexts[variableNumber] = (existingValidVariable ? existingValidVariable + ' ~ ' : '') + chosenVariable;
-      }
-      return chosenVariable;
-    });
-    const htmlTemplate = this._template;
-    const html = replaceVariableParts(htmlTemplate, (variableNumber, variableTexts, isMainVariable) => {
-      const chosenVariableId = chosenVariableIds[variableNumber];
-      const chosenVariable = variableTexts[chosenVariableId];
-      if (chosenVariable && isMainVariable) {
-        return `<a class="variable" data-variable-number="${variableNumber}">${chosenVariable}</a>`;
-      } else {
-        return chosenVariable;
-      }
-    });
-    this._possiblePathCount = possiblePathCount;
-    this._pathId = pathId;
-    this._chosenVariableTexts = chosenVariableTexts;
-    this._text = text;
-    this._html = html;
-  }
-  reset(pathIdSeed) {
-
-  }
-  get possiblePathCount() {
-    return this._possiblePathCount;
-  }
-  get pathId() {
-    return this._pathId;
-  }
-  get chosenVariableTexts() {
-    return this._chosenVariableTexts;
-  }
-  get text() {
-    return this._text;
-  }
-  get html() {
-    return this._html;
-  }
-}
-*/
