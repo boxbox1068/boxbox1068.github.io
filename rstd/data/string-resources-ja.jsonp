@@ -1,6 +1,6 @@
 jsonpCallback({
-  "app-title": "翻訳トレーナーbot",
-  "copyright-notice-html": "<b>翻訳トレーナーbot</b> &copy; 2021 shikaku1068",
+  "app-title": "翻訳ドリルbot",
+  "copyright-notice-html": "<b>翻訳ドリルbot</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
   "--the-source-of-this-unit": "この単元のソース",
   "--settings": "設定",
@@ -14,6 +14,9 @@ jsonpCallback({
   "--font-size--medium": "標準",
   "--font-size--large": "大きい",
   "--font-size--very-large": "とても大きい",
+  "--font-family": "フォントの種類",
+  "--font-family--sans-serif": "ゴシック体（サンセリフ体）",
+  "--font-family--serif": "明朝体（セリフ体）",
   "--enable-variable-highlight": "可変部のハイライト",
   "--enable-variable-highlight--true": "有効",
   "--enable-variable-highlight--false": "無効",

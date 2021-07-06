@@ -61,20 +61,12 @@ class RabbitPhrase {
       }
     }
     const chosenOptionTexts = [];
-    const phraseText = _replaceVariableTags(this._template, (variableNumber, optionTexts, isTopLevelVariable) => {
-      const chosenOptionId = chosenOptionIds[variableNumber];
-      const chosenOptionText = optionTexts[chosenOptionId];
-      if (isTopLevelVariable && chosenOptionText) {
-        const existingText = chosenOptionTexts[variableNumber];
-        chosenOptionTexts[variableNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
-      }
-      return chosenOptionText;
-    });
-    const htmlTemplate = this._template;
-    const phraseHtml = _replaceVariableTags(htmlTemplate, (variableNumber, optionTexts, isTopLevelVariable) => {
+    const phraseHtml = _replaceVariableTags(this._template, (variableNumber, optionTexts, isTopLevelVariable) => {
       const chosenOptionId = chosenOptionIds[variableNumber];
       const chosenOptionText = optionTexts[chosenOptionId];
       if (chosenOptionText && isTopLevelVariable) {
+        const existingText = chosenOptionTexts[variableNumber];
+        chosenOptionTexts[variableNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
         return `<span class="variable" data-variable-number="${variableNumber}">${chosenOptionText}</span>`;
       } else {
         return chosenOptionText;
@@ -83,7 +75,6 @@ class RabbitPhrase {
     this._possiblePathCount = possiblePathCount;
     this._pathId = pathId;
     this._chosenOptionTexts = chosenOptionTexts;
-    this._text = phraseText;
     this._html = phraseHtml;
     this._resetCount++;
   }
@@ -97,7 +88,7 @@ class RabbitPhrase {
     return this._chosenOptionTexts;
   }
   get text() {
-    return this._text;
+    return this._html.replace(/<.*?>/g, '');
   }
   get html() {
     return this._html;

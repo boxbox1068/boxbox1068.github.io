@@ -1,8 +1,9 @@
 'use strict';
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
-  "color-theme": "light", // light|dark|auto => JS
+  "color-theme": "light", // light|dark|auto => JS + CSS
   "font-size": "medium", // very-small|small|medium|large|very-large => CSS
+  "font-family": "sans-serif", // sans-serif|serif => CSS
   "enable-variable-highlight": "true", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
@@ -359,24 +360,26 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
   settingRadioElements.item(nextIndex).click();
 }
-const speakQuestion = () => {
+const speakQuestion = interrupt => {
   speak(
     questionPhrase.text,
     questionPhrase.lang,
     getSetting('voice-volume'),
     getSetting('question-voice-rate'),
     getSetting('question-voice-pitch'),
-    getSetting('question-voice-number')
+    getSetting('question-voice-number'),
+    interrupt
   );
 };
-const speakAnswer = () => {
+const speakAnswer = interrupt => {
   speak(
     answerPhrase.text,
     answerPhrase.lang,
     getSetting('voice-volume'),
     getSetting('answer-voice-rate'),
     getSetting('answer-voice-pitch'),
-    getSetting('answer-voice-number')
+    getSetting('answer-voice-number'),
+    interrupt
   );
 }
 const resetCard = async () => {
@@ -450,7 +453,7 @@ const resetCard = async () => {
   }
   setFlag('disable-operation', false);
   if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-    speakQuestion();
+    speakQuestion(true);
   }
 };
 const uncoverAnswer = async () => {
@@ -464,7 +467,7 @@ const uncoverAnswer = async () => {
   }
   setFlag('disable-operation', false);
   if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-    speakAnswer();
+    speakAnswer(true);
   }
 };
 window.addEventListener('DOMContentLoaded', main);

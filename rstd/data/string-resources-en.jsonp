@@ -1,6 +1,6 @@
 jsonpCallback({
-  "app-title": "Translation Trainer Bot",
-  "copyright-notice-html": "<b>Translation Trainer Bot</b> &copy; 2021 shikaku1068",
+  "app-title": "Translation Drills Bot",
+  "copyright-notice-html": "<b>Translation Drills Bot</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",
@@ -14,6 +14,9 @@ jsonpCallback({
   "--font-size--medium": "Medium",
   "--font-size--large": "Large",
   "--font-size--very-large": "Very large",
+  "--font-family": "Font family",
+  "--font-family--sans-serif": "Sans serif",
+  "--font-family--serif": "Serif",
   "--enable-variable-highlight": "Enable variable highlight",
   "--enable-variable-highlight--true": "True",
   "--enable-variable-highlight--false": "False",

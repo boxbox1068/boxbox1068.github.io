@@ -3,7 +3,6 @@
  * ------------- */
 :root {
   --common-background-color: #CFD8DC;
-  --common-background-image: repeating-linear-gradient(90deg, #FFF0 0px, #FFF6 4px, #FFF0 8px);
   --common-color: #263238;
   --lead-panel-background-color: #C5CAE9;
   --lead-panel-color: #263238;
@@ -42,7 +41,6 @@
 :root[data-color-theme="dark"],
 :root.prefers-dark-color-theme[data-color-theme="auto"] {
   --common-background-color: #212121;
-  --common-background-image: unset;
   --common-color: #FFF;
   --lead-panel-background-color: #455A64;
   --lead-panel-color: #FFF;
@@ -84,7 +82,7 @@
  * --------- */
  :root {
   --common-font-size: 4vmin;
-  --common-font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Yu Gothic", YuGothic, Verdana, Meiryo, sans-serif;
+  --common-font-family: font-family: 'Helvetica Neue', 'Helvetica', 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic Medium', Meiryo, sans-serif;
   --common-cell-border-spacing: .25rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 2px;
@@ -105,6 +103,12 @@
   touch-action: pan-y;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
+}
+:root[data-font-family="sans-serif"] {
+  --rabbit-body-font-family: inherit;
+}
+:root[data-font-family="serif"] {
+  --rabbit-body-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
 }
 :root[data-font-size="very-small"] {
   --rabbit-body-font-size: 1rem;
@@ -151,7 +155,6 @@
 html {
   height: 100%;
   background-color: var(--common-background-color);
-  background-image: var(--common-background-image);
   color: var(--common-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
@@ -170,7 +173,7 @@ button {
 :root:not(.disable-operation) button:hover,
 :root:not(.disable-operation) button:hover::before,
 :root:not(.disable-operation) button:hover::after {
-  background-image: linear-gradient(#FFF2,#FFF2);
+  background-image: linear-gradient(#FFF2, #FFF2);
 }
 button > svg {
   width: 75%;
@@ -255,6 +258,7 @@ body > * {
   padding: var(--common-padding);
   color: var(--lead-panel-color);
   font-size: var(--lead-body-font-size);
+  font-family: var(--rabbit-body-font-family);
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
@@ -299,6 +303,7 @@ body > * {
   padding: var(--common-padding);
   color: var(--main-panel-color);
   font-size: var(--rabbit-body-font-size);
+  font-family: var(--rabbit-body-font-family);
   line-height: var(--common-line-height);
 }
 .rabbit-cover {

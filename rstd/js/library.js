@@ -198,10 +198,13 @@ const addDoubleTapListener = (maxValidInterval, listener) => {
     }
   }, {passive: false});
 };
-const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber) => {
+const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber, interrupt) => {
   const isSpeaking = window.speechSynthesis.speaking;
   window.speechSynthesis.cancel();
   if (! text) {
+    return;
+  }
+  if (isSpeaking && ! interrupt) {
     return;
   }
   const utterance = new SpeechSynthesisUtterance();
