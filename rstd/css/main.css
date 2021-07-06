@@ -82,7 +82,7 @@
  * --------- */
  :root {
   --common-font-size: 4vmin;
-  --common-font-family: font-family: 'Helvetica Neue', 'Helvetica', 'Hiragino Kaku Gothic ProN', YuGothic, 'Yu Gothic Medium', Meiryo, sans-serif;
+  --common-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
   --common-cell-border-spacing: .25rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 2px;
@@ -152,9 +152,25 @@
 :root[data-animation-duration="long"] {
   --common-transition-duration: .75s;
 }
+
+
+
+
 html {
   height: 100%;
   background-color: var(--common-background-color);
+
+
+  background-image: linear-gradient(90deg, #FFF0 50%, #FFF2 50%);
+background-size: 8px 8px;
+
+/*
+background-color: #fff;
+  background-image:
+    radial-gradient(#7bded9 30%, transparent 30%);
+  background-size: 20px 20px;
+*/
+
   color: var(--common-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
@@ -317,7 +333,7 @@ body > * {
   height: 100%;
   background-color: var(--main-cover-background-color);
   color: var(--main-cover-color);
-  font-weight: bold;
+  font-weight: 600;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
 }
@@ -333,7 +349,7 @@ body > * {
   --hint-balloon-opacity: 0;
   border-bottom: var(--hint-balloon-border-width) solid;
   border-bottom-color: var(--variable-border-bottom-color);
-  font-weight: bold;
+  font-weight: 600;
 }
 :root.fold-lead:not(.show-settings) .variable.active,
 :root.fold-lead:not(.show-settings):not(.hasActiveElement) .variable:hover {
@@ -381,7 +397,7 @@ body > * {
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
   color: var(--hint-balloon-color);
-  font-weight: bold;
+  font-weight: 600;
 }
 .hint-balloon-panel::before {
   display: block;
@@ -476,7 +492,7 @@ body > * {
   left: 0;
   width: 100%;
   height: calc(100% - var(--this-toggle-height));
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1rem;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
