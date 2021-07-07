@@ -40,7 +40,7 @@
 }
 :root[data-color-theme="dark"],
 :root.prefers-dark-color-theme[data-color-theme="auto"] {
-  --common-background-color: #212121;
+  --common-background-color: #000;
   --common-color: #FFF;
   --lead-panel-background-color: #455A64;
   --lead-panel-color: #FFF;
@@ -77,6 +77,53 @@
   --hint-balloon-color: #263238;
 }
 
+/* ------ *
+ |  SKIN  |
+ * ------ */
+:root[data-skin="vertical-thin-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 8px 8px;
+}
+:root[data-skin="vertical-thick-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 16px 16px;
+}
+:root[data-skin="horizontal-thin-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 8px 8px;
+}
+:root[data-skin="horizontal-thick-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 16px 16px;
+}
+:root[data-skin="small-dots"] body {
+  background-image: radial-gradient(#80808016 30%, transparent 30%);
+  background-size: 16px 16px;
+}
+:root[data-skin="middle-dots"] body {
+  background-image: radial-gradient(#80808016 30%, transparent 30%);
+  background-size: 32px 32px;
+}
+:root[data-skin="large-dots"] body {
+  background-image: radial-gradient(#80808016 30%, transparent 30%);
+  background-size: 48px 48px;
+}
+:root[data-skin="small-checks"] body {
+  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 8px 8px;
+}
+:root[data-skin="middle-checks"] body {
+  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 16px 16px;
+}
+:root[data-skin="checks"] body {
+  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
+  background-size: 32px 32px;
+}
+body {
+  background-image: radial-gradient(#80808016 30%, transparent 30%);
+  background-size: 32px 32px;
+}
 /* --------- *
  |  GENERAL  |
  * --------- */
@@ -161,15 +208,7 @@ html {
   background-color: var(--common-background-color);
 
 
-  background-image: linear-gradient(90deg, #FFF0 50%, #FFF2 50%);
-background-size: 8px 8px;
 
-/*
-background-color: #fff;
-  background-image:
-    radial-gradient(#7bded9 30%, transparent 30%);
-  background-size: 20px 20px;
-*/
 
   color: var(--common-color);
   font-size: var(--common-font-size);
