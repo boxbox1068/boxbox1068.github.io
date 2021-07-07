@@ -1,6 +1,6 @@
-/* ------------- *
- |  COLOR THEME  |
- * ------------- */
+/* -------------- *
+ |  COLOR SCHEME  |
+ * -------------- */
 :root {
   --common-background-color: #CFD8DC;
   --common-color: #263238;
@@ -39,8 +39,8 @@
   --hint-balloon-border-color: #607D8B;
   --hint-balloon-color: #263238;
 }
-:root[data-color-theme="dark"],
-:root.prefers-dark-color-theme[data-color-theme="auto"] {
+:root[data-color-scheme="dark"],
+:root.prefers-dark-color-scheme[data-color-scheme="auto"] {
   --common-background-color: #000;
   --common-color: #FFF;
   --background-patterns-color: #0001;
@@ -79,62 +79,146 @@
   --hint-balloon-color: #263238;
 }
 
+/* -------------- *
+ *  ACCENT COLOR  |
+ * ---------------*/
+:root[data-accent-color="red"] {
+  --lead-panel-background-color: #EF9A9A;
+  --main-cover-background-color: #F44336;
+}
+:root[data-accent-color="pink"] {
+  --lead-panel-background-color: #F48FB1;
+  --main-cover-background-color: #E91E63;
+}
+:root[data-accent-color="purple"] {
+  --lead-panel-background-color: #CE93D8;
+  --main-cover-background-color: #9C27B0;
+}
+:root[data-accent-color="deep-purple"] {
+  --lead-panel-background-color: #B39DDB;
+  --main-cover-background-color: #673AB7;
+}
+:root[data-accent-color="indigo"] {
+  --lead-panel-background-color: #9FA8DA;
+  --main-cover-background-color: #3F51B5;
+}
+:root[data-accent-color="blue"] {
+  --lead-panel-background-color: #90CAF9;
+  --main-cover-background-color: #2196F3;
+}
+:root[data-accent-color="light-blue"] {
+  --lead-panel-background-color: #81D4FA;
+  --main-cover-background-color: #03A9F4;
+}
+:root[data-accent-color="cyan"] {
+  --lead-panel-background-color: #80DEEA;
+  --main-cover-background-color: #00BCD4;
+}
+:root[data-accent-color="teal"] {
+  --lead-panel-background-color: #80CBC4;
+  --main-cover-background-color: #009688;
+}
+:root[data-accent-color="green"] {
+  --lead-panel-background-color: #A5D6A7;
+  --main-cover-background-color: #4CAF50;
+}
+:root[data-accent-color="light-green"] {
+  --lead-panel-background-color: #C5E1A5;
+  --main-cover-background-color: #8BC34A;
+}
+:root[data-accent-color="lime"] {
+  --lead-panel-background-color: #E6EE9C;
+  --main-cover-background-color: #CDDC39;
+}
+:root[data-accent-color="yellow"] {
+  --lead-panel-background-color: #FFF59D;
+  --main-cover-background-color: #FFEB3B;
+}
+:root[data-accent-color="amber"] {
+  --lead-panel-background-color: #FFE082;
+  --main-cover-background-color: #FFC107;
+}
+:root[data-accent-color="orange"] {
+  --lead-panel-background-color: #FFCC80;
+  --main-cover-background-color: #FF9800;
+}
+:root[data-accent-color="deep-orange"] {
+  --lead-panel-background-color: #FFAB91;
+  --main-cover-background-color: #FF5722;
+}
+:root[data-accent-color="brown"] {
+  --lead-panel-background-color: #BCAAA4;
+  --main-cover-background-color: #795548;
+}
+:root[data-accent-color="grey"] {
+  --lead-panel-background-color: #EEEEEE;
+  --main-cover-background-color: #9E9E9E;
+}
+:root[data-accent-color="deep-grey"] {
+  --lead-panel-background-color: #B0BEC5;
+  --main-cover-background-color: #607D8B;
+}
+
 /* --------------------- *
  |  BACKGROUND PATTERNS  |
  * --------------------- */
-:root[data-background-patterns="horizontal-thin-stripe"] body {
-  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 8px 8px;
+:root[data-background-patterns="horizontal-thin-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 8px 8px;
 }
-:root[data-background-patterns="horizontal-medium-stripe"] body {
-  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 16px 16px;
+:root[data-background-patterns="horizontal-medium-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="horizontal-thick-stripe"] body {
-  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 32px 32px;
+:root[data-background-patterns="horizontal-thick-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="vertical-thin-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 8px 8px;
+:root[data-background-patterns="vertical-thin-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 8px 8px;
 }
-:root[data-background-patterns="vertical-medium-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 16px 16px;
+:root[data-background-patterns="vertical-medium-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="vertical-thick-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 32px 32px;
+:root[data-background-patterns="vertical-thick-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="small-checks"] body {
-  background-image:
+:root[data-background-patterns="small-checks"] {
+  --body-background-image:
     linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
     linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 16px 16px;
+  --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="medium-checks"] body {
-  background-image:
+:root[data-background-patterns="medium-checks"] {
+  --body-background-image:
     linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
     linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 24px 24px;
+  --body-background-size: 24px 24px;
 }
-:root[data-background-patterns="large-checks"] body {
-  background-image:
+:root[data-background-patterns="large-checks"] {
+  --body-background-image:
     linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
     linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  background-size: 32px 32px;
+  --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="small-dots"] body {
-  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
-  background-size: 16px 16px;
+:root[data-background-patterns="small-dots"] {
+  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+  --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="medium-dots"] body {
-  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
-  background-size: 24px 24px;
+:root[data-background-patterns="medium-dots"] {
+  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+  --body-background-size: 24px 24px;
 }
-:root[data-background-patterns="large-dots"] body {
-  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
-  background-size: 32px 32px;
+:root[data-background-patterns="large-dots"] {
+  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+  --body-background-size: 32px 32px;
+}
+body {
+  background-image: var(--body-background-image);
+  background-size: var(--body-background-size);
 }
 
 /* --------- *
@@ -384,7 +468,7 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: var(--main-cover-background-color);
-  color: var(--main-cover-color);
+  color: #FFF1;
   font-weight: 600;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);

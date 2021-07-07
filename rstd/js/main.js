@@ -1,7 +1,8 @@
 'use strict';
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
-  "color-theme": "light", // light|dark|auto => JS + CSS
+  "color-scheme": "light", // light|dark|auto => JS + CSS
+  "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|grey|blue-grey => CSS
   "background-patterns": "horizontal-thin-stripe", // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
   "font-size": "medium", // very-small|small|medium|large|very-large => CSS
   "font-family": "sans-serif", // sans-serif|serif => CSS
@@ -18,7 +19,8 @@ const settingDefaultValues = {
   "enable-swipe-to-right": "true" // true|false => JS
 };
 const settingControlChars = {
-  "color-theme": "a",
+  "color-scheme": "a",
+  "accent-color": "b",
   "background-patterns": "b",
   "font-size": "c",
   "enable-variable-highlight": "d",
@@ -54,12 +56,12 @@ const main = async () => {
   const mql = window.matchMedia('(prefers-color-scheme: dark)');
   mql.addEventListener('change', event => {
     if (event.matches) {
-      setFlag('prefers-dark-color-theme', true);
+      setFlag('prefers-dark-color-scheme', true);
     } else {
-      setFlag('prefers-dark-color-theme', false);
+      setFlag('prefers-dark-color-scheme', false);
     }
   });
-  setFlag('prefers-dark-color-theme', mql.matches);
+  setFlag('prefers-dark-color-scheme', mql.matches);
   for (const key in settingDefaultValues) {
     loadSetting(key, settingDefaultValues[key]);
   }
