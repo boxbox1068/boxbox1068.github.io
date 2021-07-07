@@ -154,7 +154,7 @@
   --lead-panel-background-color: #EEEEEE;
   --main-cover-background-color: #9E9E9E;
 }
-:root[data-accent-color="deep-grey"] {
+:root[data-accent-color="blue-grey"] {
   --lead-panel-background-color: #B0BEC5;
   --main-cover-background-color: #607D8B;
 }

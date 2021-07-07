@@ -26,7 +26,7 @@ jsonpCallback({
   "--accent-color--orange": "Orange",
   "--accent-color--deep-orange": "Deep Orange",
   "--accent-color--brown": "Brown",
-  "--accent-color--grey": "Brey",
+  "--accent-color--grey": "Grey",
   "--accent-color--blue-grey": "Blue grey",
   "--background-patterns": "Background patterns",
   "--background-patterns--none": "none",
