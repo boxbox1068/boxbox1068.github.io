@@ -80,113 +80,132 @@
   </div>
   <div id="settings-panel">
     <div id="settings-body">
-      <ol>
-        <li>
-          <b data-string-resource-key="--color-theme"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="color-theme" data-setting-value="light" data-string-resource-key="--color-theme--light"></button>
-          <button class="setting-radio" data-setting-key="color-theme" data-setting-value="dark" data-string-resource-key="--color-theme--dark"></button>
-          <button class="setting-radio" data-setting-key="color-theme" data-setting-value="auto" data-string-resource-key="--color-theme--auto"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--font-size"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="font-size" data-setting-value="very-small" data-string-resource-key="--font-size--very-small"></button>
-          <button class="setting-radio" data-setting-key="font-size" data-setting-value="small" data-string-resource-key="--font-size--small"></button>
-          <button class="setting-radio" data-setting-key="font-size" data-setting-value="medium" data-string-resource-key="--font-size--medium"></button>
-          <button class="setting-radio" data-setting-key="font-size" data-setting-value="large" data-string-resource-key="--font-size--large"></button>
-          <button class="setting-radio" data-setting-key="font-size" data-setting-value="very-large" data-string-resource-key="--font-size--very-large"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--font-family"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="font-family" data-setting-value="sans-serif" data-string-resource-key="--font-family--sans-serif"></button>
-          <button class="setting-radio" data-setting-key="font-family" data-setting-value="serif" data-string-resource-key="--font-family--serif"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--enable-variable-highlight"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="true" data-string-resource-key="--enable-variable-highlight--true"></button>
-          <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="false" data-string-resource-key="--enable-variable-highlight--false"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--enable-hint-balloon"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="true" data-string-resource-key="--enable-hint-balloon--true"></button>
-          <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="false" data-string-resource-key="--enable-hint-balloon--false"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--animation-duration"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="none" data-string-resource-key="--animation-duration--none"></button>
-          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="short" data-string-resource-key="--animation-duration--short"></button>
-          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="medium" data-string-resource-key="--animation-duration--medium"></button>
-          <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="long" data-string-resource-key="--animation-duration--long"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--voice-volume"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="very-soft" data-string-resource-key="--voice-volume--very-soft"></span></span>
-          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="soft" data-string-resource-key="--voice-volume--soft"></span></span>
-          <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="medium"></button><span data-string-resource-key="--voice-volume--medium"></span></span>
-        </li>
-        <li>
-          <b data-string-resource-key="--question-voice-rate"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="very-slow" data-string-resource-key="--question-voice-rate--very-slow"></button>
-          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="slow" data-string-resource-key="--question-voice-rate--slow"></button>
-          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="medium" data-string-resource-key="--question-voice-rate--medium"></button>
-          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="fast" data-string-resource-key="--question-voice-rate--fast"></button>
-          <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="very-fast" data-string-resource-key="--question-voice-rate--very-fast"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--question-voice-pitch"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="very-low" data-string-resource-key="--question-voice-pitch--very-low"></button>
-          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="low" data-string-resource-key="--question-voice-pitch--low"></button>
-          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="medium" data-string-resource-key="--question-voice-pitch--medium"></button>
-          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="high" data-string-resource-key="--question-voice-pitch--high"></button>
-          <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="very-high" data-string-resource-key="--question-voice-pitch--very-high"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--question-voice-number"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="1">1</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="2">2</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="3">3</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="4">4</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="5">5</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="6">6</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="7">7</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="8">8</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="9">9</button>
-          <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0" data-string-resource-key="--question-voice-number--random"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--answer-voice-rate"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="very-slow" data-string-resource-key="--answer-voice-rate--very-slow"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="slow" data-string-resource-key="--answer-voice-rate--slow"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="medium" data-string-resource-key="--answer-voice-rate--medium"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="fast" data-string-resource-key="--answer-voice-rate--fast"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="very-fast" data-string-resource-key="--answer-voice-rate--very-fast"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--answer-voice-pitch"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="very-low" data-string-resource-key="--answer-voice-pitch--very-low"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="low" data-string-resource-key="--answer-voice-pitch--low"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="medium" data-string-resource-key="--answer-voice-pitch--medium"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="high" data-string-resource-key="--answer-voice-pitch--high"></button>
-          <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="very-high" data-string-resource-key="--answer-voice-pitch--very-high"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--answer-voice-number"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="1">1</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="2">2</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="3">3</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="4">4</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="5">5</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="6">6</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="7">7</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="8">8</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="9">9</button>
-          <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0" data-string-resource-key="--answer-voice-number--random"></button>
-        </li>
-        <li>
-          <b data-string-resource-key="--enable-swipe-to-right"></b><span>:</span>
-          <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="true" data-string-resource-key="--enable-swipe-to-right--true"></button>
-          <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="false" data-string-resource-key="--enable-swipe-to-right--false"></button>
-        </li>
-      </ol>
+      <div class="setting-category">外観</div>
+      <div class="setting-item">
+        <b data-string-resource-key="--color-theme"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="color-theme" data-setting-value="light" data-string-resource-key="--color-theme--light"></button>
+        <button class="setting-radio" data-setting-key="color-theme" data-setting-value="dark" data-string-resource-key="--color-theme--dark"></button>
+        <button class="setting-radio" data-setting-key="color-theme" data-setting-value="auto" data-string-resource-key="--color-theme--auto"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--background-patterns"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="none" data-string-resource-key="--background-patterns--none"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="horizontal-thin-stripe" data-string-resource-key="--background-patterns--horizontal-thin-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="horizontal-medium-stripe" data-string-resource-key="--background-patterns--horizontal-medium-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="horizontal-thick-stripe" data-string-resource-key="--background-patterns--horizontal-thick-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="vertical-thin-stripe" data-string-resource-key="--background-patterns--vertical-thin-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="vertical-medium-stripe" data-string-resource-key="--background-patterns--vertical-medium-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="vertical-thick-stripe" data-string-resource-key="--background-patterns--vertical-thick-stripe"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="small-checks" data-string-resource-key="--background-patterns--small-checks"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="medium-checks" data-string-resource-key="--background-patterns--medium-checks"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="large-checks" data-string-resource-key="--background-patterns--large-checks"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="small-dots" data-string-resource-key="--background-patterns--small-dots"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="medium-dots" data-string-resource-key="--background-patterns--medium-dots"></button>
+        <button class="setting-radio" data-setting-key="background-patterns" data-setting-value="large-dots" data-string-resource-key="--background-patterns--large-dots"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--font-size"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="font-size" data-setting-value="very-small" data-string-resource-key="--font-size--very-small"></button>
+        <button class="setting-radio" data-setting-key="font-size" data-setting-value="small" data-string-resource-key="--font-size--small"></button>
+        <button class="setting-radio" data-setting-key="font-size" data-setting-value="medium" data-string-resource-key="--font-size--medium"></button>
+        <button class="setting-radio" data-setting-key="font-size" data-setting-value="large" data-string-resource-key="--font-size--large"></button>
+        <button class="setting-radio" data-setting-key="font-size" data-setting-value="very-large" data-string-resource-key="--font-size--very-large"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--font-family"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="font-family" data-setting-value="sans-serif" data-string-resource-key="--font-family--sans-serif"></button>
+        <button class="setting-radio" data-setting-key="font-family" data-setting-value="serif" data-string-resource-key="--font-family--serif"></button>
+      </div>
+      <div class="setting-category">ドリル</div>
+      <div class="setting-item">
+        <b data-string-resource-key="--enable-variable-highlight"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="true" data-string-resource-key="--enable-variable-highlight--true"></button>
+        <button class="setting-radio" data-setting-key="enable-variable-highlight" data-setting-value="false" data-string-resource-key="--enable-variable-highlight--false"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--enable-hint-balloon"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="true" data-string-resource-key="--enable-hint-balloon--true"></button>
+        <button class="setting-radio" data-setting-key="enable-hint-balloon" data-setting-value="false" data-string-resource-key="--enable-hint-balloon--false"></button>
+      </div>
+      <div class="setting-category">アニメ</div>
+      <div class="setting-item">
+        <b data-string-resource-key="--animation-duration"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="none" data-string-resource-key="--animation-duration--none"></button>
+        <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="short" data-string-resource-key="--animation-duration--short"></button>
+        <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="medium" data-string-resource-key="--animation-duration--medium"></button>
+        <button class="setting-radio" data-setting-key="animation-duration" data-setting-value="long" data-string-resource-key="--animation-duration--long"></button>
+      </div>
+      <div class="setting-category">音声</div>
+      <div class="setting-item">
+        <b data-string-resource-key="--voice-volume"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="very-soft" data-string-resource-key="--voice-volume--very-soft"></span></span>
+        <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="soft" data-string-resource-key="--voice-volume--soft"></span></span>
+        <button class="setting-radio" data-setting-key="voice-volume" data-setting-value="medium"></button><span data-string-resource-key="--voice-volume--medium"></span></span>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--question-voice-rate"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="very-slow" data-string-resource-key="--question-voice-rate--very-slow"></button>
+        <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="slow" data-string-resource-key="--question-voice-rate--slow"></button>
+        <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="medium" data-string-resource-key="--question-voice-rate--medium"></button>
+        <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="fast" data-string-resource-key="--question-voice-rate--fast"></button>
+        <button class="setting-radio" data-setting-key="question-voice-rate" data-setting-value="very-fast" data-string-resource-key="--question-voice-rate--very-fast"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--question-voice-pitch"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="very-low" data-string-resource-key="--question-voice-pitch--very-low"></button>
+        <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="low" data-string-resource-key="--question-voice-pitch--low"></button>
+        <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="medium" data-string-resource-key="--question-voice-pitch--medium"></button>
+        <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="high" data-string-resource-key="--question-voice-pitch--high"></button>
+        <button class="setting-radio" data-setting-key="question-voice-pitch" data-setting-value="very-high" data-string-resource-key="--question-voice-pitch--very-high"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--question-voice-number"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="1">1</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="2">2</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="3">3</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="4">4</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="5">5</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="6">6</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="7">7</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="8">8</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="9">9</button>
+        <button class="setting-radio" data-setting-key="question-voice-number" data-setting-value="0" data-string-resource-key="--question-voice-number--random"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--answer-voice-rate"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="very-slow" data-string-resource-key="--answer-voice-rate--very-slow"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="slow" data-string-resource-key="--answer-voice-rate--slow"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="medium" data-string-resource-key="--answer-voice-rate--medium"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="fast" data-string-resource-key="--answer-voice-rate--fast"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-rate" data-setting-value="very-fast" data-string-resource-key="--answer-voice-rate--very-fast"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--answer-voice-pitch"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="very-low" data-string-resource-key="--answer-voice-pitch--very-low"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="low" data-string-resource-key="--answer-voice-pitch--low"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="medium" data-string-resource-key="--answer-voice-pitch--medium"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="high" data-string-resource-key="--answer-voice-pitch--high"></button>
+        <button class="setting-radio" data-setting-key="answer-voice-pitch" data-setting-value="very-high" data-string-resource-key="--answer-voice-pitch--very-high"></button>
+      </div>
+      <div class="setting-item">
+        <b data-string-resource-key="--answer-voice-number"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="1">1</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="2">2</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="3">3</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="4">4</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="5">5</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="6">6</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="7">7</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="8">8</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="9">9</button>
+        <button class="setting-radio" data-setting-key="answer-voice-number" data-setting-value="0" data-string-resource-key="--answer-voice-number--random"></button>
+      </div>
+      <div class="setting-category">操作</div>
+      <div class="setting-item">
+        <b data-string-resource-key="--enable-swipe-to-right"></b><span>:</span>
+        <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="true" data-string-resource-key="--enable-swipe-to-right--true"></button>
+        <button class="setting-radio" data-setting-key="enable-swipe-to-right" data-setting-value="false" data-string-resource-key="--enable-swipe-to-right--false"></button>
+      </div>
     </div>
   </div>
 </div>

@@ -4,6 +4,7 @@
 :root {
   --common-background-color: #CFD8DC;
   --common-color: #263238;
+  --background-patterns-color: #0001;
   --lead-panel-background-color: #C5CAE9;
   --lead-panel-color: #263238;
   --fold-lead-button-background-color: #455A64;
@@ -42,6 +43,7 @@
 :root.prefers-dark-color-theme[data-color-theme="auto"] {
   --common-background-color: #000;
   --common-color: #FFF;
+  --background-patterns-color: #0001;
   --lead-panel-background-color: #455A64;
   --lead-panel-color: #FFF;
   --fold-lead-button-background-color: #455A64;
@@ -77,53 +79,64 @@
   --hint-balloon-color: #263238;
 }
 
-/* ------ *
- |  SKIN  |
- * ------ */
-:root[data-skin="vertical-thin-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+/* --------------------- *
+ |  BACKGROUND PATTERNS  |
+ * --------------------- */
+:root[data-background-patterns="horizontal-thin-stripe"] body {
+  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 8px 8px;
 }
-:root[data-skin="vertical-thick-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+:root[data-background-patterns="horizontal-medium-stripe"] body {
+  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 16px 16px;
 }
-:root[data-skin="horizontal-thin-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+:root[data-background-patterns="horizontal-thick-stripe"] body {
+  background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  background-size: 32px 32px;
+}
+:root[data-background-patterns="vertical-thin-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 8px 8px;
 }
-:root[data-skin="horizontal-thick-stripe"] body {
-  background-image: linear-gradient(90deg, transparent 50%, #80808016 50%);
+:root[data-background-patterns="vertical-medium-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 16px 16px;
 }
-:root[data-skin="small-dots"] body {
-  background-image: radial-gradient(#80808016 30%, transparent 30%);
+:root[data-background-patterns="vertical-thick-stripe"] body {
+  background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  background-size: 32px 32px;
+}
+:root[data-background-patterns="small-checks"] body {
+  background-image:
+    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
+    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 16px 16px;
 }
-:root[data-skin="middle-dots"] body {
-  background-image: radial-gradient(#80808016 30%, transparent 30%);
+:root[data-background-patterns="medium-checks"] body {
+  background-image:
+    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
+    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  background-size: 24px 24px;
+}
+:root[data-background-patterns="large-checks"] body {
+  background-image:
+    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
+    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   background-size: 32px 32px;
 }
-:root[data-skin="large-dots"] body {
-  background-image: radial-gradient(#80808016 30%, transparent 30%);
-  background-size: 48px 48px;
-}
-:root[data-skin="small-checks"] body {
-  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
-  background-size: 8px 8px;
-}
-:root[data-skin="middle-checks"] body {
-  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
+:root[data-background-patterns="small-dots"] body {
+  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
   background-size: 16px 16px;
 }
-:root[data-skin="checks"] body {
-  background-image: linear-gradient(0deg, transparent 50%, #80808016 50%), linear-gradient(90deg, transparent 50%, #80808016 50%);
+:root[data-background-patterns="medium-dots"] body {
+  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+  background-size: 24px 24px;
+}
+:root[data-background-patterns="large-dots"] body {
+  background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
   background-size: 32px 32px;
 }
-body {
-  background-image: radial-gradient(#80808016 30%, transparent 30%);
-  background-size: 32px 32px;
-}
+
 /* --------- *
  |  GENERAL  |
  * --------- */

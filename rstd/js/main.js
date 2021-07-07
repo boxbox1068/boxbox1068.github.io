@@ -2,6 +2,7 @@
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "color-theme": "light", // light|dark|auto => JS + CSS
+  "background-patterns": "horizontal-thin-stripe", // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
   "font-size": "medium", // very-small|small|medium|large|very-large => CSS
   "font-family": "sans-serif", // sans-serif|serif => CSS
   "enable-variable-highlight": "true", // true|false => CSS
@@ -18,14 +19,15 @@ const settingDefaultValues = {
 };
 const settingControlChars = {
   "color-theme": "a",
-  "font-size": "b",
-  "enable-variable-highlight": "c",
-  "enable-hint-balloon": "d",
-  "animation-duration": "e",
-  "voice-volume": "f",
+  "background-patterns": "b",
+  "font-size": "c",
+  "enable-variable-highlight": "d",
+  "enable-hint-balloon": "e",
+  "animation-duration": "f",
+  "voice-volume": "g",
   "question-voice-rate": "h",
   "question-voice-pitch": "i",
-  "question-voice-number": "g",
+  "question-voice-number": "j",
   "answer-voice-rate": "k",
   "answer-voice-pitch": "l",
   "answer-voice-number": "j",
