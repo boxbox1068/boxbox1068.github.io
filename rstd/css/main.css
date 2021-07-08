@@ -84,79 +84,93 @@
  * ---------------*/
 :root[data-accent-color="red"] {
   --lead-panel-background-color: #EF9A9A;
-  --main-cover-background-color: #F44336;
+  --main-cover-background-color: #D32F2F;
+  --main-cover-color: #F44336;
 }
 :root[data-accent-color="pink"] {
   --lead-panel-background-color: #F48FB1;
-  --main-cover-background-color: #E91E63;
+  --main-cover-background-color: #C2185B;
+  --main-cover-color: #E91E63;
 }
 :root[data-accent-color="purple"] {
   --lead-panel-background-color: #CE93D8;
-  --main-cover-background-color: #9C27B0;
+  --main-cover-background-color: #7B1FA2;
+  --main-cover-color: #9C27B0;
 }
 :root[data-accent-color="deep-purple"] {
   --lead-panel-background-color: #B39DDB;
-  --main-cover-background-color: #673AB7;
+  --main-cover-background-color: #512DA8;
+  --main-cover-color: #673AB7;
 }
 :root[data-accent-color="indigo"] {
   --lead-panel-background-color: #9FA8DA;
-  --main-cover-background-color: #3F51B5;
+  --main-cover-background-color: #303F9F;
+  --main-cover-color: #3F51B5;
 }
 :root[data-accent-color="blue"] {
   --lead-panel-background-color: #90CAF9;
-  --main-cover-background-color: #2196F3;
+  --main-cover-background-color: #1976D2;
+  --main-cover-color: #2196F3;
 }
 :root[data-accent-color="light-blue"] {
   --lead-panel-background-color: #81D4FA;
-  --main-cover-background-color: #03A9F4;
+  --main-cover-background-color: #0288D1;
+  --main-cover-color: #03A9F4;
 }
 :root[data-accent-color="cyan"] {
   --lead-panel-background-color: #80DEEA;
-  --main-cover-background-color: #00BCD4;
+  --main-cover-background-color: #0097A7;
+  --main-cover-color: #00BCD4;
 }
 :root[data-accent-color="teal"] {
   --lead-panel-background-color: #80CBC4;
-  --main-cover-background-color: #009688;
+  --main-cover-background-color: #00796B;
+  --main-cover-color: #009688;
 }
 :root[data-accent-color="green"] {
   --lead-panel-background-color: #A5D6A7;
-  --main-cover-background-color: #4CAF50;
+  --main-cover-background-color: #388E3C;
+  --main-cover-color: #4CAF50;
 }
 :root[data-accent-color="light-green"] {
   --lead-panel-background-color: #C5E1A5;
-  --main-cover-background-color: #8BC34A;
+  --main-cover-background-color: #689F38;
+  --main-cover-color: #8BC34A;
 }
 :root[data-accent-color="lime"] {
   --lead-panel-background-color: #E6EE9C;
-  --main-cover-background-color: #CDDC39;
+  --main-cover-background-color: #AFB42B;
+  --main-cover-color: #CDDC39;
 }
 :root[data-accent-color="yellow"] {
   --lead-panel-background-color: #FFF59D;
-  --main-cover-background-color: #FFEB3B;
+  --main-cover-background-color: #FBC02D;
+  --main-cover-color: #FFEB3B;
 }
 :root[data-accent-color="amber"] {
   --lead-panel-background-color: #FFE082;
-  --main-cover-background-color: #FFC107;
+  --main-cover-background-color: #FFA000;
+  --main-cover-color: #FFC107;
 }
 :root[data-accent-color="orange"] {
   --lead-panel-background-color: #FFCC80;
-  --main-cover-background-color: #FF9800;
+  --main-cover-background-color: #F57C00;
+  --main-cover-color: #FF9800;
 }
 :root[data-accent-color="deep-orange"] {
   --lead-panel-background-color: #FFAB91;
-  --main-cover-background-color: #FF5722;
+  --main-cover-background-color: #E64A19;
+  --main-cover-color: #FF5722;
 }
 :root[data-accent-color="brown"] {
   --lead-panel-background-color: #BCAAA4;
-  --main-cover-background-color: #795548;
-}
-:root[data-accent-color="grey"] {
-  --lead-panel-background-color: #EEEEEE;
-  --main-cover-background-color: #9E9E9E;
+  --main-cover-background-color: #5D4037;
+  --main-cover-color: #795548;
 }
 :root[data-accent-color="blue-grey"] {
   --lead-panel-background-color: #B0BEC5;
-  --main-cover-background-color: #607D8B;
+  --main-cover-background-color: #455A64;
+  --main-cover-color: #607D8B;
 }
 
 /* --------------------- *
@@ -468,7 +482,7 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: var(--main-cover-background-color);
-  color: #FFF1;
+  color: var(--main-cover-color);
   font-weight: 600;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
@@ -752,8 +766,11 @@ body > * {
 }
 #settings-body {
   padding: var(--common-padding);
-  font-size: var(--settings-body-font-size);
+  font-size: 1rem;
 }
+
+
+/*
 #settings-body > ol {
   margin: 0;
   padding-left: 1.5rem;
@@ -767,7 +784,20 @@ body > * {
 #settings-body > ol > li + li {
   padding-top: .5rem;
 }
-
+*/
+.setting-category {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+:root {
+  counter-reset: setting-item;
+}
+.setting-item::after {
+  display: inline-block;
+  width: 2rem;
+  counter-increment: setting-item;
+  content: "(" counter(setting-item, lower-latin) ")";
+}
 
 .setting-radio {
   --setting-radio-core-color: var(--setting-radio-background-color);

@@ -2,7 +2,7 @@
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "color-scheme": "light", // light|dark|auto => JS + CSS
-  "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|grey|blue-grey => CSS
+  "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|blue-grey => CSS
   "background-patterns": "horizontal-thin-stripe", // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
   "font-size": "medium", // very-small|small|medium|large|very-large => CSS
   "font-family": "sans-serif", // sans-serif|serif => CSS
