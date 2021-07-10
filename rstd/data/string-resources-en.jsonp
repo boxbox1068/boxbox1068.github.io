@@ -1,6 +1,6 @@
 jsonpCallback({
-  "app-title": "Translation Drills Bot",
-  "copyright-notice-html": "<b>Translation Drills Bot</b> &copy; 2021 shikaku1068",
+  "app-title": "Translation Drill Bot",
+  "copyright-notice-html": "<b>Translation Drill Bot</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",

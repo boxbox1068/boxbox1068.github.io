@@ -768,37 +768,18 @@ body > * {
   padding: var(--common-padding);
   font-size: 1rem;
 }
-
-
-/*
-#settings-body > ol {
-  margin: 0;
-  padding-left: 1.5rem;
-  list-style-type: lower-latin;
-}
-#settings-body > ol > li {
-  padding-left: 1rem;
-  overflow: visible;
-  text-indent: -1rem;
-}
-#settings-body > ol > li + li {
-  padding-top: .5rem;
-}
-*/
 .setting-category {
   font-weight: 600;
   font-size: 1.25rem;
 }
-:root {
-  counter-reset: setting-item;
-}
-.setting-item::after {
-  display: inline-block;
-  width: 2rem;
+.setting-item {
+  padding-left: 2rem;
+  text-indent: -2rem;
   counter-increment: setting-item;
+}
+.setting-item::before {
   content: "(" counter(setting-item, lower-latin) ")";
 }
-
 .setting-radio {
   --setting-radio-core-color: var(--setting-radio-background-color);
   position: relative;
