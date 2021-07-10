@@ -762,7 +762,6 @@ body > * {
 }
 .setting-category {
   font-weight: bold;
-//  text-decoration: underline;
 }
 .setting-category::before {
   content: "--- ";
@@ -790,32 +789,39 @@ body > * {
   content: ": ";
 }
 .setting-radio {
+  --setting-radio-size: 1rem;
   --setting-radio-core-color: var(--setting-radio-background-color);
+  display: inline-flex;
+  align-items: center;
   position: relative;
-  height: 1rem;
+  height: 1.5rem;
   margin-left: .25rem;
   padding-left: 1.25rem;
   border: 0;
+  font-size: 1rem;
 }
 .setting-radio.checked {
   --setting-radio-core-color: var(--control-color);
 }
 .setting-radio::before {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  width: 1rem;
-  height: 1rem;
+  width: var(--setting-radio-size);
+  height: var(--setting-radio-size);
+  margin-top: calc(var(--setting-radio-size) * -.5);
   border: calc(var(--common-border-width) * 2) solid var(--setting-radio-background-color);
   background-color: var(--setting-radio-core-color);
   content: "";
 }
 .setting-radio::after {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  width: 1rem;
-  height: 1rem;
+  width: var(--setting-radio-size);
+  height: var(--setting-radio-size);
+  margin-top: calc(var(--setting-radio-size) * -.5);
+  margin-top: -.5rem;
   border: var(--common-border-width) solid var(--control-border-color);
   content: "";
 }
