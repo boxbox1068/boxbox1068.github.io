@@ -764,16 +764,17 @@ body > * {
   font-weight: bold;
 }
 .setting-category::before {
-  content: "--- ";
+  color: grey;
+  content: "\02022\02022\02022\02022\0020";
 }
 .setting-category::after {
-  content: " ---";
+  color: grey;
+  content: "\0020\02022\02022\02022\02022";
 }
 .setting-category:not(:first-child) {
   margin-top: 1rem;
 }
 .setting-item {
-  margin-top: .5rem;
   padding-left: 2rem;
   font-weight: bold;
   text-indent: -2rem;
@@ -783,10 +784,10 @@ body > * {
   margin-top: .5rem;
 }
 .setting-item > span::before {
-  content: "(" counter(setting-item, lower-latin) ")";
+  content: counter(setting-item, lower-latin) ")\0020";
 }
 .setting-item > span::after {
-  content: ": ";
+  content: ":\0020";
 }
 .setting-radio {
   --setting-radio-size: 1rem;
@@ -794,7 +795,7 @@ body > * {
   display: inline-flex;
   align-items: center;
   position: relative;
-  height: 1.5rem;
+  height: 1rem;
   margin-left: .25rem;
   padding-left: 1.25rem;
   border: 0;

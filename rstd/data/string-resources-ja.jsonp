@@ -118,5 +118,5 @@ jsonpCallback({
   "--background-patterns--large-checks": "チェック（大）",
   "--background-patterns--small-dots": "水玉（小）",
   "--background-patterns--medium-dots": "水玉（中）",
-  "--background-patterns--large-dots": "水玉（大）,
+  "--background-patterns--large-dots": "水玉（大）",
 });
