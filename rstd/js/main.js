@@ -102,7 +102,7 @@ const main = async () => {
   qs('#hide-settings-button').addEventListener('click', () => {
     setFlag('show-settings', false);
   });
-  qs('#settings-background').addEventListener('click', event => {
+  qs('#settings-screen').addEventListener('click', event => {
     if (event.currentTarget != event.target) {
       return;
     }
@@ -299,6 +299,18 @@ const main = async () => {
     });
   }
   qs('#lead-body').innerHTML = leadText;
+
+
+
+  if (! questionTemplate) {
+    questionTemplate = 'hogehoge';
+  }
+  if (! answerTemplate) {
+    answerTemplate = 'fugafuga';
+  }
+
+
+
   await new Promise(resolve => {
     setFlag.listener = (key, value) => {
       if (key == 'fold-lead' && value) {
@@ -387,6 +399,10 @@ const speakAnswer = interrupt => {
   );
 }
 const resetCard = async () => {
+  if (getFlag('disable-operation')) {
+    return;
+  }
+  setFlag('disable-operation', true);
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
     const _setHintBalloonPosition = variableElement => {
       const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-panel');
@@ -420,7 +436,6 @@ const resetCard = async () => {
     window.addEventListener('resize', _updateHintBalloonPositions);
   }
   speak(null);
-  setFlag('disable-operation', true);
   setFlag('uncover-question', false);
   setFlag('uncover-answer', false);
   const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
@@ -455,23 +470,26 @@ const resetCard = async () => {
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('disable-operation', false);
   if (getSetting('enable-automatic-question-speaking', 'boolean')) {
     speakQuestion(true);
   }
+  setFlag('disable-operation', false);
 };
 const uncoverAnswer = async () => {
-  speak(null);
+  if (getFlag('disable-operation')) {
+    return;
+  }
   setFlag('disable-operation', true);
+  speak(null);
   setFlag('uncover-answer', true);
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  setFlag('disable-operation', false);
   if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
     speakAnswer(true);
   }
+  setFlag('disable-operation', false);
 };
 window.addEventListener('DOMContentLoaded', main);

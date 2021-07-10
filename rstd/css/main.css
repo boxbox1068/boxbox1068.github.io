@@ -483,7 +483,7 @@ body > * {
   height: 100%;
   background-color: var(--main-cover-background-color);
   color: var(--main-cover-color);
-  font-weight: 600;
+  font-weight: bold;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
 }
@@ -499,7 +499,7 @@ body > * {
   --hint-balloon-opacity: 0;
   border-bottom: var(--hint-balloon-border-width) solid;
   border-bottom-color: var(--variable-border-bottom-color);
-  font-weight: 600;
+  font-weight: bold;
 }
 :root.fold-lead:not(.show-settings) .variable.active,
 :root.fold-lead:not(.show-settings):not(.hasActiveElement) .variable:hover {
@@ -547,7 +547,7 @@ body > * {
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
   color: var(--hint-balloon-color);
-  font-weight: 600;
+  font-weight: bold;
 }
 .hint-balloon-panel::before {
   display: block;
@@ -642,7 +642,7 @@ body > * {
   left: 0;
   width: 100%;
   height: calc(100% - var(--this-toggle-height));
-  font-weight: 600;
+  font-weight: bold;
   font-size: 1rem;
   transition-duration: calc(var(--common-transition-duration) / 2);
 }
@@ -706,14 +706,14 @@ body > * {
   height: 1.25rem;
 }
 
-/*-----------------*
- |  SETTINGS CELL  |
- *-----------------*/
-#settings-cell {
+/*-------------------*
+ |  SETTINGS SCREEN  |
+ *-------------------*/
+ #settings-screen {
   display: grid;
   grid-template:
     "... ... ..." 2.5rem 
-    "... settings-header ..." 2rem
+    "... settings-title-bar ..." 2rem
     "... settings-panel ..." 1fr
     "... ... ..." 2.5rem
     / 2.5rem 1fr 2.5rem;
@@ -724,36 +724,28 @@ body > * {
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: #000C;
   transition-duration: var(--common-transition-duration);
 }
-:root.show-settings #settings-cell {
+:root.show-settings #settings-screen {
   visibility: visible;
   opacity: 1;
 }
-#settings-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  background-color: #000C;
-}
-#settings-header {
-  grid-area: settings-header;
+#settings-title-bar {
+  grid-area: settings-title-bar;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--common-padding);
   background-color: var(--settings-header-background-color);
   color: var(--settings-header-color);
+  font-weight: bold;
 }
 #hide-settings-button {
   width: 1.5rem;
   height: 1.5rem;
   color: var(--settings-header-color);
   cursor: pointer;
-  transition-duration: var(--common-transition-duration);
 }
 #hide-settings-button > svg {
   width: 60%;
@@ -769,16 +761,27 @@ body > * {
   font-size: 1rem;
 }
 .setting-category {
-  font-weight: 600;
-  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.setting-category:not(:first-child) {
+  margin-top: 1rem;
 }
 .setting-item {
+  margin-top: .5rem;
   padding-left: 2rem;
+  font-weight: bold;
   text-indent: -2rem;
   counter-increment: setting-item;
 }
-.setting-item::before {
+.setting-item + .setting-item {
+  margin-top: .5rem;
+}
+.setting-item > span::before {
   content: "(" counter(setting-item, lower-latin) ")";
+}
+.setting-item > span::after {
+  content: ": ";
 }
 .setting-radio {
   --setting-radio-core-color: var(--setting-radio-background-color);
@@ -787,7 +790,7 @@ body > * {
   margin-left: .25rem;
   padding-left: 1.25rem;
   border: 0;
-  font-size: inherit;
+  font-size: .9rem;
 }
 .setting-radio.checked {
   --setting-radio-core-color: var(--control-color);
