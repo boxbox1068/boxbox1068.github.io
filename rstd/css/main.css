@@ -241,7 +241,7 @@ body {
  :root {
   --common-font-size: 4vmin;
   --common-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
-  --common-cell-border-spacing: .25rem;
+  --common-cell-border-spacing: .5rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 2px;
   --common-line-height: 1.5em;
@@ -762,7 +762,13 @@ body > * {
 }
 .setting-category {
   font-weight: bold;
-  text-decoration: underline;
+//  text-decoration: underline;
+}
+.setting-category::before {
+  content: "--- ";
+}
+.setting-category::after {
+  content: " ---";
 }
 .setting-category:not(:first-child) {
   margin-top: 1rem;
@@ -790,7 +796,6 @@ body > * {
   margin-left: .25rem;
   padding-left: 1.25rem;
   border: 0;
-  font-size: .9rem;
 }
 .setting-radio.checked {
   --setting-radio-core-color: var(--control-color);
