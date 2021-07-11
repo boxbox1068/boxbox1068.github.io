@@ -1,30 +1,9 @@
-/* -------------- *
- |  COLOR SCHEME  |
- * -------------- */
-:root {
-  --common-background-color: #CFD8DC;
-  --common-color: #263238;
-  --background-patterns-color: #0001;
-  --lead-panel-background-color: #C5CAE9;
-  --lead-panel-color: #263238;
-  --fold-lead-button-background-color: #455A64;
-  --fold-lead-button-color: #CFD8DC;
-  --main-panel-background-color: #FFFC;
-  --main-panel-color: #263238;
-  --main-cover-background-color: #3F51B5;
-  --main-cover-color: #3949AB;
-  --control-background-color: #CFD8DC;
-  --disabled-controls-background-color: #ECEFF1;
-  --control-border-color: #546E7A;
-  --control-color: #455A64;
-  --toggle-color: #78909C;
-  --on-toggle-color: #FFC107;
-  --footer-background-color: #37474F;
-  --footer-color: #CFD8DC;
-  --settings-header-background-color: #37474F;
-  --settings-header-color: #CFD8DC;
-  --setting-radio-background-color: #ECEFF1;
-  --setting-radio-color: #455A64;
+/* ---------- *
+ |  SETTINGS  |
+ * ---------- */
+/*  ENABLE VARIABLE HIGHLIGHT  */
+:root,
+:root[data-enable-variable-highlight="true"] {
   --variable-number-1-background-color: #EF9A9A99;
   --variable-number-2-background-color: #90CAF999;
   --variable-number-3-background-color: #FFF59D99;
@@ -35,53 +14,144 @@
   --variable-number-8-background-color: #F48FB199;
   --variable-number-9-background-color: #BCAAA499;
   --variable-number-0-background-color: #B0BEC599;
-  --hint-balloon-background-color: #FFF;
-  --hint-balloon-border-color: #607D8B;
-  --hint-balloon-color: #263238;
 }
-:root[data-color-scheme="dark"],
-:root.prefers-dark-color-scheme[data-color-scheme="auto"] {
-  --common-background-color: #000;
-  --common-color: #FFF;
-  --background-patterns-color: #0001;
-  --lead-panel-background-color: #455A64;
-  --lead-panel-color: #FFF;
-  --fold-lead-button-background-color: #455A64;
-  --fold-lead-button-color: #CFD8DC;
-  --main-panel-background-color: #000C;
-  --main-panel-color: #FFF;
-  --main-cover-background-color: #37474F;
-  --main-cover-color: #455A64;
-  --control-background-color: #CFD8DC;
-  --disabled-controls-background-color: #ECEFF1;
-  --control-border-color: #546E7A;
-  --control-color: #455A64;
-  --toggle-color: #78909C;
-  --on-toggle-color: #FFC107;
-  --footer-background-color: #37474F;
-  --footer-color: #CFD8DC;
-  --settings-header-background-color: #37474F;
-  --settings-header-color: #CFD8DC;
-  --setting-radio-background-color: #ECEFF1;
-  --setting-radio-color: #455A64;
-  --variable-number-1-background-color: #EF9A9A99;
-  --variable-number-2-background-color: #90CAF999;
-  --variable-number-3-background-color: #FFF59D99;
-  --variable-number-4-background-color: #A5D6A799;
-  --variable-number-5-background-color: #CE93D899;
-  --variable-number-6-background-color: #FFCC8099;
-  --variable-number-7-background-color: #80DEEA99;
-  --variable-number-8-background-color: #F48FB199;
-  --variable-number-9-background-color: #BCAAA499;
-  --variable-number-0-background-color: #B0BEC599;
-  --hint-balloon-background-color: #FFF;
-  --hint-balloon-border-color: #607D8B;
-  --hint-balloon-color: #263238;
+:root[data-enable-variable-highlight="false"] {
+  --variable-number-1-background-color: transparent;
+  --variable-number-2-background-color: transparent;
+  --variable-number-3-background-color: transparent;
+  --variable-number-4-background-color: transparent;
+  --variable-number-5-background-color: transparent;
+  --variable-number-6-background-color: transparent;
+  --variable-number-7-background-color: transparent;
+  --variable-number-8-background-color: transparent;
+  --variable-number-9-background-color: transparent;
+  --variable-number-0-background-color: transparent;
 }
 
-/* -------------- *
- *  ACCENT COLOR  |
- * ---------------*/
+/*  ENABLE HINT BALLOON  */
+:root,
+:root[data-enable-hint-balloon="true"] {
+  --hint-balloon-panel-display: block;
+}
+:root[data-enable-hint-balloon="false"] {
+  --hint-balloon-panel-display: none;
+}
+
+/*  ANIMATION DURATION  */
+:root[data-animation-duration="none"] {
+  --common-transition-duration: 0;
+}
+:root[data-animation-duration="short"] {
+  --common-transition-duration: .25s;
+}
+:root,
+:root[data-animation-duration="medium"] {
+  --common-transition-duration: .5s;
+}
+:root[data-animation-duration="long"] {
+  --common-transition-duration: .75s;
+}
+
+/*  FONT SIZE  */
+:root[data-font-size="very-small"] {
+  --rabbit-body-font-size: 1rem;
+}
+:root[data-font-size="small"] {
+  --rabbit-body-font-size: 1.25rem;
+}
+:root,
+:root[data-font-size="medium"] {
+  --rabbit-body-font-size: 1.5rem;
+}
+:root[data-font-size="large"] {
+  --rabbit-body-font-size: 1.75rem;
+}
+:root[data-font-size="very-large"] {
+  --rabbit-body-font-size: 2rem;
+}
+
+/*  FONT FAMILY  */
+:root,
+:root[data-font-family="sans-serif"] {
+  --rabbit-body-font-family: inherit;
+}
+:root[data-font-family="serif"] {
+  --rabbit-body-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+}
+
+/*  LINE HEIGHT  */
+:root[data-line-height="small"] {
+  --common-line-height: 1.25em;
+}
+:root,
+:root[data-line-height="medium"] {
+  --common-line-height: 1.5em;
+}
+:root[data-line-height="large"] {
+  --common-line-height: 1.75em;
+}
+
+/*  COLOR SCHEME  */
+ :root,
+ :root[data-color-scheme="light"] {
+   --common-background-color: #CFD8DC;
+   --common-color: #263238;
+   --background-patterns-color: #0001;
+   --lead-panel-background-color: #C5CAE9;
+   --lead-panel-color: #263238;
+   --fold-lead-button-background-color: #455A64;
+   --fold-lead-button-color: #CFD8DC;
+   --main-panel-background-color: #FFFC;
+   --main-panel-color: #263238;
+   --main-cover-background-color: #3F51B5;
+   --main-cover-color: #3949AB;
+   --control-background-color: #CFD8DC;
+   --disabled-controls-background-color: #ECEFF1;
+   --control-border-color: #546E7A;
+   --control-color: #455A64;
+   --toggle-color: #78909C;
+   --on-toggle-color: #FFC107;
+   --footer-background-color: #37474F;
+   --footer-color: #CFD8DC;
+   --settings-header-background-color: #37474F;
+   --settings-header-color: #CFD8DC;
+   --setting-radio-background-color: #ECEFF1;
+   --setting-radio-color: #455A64;
+   --hint-balloon-background-color: #FFF;
+   --hint-balloon-border-color: #607D8B;
+   --hint-balloon-color: #263238;
+ }
+ :root[data-color-scheme="dark"],
+ :root[data-color-scheme="auto"].prefers-dark-color-scheme {
+   --common-background-color: #000;
+   --common-color: #FFF;
+   --background-patterns-color: #0001;
+   --lead-panel-background-color: #455A64;
+   --lead-panel-color: #FFF;
+   --fold-lead-button-background-color: #455A64;
+   --fold-lead-button-color: #CFD8DC;
+   --main-panel-background-color: #000C;
+   --main-panel-color: #FFF;
+   --main-cover-background-color: #37474F;
+   --main-cover-color: #455A64;
+   --control-background-color: #CFD8DC;
+   --disabled-controls-background-color: #ECEFF1;
+   --control-border-color: #546E7A;
+   --control-color: #455A64;
+   --toggle-color: #78909C;
+   --on-toggle-color: #FFC107;
+   --footer-background-color: #37474F;
+   --footer-color: #CFD8DC;
+   --settings-header-background-color: #37474F;
+   --settings-header-color: #CFD8DC;
+   --setting-radio-background-color: #ECEFF1;
+   --setting-radio-color: #455A64;
+   --hint-balloon-background-color: #FFF;
+   --hint-balloon-border-color: #607D8B;
+   --hint-balloon-color: #263238;
+}
+ 
+/*  ACCENT COLOR  */
 :root[data-accent-color="red"] {
   --lead-panel-background-color: #EF9A9A;
   --main-cover-background-color: #E53935;
@@ -122,6 +192,7 @@
   --main-cover-background-color: #00ACC1;
   --main-cover-color: #26C6DA;
 }
+:root,
 :root[data-accent-color="teal"] {
   --lead-panel-background-color: #80CBC4;
   --main-cover-background-color: #00897B;
@@ -173,9 +244,8 @@
   --main-cover-color: #78909C;
 }
 
-/* --------------------- *
- |  BACKGROUND PATTERNS  |
- * --------------------- */
+/*  BACKGROUND PATTERNS  */
+:root,
 :root[data-background-patterns="horizontal-thin-stripe"] {
   --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 8px 8px;
@@ -230,10 +300,6 @@
   --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
   --body-background-size: 32px 32px;
 }
-body {
-  background-image: var(--body-background-image);
-  background-size: var(--body-background-size);
-}
 
 /* --------- *
  |  GENERAL  |
@@ -244,7 +310,6 @@ body {
   --common-cell-border-spacing: .5rem;
   --common-padding: .5rem 1rem;
   --common-border-width: 2px;
-  --common-line-height: 1.5em;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: .2rem;
@@ -261,54 +326,6 @@ body {
   touch-action: pan-y;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
-}
-:root[data-font-family="sans-serif"] {
-  --rabbit-body-font-family: inherit;
-}
-:root[data-font-family="serif"] {
-  --rabbit-body-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
-}
-:root[data-font-size="very-small"] {
-  --rabbit-body-font-size: 1rem;
-}
-:root[data-font-size="small"] {
-  --rabbit-body-font-size: 1.25rem;
-}
-:root[data-font-size="medium"] {
-  --rabbit-body-font-size: 1.5rem;
-}
-:root[data-font-size="large"] {
-  --rabbit-body-font-size: 1.75rem;
-}
-:root[data-font-size="very-large"] {
-  --rabbit-body-font-size: 2rem;
-}
-:root[data-enable-variable-highlight="false"] {
-  --variable-number-1-background-color: transparent;
-  --variable-number-2-background-color: transparent;
-  --variable-number-3-background-color: transparent;
-  --variable-number-4-background-color: transparent;
-  --variable-number-5-background-color: transparent;
-  --variable-number-6-background-color: transparent;
-  --variable-number-7-background-color: transparent;
-  --variable-number-8-background-color: transparent;
-  --variable-number-9-background-color: transparent;
-  --variable-number-0-background-color: transparent;
-}
-:root[data-enable-hint-balloon="false"] {
-  --hint-balloon-panel-display: none;
-}
-:root[data-animation-duration="none"] {
-  --common-transition-duration: 0;
-}
-:root[data-animation-duration="short"] {
-  --common-transition-duration: .25s;
-}
-:root[data-animation-duration="medium"] {
-  --common-transition-duration: .5s;
-}
-:root[data-animation-duration="long"] {
-  --common-transition-duration: .75s;
 }
 
 
@@ -363,6 +380,8 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
+  background-image: var(--body-background-image);
+  background-size: var(--body-background-size);
 }
 @media screen and (orientation: portrait) {
   body {
@@ -538,7 +557,7 @@ body > * {
   background-color: var(--variable-number-0-background-color);
 }
 .hint-balloon-panel {
-  display: var(--hint-balloon-panel-display, block);
+  display: var(--hint-balloon-panel-display);
   visibility: var(--hint-balloon-visibility);
   opacity: var(--hint-balloon-opacity);
   position: fixed;

@@ -1,11 +1,7 @@
 'use strict';
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
-  "color-scheme": "light", // light|dark|auto => JS + CSS
-  "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|blue-grey => CSS
-  "background-patterns": "horizontal-thin-stripe", // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
-  "font-size": "medium", // very-small|small|medium|large|very-large => CSS
-  "font-family": "sans-serif", // sans-serif|serif => CSS
+  "enable-swipe-to-right": "true", // true|false => JS
   "enable-variable-highlight": "true", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
@@ -16,24 +12,31 @@ const settingDefaultValues = {
   "answer-voice-rate": "medium", // very-slow|slow|medium|fast|very-fast => JS
   "answer-voice-pitch": "medium", // very-low|low|medium|high|very-high => JS
   "answer-voice-number": "1", // 1-9|0 => JS
-  "enable-swipe-to-right": "true" // true|false => JS
+  "font-size": "medium", // very-small|small|medium|large|very-large => CSS
+  "font-family": "sans-serif", // sans-serif|serif => CSS
+  "line-height": "medium", // small|medium|large => CSS
+  "color-scheme": "light", // light|dark|auto => JS + CSS
+  "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|blue-grey => CSS
+  "background-patterns": "horizontal-thin-stripe" // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
 };
 const settingControlChars = {
-  "color-scheme": "a",
-  "accent-color": "b",
-  "background-patterns": "b",
-  "font-size": "c",
-  "enable-variable-highlight": "d",
-  "enable-hint-balloon": "e",
-  "animation-duration": "f",
-  "voice-volume": "g",
-  "question-voice-rate": "h",
-  "question-voice-pitch": "i",
-  "question-voice-number": "j",
-  "answer-voice-rate": "k",
-  "answer-voice-pitch": "l",
-  "answer-voice-number": "j",
-  "enable-swipe-to-right": "m"
+  "enable-swipe-to-right": "a",
+  "enable-variable-highlight": "b",
+  "enable-hint-balloon": "c",
+  "animation-duration": "d",
+  "voice-volume": "e",
+  "question-voice-rate": "f",
+  "question-voice-pitch": "g",
+  "question-voice-number": "h",
+  "answer-voice-rate": "i",
+  "answer-voice-pitch": "j",
+  "answer-voice-number": "k",
+  "font-size": "l",
+  "font-family": "m",
+  "line-height": "n",
+  "color-scheme": "o",
+  "accent-color": "p",
+  "background-patterns": "q"
 };
 let appLang;
 let stringResources;
