@@ -16,16 +16,16 @@
   --variable-number-0-background-color: #B0BEC599;
 }
 :root[data-enable-variable-highlight="false"] {
-  --variable-number-1-background-color: transparent;
-  --variable-number-2-background-color: transparent;
-  --variable-number-3-background-color: transparent;
-  --variable-number-4-background-color: transparent;
-  --variable-number-5-background-color: transparent;
-  --variable-number-6-background-color: transparent;
-  --variable-number-7-background-color: transparent;
-  --variable-number-8-background-color: transparent;
-  --variable-number-9-background-color: transparent;
-  --variable-number-0-background-color: transparent;
+  --variable-number-1-background-color: unset;
+  --variable-number-2-background-color: unset;
+  --variable-number-3-background-color: unset;
+  --variable-number-4-background-color: unset;
+  --variable-number-5-background-color: unset;
+  --variable-number-6-background-color: unset;
+  --variable-number-7-background-color: unset;
+  --variable-number-8-background-color: unset;
+  --variable-number-9-background-color: unset;
+  --variable-number-0-background-color: unset;
 }
 
 /*  ENABLE HINT BALLOON  */
@@ -105,7 +105,7 @@
    --main-panel-color: #263238;
    --main-cover-background-color: #3F51B5;
    --main-cover-color: #3949AB;
-   --control-background-color: #CFD8DC;
+    --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
    --control-color: #455A64;
@@ -134,7 +134,7 @@
    --main-panel-color: #FFF;
    --main-cover-background-color: #37474F;
    --main-cover-color: #455A64;
-   --control-background-color: #CFD8DC;
+    --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
    --control-color: #455A64;
@@ -512,6 +512,9 @@ body > * {
 :root.uncover-answer #answer-cover {
   left: 100%;
 }
+
+
+/*
 .variable {
   --variable-border-bottom-color: transparent;
   --hint-balloon-visibility: hidden;
@@ -520,6 +523,17 @@ body > * {
   border-bottom-color: var(--variable-border-bottom-color);
   font-weight: bold;
 }
+*/
+.variable {
+  --variable-border-bottom-color: transparent;
+  --hint-balloon-visibility: hidden;
+  --hint-balloon-opacity: 0;
+  border-bottom: var(--hint-balloon-border-width) solid;
+  border-bottom-color: var(--variable-border-bottom-color);
+  font-weight: bold;
+}
+
+
 :root.fold-lead:not(.show-settings) .variable.active,
 :root.fold-lead:not(.show-settings):not(.hasActiveElement) .variable:hover {
   --variable-border-bottom-color: var(--hint-balloon-border-color);
