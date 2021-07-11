@@ -84,93 +84,93 @@
  * ---------------*/
 :root[data-accent-color="red"] {
   --lead-panel-background-color: #EF9A9A;
-  --main-cover-background-color: #D32F2F;
-  --main-cover-color: #F44336;
+  --main-cover-background-color: #E53935;
+  --main-cover-color: #EF5350;
 }
 :root[data-accent-color="pink"] {
   --lead-panel-background-color: #F48FB1;
-  --main-cover-background-color: #C2185B;
-  --main-cover-color: #E91E63;
+  --main-cover-background-color: #D81B60;
+  --main-cover-color: #EC407A;
 }
 :root[data-accent-color="purple"] {
   --lead-panel-background-color: #CE93D8;
-  --main-cover-background-color: #7B1FA2;
-  --main-cover-color: #9C27B0;
+  --main-cover-background-color: #8E24AA;
+  --main-cover-color: #AB47BC;
 }
 :root[data-accent-color="deep-purple"] {
   --lead-panel-background-color: #B39DDB;
-  --main-cover-background-color: #512DA8;
-  --main-cover-color: #673AB7;
+  --main-cover-background-color: #5E35B1;
+  --main-cover-color: #7E57C2;
 }
 :root[data-accent-color="indigo"] {
   --lead-panel-background-color: #9FA8DA;
-  --main-cover-background-color: #303F9F;
-  --main-cover-color: #3F51B5;
+  --main-cover-background-color: #3949AB;
+  --main-cover-color: #5C6BC0;
 }
 :root[data-accent-color="blue"] {
   --lead-panel-background-color: #90CAF9;
-  --main-cover-background-color: #1976D2;
-  --main-cover-color: #2196F3;
+  --main-cover-background-color: #1E88E5;
+  --main-cover-color: #42A5F5;
 }
 :root[data-accent-color="light-blue"] {
   --lead-panel-background-color: #81D4FA;
-  --main-cover-background-color: #0288D1;
-  --main-cover-color: #03A9F4;
+  --main-cover-background-color: #039BE5;
+  --main-cover-color: #29B6F6;
 }
 :root[data-accent-color="cyan"] {
   --lead-panel-background-color: #80DEEA;
-  --main-cover-background-color: #0097A7;
-  --main-cover-color: #00BCD4;
+  --main-cover-background-color: #00ACC1;
+  --main-cover-color: #26C6DA;
 }
 :root[data-accent-color="teal"] {
   --lead-panel-background-color: #80CBC4;
-  --main-cover-background-color: #00796B;
-  --main-cover-color: #009688;
+  --main-cover-background-color: #00897B;
+  --main-cover-color: #26A69A;
 }
 :root[data-accent-color="green"] {
   --lead-panel-background-color: #A5D6A7;
-  --main-cover-background-color: #388E3C;
-  --main-cover-color: #4CAF50;
+  --main-cover-background-color: #43A047;
+  --main-cover-color: #66BB6A;
 }
 :root[data-accent-color="light-green"] {
   --lead-panel-background-color: #C5E1A5;
-  --main-cover-background-color: #689F38;
-  --main-cover-color: #8BC34A;
+  --main-cover-background-color: #7CB342;
+  --main-cover-color: #9CCC65;
 }
 :root[data-accent-color="lime"] {
   --lead-panel-background-color: #E6EE9C;
-  --main-cover-background-color: #AFB42B;
-  --main-cover-color: #CDDC39;
+  --main-cover-background-color: #C0CA33;
+  --main-cover-color: #D4E157;
 }
 :root[data-accent-color="yellow"] {
   --lead-panel-background-color: #FFF59D;
-  --main-cover-background-color: #FBC02D;
-  --main-cover-color: #FFEB3B;
+  --main-cover-background-color: #FDD835;
+  --main-cover-color: #FFEE58;
 }
 :root[data-accent-color="amber"] {
   --lead-panel-background-color: #FFE082;
-  --main-cover-background-color: #FFA000;
-  --main-cover-color: #FFC107;
+  --main-cover-background-color: #FFB300;
+  --main-cover-color: #FFCA28;
 }
 :root[data-accent-color="orange"] {
   --lead-panel-background-color: #FFCC80;
-  --main-cover-background-color: #F57C00;
-  --main-cover-color: #FF9800;
+  --main-cover-background-color: #FB8C00;
+  --main-cover-color: #FFA726;
 }
 :root[data-accent-color="deep-orange"] {
   --lead-panel-background-color: #FFAB91;
-  --main-cover-background-color: #E64A19;
-  --main-cover-color: #FF5722;
+  --main-cover-background-color: #F4511E;
+  --main-cover-color: #FF7043;
 }
 :root[data-accent-color="brown"] {
   --lead-panel-background-color: #BCAAA4;
-  --main-cover-background-color: #5D4037;
-  --main-cover-color: #795548;
+  --main-cover-background-color: #6D4C41;
+  --main-cover-color: #8D6E63;
 }
 :root[data-accent-color="blue-grey"] {
   --lead-panel-background-color: #B0BEC5;
-  --main-cover-background-color: #455A64;
-  --main-cover-color: #607D8B;
+  --main-cover-background-color: #546E7A;
+  --main-cover-color: #78909C;
 }
 
 /* --------------------- *
@@ -765,11 +765,11 @@ body > * {
 }
 .setting-category::before {
   color: grey;
-  content: "\02022\02022\02022\02022\0020";
+  content: "\02022\0020\02022\0020\02022\0020\02022\0020";
 }
 .setting-category::after {
   color: grey;
-  content: "\0020\02022\02022\02022\02022";
+  content: "\0020\02022\0020\02022\0020\02022\0020\02022";
 }
 .setting-category:not(:first-child) {
   margin-top: 1rem;
