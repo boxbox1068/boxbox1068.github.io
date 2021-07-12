@@ -4,7 +4,7 @@ jsonpCallback({
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
   "--the-source-of-this-drill": "このドリルのソース",
   "--settings": "設定",
-  "--setting-category--operation": "操作",
+  "--setting-category--control": "操作",
   "--enable-swipe-to-right": "右方向のスワイプ（問題のスキップ等）",
   "--enable-swipe-to-right--true": "有効",
   "--enable-swipe-to-right--false": "無効",

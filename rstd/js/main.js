@@ -334,9 +334,9 @@ const main = async () => {
     });
   });
   const processedQuestionTemplate = replaceAll(questionTemplate, templateReplacements);
-  questionPhrase = new RabbitPhrase(processedQuestionTemplate, questionLang);
+  questionPhrase = new DrillPhrase(processedQuestionTemplate, questionLang);
   const processedAnswerTemplate = replaceAll(answerTemplate, templateReplacements);
-  answerPhrase = new RabbitPhrase(processedAnswerTemplate, answerLang);
+  answerPhrase = new DrillPhrase(processedAnswerTemplate, answerLang);
   resetCard();
 };
 const switchActiveVariableElement = reverse => {
@@ -402,10 +402,10 @@ const speakAnswer = interrupt => {
   );
 }
 const resetCard = async () => {
-  if (getFlag('disable-operation')) {
+  if (getFlag('disable-control')) {
     return;
   }
-  setFlag('disable-operation', true);
+  setFlag('disable-control', true);
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
     const _setHintBalloonPosition = variableElement => {
       const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-panel');
@@ -476,13 +476,13 @@ const resetCard = async () => {
   if (getSetting('enable-automatic-question-speaking', 'boolean')) {
     speakQuestion(true);
   }
-  setFlag('disable-operation', false);
+  setFlag('disable-control', false);
 };
 const uncoverAnswer = async () => {
-  if (getFlag('disable-operation')) {
+  if (getFlag('disable-control')) {
     return;
   }
-  setFlag('disable-operation', true);
+  setFlag('disable-control', true);
   speak(null);
   setFlag('uncover-answer', true);
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
@@ -493,6 +493,6 @@ const uncoverAnswer = async () => {
   if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
     speakAnswer(true);
   }
-  setFlag('disable-operation', false);
+  setFlag('disable-control', false);
 };
 window.addEventListener('DOMContentLoaded', main);

@@ -4,7 +4,7 @@ jsonpCallback({
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "--the-source-of-this-drill": "The source of this drill",
   "--settings": "Settings",
-  "--setting-category--operation": "Operation",
+  "--setting-category--control": "Control",
   "--enable-swipe-to-right": "Enable swipe to right (to skip the question etc.)",
   "--enable-swipe-to-right--true": "True",
   "--enable-swipe-to-right--false": "False",

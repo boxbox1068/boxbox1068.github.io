@@ -1,5 +1,5 @@
 'use strict';
-class RabbitPhrase {
+class DrillPhrase {
   constructor(template, lang) {
     this._template = `${template}`;
     this._lang = `${lang}`;
