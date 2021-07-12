@@ -56,29 +56,29 @@
 
 /*  FONT SIZE  */
 :root[data-font-size="very-small"] {
-  --rabbit-body-font-size: 1rem;
+  --drill-panel-font-size: 1rem;
 }
 :root[data-font-size="small"] {
-  --rabbit-body-font-size: 1.25rem;
+  --drill-panel-font-size: 1.25rem;
 }
 :root,
 :root[data-font-size="medium"] {
-  --rabbit-body-font-size: 1.5rem;
+  --drill-panel-font-size: 1.5rem;
 }
 :root[data-font-size="large"] {
-  --rabbit-body-font-size: 1.75rem;
+  --drill-panel-font-size: 1.75rem;
 }
 :root[data-font-size="very-large"] {
-  --rabbit-body-font-size: 2rem;
+  --drill-panel-font-size: 2rem;
 }
 
 /*  FONT FAMILY  */
 :root,
 :root[data-font-family="sans-serif"] {
-  --rabbit-body-font-family: inherit;
+  --drill-panel-font-family: inherit;
 }
 :root[data-font-family="serif"] {
-  --rabbit-body-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+  --drill-panel-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
 }
 
 /*  LINE HEIGHT  */
@@ -105,8 +105,8 @@
    --fold-lead-button-color: #CFD8DC;
    --main-panel-background-color: #FFFC;
    --main-panel-color: #263238;
-   --main-cover-background-color: #3F51B5;
-   --main-cover-color: #3949AB;
+   --drill-cover-background-color: #3F51B5;
+   --drill-cover-font-color: #3949AB;
     --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
@@ -134,8 +134,8 @@
    --fold-lead-button-color: #CFD8DC;
    --main-panel-background-color: #000C;
    --main-panel-color: #FFF;
-   --main-cover-background-color: #37474F;
-   --main-cover-color: #455A64;
+   --drill-cover-background-color: #37474F;
+   --drill-cover-font-color: #455A64;
     --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
@@ -156,94 +156,94 @@
 /*  ACCENT COLOR  */
 :root[data-accent-color="red"] {
   --lead-panel-background-color: #EF9A9A;
-  --main-cover-background-color: #E53935;
-  --main-cover-color: #EF5350;
+  --drill-cover-background-color: #E53935;
+  --drill-cover-font-color: #EF5350;
 }
 :root[data-accent-color="pink"] {
   --lead-panel-background-color: #F48FB1;
-  --main-cover-background-color: #D81B60;
-  --main-cover-color: #EC407A;
+  --drill-cover-background-color: #D81B60;
+  --drill-cover-font-color: #EC407A;
 }
 :root[data-accent-color="purple"] {
   --lead-panel-background-color: #CE93D8;
-  --main-cover-background-color: #8E24AA;
-  --main-cover-color: #AB47BC;
+  --drill-cover-background-color: #8E24AA;
+  --drill-cover-font-color: #AB47BC;
 }
 :root[data-accent-color="deep-purple"] {
   --lead-panel-background-color: #B39DDB;
-  --main-cover-background-color: #5E35B1;
-  --main-cover-color: #7E57C2;
+  --drill-cover-background-color: #5E35B1;
+  --drill-cover-font-color: #7E57C2;
 }
 :root[data-accent-color="indigo"] {
   --lead-panel-background-color: #9FA8DA;
-  --main-cover-background-color: #3949AB;
-  --main-cover-color: #5C6BC0;
+  --drill-cover-background-color: #3949AB;
+  --drill-cover-font-color: #5C6BC0;
 }
 :root[data-accent-color="blue"] {
   --lead-panel-background-color: #90CAF9;
-  --main-cover-background-color: #1E88E5;
-  --main-cover-color: #42A5F5;
+  --drill-cover-background-color: #1E88E5;
+  --drill-cover-font-color: #42A5F5;
 }
 :root[data-accent-color="light-blue"] {
   --lead-panel-background-color: #81D4FA;
-  --main-cover-background-color: #039BE5;
-  --main-cover-color: #29B6F6;
+  --drill-cover-background-color: #039BE5;
+  --drill-cover-font-color: #29B6F6;
 }
 :root[data-accent-color="cyan"] {
   --lead-panel-background-color: #80DEEA;
-  --main-cover-background-color: #00ACC1;
-  --main-cover-color: #26C6DA;
+  --drill-cover-background-color: #00ACC1;
+  --drill-cover-font-color: #26C6DA;
 }
-:root,
 :root[data-accent-color="teal"] {
   --lead-panel-background-color: #80CBC4;
-  --main-cover-background-color: #00897B;
-  --main-cover-color: #26A69A;
+  --drill-cover-background-color: #00897B;
+  --drill-cover-font-color: #26A69A;
 }
 :root[data-accent-color="green"] {
   --lead-panel-background-color: #A5D6A7;
-  --main-cover-background-color: #43A047;
-  --main-cover-color: #66BB6A;
+  --drill-cover-background-color: #43A047;
+  --drill-cover-font-color: #66BB6A;
 }
 :root[data-accent-color="light-green"] {
   --lead-panel-background-color: #C5E1A5;
-  --main-cover-background-color: #7CB342;
-  --main-cover-color: #9CCC65;
+  --drill-cover-background-color: #7CB342;
+  --drill-cover-font-color: #9CCC65;
 }
 :root[data-accent-color="lime"] {
   --lead-panel-background-color: #E6EE9C;
-  --main-cover-background-color: #C0CA33;
-  --main-cover-color: #D4E157;
+  --drill-cover-background-color: #C0CA33;
+  --drill-cover-font-color: #D4E157;
 }
 :root[data-accent-color="yellow"] {
   --lead-panel-background-color: #FFF59D;
-  --main-cover-background-color: #FDD835;
-  --main-cover-color: #FFEE58;
+  --drill-cover-background-color: #FDD835;
+  --drill-cover-font-color: #FFEE58;
 }
 :root[data-accent-color="amber"] {
   --lead-panel-background-color: #FFE082;
-  --main-cover-background-color: #FFB300;
-  --main-cover-color: #FFCA28;
+  --drill-cover-background-color: #FFB300;
+  --drill-cover-font-color: #FFCA28;
 }
 :root[data-accent-color="orange"] {
   --lead-panel-background-color: #FFCC80;
-  --main-cover-background-color: #FB8C00;
-  --main-cover-color: #FFA726;
+  --drill-cover-background-color: #FB8C00;
+  --drill-cover-font-color: #FFA726;
 }
 :root[data-accent-color="deep-orange"] {
   --lead-panel-background-color: #FFAB91;
-  --main-cover-background-color: #F4511E;
-  --main-cover-color: #FF7043;
+  --drill-cover-background-color: #F4511E;
+  --drill-cover-font-color: #FF7043;
 }
 :root[data-accent-color="brown"] {
   --lead-panel-background-color: #BCAAA4;
-  --main-cover-background-color: #6D4C41;
-  --main-cover-color: #8D6E63;
+  --drill-cover-background-color: #6D4C41;
+  --drill-cover-font-color: #8D6E63;
 }
+:root,
 :root[data-accent-color="blue-grey"] {
   --lead-panel-background-color: #B0BEC5;
-  --main-cover-background-color: #546E7A;
-  --main-cover-color: #78909C;
+  --drill-cover-background-color: #546E7A;
+  --drill-cover-font-color: #78909C;
 }
 
 /*  BACKGROUND PATTERNS  */
@@ -282,13 +282,19 @@
   --body-background-image:
     linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
     linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  --body-background-size: 24px 24px;
+  --body-background-size: 32px 32px;
 }
 :root[data-background-patterns="large-checks"] {
   --body-background-image:
     linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
     linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
-  --body-background-size: 32px 32px;
+  --body-background-size: 48px 48px;
+}
+:root[data-background-patterns="extra-large-checks"] {
+  --body-background-image:
+    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
+    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 64px 64px;
 }
 :root[data-background-patterns="small-dots"] {
   --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
@@ -296,11 +302,15 @@
 }
 :root[data-background-patterns="medium-dots"] {
   --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
-  --body-background-size: 24px 24px;
+  --body-background-size: 32px 32px;
 }
 :root[data-background-patterns="large-dots"] {
   --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
-  --body-background-size: 32px 32px;
+  --body-background-size: 48px 48px;
+}
+:root[data-background-patterns="extra-large-dots"] {
+  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+  --body-background-size: 64px 64px;
 }
 
 /* --------- *
@@ -445,7 +455,7 @@ body > * {
   padding: var(--common-padding);
   color: var(--lead-panel-color);
   font-size: var(--lead-body-font-size);
-  font-family: var(--rabbit-body-font-family);
+  font-family: var(--drill-panel-font-family);
   line-height: var(--common-line-height);
   overflow-wrap: break-word;
 }
@@ -489,8 +499,8 @@ body > * {
   margin: auto;
   padding: var(--common-padding);
   color: var(--main-panel-color);
-  font-size: var(--rabbit-body-font-size);
-  font-family: var(--rabbit-body-font-family);
+  font-size: var(--drill-panel-font-size);
+  font-family: var(--drill-panel-font-family);
   line-height: var(--common-line-height);
 }
 .rabbit-cover {
@@ -502,8 +512,8 @@ body > * {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--main-cover-background-color);
-  color: var(--main-cover-color);
+  background-color: var(--drill-cover-background-color);
+  color: var(--drill-cover-font-color);
   font-weight: bold;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);

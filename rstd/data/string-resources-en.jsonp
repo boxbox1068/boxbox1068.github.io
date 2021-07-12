@@ -2,7 +2,7 @@ jsonpCallback({
   "app-title": "Translation Drill Maker",
   "copyright-notice-html": "<b>Translation Drill Maker</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
-  "--the-source-of-this-unit": "The source of this session",
+  "--the-source-of-this-drill": "The source of this drill",
   "--settings": "Settings",
   "--setting-category--operation": "Operation",
   "--enable-swipe-to-right": "Enable swipe to right (to skip the question etc.)",
@@ -120,7 +120,9 @@ jsonpCallback({
   "--background-patterns--small-checks": "Small checks",
   "--background-patterns--medium-checks": "Medium checks",
   "--background-patterns--large-checks": "Large checks",
+  "--background-patterns--extra-large-checks": "Extra-large checks",
   "--background-patterns--small-dots": "Small dots",
   "--background-patterns--medium-dots": "Medium dots",
   "--background-patterns--large-dots": "Large dots",
+  "--background-patterns--extra-large-dots": "Extra-large dots",
 });

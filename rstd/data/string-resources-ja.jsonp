@@ -2,7 +2,7 @@ jsonpCallback({
   "app-title": "翻訳ドリルメーカー",
   "copyright-notice-html": "<b>翻訳ドリルメーカー</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
-  "--the-source-of-this-unit": "この単元のソース",
+  "--the-source-of-this-drill": "このドリルのソース",
   "--settings": "設定",
   "--setting-category--operation": "操作",
   "--enable-swipe-to-right": "右方向のスワイプ（問題のスキップ等）",
@@ -120,7 +120,9 @@ jsonpCallback({
   "--background-patterns--small-checks": "チェック（小）",
   "--background-patterns--medium-checks": "チェック（中）",
   "--background-patterns--large-checks": "チェック（大）",
+  "--background-patterns--extra-large-checks": "チェック（特大）",
   "--background-patterns--small-dots": "水玉（小）",
   "--background-patterns--medium-dots": "水玉（中）",
   "--background-patterns--large-dots": "水玉（大）",
+  "--background-patterns--extra-large-dots": "水玉（特大）",
 });

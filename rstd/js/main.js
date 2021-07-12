@@ -286,12 +286,12 @@ const main = async () => {
       }, {once: true});
     });
   } else {
-    const urlOfDemoUnitJsonp = `./data/demo-unit-${appLang}.jsonp`;
+    const urlOfDemoUnitJsonp = `./data/demo-drill-${appLang}.jsonp`;
     await new Promise(resolve => {
       requestJsonp(urlOfDemoUnitJsonp, data => {
         leadText = data['ltext'] || '';
         leadText += `${leadText ? '<br>__<br>' : ''}`
-          + `${stringResources['--the-source-of-this-unit']}: `
+          + `${stringResources['--the-source-of-this-drill']}: `
           + `<a href="${urlOfDemoUnitJsonp}">${urlOfDemoUnitJsonp}</a>`;
         questionTemplate = data['qtemp'] || '';
         questionLang = data['qlang'] || '';
