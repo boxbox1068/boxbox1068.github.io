@@ -31,9 +31,11 @@
 /*  ENABLE HINT BALLOON  */
 :root,
 :root[data-enable-hint-balloon="true"] {
+  --variable-underline-color: #607D8B;
   --hint-balloon-panel-display: block;
 }
 :root[data-enable-hint-balloon="false"] {
+  --variable-underline-color: transparent;
   --hint-balloon-panel-display: none;
 }
 
@@ -514,16 +516,6 @@ body > * {
 }
 
 
-/*
-.variable {
-  --variable-border-bottom-color: transparent;
-  --hint-balloon-visibility: hidden;
-  --hint-balloon-opacity: 0;
-  border-bottom: var(--hint-balloon-border-width) solid;
-  border-bottom-color: var(--variable-border-bottom-color);
-  font-weight: bold;
-}
-*/
 .variable {
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
@@ -533,6 +525,7 @@ body > * {
 :root.fold-lead:not(.show-settings):not(.has-active-element) .variable:hover {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
+  text-decoration: underline dashed var(--variable-underline-color);
 }
 
 
@@ -733,8 +726,13 @@ body > * {
 }
 #show-settings-button,
 #visit-home-button {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--footer-cell-height);
+  height: var(--footer-cell-height);
+}
+#show-settings-button > svg,
+#visit-home-button > svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 /*-------------------*
