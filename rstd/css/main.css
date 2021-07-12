@@ -55,7 +55,7 @@
 }
 
 /*  FONT SIZE  */
-:root[data-font-size="very-small"] {
+:root[data-font-size="extra-small"] {
   --drill-panel-font-size: 1rem;
 }
 :root[data-font-size="small"] {
@@ -68,7 +68,7 @@
 :root[data-font-size="large"] {
   --drill-panel-font-size: 1.75rem;
 }
-:root[data-font-size="very-large"] {
+:root[data-font-size="extra-large"] {
   --drill-panel-font-size: 2rem;
 }
 
@@ -96,17 +96,15 @@
 /*  COLOR SCHEME  */
  :root,
  :root[data-color-scheme="light"] {
-   --common-background-color: #CFD8DC;
-   --common-color: #263238;
-   --background-patterns-color: #0001;
-   --lead-panel-background-color: #C5CAE9;
-   --lead-panel-color: #263238;
+   --app-background-color: #CFD8DC;
+   --app-color: #263238;
+   --background-patterns-color: #00000022;
    --fold-lead-button-background-color: #455A64;
    --fold-lead-button-color: #CFD8DC;
    --main-panel-background-color: #FFFC;
    --main-panel-color: #263238;
    --drill-cover-background-color: #3F51B5;
-   --drill-cover-font-color: #3949AB;
+   --drill-cover-color: #3949AB;
     --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
@@ -125,8 +123,8 @@
  }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-   --common-background-color: #000;
-   --common-color: #FFF;
+   --app-background-color: #000;
+   --app-color: #FFF;
    --background-patterns-color: #0001;
    --lead-panel-background-color: #455A64;
    --lead-panel-color: #FFF;
@@ -135,7 +133,7 @@
    --main-panel-background-color: #000C;
    --main-panel-color: #FFF;
    --drill-cover-background-color: #37474F;
-   --drill-cover-font-color: #455A64;
+   --drill-cover-color: #455A64;
     --control-background-color: #CFD8DC;
    --disabled-controls-background-color: #ECEFF1;
    --control-border-color: #546E7A;
@@ -157,120 +155,128 @@
 :root[data-accent-color="red"] {
   --lead-panel-background-color: #EF9A9A;
   --drill-cover-background-color: #E53935;
-  --drill-cover-font-color: #EF5350;
+  --drill-cover-color: #EF5350;
 }
 :root[data-accent-color="pink"] {
   --lead-panel-background-color: #F48FB1;
   --drill-cover-background-color: #D81B60;
-  --drill-cover-font-color: #EC407A;
+  --drill-cover-color: #EC407A;
 }
 :root[data-accent-color="purple"] {
   --lead-panel-background-color: #CE93D8;
   --drill-cover-background-color: #8E24AA;
-  --drill-cover-font-color: #AB47BC;
+  --drill-cover-color: #AB47BC;
 }
 :root[data-accent-color="deep-purple"] {
   --lead-panel-background-color: #B39DDB;
   --drill-cover-background-color: #5E35B1;
-  --drill-cover-font-color: #7E57C2;
+  --drill-cover-color: #7E57C2;
 }
 :root[data-accent-color="indigo"] {
   --lead-panel-background-color: #9FA8DA;
   --drill-cover-background-color: #3949AB;
-  --drill-cover-font-color: #5C6BC0;
+  --drill-cover-color: #5C6BC0;
 }
 :root[data-accent-color="blue"] {
   --lead-panel-background-color: #90CAF9;
   --drill-cover-background-color: #1E88E5;
-  --drill-cover-font-color: #42A5F5;
+  --drill-cover-color: #42A5F5;
 }
 :root[data-accent-color="light-blue"] {
   --lead-panel-background-color: #81D4FA;
   --drill-cover-background-color: #039BE5;
-  --drill-cover-font-color: #29B6F6;
+  --drill-cover-color: #29B6F6;
 }
 :root[data-accent-color="cyan"] {
   --lead-panel-background-color: #80DEEA;
   --drill-cover-background-color: #00ACC1;
-  --drill-cover-font-color: #26C6DA;
+  --drill-cover-color: #26C6DA;
 }
 :root[data-accent-color="teal"] {
   --lead-panel-background-color: #80CBC4;
   --drill-cover-background-color: #00897B;
-  --drill-cover-font-color: #26A69A;
+  --drill-cover-color: #26A69A;
 }
 :root[data-accent-color="green"] {
   --lead-panel-background-color: #A5D6A7;
   --drill-cover-background-color: #43A047;
-  --drill-cover-font-color: #66BB6A;
+  --drill-cover-color: #66BB6A;
 }
 :root[data-accent-color="light-green"] {
   --lead-panel-background-color: #C5E1A5;
   --drill-cover-background-color: #7CB342;
-  --drill-cover-font-color: #9CCC65;
+  --drill-cover-color: #9CCC65;
 }
 :root[data-accent-color="lime"] {
   --lead-panel-background-color: #E6EE9C;
   --drill-cover-background-color: #C0CA33;
-  --drill-cover-font-color: #D4E157;
+  --drill-cover-color: #D4E157;
 }
 :root[data-accent-color="yellow"] {
   --lead-panel-background-color: #FFF59D;
   --drill-cover-background-color: #FDD835;
-  --drill-cover-font-color: #FFEE58;
+  --drill-cover-color: #FFEE58;
 }
 :root[data-accent-color="amber"] {
   --lead-panel-background-color: #FFE082;
   --drill-cover-background-color: #FFB300;
-  --drill-cover-font-color: #FFCA28;
+  --drill-cover-color: #FFCA28;
 }
 :root[data-accent-color="orange"] {
   --lead-panel-background-color: #FFCC80;
   --drill-cover-background-color: #FB8C00;
-  --drill-cover-font-color: #FFA726;
+  --drill-cover-color: #FFA726;
 }
 :root[data-accent-color="deep-orange"] {
   --lead-panel-background-color: #FFAB91;
   --drill-cover-background-color: #F4511E;
-  --drill-cover-font-color: #FF7043;
+  --drill-cover-color: #FF7043;
 }
 :root[data-accent-color="brown"] {
   --lead-panel-background-color: #BCAAA4;
   --drill-cover-background-color: #6D4C41;
-  --drill-cover-font-color: #8D6E63;
+  --drill-cover-color: #8D6E63;
 }
 :root,
 :root[data-accent-color="blue-grey"] {
   --lead-panel-background-color: #B0BEC5;
   --drill-cover-background-color: #546E7A;
-  --drill-cover-font-color: #78909C;
+  --drill-cover-color: #78909C;
 }
 
 /*  BACKGROUND PATTERNS  */
+:root[data-background-patterns="thin-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 8px 8px;
+}
 :root,
-:root[data-background-patterns="horizontal-thin-stripe"] {
-  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
-  --body-background-size: 8px 8px;
-}
-:root[data-background-patterns="horizontal-medium-stripe"] {
+:root[data-background-patterns="medium-horizontal-stripe"] {
   --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="horizontal-thick-stripe"] {
+:root[data-background-patterns="thick-horizontal-stripe"] {
   --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="vertical-thin-stripe"] {
+:root[data-background-patterns="extra-thick-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 64px 64px;
+}
+:root[data-background-patterns="thin-vertical-stripe"] {
   --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 8px 8px;
 }
-:root[data-background-patterns="vertical-medium-stripe"] {
+:root[data-background-patterns="medium-vertical-stripe"] {
   --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="vertical-thick-stripe"] {
+:root[data-background-patterns="thick-vertical-stripe"] {
   --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
   --body-background-size: 32px 32px;
+}
+:root[data-background-patterns="extra-thick-vertical-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+  --body-background-size: 64px 64px;
 }
 :root[data-background-patterns="small-checks"] {
   --body-background-image:
@@ -345,12 +351,12 @@
 
 html {
   height: 100%;
-  background-color: var(--common-background-color);
+  background-color: var(--app-background-color);
 
 
 
 
-  color: var(--common-color);
+  color: var(--app-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
 }
@@ -453,7 +459,6 @@ body > * {
 #lead-body {
   margin-bottom: var(--fold-lead-button-height);
   padding: var(--common-padding);
-  color: var(--lead-panel-color);
   font-size: var(--lead-body-font-size);
   font-family: var(--drill-panel-font-family);
   line-height: var(--common-line-height);
@@ -513,7 +518,7 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: var(--drill-cover-background-color);
-  color: var(--drill-cover-font-color);
+  color: var(--drill-cover-color);
   font-weight: bold;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
@@ -793,7 +798,7 @@ body > * {
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
-  background-color: var(--common-background-color);
+  background-color: var(--app-background-color);
 }
 #settings-body {
   padding: var(--common-padding);
