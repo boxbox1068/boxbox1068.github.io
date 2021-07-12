@@ -1,6 +1,6 @@
 jsonpCallback({
-  "app-title": "Translation Workbook Maker",
-  "copyright-notice-html": "<b>Translation Workbook Maker</b> &copy; 2021 shikaku1068",
+  "app-title": "Translation Drill Maker",
+  "copyright-notice-html": "<b>Translation Drill Maker</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "--the-source-of-this-unit": "The source of this session",
   "--settings": "Settings",
