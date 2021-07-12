@@ -362,9 +362,9 @@ const setActiveElement = targetElement => {
   });
   if (targetElement) {
     targetElement.classList.add('active');
-    setFlag('hasActiveElement', true);
+    setFlag('has-active-element', true);
   } else {
-    setFlag('hasActiveElement', false);
+    setFlag('has-active-element', false);
   }
 };
 const switchSettingRadio = (targetSettingKey, reverse) => {

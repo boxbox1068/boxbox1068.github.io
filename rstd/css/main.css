@@ -1,19 +1,19 @@
-/* ---------- *
- |  SETTINGS  |
- * ---------- */
+/*------------*
+ *  SETTINGS  *
+ *------------*/
 /*  ENABLE VARIABLE HIGHLIGHT  */
 :root,
 :root[data-enable-variable-highlight="true"] {
-  --variable-number-1-background-color: #EF9A9A99;
-  --variable-number-2-background-color: #90CAF999;
-  --variable-number-3-background-color: #FFF59D99;
-  --variable-number-4-background-color: #A5D6A799;
-  --variable-number-5-background-color: #CE93D899;
-  --variable-number-6-background-color: #FFCC8099;
-  --variable-number-7-background-color: #80DEEA99;
-  --variable-number-8-background-color: #F48FB199;
-  --variable-number-9-background-color: #BCAAA499;
-  --variable-number-0-background-color: #B0BEC599;
+  --variable-number-1-background-color: #F4433666;
+  --variable-number-2-background-color: #FF980066;
+  --variable-number-3-background-color: #FFEB3B66;
+  --variable-number-4-background-color: #4CAF5066;
+  --variable-number-5-background-color: #9C27B066;
+  --variable-number-6-background-color: #2196F366;
+  --variable-number-7-background-color: #3F51B566;
+  --variable-number-8-background-color: #9C27B066;
+  --variable-number-9-background-color: #79554866;
+  --variable-number-0-background-color: #607D8B66;
 }
 :root[data-enable-variable-highlight="false"] {
   --variable-number-1-background-color: unset;
@@ -366,7 +366,7 @@ button > svg {
 }
 
 /* ----------- *
- |  HTML BODY  |
+ *  HTML BODY  *
  * ----------- */
 body {
   display: grid;
@@ -525,21 +525,18 @@ body > * {
 }
 */
 .variable {
-  --variable-border-bottom-color: transparent;
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
-  border-bottom: var(--hint-balloon-border-width) solid;
-  border-bottom-color: var(--variable-border-bottom-color);
   font-weight: bold;
 }
-
-
 :root.fold-lead:not(.show-settings) .variable.active,
-:root.fold-lead:not(.show-settings):not(.hasActiveElement) .variable:hover {
-  --variable-border-bottom-color: var(--hint-balloon-border-color);
+:root.fold-lead:not(.show-settings):not(.has-active-element) .variable:hover {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
 }
+
+
+
 .variable[data-variable-number="1"] {
   background-color: var(--variable-number-1-background-color);
 }
@@ -728,6 +725,7 @@ body > * {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100%;
   padding: var(--common-padding);
   color: var(--footer-color);
   font-size: .75rem;
@@ -735,8 +733,8 @@ body > * {
 }
 #show-settings-button,
 #visit-home-button {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /*-------------------*
