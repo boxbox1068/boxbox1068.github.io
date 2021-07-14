@@ -1,6 +1,6 @@
 jsonpCallback({
-  "app-title": "Translation Drill Maker",
-  "copyright-notice-html": "<b>Translation Drill Maker</b> &copy; 2021 shikaku1068",
+  "app-title": "Language Drill Maker",
+  "copyright-notice-html": "<b>Language Drill Maker</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Refill %refill-count%",
   "--the-source-of-this-drill": "The source of this drill",
   "--settings": "Settings",

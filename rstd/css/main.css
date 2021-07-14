@@ -5,13 +5,13 @@
 :root,
 :root[data-enable-variable-highlight="true"] {
   --variable-number-1-background-color: #F4433666;
-  --variable-number-2-background-color: #FF980066;
-  --variable-number-3-background-color: #FFEB3B66;
-  --variable-number-4-background-color: #4CAF5066;
+  --variable-number-2-background-color: #2196F366;
+  --variable-number-3-background-color: #4CAF5066;
+  --variable-number-4-background-color: #FF980066;
   --variable-number-5-background-color: #9C27B066;
-  --variable-number-6-background-color: #2196F366;
+  --variable-number-6-background-color: #FFEB3B66;
   --variable-number-7-background-color: #3F51B566;
-  --variable-number-8-background-color: #9C27B066;
+  --variable-number-8-background-color: #8BC34A66;
   --variable-number-9-background-color: #79554866;
   --variable-number-0-background-color: #607D8B66;
 }
@@ -96,60 +96,27 @@
 /*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
-  --app-background-color: #CFD8DC;
-  --app-color: #263238;
-  --background-patterns-color: #00000011;
+  --common-background-color: #CFD8DC;
+  --common-color: #263238;
+  --common-button-border-color: #607D8B;
+  --common-button-background-color: #CFD8DC;
+  --common-button-color: #455A64;
+  --background-patterns-color: #0001;
   --fold-lead-button-background-color: #455A64;
-  --fold-lead-button-color: #CFD8DC;
+  --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #FFF9;
-  --drill-panel-color: #263238;
   --hint-balloon-panel-border-color: #607D8B;
   --hint-balloon-panel-background-color: #FFF;
-  --hint-balloon-panel-color: #263238;
-  --control-button-border-color: #546E7A;
-  --control-button-background-color: #CFD8DC;
-  --disabled-control-button-background-color: #ECEFF1;
-  --control-button-color: #455A64;
   --off-toggle-button-color: #78909C;
   --on-toggle-button-color: #FFC107;
   --footer-panel-background-color: #37474F;
-  --footer-panel-color: #CFD8DC;
+  --footer-panel-color: #ECEFF1;
   --settings-title-bar-background-color: #37474F;
-  --settings-title-bar-color: #CFD8DC;
-  --settings-panel-background-color: #CFD8DC;
-  --setting-category-decoration-color: grey;
-  --setting-radio-border-color: #455A64;
+  --settings-title-bar-color: #ECEFF1;
   --setting-radio-background-color: #ECEFF1;
-  --setting-radio-color: #455A64;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-   --app-background-color: #000;
-   --app-color: #FFF;
-   --background-patterns-color: #0001;
-   --lead-panel-background-color: #455A64;
-   --lead-panel-color: #FFF;
-   --fold-lead-button-background-color: #455A64;
-   --fold-lead-button-color: #CFD8DC;
-   --drill-panel-background-color: #000C;
-   --drill-panel-color: #FFF;
-   --drill-cover-background-color: #37474F;
-   --drill-cover-color: #455A64;
-    --control-button-background-color: #CFD8DC;
-   --disabled-control-button-background-color: #ECEFF1;
-   --control-button-border-color: #546E7A;
-   --control-button-color: #455A64;
-   --off-toggle-button-color: #78909C;
-   --on-toggle-button-color: #FFC107;
-   --footer-panel-background-color: #37474F;
-   --footer-panel-color: #CFD8DC;
-   --settings-title-bar-background-color: #37474F;
-   --settings-title-bar-color: #CFD8DC;
-   --setting-radio-background-color: #ECEFF1;
-   --setting-radio-color: #455A64;
-   --hint-balloon-panel-background-color: #FFF;
-   --hint-balloon-panel-border-color: #607D8B;
-   --hint-balloon-panel-color: #263238;
 }
  
 /*  ACCENT COLOR  */
@@ -325,7 +292,7 @@
 }
 
 /* --------- *
- |  GENERAL  |
+ *  GENERAL  *
  * --------- */
  :root {
   --common-font-size: 4vmin;
@@ -356,12 +323,12 @@
 
 html {
   height: 100%;
-  background-color: var(--app-background-color);
+  background-color: var(--common-background-color);
 
 
 
 
-  color: var(--app-color);
+  color: var(--common-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
 }
@@ -508,7 +475,6 @@ body > * {
 .drill-body {
   margin: auto;
   padding: var(--common-padding);
-  color: var(--drill-panel-color);
   font-size: var(--drill-panel-font-size);
   font-family: var(--drill-panel-font-family);
   line-height: var(--common-line-height);
@@ -589,13 +555,16 @@ body > * {
   height: var(--hint-balloon-height);
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
-  color: var(--hint-balloon-panel-color);
   font-weight: bold;
+
+  background-color: var(--hint-balloon-panel-background-color);
+  border: var(--hint-balloon-border-width) solid var(--hint-balloon-panel-border-color);
+
 }
 .hint-balloon-panel::before {
   display: block;
   position: absolute;
-  top: 100%;
+  top: calc(100% + var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-panel-border-color);
@@ -604,7 +573,7 @@ body > * {
 .hint-balloon-panel::after {
   display: block;
   position: absolute;
-  top: calc(100% - .2rem * 2);
+  top: calc(100% - var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-panel-background-color);
@@ -615,8 +584,8 @@ body > * {
   align-items: center;
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
-  border: var(--hint-balloon-border-width) solid var(--hint-balloon-panel-border-color);
-  background-color: var(--hint-balloon-panel-background-color);
+//  border: var(--hint-balloon-border-width) solid var(--hint-balloon-panel-border-color);
+//  background-color: var(--hint-balloon-panel-background-color);
   white-space: nowrap;
 }
 
@@ -653,28 +622,28 @@ body > * {
   border-right: 0;
 }
 .toggle-button {
-  --this-toggle-height: .25rem;
+  --toggle-button-height: .25rem;
 }
 .toggle-button {
   position: relative;
   width: 1.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--control-button-border-color);
-  background-color: var(--control-button-background-color);
+  border: var(--common-border-width) solid var(--common-button-border-color);
+  background-color: var(--common-button-background-color);
 }
 .toggle-button::before {
   top: 0;
-  border-top: calc(var(--this-toggle-height) + var(--common-border-width)) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--control-button-border-color);
+  border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
+  border-bottom: var(--common-border-width) solid var(--common-button-border-color);
   background-color: var(--off-toggle-button-color);
-  color: var(--control-button-background-color);
+  color: var(--common-button-background-color);
 }
 .toggle-button::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--control-button-border-color);
-  border-bottom: calc(var(--this-toggle-height) + var(--common-border-width)) solid transparent;
+  border-top: var(--common-border-width) solid var(--common-button-border-color);
+  border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   background-color: var(--on-toggle-button-color);
-  color: var(--control-button-color);
+  color: var(--common-button-color);
 }
 .toggle-button::before,
 .toggle-button::after {
@@ -684,7 +653,7 @@ body > * {
   position: absolute;
   left: 0;
   width: 100%;
-  height: calc(100% - var(--this-toggle-height));
+  height: calc(100% - var(--toggle-button-height));
   font-weight: bold;
   font-size: 1rem;
   transition-duration: calc(var(--common-transition-duration) / 2);
@@ -699,11 +668,11 @@ body > * {
 }
 :root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::before,
 :root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::before {
-  top: calc(var(--this-toggle-height) - 100%);
+  top: calc(var(--toggle-button-height) - 100%);
 }
 :root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::after,
 :root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::after {
-  top: var(--this-toggle-height);
+  top: var(--toggle-button-height);
 }
 .control-button {
   display: flex;
@@ -711,9 +680,9 @@ body > * {
   align-items: center;
   width: 3.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--control-button-border-color);
-  background-color: var(--control-button-background-color);
-  color: var(--control-button-color);
+  border: var(--common-border-width) solid var(--common-button-border-color);
+  background-color: var(--common-button-background-color);
+  color: var(--common-button-color);
 }
 .control-button#play-button {
   width: 5.5rem;
@@ -733,6 +702,7 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: var(--footer-panel-background-color);
+  color: var(--footer-panel-color);
 }
 #footer-body {
   display: flex;
@@ -740,7 +710,6 @@ body > * {
   align-items: center;
   height: 100%;
   padding: var(--common-padding);
-  color: var(--footer-panel-color);
   font-size: .75rem;
   white-space: nowrap;
 }
@@ -803,7 +772,7 @@ body > * {
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
-  background-color: var(--app-background-color);
+  background-color: var(--common-background-color);
 }
 #settings-body {
   padding: var(--common-padding);
@@ -851,7 +820,7 @@ body > * {
   font-size: 1rem;
 }
 .setting-radio.checked {
-  --setting-radio-core-color: var(--control-button-color);
+  --setting-radio-core-color: var(--common-button-color);
 }
 .setting-radio::before {
   position: absolute;
@@ -872,6 +841,48 @@ body > * {
   height: var(--setting-radio-size);
   margin-top: calc(var(--setting-radio-size) * -.5);
   margin-top: -.5rem;
-  border: var(--common-border-width) solid var(--control-button-border-color);
+  border: var(--common-border-width) solid var(--common-button-border-color);
   content: "";
+}
+.setting-radio[data-setting-key="accent-color"] {
+  text-decoration-style: solid;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--common-border-width);
+}
+.setting-radio[data-setting-key="accent-color"][data-setting-value="red"] {
+  text-decoration-color: #F44336;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="pink"] {
+  text-decoration-color: #E91E63;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="purple"] {
+  text-decoration-color: #9C27B0;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="deep-purple"] {
+  text-decoration-color: #673AB7;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="indigo"] {
+  text-decoration-color: #3F51B5;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="blue"] {
+  text-decoration-color: #2196F3;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="light-blue"] {
+  text-decoration-color: #03A9F4;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="cyan"] {
+  text-decoration-color: #00BCD4;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="teal"] {
+  text-decoration-color: #009688;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="green"] {
+  text-decoration-color: #4CAF50;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="light-green"] {
+  text-decoration-color: #8BC34A;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="lime"] {
+  text-decoration-color: #CDDC39;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="yellow"] {
+  text-decoration-color: #FFEB3B;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="amber"] {
+  text-decoration-color: #FFC107;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="orange"] {
+  text-decoration-color: #FF9800;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="deep-orange"] {
+  text-decoration-color: #FF5722;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="brown"] {
+  text-decoration-color: #FF5722;
+}.setting-radio[data-setting-key="accent-color"][data-setting-value="blue-grey"] {
+  text-decoration-color: #607D8B;
 }
