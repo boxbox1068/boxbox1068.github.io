@@ -111,7 +111,7 @@ const main = async () => {
     }
     setFlag('show-settings', false);
   });
-  qsa('.setting-radio').forEach(element => {
+  qsa('[data-setting-key]').forEach(element => {
     element.addEventListener('click', () => {
       const key = element.getAttribute('data-setting-key');
       const value = element.getAttribute('data-setting-value');

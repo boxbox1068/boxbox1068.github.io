@@ -96,16 +96,15 @@
 /*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
+  --common-border-color: #607D8B;
   --common-background-color: #CFD8DC;
   --common-color: #263238;
-  --common-button-border-color: #607D8B;
   --common-button-background-color: #CFD8DC;
   --common-button-color: #455A64;
   --background-patterns-color: #0001;
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #FFF9;
-  --hint-balloon-panel-border-color: #607D8B;
   --hint-balloon-panel-background-color: #FFF;
   --off-toggle-button-color: #78909C;
   --on-toggle-button-color: #FFC107;
@@ -113,10 +112,27 @@
   --footer-panel-color: #ECEFF1;
   --settings-title-bar-background-color: #37474F;
   --settings-title-bar-color: #ECEFF1;
-  --setting-radio-background-color: #ECEFF1;
+  --radio-button-background-color: #ECEFF1;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
+  --common-border-color: #90A4AE;
+  --common-background-color: #263238;
+  --common-color: #ECEFF1;
+  --common-button-background-color: #263238;
+  --common-button-color: #ECEFF1;
+  --background-patterns-color: unset;
+  --fold-lead-button-background-color: #455A64;
+  --fold-lead-button-color: #ECEFF1;
+  --drill-panel-background-color: #000;
+  --hint-balloon-panel-background-color: #000;
+  --off-toggle-button-color: #78909C;
+  --on-toggle-button-color: #FFC107;
+  --footer-panel-background-color: #37474F;
+  --footer-panel-color: #ECEFF1;
+  --settings-title-bar-background-color: #37474F;
+  --settings-title-bar-color: #ECEFF1;
+  --radio-button-background-color: #ECEFF1;
 }
  
 /*  ACCENT COLOR  */
@@ -558,7 +574,7 @@ body > * {
   font-weight: bold;
 
   background-color: var(--hint-balloon-panel-background-color);
-  border: var(--hint-balloon-border-width) solid var(--hint-balloon-panel-border-color);
+  border: var(--hint-balloon-border-width) solid var(--common-border-color);
 
 }
 .hint-balloon-panel::before {
@@ -567,7 +583,7 @@ body > * {
   top: calc(100% + var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-panel-border-color);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--common-border-color);
   content: "";
 }
 .hint-balloon-panel::after {
@@ -584,7 +600,7 @@ body > * {
   align-items: center;
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
-//  border: var(--hint-balloon-border-width) solid var(--hint-balloon-panel-border-color);
+//  border: var(--hint-balloon-border-width) solid var(--common-border-color);
 //  background-color: var(--hint-balloon-panel-background-color);
   white-space: nowrap;
 }
@@ -628,19 +644,19 @@ body > * {
   position: relative;
   width: 1.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--common-button-border-color);
+  border: var(--common-border-width) solid var(--common-border-color);
   background-color: var(--common-button-background-color);
 }
 .toggle-button::before {
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--common-button-border-color);
+  border-bottom: var(--common-border-width) solid var(--common-border-color);
   background-color: var(--off-toggle-button-color);
   color: var(--common-button-background-color);
 }
 .toggle-button::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--common-button-border-color);
+  border-top: var(--common-border-width) solid var(--common-border-color);
   border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   background-color: var(--on-toggle-button-color);
   color: var(--common-button-color);
@@ -680,7 +696,7 @@ body > * {
   align-items: center;
   width: 3.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--common-button-border-color);
+  border: var(--common-border-width) solid var(--common-border-color);
   background-color: var(--common-button-background-color);
   color: var(--common-button-color);
 }
@@ -807,9 +823,9 @@ body > * {
 .setting-item > span::after {
   content: ":\0020";
 }
-.setting-radio {
-  --setting-radio-size: 1rem;
-  --setting-radio-core-color: var(--setting-radio-background-color);
+.radio-button {
+  --radio-button-size: 1rem;
+  --radio-button-color: var(--radio-button-background-color);
   display: inline-flex;
   align-items: center;
   position: relative;
@@ -819,70 +835,70 @@ body > * {
   border: 0;
   font-size: 1rem;
 }
-.setting-radio.checked {
-  --setting-radio-core-color: var(--common-button-color);
+.radio-button.checked {
+  --radio-button-color: var(--common-button-color);
 }
-.setting-radio::before {
+.radio-button::before {
   position: absolute;
   top: 50%;
   left: 0;
-  width: var(--setting-radio-size);
-  height: var(--setting-radio-size);
-  margin-top: calc(var(--setting-radio-size) * -.5);
-  border: calc(var(--common-border-width) * 2) solid var(--setting-radio-background-color);
-  background-color: var(--setting-radio-core-color);
+  width: var(--radio-button-size);
+  height: var(--radio-button-size);
+  margin-top: calc(var(--radio-button-size) * -.5);
+  border: calc(var(--common-border-width) * 2) solid var(--radio-button-background-color);
+  background-color: var(--radio-button-color);
   content: "";
 }
-.setting-radio::after {
+.radio-button::after {
   position: absolute;
   top: 50%;
   left: 0;
-  width: var(--setting-radio-size);
-  height: var(--setting-radio-size);
-  margin-top: calc(var(--setting-radio-size) * -.5);
+  width: var(--radio-button-size);
+  height: var(--radio-button-size);
+  margin-top: calc(var(--radio-button-size) * -.5);
   margin-top: -.5rem;
-  border: var(--common-border-width) solid var(--common-button-border-color);
+  border: var(--common-border-width) solid var(--common-border-color);
   content: "";
 }
-.setting-radio[data-setting-key="accent-color"] {
+.radio-button[data-setting-key="accent-color"] {
   text-decoration-style: solid;
   text-decoration-line: underline;
   text-decoration-thickness: var(--common-border-width);
 }
-.setting-radio[data-setting-key="accent-color"][data-setting-value="red"] {
+.radio-button[data-setting-key="accent-color"][data-setting-value="red"] {
   text-decoration-color: #F44336;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="pink"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="pink"] {
   text-decoration-color: #E91E63;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="purple"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="purple"] {
   text-decoration-color: #9C27B0;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="deep-purple"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="deep-purple"] {
   text-decoration-color: #673AB7;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="indigo"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="indigo"] {
   text-decoration-color: #3F51B5;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="blue"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="blue"] {
   text-decoration-color: #2196F3;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="light-blue"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="light-blue"] {
   text-decoration-color: #03A9F4;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="cyan"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="cyan"] {
   text-decoration-color: #00BCD4;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="teal"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="teal"] {
   text-decoration-color: #009688;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="green"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="green"] {
   text-decoration-color: #4CAF50;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="light-green"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="light-green"] {
   text-decoration-color: #8BC34A;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="lime"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="lime"] {
   text-decoration-color: #CDDC39;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="yellow"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="yellow"] {
   text-decoration-color: #FFEB3B;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="amber"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="amber"] {
   text-decoration-color: #FFC107;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="orange"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="orange"] {
   text-decoration-color: #FF9800;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="deep-orange"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="deep-orange"] {
   text-decoration-color: #FF5722;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="brown"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="brown"] {
   text-decoration-color: #FF5722;
-}.setting-radio[data-setting-key="accent-color"][data-setting-value="blue-grey"] {
+}.radio-button[data-setting-key="accent-color"][data-setting-value="blue-grey"] {
   text-decoration-color: #607D8B;
 }
