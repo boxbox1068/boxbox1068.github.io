@@ -98,7 +98,7 @@
 :root[data-color-scheme="light"] {
   --app-main-background-color: #CFD8DC;
   --app-main-color: #202020;
-  --app-sub-background-color: #37474F;
+  --app-sub-background-color: #455A64;
   --app-sub-color: #DFDFDF;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
@@ -110,7 +110,6 @@
   --drill-cover-background-color: var(--accent-color);
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #DFDFDF;
-  --toggle-button-off-color: #78909C;
   --toggle-button-on-color: #FFA726;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
@@ -121,9 +120,9 @@
   --app-main-color: #DFDFDF;
   --app-sub-background-color: #263238;
   --app-sub-color: #DFDFDF;
-  --button-border-color: #37474F;
-  --button-background-color: #13191C;
-  --button-color: #B0BEC5;
+  --button-border-color: #455A64;
+  --button-background-color: #263238;
+  --button-color: #DFDFDF;
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
@@ -131,8 +130,7 @@
   --drill-cover-background-color: #263238;
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #202020;
-  --toggle-button-off-color: #78909C;
-  --toggle-button-on-color: #FFA726;
+  --toggle-button-on-color: #732800;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
 }
@@ -612,20 +610,18 @@ body > * {
   height: var(--control-height);
   border: var(--common-border-width) solid var(--button-border-color);
   background-color: var(--button-background-color);
+  color: var(--button-color);
 }
 .toggle-button::before {
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   border-bottom: var(--common-border-width) solid var(--button-border-color);
-  background-color: var(--toggle-button-off-color);
-  color: var(--button-background-color);
 }
 .toggle-button::after {
   top: 100%;
   border-top: var(--common-border-width) solid var(--button-border-color);
   border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   background-color: var(--toggle-button-on-color);
-  color: var(--button-color);
 }
 .toggle-button::before,
 .toggle-button::after {
