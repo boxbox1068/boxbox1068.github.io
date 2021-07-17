@@ -75,7 +75,7 @@
 /*  FONT FAMILY  */
 :root,
 :root[data-font-family="sans-serif"] {
-  --drill-panel-font-family: inherit;
+  --drill-panel-font-family: var(--common-font-family);
 }
 :root[data-font-family="serif"] {
   --drill-panel-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
@@ -96,10 +96,10 @@
 /*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
-  --app-main-background-color: #CFD8DC;
-  --app-main-color: #202020;
-  --app-sub-background-color: #455A64;
-  --app-sub-color: #DFDFDF;
+  --main-background-color: #CFD8DC;
+  --main-color: #202020;
+  --sub-background-color: #455A64;
+  --sub-color: #DFDFDF;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-color: #455A64;
@@ -113,13 +113,14 @@
   --toggle-button-on-color: #FFA726;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
+  --radio-button-color: #455A64;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-  --app-main-background-color: #13191C;
-  --app-main-color: #DFDFDF;
-  --app-sub-background-color: #263238;
-  --app-sub-color: #DFDFDF;
+  --main-background-color: #13191C;
+  --main-color: #DFDFDF;
+  --sub-background-color: #263238;
+  --sub-color: #DFDFDF;
   --button-border-color: #455A64;
   --button-background-color: #263238;
   --button-color: #DFDFDF;
@@ -133,6 +134,7 @@
   --toggle-button-on-color: #732800;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
+  --radio-button-color: #455A64;
 }
  
 /*  ACCENT COLOR  */
@@ -303,12 +305,12 @@
 
 html {
   height: 100%;
-  background-color: var(--app-main-background-color);
+  background-color: var(--main-background-color);
 
 
 
 
-  color: var(--app-main-color);
+  color: var(--main-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
 }
@@ -679,8 +681,8 @@ body > * {
 #footer-panel {
   width: 100%;
   height: 100%;
-  background-color: var(--app-sub-background-color);
-  color: var(--app-sub-color);
+  background-color: var(--sub-background-color);
+  color: var(--sub-color);
 }
 #footer-body {
   display: flex;
@@ -733,14 +735,14 @@ body > * {
   justify-content: space-between;
   align-items: center;
   padding: var(--common-padding);
-  background-color: var(--app-sub-background-color);
-  color: var(--app-sub-color);
+  background-color: var(--sub-background-color);
+  color: var(--sub-color);
   font-weight: bold;
 }
 #hide-settings-button {
   width: 1.5rem;
   height: 1.5rem;
-  color: var(--app-sub-color);
+  color: var(--sub-color);
   cursor: pointer;
 }
 #hide-settings-button > svg {
@@ -750,7 +752,7 @@ body > * {
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
-  background-color: var(--app-main-background-color);
+  background-color: var(--main-background-color);
 }
 #settings-body {
   padding: var(--common-padding);
@@ -780,7 +782,7 @@ body > * {
 }
 .radio-button {
   --radio-button-size: 1rem;
-  --radio-button-color: var(--radio-button-background-color);
+//  --radio-button-color: var(--radio-button-background-color);
   display: inline-flex;
   align-items: center;
   position: relative;
@@ -790,9 +792,6 @@ body > * {
   border: 0;
   font-size: 1rem;
 }
-.radio-button.checked {
-  --radio-button-color: var(--button-color);
-}
 .radio-button::before {
   position: absolute;
   top: 50%;
@@ -801,8 +800,11 @@ body > * {
   height: var(--radio-button-size);
   margin-top: calc(var(--radio-button-size) * -.5);
   border: calc(var(--common-border-width) * 2) solid var(--radio-button-background-color);
-  background-color: var(--radio-button-color);
+  background-color: var(--radio-button-background-color);
   content: "";
+}
+.radio-button.checked::before {
+  background-color: var(--radio-button-color);
 }
 .radio-button::after {
   position: absolute;
