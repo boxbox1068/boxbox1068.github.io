@@ -102,9 +102,11 @@
   --common-button-background-color: #CFD8DC;
   --common-button-color: #455A64;
   --background-patterns-color: #0001;
+  --lead-panel-background-color: #CFD8DC;
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #FFF9;
+  --drill-cover-background-color: var(--accent-color-main);
   --hint-balloon-panel-background-color: #FFF;
   --off-toggle-button-color: #78909C;
   --on-toggle-button-color: #FFC107;
@@ -122,9 +124,11 @@
   --common-button-background-color: #263238;
   --common-button-color: #ECEFF1;
   --background-patterns-color: unset;
+  --lead-panel-background-color: var(--dark-accent-color-a);
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #000;
+  --drill-cover-background-color: var(--dark-accent-color-b);
   --hint-balloon-panel-background-color: #000;
   --off-toggle-button-color: #78909C;
   --on-toggle-button-color: #FFC107;
@@ -137,95 +141,106 @@
  
 /*  ACCENT COLOR  */
 :root[data-accent-color="red"] {
-  --lead-panel-background-color: #EF9A9A;
-  --drill-cover-background-color: #E53935;
-  --drill-cover-color: #EF5350;
+  --accent-color-main: #E53935;
+  --accent-color-variant: #EF9A9A;
 }
 :root[data-accent-color="pink"] {
-  --lead-panel-background-color: #F48FB1;
-  --drill-cover-background-color: #D81B60;
-  --drill-cover-color: #EC407A;
+  --accent-color-main: #D81B60;
+  --accent-color-variant: #F48FB1;
 }
 :root[data-accent-color="purple"] {
-  --lead-panel-background-color: #CE93D8;
-  --drill-cover-background-color: #8E24AA;
-  --drill-cover-color: #AB47BC;
+  --accent-color-main: #8E24AA;
+  --accent-color-variant: #CE93D8;
 }
 :root[data-accent-color="deep-purple"] {
-  --lead-panel-background-color: #B39DDB;
-  --drill-cover-background-color: #5E35B1;
-  --drill-cover-color: #7E57C2;
+  --accent-color-main: #5E35B1;
+  --accent-color-variant: #B39DDB;
 }
 :root[data-accent-color="indigo"] {
-  --lead-panel-background-color: #9FA8DA;
-  --drill-cover-background-color: #3949AB;
-  --drill-cover-color: #5C6BC0;
+--accent-color-variant: #9FA8DA;
+--accent-color-variant: #B0BEC5;
+--accent-color-main: #3949AB;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="blue"] {
-  --lead-panel-background-color: #90CAF9;
-  --drill-cover-background-color: #1E88E5;
-  --drill-cover-color: #42A5F5;
+  --accent-color-variant: #90CAF9;
+  --accent-color-main: #1E88E5;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="light-blue"] {
-  --lead-panel-background-color: #81D4FA;
-  --drill-cover-background-color: #039BE5;
-  --drill-cover-color: #29B6F6;
+  --accent-color-variant: #81D4FA;
+  --accent-color-main: #039BE5;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="cyan"] {
-  --lead-panel-background-color: #80DEEA;
-  --drill-cover-background-color: #00ACC1;
-  --drill-cover-color: #26C6DA;
+  --accent-color-variant: #80DEEA;
+  --accent-color-main: #00ACC1;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="teal"] {
-  --lead-panel-background-color: #80CBC4;
-  --drill-cover-background-color: #00897B;
-  --drill-cover-color: #26A69A;
+  --accent-color-variant: #80CBC4;
+  --accent-color-main: #00897B;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="green"] {
-  --lead-panel-background-color: #A5D6A7;
-  --drill-cover-background-color: #43A047;
-  --drill-cover-color: #66BB6A;
+  --accent-color-variant: #A5D6A7;
+  --accent-color-main: #43A047;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="light-green"] {
-  --lead-panel-background-color: #C5E1A5;
-  --drill-cover-background-color: #7CB342;
-  --drill-cover-color: #9CCC65;
+  --accent-color-variant: #C5E1A5;
+  --accent-color-main: #7CB342;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="lime"] {
-  --lead-panel-background-color: #E6EE9C;
-  --drill-cover-background-color: #C0CA33;
-  --drill-cover-color: #D4E157;
+  --accent-color-variant: #E6EE9C;
+  --accent-color-main: #C0CA33;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="yellow"] {
-  --lead-panel-background-color: #FFF59D;
-  --drill-cover-background-color: #FDD835;
-  --drill-cover-color: #FFEE58;
+  --accent-color-variant: #FFF59D;
+  --accent-color-main: #FDD835;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="amber"] {
-  --lead-panel-background-color: #FFE082;
-  --drill-cover-background-color: #FFB300;
-  --drill-cover-color: #FFCA28;
+  --accent-color-variant: #FFE082;
+  --accent-color-main: #FFB300;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="orange"] {
-  --lead-panel-background-color: #FFCC80;
-  --drill-cover-background-color: #FB8C00;
-  --drill-cover-color: #FFA726;
+  --accent-color-variant: #FFCC80;
+  --accent-color-main: #FB8C00;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="deep-orange"] {
-  --lead-panel-background-color: #FFAB91;
-  --drill-cover-background-color: #F4511E;
-  --drill-cover-color: #FF7043;
+  --accent-color-variant: #FFAB91;
+  --accent-color-main: #F4511E;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root[data-accent-color="brown"] {
-  --lead-panel-background-color: #BCAAA4;
-  --drill-cover-background-color: #6D4C41;
-  --drill-cover-color: #8D6E63;
+  --accent-color-variant: #BCAAA4;
+  --accent-color-main: #6D4C41;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 :root,
 :root[data-accent-color="blue-grey"] {
-  --lead-panel-background-color: #B0BEC5;
-  --drill-cover-background-color: #546E7A;
-  --drill-cover-color: #78909C;
+  --accent-color-variant: #B0BEC5;
+  --accent-color-main: #546E7A;
+  --dark-accent-color-a: ;
+  --dark-accent-color-b: ;
 }
 
 /*  BACKGROUND PATTERNS  */
@@ -505,7 +520,7 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: var(--drill-cover-background-color);
-  color: var(--drill-cover-color);
+  color: #FFF3;
   font-weight: bold;
   font-size: 10rem;
   transition-duration: var(--common-transition-duration);
@@ -898,7 +913,7 @@ body > * {
 }.radio-button[data-setting-key="accent-color"][data-setting-value="deep-orange"] {
   text-decoration-color: #FF5722;
 }.radio-button[data-setting-key="accent-color"][data-setting-value="brown"] {
-  text-decoration-color: #FF5722;
+  text-decoration-color: #795548;
 }.radio-button[data-setting-key="accent-color"][data-setting-value="blue-grey"] {
   text-decoration-color: #607D8B;
 }
