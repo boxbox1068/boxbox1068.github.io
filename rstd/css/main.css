@@ -31,12 +31,12 @@
 /*  ENABLE HINT BALLOON  */
 :root,
 :root[data-enable-hint-balloon="true"] {
-  --variable-underline-color: #607D8B;
-  --hint-balloon-panel-display: block;
+  --variable-underline-color: var(--hint-balloon-chip-border-color);
+  --hint-balloon-chip-display: block;
 }
 :root[data-enable-hint-balloon="false"] {
-  --variable-underline-color: transparent;
-  --hint-balloon-panel-display: none;
+  --variable-underline-color: unset;
+  --hint-balloon-chip-display: none;
 }
 
 /*  ANIMATION DURATION  */
@@ -83,242 +83,193 @@
 
 /*  LINE HEIGHT  */
 :root[data-line-height="small"] {
-  --common-line-height: 1.25em;
+  --drill-body-line-height: 1.25em;
 }
 :root,
 :root[data-line-height="medium"] {
-  --common-line-height: 1.5em;
+  --drill-body-line-height: 1.5em;
 }
 :root[data-line-height="large"] {
-  --common-line-height: 1.75em;
+  --drill-body-line-height: 1.75em;
 }
 
 /*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
-  --chip-border-color: #607D8B;
-  --app-background-color: #CFD8DC;
-  --font-color: rgb(0, 0, 0, 223);
+  --app-main-background-color: #CFD8DC;
+  --app-main-color: #000000DF;
+  --app-sub-background-color: #37474F;
+  --app-sub-color: #FFFFFFDF;
+  --background-pattern-color: #8882;
+  --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-color: #455A64;
-  --background-patterns-color: #0001;
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #FFF9;
-  --drill-cover-background-color: var(--accent-color-main);
-  --hint-balloon-panel-background-color: #FFF;
-  --off-toggle-button-color: #78909C;
-  --on-toggle-button-color: #FFC107;
-  --footer-panel-background-color: #37474F;
-  --footer-panel-color: #ECEFF1;
-  --settings-title-bar-background-color: #37474F;
-  --settings-title-bar-color: #ECEFF1;
+  --drill-cover-background-color: var(--accent-color);
+  --hint-balloon-chip-border-color: #607D8B;
+  --hint-balloon-chip-background-color: #FFF;
+  --off-toggle-button-highlight-color: #78909C;
+  --on-toggle-button-highlight-color: #FFC107;
   --radio-button-background-color: #ECEFF1;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-  --chip-border-color: #90A4AE;
-  --app-background-color: #263238;
-  --font-color: #ECEFF1;
+  --button-border-color: #90A4AE;
+  --app-main-background-color: #263238;
+  --app-main-color: #ECEFF1;
   --button-background-color: #263238;
   --button-color: #ECEFF1;
-  --background-patterns-color: transparent;
+  --background-pattern-color: transparent;
+  --background-pattern-color: #8882;
   --lead-panel-background-color: var(--dark-accent-color-a);
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #000;
   --drill-cover-background-color: var(--dark-accent-color-b);
-  --hint-balloon-panel-background-color: #000;
-  --off-toggle-button-color: #78909C;
-  --on-toggle-button-color: #FFC107;
-  --footer-panel-background-color: #37474F;
-  --footer-panel-color: #ECEFF1;
-  --settings-title-bar-background-color: #37474F;
-  --settings-title-bar-color: #ECEFF1;
+  --hint-balloon-chip-background-color: #000;
+  --off-toggle-button-highlight-color: #78909C;
+  --on-toggle-button-highlight-color: #FFC107;
+  --app-sub-background-color: #37474F;
+  --app-sub-color: #ECEFF1;
   --radio-button-background-color: #ECEFF1;
 }
  
 /*  ACCENT COLOR  */
 :root[data-accent-color="red"] {
-  --accent-color-main: #E53935;
-  --accent-color-variant: #EF9A9A;
+  --accent-color: #E53935;
 }
 :root[data-accent-color="pink"] {
-  --accent-color-main: #D81B60;
-  --accent-color-variant: #F48FB1;
+  --accent-color: #D81B60;
 }
 :root[data-accent-color="purple"] {
-  --accent-color-main: #8E24AA;
-  --accent-color-variant: #CE93D8;
+  --accent-color: #8E24AA;
 }
 :root[data-accent-color="deep-purple"] {
-  --accent-color-main: #5E35B1;
-  --accent-color-variant: #B39DDB;
+  --accent-color: #5E35B1;
 }
 :root[data-accent-color="indigo"] {
---accent-color-variant: #9FA8DA;
---accent-color-variant: #B0BEC5;
---accent-color-main: #3949AB;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #3949AB;
 }
 :root[data-accent-color="blue"] {
-  --accent-color-variant: #90CAF9;
-  --accent-color-main: #1E88E5;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #1E88E5;
 }
 :root[data-accent-color="light-blue"] {
-  --accent-color-variant: #81D4FA;
-  --accent-color-main: #039BE5;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #039BE5;
 }
 :root[data-accent-color="cyan"] {
-  --accent-color-variant: #80DEEA;
-  --accent-color-main: #00ACC1;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #00ACC1;
 }
 :root[data-accent-color="teal"] {
-  --accent-color-variant: #80CBC4;
-  --accent-color-main: #00897B;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #00897B;
 }
 :root[data-accent-color="green"] {
-  --accent-color-variant: #A5D6A7;
-  --accent-color-main: #43A047;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #43A047;
 }
 :root[data-accent-color="light-green"] {
-  --accent-color-variant: #C5E1A5;
-  --accent-color-main: #7CB342;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #7CB342;
 }
 :root[data-accent-color="lime"] {
-  --accent-color-variant: #E6EE9C;
-  --accent-color-main: #C0CA33;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #C0CA33;
 }
 :root[data-accent-color="yellow"] {
-  --accent-color-variant: #FFF59D;
-  --accent-color-main: #FDD835;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #FDD835;
 }
 :root[data-accent-color="amber"] {
-  --accent-color-variant: #FFE082;
-  --accent-color-main: #FFB300;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #FFB300;
 }
 :root[data-accent-color="orange"] {
-  --accent-color-variant: #FFCC80;
-  --accent-color-main: #FB8C00;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #FB8C00;
 }
 :root[data-accent-color="deep-orange"] {
-  --accent-color-variant: #FFAB91;
-  --accent-color-main: #F4511E;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #F4511E;
 }
 :root[data-accent-color="brown"] {
-  --accent-color-variant: #BCAAA4;
-  --accent-color-main: #6D4C41;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #6D4C41;
 }
 :root,
 :root[data-accent-color="blue-grey"] {
-  --accent-color-variant: #B0BEC5;
-  --accent-color-main: #546E7A;
-  --dark-accent-color-a: ;
-  --dark-accent-color-b: ;
+  --accent-color: #546E7A;
 }
 
-/*  BACKGROUND PATTERNS  */
-:root[data-background-patterns="none"] {
+/*  BACKGROUND PATTERN  */
+:root[data-background-pattern="none"] {
   --body-background-image: unset;
   --body-background-size: unset;
 }
-:root[data-background-patterns="thin-horizontal-stripe"] {
-  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="thin-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, #8882 50%);
   --body-background-size: 8px 8px;
 }
 :root,
-:root[data-background-patterns="medium-horizontal-stripe"] {
-  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="medium-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, #8882 50%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="thick-horizontal-stripe"] {
-  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="thick-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, #8882 50%);
   --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="extra-thick-horizontal-stripe"] {
-  --body-background-image: linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="extra-thick-horizontal-stripe"] {
+  --body-background-image: linear-gradient(0deg, transparent 50%, #8882 50%);
   --body-background-size: 64px 64px;
 }
-:root[data-background-patterns="thin-vertical-stripe"] {
-  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="thin-vertical-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 8px 8px;
 }
-:root[data-background-patterns="medium-vertical-stripe"] {
-  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="medium-vertical-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="thick-vertical-stripe"] {
-  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="thick-vertical-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="extra-thick-vertical-stripe"] {
-  --body-background-image: linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+:root[data-background-pattern="extra-thick-vertical-stripe"] {
+  --body-background-image: linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 64px 64px;
 }
-:root[data-background-patterns="small-checks"] {
+:root[data-background-pattern="small-checks"] {
   --body-background-image:
-    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
-    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+    linear-gradient(0deg, transparent 50%, #8882 50%),
+    linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="medium-checks"] {
+:root[data-background-pattern="medium-checks"] {
   --body-background-image:
-    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
-    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+    linear-gradient(0deg, transparent 50%, #8882 50%),
+    linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="large-checks"] {
+:root[data-background-pattern="large-checks"] {
   --body-background-image:
-    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
-    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+    linear-gradient(0deg, transparent 50%, #8882 50%),
+    linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 48px 48px;
 }
-:root[data-background-patterns="extra-large-checks"] {
+:root[data-background-pattern="extra-large-checks"] {
   --body-background-image:
-    linear-gradient(0deg, transparent 50%, var(--background-patterns-color) 50%),
-    linear-gradient(90deg, transparent 50%, var(--background-patterns-color) 50%);
+    linear-gradient(0deg, transparent 50%, #8882 50%),
+    linear-gradient(90deg, transparent 50%, #8882 50%);
   --body-background-size: 64px 64px;
 }
-:root[data-background-patterns="small-dots"] {
-  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+:root[data-background-pattern="small-dots"] {
+  --body-background-image: radial-gradient(#8882 30%, transparent 30%);
   --body-background-size: 16px 16px;
 }
-:root[data-background-patterns="medium-dots"] {
-  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+:root[data-background-pattern="medium-dots"] {
+  --body-background-image: radial-gradient(#8882 30%, transparent 30%);
   --body-background-size: 32px 32px;
 }
-:root[data-background-patterns="large-dots"] {
-  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+:root[data-background-pattern="large-dots"] {
+  --body-background-image: radial-gradient(#8882 30%, transparent 30%);
   --body-background-size: 48px 48px;
 }
-:root[data-background-patterns="extra-large-dots"] {
-  --body-background-image: radial-gradient(var(--background-patterns-color) 30%, transparent 30%);
+:root[data-background-pattern="extra-large-dots"] {
+  --body-background-image: radial-gradient(#8882 30%, transparent 30%);
   --body-background-size: 64px 64px;
 }
 
@@ -354,12 +305,12 @@
 
 html {
   height: 100%;
-  background-color: var(--app-background-color);
+  background-color: var(--app-main-background-color);
 
 
 
 
-  color: var(--font-color);
+  color: var(--app-main-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
 }
@@ -464,7 +415,7 @@ body > * {
   padding: var(--common-padding);
   font-size: var(--lead-body-font-size);
   font-family: var(--drill-panel-font-family);
-  line-height: var(--common-line-height);
+  line-height: 1.5em;
   overflow-wrap: break-word;
 }
 #fold-lead-button {
@@ -508,7 +459,7 @@ body > * {
   padding: var(--common-padding);
   font-size: var(--drill-panel-font-size);
   font-family: var(--drill-panel-font-family);
-  line-height: var(--common-line-height);
+  line-height: var(--drill-body-line-height);
 }
 .drill-cover {
   display: flex;
@@ -577,8 +528,8 @@ body > * {
 .variable[data-variable-number="0"] {
   background-color: var(--variable-number-0-background-color);
 }
-.hint-balloon-panel {
-  display: var(--hint-balloon-panel-display);
+.hint-balloon-chip {
+  display: var(--hint-balloon-chip-display);
   visibility: var(--hint-balloon-visibility);
   opacity: var(--hint-balloon-opacity);
   position: fixed;
@@ -588,26 +539,26 @@ body > * {
   overflow: visible;
   font-weight: bold;
 
-  background-color: var(--hint-balloon-panel-background-color);
-  border: var(--hint-balloon-border-width) solid var(--chip-border-color);
+  background-color: var(--hint-balloon-chip-background-color);
+  border: var(--hint-balloon-border-width) solid var(--hint-balloon-chip-border-color);
 
 }
-.hint-balloon-panel::before {
+.hint-balloon-chip::before {
   display: block;
   position: absolute;
   top: calc(100% + var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--chip-border-color);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-border-color);
   content: "";
 }
-.hint-balloon-panel::after {
+.hint-balloon-chip::after {
   display: block;
   position: absolute;
   top: calc(100% - var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-panel-background-color);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-background-color);
   content: "";
 }
 .hint-balloon-body {
@@ -615,8 +566,8 @@ body > * {
   align-items: center;
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
-//  border: var(--hint-balloon-border-width) solid var(--chip-border-color);
-//  background-color: var(--hint-balloon-panel-background-color);
+//  border: var(--hint-balloon-border-width) solid var(--button-border-color);
+//  background-color: var(--hint-balloon-chip-background-color);
   white-space: nowrap;
 }
 
@@ -659,21 +610,21 @@ body > * {
   position: relative;
   width: 1.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--chip-border-color);
+  border: var(--common-border-width) solid var(--button-border-color);
   background-color: var(--button-background-color);
 }
 .toggle-button::before {
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--chip-border-color);
-  background-color: var(--off-toggle-button-color);
+  border-bottom: var(--common-border-width) solid var(--button-border-color);
+  background-color: var(--off-toggle-button-highlight-color);
   color: var(--button-background-color);
 }
 .toggle-button::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--chip-border-color);
+  border-top: var(--common-border-width) solid var(--button-border-color);
   border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
-  background-color: var(--on-toggle-button-color);
+  background-color: var(--on-toggle-button-highlight-color);
   color: var(--button-color);
 }
 .toggle-button::before,
@@ -711,7 +662,7 @@ body > * {
   align-items: center;
   width: 3.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--chip-border-color);
+  border: var(--common-border-width) solid var(--button-border-color);
   background-color: var(--button-background-color);
   color: var(--button-color);
 }
@@ -732,8 +683,8 @@ body > * {
 #footer-panel {
   width: 100%;
   height: 100%;
-  background-color: var(--footer-panel-background-color);
-  color: var(--footer-panel-color);
+  background-color: var(--app-sub-background-color);
+  color: var(--app-sub-color);
 }
 #footer-body {
   display: flex;
@@ -786,14 +737,14 @@ body > * {
   justify-content: space-between;
   align-items: center;
   padding: var(--common-padding);
-  background-color: var(--settings-title-bar-background-color);
-  color: var(--settings-title-bar-color);
+  background-color: var(--app-sub-background-color);
+  color: var(--app-sub-color);
   font-weight: bold;
 }
 #hide-settings-button {
   width: 1.5rem;
   height: 1.5rem;
-  color: var(--settings-title-bar-color);
+  color: var(--app-sub-color);
   cursor: pointer;
 }
 #hide-settings-button > svg {
@@ -803,7 +754,7 @@ body > * {
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
-  background-color: var(--app-background-color);
+  background-color: var(--app-main-background-color);
 }
 #settings-body {
   padding: var(--common-padding);
@@ -872,7 +823,7 @@ body > * {
   height: var(--radio-button-size);
   margin-top: calc(var(--radio-button-size) * -.5);
   margin-top: -.5rem;
-  border: var(--common-border-width) solid var(--chip-border-color);
+  border: var(--common-border-width) solid var(--button-border-color);
   content: "";
 }
 .radio-button[data-setting-key="accent-color"] {

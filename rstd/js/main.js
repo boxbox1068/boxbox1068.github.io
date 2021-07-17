@@ -17,7 +17,7 @@ const settingDefaultValues = {
   "line-height": "medium", // small|medium|large => CSS
   "color-scheme": "light", // light|dark|auto => JS + CSS
   "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|blue-grey => CSS
-  "background-patterns": "horizontal-thin-stripe" // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
+  "background-pattern": "horizontal-thin-stripe" // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
 };
 const settingControlChars = {
   "enable-swipe-to-right": "a",
@@ -36,7 +36,7 @@ const settingControlChars = {
   "line-height": "n",
   "color-scheme": "o",
   "accent-color": "p",
-  "background-patterns": "q"
+  "background-pattern": "q"
 };
 let appLang;
 let stringResources;
@@ -408,7 +408,7 @@ const resetCard = async () => {
   setFlag('disable-control', true);
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
     const _setHintBalloonPosition = variableElement => {
-      const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-panel');
+      const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-chip');
       const variableRect = variableElement.getClientRects()[0];
       hintBalloonPanelElement.style.top = `${variableRect.top}px`;
       hintBalloonPanelElement.style.left = `${variableRect.left}px`;
@@ -427,7 +427,7 @@ const resetCard = async () => {
       hintBalloonBodyElement.className = 'hint-balloon-body';
       hintBalloonBodyElement.innerText = hintText;
       const hintBalloonPanelElement = ce('span');
-      hintBalloonPanelElement.className = 'hint-balloon-panel';
+      hintBalloonPanelElement.className = 'hint-balloon-chip';
       hintBalloonPanelElement.append(hintBalloonBodyElement);
       variableElement.append(hintBalloonPanelElement);
       const hintBalloonRight = variableElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
