@@ -211,23 +211,23 @@ const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber, inte
   utterance.text = text || '';
   utterance.lang = lang || 'en';
   utterance.volume = {
-    'very-soft': 0.5,
+    'extra-soft': 0.5,
     'soft': 0.75,
     'medium': 1
   }[voiceVolume] || 1;
   utterance.rate = {
-    'very-slow': 0.5,
+    'extra-slow': 0.5,
     'slow': 0.75,
     'medium': 1,
     'fast': 1.25,
-    'very-fast': 1.5
+    'extra-fast': 1.5
   }[voiceRate] || 1;
   utterance.pitch = {
-    'very-low': 0.5,
+    'extra-low': 0.5,
     'low': 0.75,
     'medium': 1,
     'high': 1.25,
-    'very-high': 1.5
+    'extra-high': 1.5
   }[voicePitch] || 1;
   const candidateVoices = [];
   for (const voice of window.speechSynthesis.getVoices()) {

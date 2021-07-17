@@ -2,6 +2,7 @@
 const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "enable-swipe-to-right": "true", // true|false => JS
+  "enable-automatic-drill-starting": "false", // true|false => JS
   "enable-variable-highlight": "true", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
@@ -21,22 +22,23 @@ const settingDefaultValues = {
 };
 const settingControlChars = {
   "enable-swipe-to-right": "a",
-  "enable-variable-highlight": "b",
-  "enable-hint-balloon": "c",
-  "animation-duration": "d",
-  "voice-volume": "e",
-  "question-voice-rate": "f",
-  "question-voice-pitch": "g",
-  "question-voice-number": "h",
-  "answer-voice-rate": "i",
-  "answer-voice-pitch": "j",
-  "answer-voice-number": "k",
-  "font-size": "l",
-  "font-family": "m",
-  "line-height": "n",
-  "color-scheme": "o",
-  "accent-color": "p",
-  "background-pattern": "q"
+  "enable-automatic-drill-starting": "b",
+  "enable-variable-highlight": "c",
+  "enable-hint-balloon": "d",
+  "animation-duration": "e",
+  "voice-volume": "f",
+  "question-voice-rate": "g",
+  "question-voice-pitch": "h",
+  "question-voice-number": "i",
+  "answer-voice-rate": "j",
+  "answer-voice-pitch": "k",
+  "answer-voice-number": "l",
+  "font-size": "m",
+  "font-family": "n",
+  "line-height": "o",
+  "color-scheme": "p",
+  "accent-color": "q",
+  "background-pattern": "r"
 };
 let appLang;
 let stringResources;
@@ -321,7 +323,7 @@ const main = async () => {
         resolve();
       }
     }
-    if (! leadText) {
+    if (! leadText || getSetting('enable-automatic-drill-starting', 'boolean')) {
       qs('#fold-lead-button').click();
       qs('#fold-lead-button').disabled = true;
     }
