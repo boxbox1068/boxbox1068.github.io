@@ -97,23 +97,24 @@
 :root,
 :root[data-color-scheme="light"] {
   --app-main-background-color: #CFD8DC;
-  --app-main-color: #000000DF;
+  --app-main-color: #202020;
   --app-sub-background-color: #37474F;
-  --app-sub-color: #FFFFFFDF;
+  --app-sub-color: #DFDFDF;
   --background-pattern-color: #8882;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-color: #455A64;
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: #455A64;
-  --fold-lead-button-color: #ECEFF1;
-  --drill-panel-background-color: #FFF9;
+  --fold-lead-button-color: #DFDFDF;
+  --drill-panel-background-color: #FFF8;
   --drill-cover-background-color: var(--accent-color);
   --hint-balloon-chip-border-color: #607D8B;
-  --hint-balloon-chip-background-color: #FFF;
+  --hint-balloon-chip-background-color: #DFDFDF;
   --off-toggle-button-highlight-color: #78909C;
   --on-toggle-button-highlight-color: #FFC107;
-  --radio-button-background-color: #ECEFF1;
+  --setting-category-border-color: #607D8B;
+  --radio-button-background-color: #DFDFDF;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
@@ -761,15 +762,8 @@ body > * {
   font-size: 1rem;
 }
 .setting-category {
+  border-bottom: .2rem dashed var(--setting-category-border-color);
   font-weight: bold;
-}
-.setting-category::before {
-  color: grey;
-  content: "\02022\0020\02022\0020\02022\0020\02022\0020";
-}
-.setting-category::after {
-  color: grey;
-  content: "\0020\02022\0020\02022\0020\02022\0020\02022";
 }
 .setting-category:not(:first-child) {
   margin-top: 1rem;
@@ -780,7 +774,7 @@ body > * {
   text-indent: -2rem;
   counter-increment: setting-item;
 }
-.setting-item + .setting-item {
+.setting-item {
   margin-top: .5rem;
 }
 .setting-item > span::before {
@@ -795,7 +789,7 @@ body > * {
   display: inline-flex;
   align-items: center;
   position: relative;
-  height: 1rem;
+  height: 1.5rem;
   margin-left: .25rem;
   padding-left: 1.25rem;
   border: 0;
