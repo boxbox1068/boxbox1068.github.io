@@ -96,13 +96,13 @@
 /*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
-  --common-border-color: #607D8B;
-  --common-background-color: #CFD8DC;
-  --common-color: #263238;
-  --common-button-background-color: #CFD8DC;
-  --common-button-color: #455A64;
+  --chip-border-color: #607D8B;
+  --app-background-color: #CFD8DC;
+  --font-color: rgb(0, 0, 0, 223);
+  --button-background-color: #CFD8DC;
+  --button-color: #455A64;
   --background-patterns-color: #0001;
-  --lead-panel-background-color: #CFD8DC;
+  --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
   --drill-panel-background-color: #FFF9;
@@ -118,12 +118,12 @@
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-  --common-border-color: #90A4AE;
-  --common-background-color: #263238;
-  --common-color: #ECEFF1;
-  --common-button-background-color: #263238;
-  --common-button-color: #ECEFF1;
-  --background-patterns-color: unset;
+  --chip-border-color: #90A4AE;
+  --app-background-color: #263238;
+  --font-color: #ECEFF1;
+  --button-background-color: #263238;
+  --button-color: #ECEFF1;
+  --background-patterns-color: transparent;
   --lead-panel-background-color: var(--dark-accent-color-a);
   --fold-lead-button-background-color: #455A64;
   --fold-lead-button-color: #ECEFF1;
@@ -354,12 +354,12 @@
 
 html {
   height: 100%;
-  background-color: var(--common-background-color);
+  background-color: var(--app-background-color);
 
 
 
 
-  color: var(--common-color);
+  color: var(--font-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
 }
@@ -589,7 +589,7 @@ body > * {
   font-weight: bold;
 
   background-color: var(--hint-balloon-panel-background-color);
-  border: var(--hint-balloon-border-width) solid var(--common-border-color);
+  border: var(--hint-balloon-border-width) solid var(--chip-border-color);
 
 }
 .hint-balloon-panel::before {
@@ -598,7 +598,7 @@ body > * {
   top: calc(100% + var(--hint-balloon-border-width));
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--common-border-color);
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--chip-border-color);
   content: "";
 }
 .hint-balloon-panel::after {
@@ -615,7 +615,7 @@ body > * {
   align-items: center;
   height: 100%;
   padding: 0 calc(var(--hint-balloon-border-width) * 2);
-//  border: var(--hint-balloon-border-width) solid var(--common-border-color);
+//  border: var(--hint-balloon-border-width) solid var(--chip-border-color);
 //  background-color: var(--hint-balloon-panel-background-color);
   white-space: nowrap;
 }
@@ -659,22 +659,22 @@ body > * {
   position: relative;
   width: 1.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--common-border-color);
-  background-color: var(--common-button-background-color);
+  border: var(--common-border-width) solid var(--chip-border-color);
+  background-color: var(--button-background-color);
 }
 .toggle-button::before {
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
-  border-bottom: var(--common-border-width) solid var(--common-border-color);
+  border-bottom: var(--common-border-width) solid var(--chip-border-color);
   background-color: var(--off-toggle-button-color);
-  color: var(--common-button-background-color);
+  color: var(--button-background-color);
 }
 .toggle-button::after {
   top: 100%;
-  border-top: var(--common-border-width) solid var(--common-border-color);
+  border-top: var(--common-border-width) solid var(--chip-border-color);
   border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   background-color: var(--on-toggle-button-color);
-  color: var(--common-button-color);
+  color: var(--button-color);
 }
 .toggle-button::before,
 .toggle-button::after {
@@ -711,9 +711,9 @@ body > * {
   align-items: center;
   width: 3.5rem;
   height: var(--control-height);
-  border: var(--common-border-width) solid var(--common-border-color);
-  background-color: var(--common-button-background-color);
-  color: var(--common-button-color);
+  border: var(--common-border-width) solid var(--chip-border-color);
+  background-color: var(--button-background-color);
+  color: var(--button-color);
 }
 .control-button#play-button {
   width: 5.5rem;
@@ -803,7 +803,7 @@ body > * {
 #settings-panel {
   grid-area: settings-panel;
   overflow-y: auto;
-  background-color: var(--common-background-color);
+  background-color: var(--app-background-color);
 }
 #settings-body {
   padding: var(--common-padding);
@@ -851,7 +851,7 @@ body > * {
   font-size: 1rem;
 }
 .radio-button.checked {
-  --radio-button-color: var(--common-button-color);
+  --radio-button-color: var(--button-color);
 }
 .radio-button::before {
   position: absolute;
@@ -872,7 +872,7 @@ body > * {
   height: var(--radio-button-size);
   margin-top: calc(var(--radio-button-size) * -.5);
   margin-top: -.5rem;
-  border: var(--common-border-width) solid var(--common-border-color);
+  border: var(--common-border-width) solid var(--chip-border-color);
   content: "";
 }
 .radio-button[data-setting-key="accent-color"] {
