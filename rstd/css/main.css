@@ -100,42 +100,41 @@
   --app-main-color: #202020;
   --app-sub-background-color: #37474F;
   --app-sub-color: #DFDFDF;
-  --background-pattern-color: #8882;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-color: #455A64;
   --lead-panel-background-color: #B0BEC5;
-  --fold-lead-button-background-color: #455A64;
+  --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
-  --drill-panel-background-color: #FFF8;
+  --drill-panel-background-color: #FFF9;
   --drill-cover-background-color: var(--accent-color);
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #DFDFDF;
-  --off-toggle-button-highlight-color: #78909C;
-  --on-toggle-button-highlight-color: #FFC107;
+  --toggle-button-off-color: #78909C;
+  --toggle-button-on-color: #FFA726;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
 }
  :root[data-color-scheme="dark"],
  :root[data-color-scheme="auto"].prefers-dark-color-scheme {
-  --button-border-color: #90A4AE;
-  --app-main-background-color: #263238;
-  --app-main-color: #ECEFF1;
-  --button-background-color: #263238;
-  --button-color: #ECEFF1;
-  --background-pattern-color: transparent;
-  --background-pattern-color: #8882;
-  --lead-panel-background-color: var(--dark-accent-color-a);
-  --fold-lead-button-background-color: #455A64;
-  --fold-lead-button-color: #ECEFF1;
-  --drill-panel-background-color: #000;
-  --drill-cover-background-color: var(--dark-accent-color-b);
-  --hint-balloon-chip-background-color: #000;
-  --off-toggle-button-highlight-color: #78909C;
-  --on-toggle-button-highlight-color: #FFC107;
-  --app-sub-background-color: #37474F;
-  --app-sub-color: #ECEFF1;
-  --radio-button-background-color: #ECEFF1;
+  --app-main-background-color: #13191C;
+  --app-main-color: #DFDFDF;
+  --app-sub-background-color: #263238;
+  --app-sub-color: #DFDFDF;
+  --button-border-color: #37474F;
+  --button-background-color: #13191C;
+  --button-color: #B0BEC5;
+  --lead-panel-background-color: #1C252A;
+  --fold-lead-button-background-color: var(--accent-color);
+  --fold-lead-button-color: #DFDFDF;
+  --drill-panel-background-color: #0009;
+  --drill-cover-background-color: #263238;
+  --hint-balloon-chip-border-color: #607D8B;
+  --hint-balloon-chip-background-color: #202020;
+  --toggle-button-off-color: #78909C;
+  --toggle-button-on-color: #FFA726;
+  --setting-category-border-color: #607D8B;
+  --radio-button-background-color: #DFDFDF;
 }
  
 /*  ACCENT COLOR  */
@@ -618,14 +617,14 @@ body > * {
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   border-bottom: var(--common-border-width) solid var(--button-border-color);
-  background-color: var(--off-toggle-button-highlight-color);
+  background-color: var(--toggle-button-off-color);
   color: var(--button-background-color);
 }
 .toggle-button::after {
   top: 100%;
   border-top: var(--common-border-width) solid var(--button-border-color);
   border-bottom: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
-  background-color: var(--on-toggle-button-highlight-color);
+  background-color: var(--toggle-button-on-color);
   color: var(--button-color);
 }
 .toggle-button::before,
