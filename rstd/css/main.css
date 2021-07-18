@@ -154,7 +154,6 @@
 :root[data-accent-color="deep-purple"] {
   --accent-color: #5E35B1;
 }
-:root,
 :root[data-accent-color="indigo"] {
   --accent-color: #3949AB;
 }
@@ -194,6 +193,7 @@
 :root[data-accent-color="brown"] {
   --accent-color: #6D4C41;
 }
+:root,
 :root[data-accent-color="blue-grey"] {
   --accent-color: #546E7A;
 }
