@@ -258,7 +258,7 @@ const main = async () => {
       speakQuestion();
     }
   });
-  qs('body').addEventListener('touchend', event => {
+  qs('body').addEventListener('click', event => {
     setActiveElement(event.target);
   });
   qs('body').addEventListener('mousemove', () => {
