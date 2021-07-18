@@ -93,62 +93,7 @@
   --drill-body-line-height: 1.75em;
 }
 
-/*  COLOR SCHEME & ACCENT COLOR  */
-:root[data-accent-color="red"] {
-  --accent-color: #E53935;
-}
-:root[data-accent-color="pink"] {
-  --accent-color: #D81B60;
-}
-:root[data-accent-color="purple"] {
-  --accent-color: #8E24AA;
-}
-:root[data-accent-color="deep-purple"] {
-  --accent-color: #5E35B1;
-}
-:root[data-accent-color="indigo"] {
-  --accent-color: #3949AB;
-}
-:root,
-:root[data-accent-color="blue"] {
-  --accent-color: #1E88E5;
-}
-:root[data-accent-color="light-blue"] {
-  --accent-color: #039BE5;
-}
-:root[data-accent-color="cyan"] {
-  --accent-color: #00ACC1;
-}
-:root[data-accent-color="teal"] {
-  --accent-color: #00897B;
-}
-:root[data-accent-color="green"] {
-  --accent-color: #43A047;
-}
-:root[data-accent-color="light-green"] {
-  --accent-color: #7CB342;
-}
-:root[data-accent-color="lime"] {
-  --accent-color: #C0CA33;
-}
-:root[data-accent-color="yellow"] {
-  --accent-color: #FDD835;
-}
-:root[data-accent-color="amber"] {
-  --accent-color: #FFB300;
-}
-:root[data-accent-color="orange"] {
-  --accent-color: #FB8C00;
-}
-:root[data-accent-color="deep-orange"] {
-  --accent-color: #F4511E;
-}
-:root[data-accent-color="brown"] {
-  --accent-color: #6D4C41;
-}
-:root[data-accent-color="blue-grey"] {
-  --accent-color: #546E7A;
-}
+/*  COLOR SCHEME  */
 :root,
 :root[data-color-scheme="light"] {
   --main-background-color: #CFD8DC;
@@ -190,6 +135,63 @@
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
   --radio-button-color: #455A64;
+}
+
+/*  ACCENT COLOR  */
+:root[data-accent-color="red"] {
+  --accent-color: #E53935;
+}
+:root[data-accent-color="pink"] {
+  --accent-color: #D81B60;
+}
+:root[data-accent-color="purple"] {
+  --accent-color: #8E24AA;
+}
+:root[data-accent-color="deep-purple"] {
+  --accent-color: #5E35B1;
+}
+:root,
+:root[data-accent-color="indigo"] {
+  --accent-color: #3949AB;
+}
+:root[data-accent-color="blue"] {
+  --accent-color: #1E88E5;
+}
+:root[data-accent-color="light-blue"] {
+  --accent-color: #039BE5;
+}
+:root[data-accent-color="cyan"] {
+  --accent-color: #00ACC1;
+}
+:root[data-accent-color="teal"] {
+  --accent-color: #00897B;
+}
+:root[data-accent-color="green"] {
+  --accent-color: #43A047;
+}
+:root[data-accent-color="light-green"] {
+  --accent-color: #7CB342;
+}
+:root[data-accent-color="lime"] {
+  --accent-color: #C0CA33;
+}
+:root[data-accent-color="yellow"] {
+  --accent-color: #FDD835;
+}
+:root[data-accent-color="amber"] {
+  --accent-color: #FFB300;
+}
+:root[data-accent-color="orange"] {
+  --accent-color: #FB8C00;
+}
+:root[data-accent-color="deep-orange"] {
+  --accent-color: #F4511E;
+}
+:root[data-accent-color="brown"] {
+  --accent-color: #6D4C41;
+}
+:root[data-accent-color="blue-grey"] {
+  --accent-color: #546E7A;
 }
 
 /*  BACKGROUND PATTERN  */

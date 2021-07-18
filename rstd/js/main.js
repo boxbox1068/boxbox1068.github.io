@@ -323,9 +323,12 @@ const main = async () => {
         resolve();
       }
     }
-    if (! leadText || getSetting('enable-automatic-drill-starting', 'boolean')) {
+    if (! leadText) {
       qs('#fold-lead-button').click();
       qs('#fold-lead-button').disabled = true;
+    }
+    if (getSetting('enable-automatic-drill-starting', 'boolean')) {
+      qs('#fold-lead-button').click();
     }
   });
   let templateReplacements;
