@@ -107,6 +107,8 @@
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
+  --error-panel-background-color: #FFEB3B;
+  --error-panel-color: #B71C1C;
   --drill-panel-background-color: #FFF8;
   --drill-cover-background-color: var(--accent-color);
   --hint-balloon-chip-border-color: #607D8B;
@@ -130,6 +132,8 @@
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
+  --error-panel-background-color: #FFEB3B;
+  --error-panel-color: #B71C1C;
   --drill-panel-background-color: #0008;
   --drill-cover-background-color: #263238;
   --hint-balloon-chip-border-color: #607D8B;
@@ -351,6 +355,7 @@ body {
   display: grid;
   grid-template:
     "lead lead lead" var(--lead-cell-height)
+    "error error error" minmax(auto, auto)
     "... ... ..." var(--common-cell-border-spacing)
     "question ... answer" 1fr
     "... ... ..." var(--common-cell-border-spacing)
@@ -368,6 +373,7 @@ body {
   body {
     grid-template:
       "lead" var(--lead-cell-height)
+      "error" minmax(auto, auto)
       "..." var(--common-cell-border-spacing)
       "question" 1fr
       "..." var(--common-cell-border-spacing)
@@ -386,6 +392,9 @@ body > * {
 }
 #lead-cell {
   grid-area: lead;
+}
+#error-cell {
+  grid-area: error;
 }
 #question-cell {
   grid-area: question;
@@ -451,6 +460,31 @@ body > * {
 #fold-lead-button > svg {
   width: 60%;
   height: 60%;
+}
+
+/* ------------------- *
+ *  ERROR NOTICE CELL  *
+ * ------------------- */
+#error-cell {
+  display: none;
+}
+:root.hasError #error-cell {
+  display: block;
+}
+#error-panel {
+  display: flex;
+  align-items: center;
+  height: 1.75rem;
+  background-color: var(--error-panel-background-color);
+  color: var(--error-panel-color);
+}
+#error-body {
+  padding: 0 var(--common-padding-left);
+  font-weight: bold;
+  font-size: .75rem;
+}
+#error-body > span:first-child::after {
+  content: ":\0020";
 }
 
 /* ----------------------------- *

@@ -3,6 +3,8 @@ jsonpCallback({
   "copyright-notice-html": "<b>語学ドリルメーカー</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
   "--the-source-of-this-drill": "このドリルのソース",
+  "--error": "エラー",
+  "--error--the-templates-of-question-and-answer-do-not-match-in-structure": "問題と答えのテンプレートの構造が一致していません。",
   "--settings": "設定",
   "--setting-category--control": "操作",
   "--enable-swipe-to-right": "右方向のスワイプ（問題のスキップ等）",

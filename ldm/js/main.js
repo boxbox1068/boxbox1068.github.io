@@ -304,18 +304,6 @@ const main = async () => {
     });
   }
   qs('#lead-body').innerHTML = leadText;
-
-
-
-  if (! questionTemplate) {
-    questionTemplate = 'hogehoge';
-  }
-  if (! answerTemplate) {
-    answerTemplate = 'fugafuga';
-  }
-
-
-
   await new Promise(resolve => {
     setFlag.listener = (key, value) => {
       if (key == 'fold-lead' && value) {
@@ -342,6 +330,10 @@ const main = async () => {
   questionPhrase = new DrillPhrase(processedQuestionTemplate, questionLang);
   const processedAnswerTemplate = replaceAll(answerTemplate, templateReplacements);
   answerPhrase = new DrillPhrase(processedAnswerTemplate, answerLang);
+  if(questionPhrase.optionCounts.toString() != answerPhrase.optionCounts.toString()) {
+    qs('#error-notice').innerHTML = stringResources['--error--the-templates-of-question-and-answer-do-not-match-in-structure'];
+    setFlag('hasError', true);
+  }
   resetCard();
 };
 const switchActiveVariableElement = reverse => {

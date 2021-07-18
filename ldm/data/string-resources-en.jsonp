@@ -3,6 +3,8 @@ jsonpCallback({
   "copyright-notice-html": "<b>Language Drill Maker</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% pattern / Refill %refill-count%",
   "--the-source-of-this-drill": "The source of this drill",
+  "--error": "Error",
+  "--error--the-templates-of-question-and-answer-do-not-match-in-structure": "The templates of question and answer do not match in structure.",
   "--settings": "Settings",
   "--setting-category--control": "Control",
   "--enable-swipe-to-right": "Enable swipe to right (to skip the question etc.)",

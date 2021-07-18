@@ -4,6 +4,7 @@ class DrillPhrase {
     this._template = `${template}`;
     this._lang = `${lang}`;
     this._resetCount = 0;
+    this.reset();
   }
   reset(pathIdSeed) {
     if (pathIdSeed < 0 || 1 <= pathIdSeed) {
@@ -72,11 +73,15 @@ class DrillPhrase {
         return chosenOptionText;
       }
     });
+    this._optionCounts = optionCounts;
     this._possiblePathCount = possiblePathCount;
     this._pathId = pathId;
     this._chosenOptionTexts = chosenOptionTexts;
     this._html = phraseHtml;
     this._resetCount++;
+  }
+  get optionCounts() {
+    return this._optionCounts;
   }
   get possiblePathCount() {
     return this._possiblePathCount;
