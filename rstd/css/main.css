@@ -41,17 +41,17 @@
 
 /*  ANIMATION DURATION  */
 :root[data-animation-duration="none"] {
-  --common-transition-duration: 0;
+  --animation-duration: 0;
 }
 :root[data-animation-duration="short"] {
-  --common-transition-duration: .25s;
+  --animation-duration: .25s;
 }
 :root,
 :root[data-animation-duration="medium"] {
-  --common-transition-duration: .5s;
+  --animation-duration: .5s;
 }
 :root[data-animation-duration="long"] {
-  --common-transition-duration: .75s;
+  --animation-duration: .75s;
 }
 
 /*  FONT SIZE  */
@@ -100,6 +100,7 @@
   --main-color: #202020;
   --sub-background-color: #455A64;
   --sub-color: #DFDFDF;
+  --a-color: #0D47A1;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-disabled-background-color: #B0BEC5;
@@ -107,10 +108,10 @@
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
-  --drill-panel-background-color: #FFF9;
+  --drill-panel-background-color: #FFF8;
   --drill-cover-background-color: var(--accent-color);
   --hint-balloon-chip-border-color: #607D8B;
-  --hint-balloon-chip-background-color: #DFDFDF;
+  --hint-balloon-chip-background-color: #EFEFEF;
   --toggle-button-on-color: #FFA726;
   --toggle-button-off-color: #B0BEC5;
   --setting-category-border-color: #607D8B;
@@ -123,6 +124,7 @@
   --main-color: #DFDFDF;
   --sub-background-color: #263238;
   --sub-color: #DFDFDF;
+  --a-color: #90CAF9;
   --button-border-color: #455A64;
   --button-background-color: #263238;
   --button-disabled-background-color: #13191C;
@@ -130,10 +132,10 @@
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
   --fold-lead-button-color: #DFDFDF;
-  --drill-panel-background-color: #0009;
+  --drill-panel-background-color: #0008;
   --drill-cover-background-color: #263238;
   --hint-balloon-chip-border-color: #607D8B;
-  --hint-balloon-chip-background-color: #202020;
+  --hint-balloon-chip-background-color: #101010;
   --toggle-button-on-color: #EF6C00;
   --toggle-button-off-color: #13191C;
   --setting-category-border-color: #607D8B;
@@ -287,6 +289,7 @@
   --common-border-width: 2px;
   --common-font-size: 4vmin;
   --common-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: 4px;
@@ -310,6 +313,13 @@ html {
   color: var(--main-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
+}
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: var(--a-color);
 }
 button {
   display: inline-flex;
@@ -407,7 +417,7 @@ body > * {
   height: calc(100% - var(--footer-cell-height));
   overflow-y: auto;
   background-color: var(--lead-panel-background-color);
-  transition-duration: var(--common-transition-duration);
+  transition: height var(--animation-duration);
 }
 .fold-lead #lead-panel {
   height: var(--lead-cell-height);
@@ -429,7 +439,7 @@ body > * {
   background-color: var(--fold-lead-button-background-color);
   color: var(--fold-lead-button-color);
   cursor: pointer;
-  transition-duration: var(--common-transition-duration);
+  transition: bottom var(--animation-duration);
 }
 .fold-lead #fold-lead-button {
   bottom: calc(100% - var(--lead-cell-height));
@@ -477,7 +487,7 @@ body > * {
   color: #FFF3;
   font-weight: bold;
   font-size: 10rem;
-  transition-duration: var(--common-transition-duration);
+  transition: left var(--animation-duration);
 }
 :root.uncover-question #question-cover {
   left: -100%;
