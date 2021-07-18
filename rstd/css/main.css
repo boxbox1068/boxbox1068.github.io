@@ -117,8 +117,8 @@
   --radio-button-background-color: #DFDFDF;
   --radio-button-color: #455A64;
 }
- :root[data-color-scheme="dark"],
- :root[data-color-scheme="auto"].prefers-dark-color-scheme {
+:root[data-color-scheme="dark"],
+:root[data-color-scheme="auto"].prefers-dark-color-scheme {
   --main-background-color: #13191C;
   --main-color: #DFDFDF;
   --sub-background-color: #263238;
@@ -281,15 +281,16 @@
  *  GENERAL  *
  * --------- */
  :root {
+  --common-cell-border-spacing: .5rem;
+  --common-padding-top: .5rem;
+  --common-padding-left: 1rem;
+  --common-border-width: 2px;
   --common-font-size: 4vmin;
   --common-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
-  --common-cell-border-spacing: .5rem;
-  --common-padding: .5rem 1rem;
-  --common-border-width: 2px;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: 4px;
-  --control-height: 2rem;
+  --control-button-height: 2rem;
   --footer-cell-height: 2.25rem;
 }
 *,
@@ -303,17 +304,9 @@
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
 }
-
-
-
-
 html {
   height: 100%;
   background-color: var(--main-background-color);
-
-
-
-
   color: var(--main-color);
   font-size: var(--common-font-size);
   font-family: var(--common-font-family);
@@ -341,16 +334,18 @@ button > svg {
   stroke: currentColor;
 }
 
-/* ----------- *
- *  HTML BODY  *
- * ----------- */
+/* ------------- *
+ *  MAIN SCREEN  *
+ * ------------- */
 body {
   display: grid;
   grid-template:
     "lead lead lead" var(--lead-cell-height)
     "... ... ..." var(--common-cell-border-spacing)
     "question ... answer" 1fr
+    "... ... ..." var(--common-cell-border-spacing)
     "statistics ... controls" min-content
+    "... ... ..." var(--common-cell-border-spacing)
     "footer footer footer" var(--footer-cell-height)
     / 1fr var(--common-cell-border-spacing) 1fr;
   height: 100%;
@@ -396,7 +391,7 @@ body > * {
 }
 
 /* ----------- *
- |  LEAD CELL  |
+ *  LEAD CELL  *
  * ----------- */
 #lead-cell {
   --fold-lead-button-height: 1.5rem;
@@ -416,7 +411,7 @@ body > * {
 }
 #lead-body {
   margin-bottom: var(--fold-lead-button-height);
-  padding: var(--common-padding);
+  padding: var(--common-padding-top) var(--common-padding-left);
   font-size: var(--lead-body-font-size);
   font-family: var(--drill-panel-font-family);
   line-height: 1.5em;
@@ -446,9 +441,9 @@ body > * {
   height: 60%;
 }
 
-/* ------------------------------- *
- |  QUESTION CELL AND ANSWER CELL  |
- * ------------------------------- */
+/* ----------------------------- *
+ *  QUESTION CELL & ANSWER CELL  *
+ * ----------------------------- */
 .drill-panel {
   display: flex;
   justify-content: center;
@@ -461,7 +456,7 @@ body > * {
 }
 .drill-body {
   margin: auto;
-  padding: var(--common-padding);
+  padding: var(--common-padding-top) var(--common-padding-left);
   font-size: var(--drill-panel-font-size);
   font-family: var(--drill-panel-font-family);
   line-height: var(--drill-body-line-height);
@@ -488,7 +483,7 @@ body > * {
   left: 100%;
 }
 
-
+/*  VARIABLE & HINT BALLOON  */
 .variable {
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
@@ -500,9 +495,6 @@ body > * {
   --hint-balloon-opacity: 1;
   text-decoration: underline dashed var(--variable-underline-color);
 }
-
-
-
 .variable[data-variable-number="1"] {
   background-color: var(--variable-number-1-background-color);
 }
@@ -533,17 +525,6 @@ body > * {
 .variable[data-variable-number="0"] {
   background-color: var(--variable-number-0-background-color);
 }
-
-
-
-
-
-
-
-
-
-
-
 .hint-balloon-chip {
   display: var(--hint-balloon-chip-display);
   visibility: var(--hint-balloon-visibility);
@@ -583,59 +564,15 @@ body > * {
   white-space: nowrap;
 }
 
-/*
-.hint-balloon-chip {
-  display: var(--hint-balloon-chip-display);
-  visibility: var(--hint-balloon-visibility);
-  opacity: var(--hint-balloon-opacity);
-  position: fixed;
-  z-index: 1;
-  height: var(--hint-balloon-height);
-  margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
-  overflow: visible;
-  font-weight: bold;
-}
-.hint-balloon-chip::before {
-  display: block;
-  position: absolute;
-  top: calc(100% - 1px);
-  left: calc(var(--hint-balloon-border-width) * 2);
-  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-border-color);
-border-top: calc(var(--hint-balloon-border-width) * 4) solid blue;
-  content: "";
-}
-.hint-balloon-chip::after {
-  display: block;
-  position: absolute;
-  top: calc(100% - var(--hint-balloon-border-width) * 2 - 1px);
-  left: calc(var(--hint-balloon-border-width) * 2);
-  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-background-color);
-border-top: calc(var(--hint-balloon-border-width) * 4) solid red;
-  content: "";
-}
-.hint-balloon-body {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: calc(var(--hint-balloon-border-width) * 2) .5rem;
-  border: var(--hint-balloon-border-width) solid var(--button-border-color);
-  background-color: var(--hint-balloon-chip-background-color);
-background-color: green;
-  white-space: nowrap;
-}
-*/
-
 /* ---------------- *
- |  STATISTIC CELL  |
+ *  STATISTIC CELL  *
  * ---------------- */
 #statistics-panel {
   width: 100%;
   height: 100%;
 }
 #statistics-body {
-  padding: var(--common-padding);
+  padding: 0 var(--common-padding-left);
   font-size: .75rem;
   line-height: 1rem;
 }
@@ -644,7 +581,7 @@ background-color: green;
 }
 
 /* --------------- *
- |  CONTROLS CELL  |
+ *  CONTROLS CELL  *
  * --------------- */
 #controls-panel {
   width: 100%;
@@ -654,18 +591,18 @@ background-color: green;
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
-  padding: var(--common-padding);
+  padding: 0 var(--common-padding-left);
 }
 #controls-body > *:not(:last-child) {
   border-right: 0;
 }
 .toggle-button {
-  --toggle-button-height: .25rem;
+  --toggle-button-height: .2rem;
 }
 .toggle-button {
   position: relative;
   width: 1.5rem;
-  height: var(--control-height);
+  height: var(--control-button-height);
   border: var(--common-border-width) solid var(--button-border-color);
   background-color: var(--button-background-color);
   color: var(--button-color);
@@ -716,7 +653,7 @@ background-color: green;
   justify-content: center;
   align-items: center;
   width: 3.5rem;
-  height: var(--control-height);
+  height: var(--control-button-height);
   border: var(--common-border-width) solid var(--button-border-color);
   background-color: var(--button-background-color);
   color: var(--button-color);
@@ -725,7 +662,6 @@ background-color: green;
   width: 5.5rem;
 }
 :root.disable-control .control-button {
-//  background-image: linear-gradient(#0002,#0002);
   background-color: var(--button-disabled-background-color);
 }
 .control-button > svg {
@@ -734,7 +670,7 @@ background-color: green;
 }
 
 /* ------------- *
- |  FOOTER CELL  |
+ *  FOOTER CELL  *
  * ------------- */
 #footer-panel {
   width: 100%;
@@ -747,7 +683,7 @@ background-color: green;
   justify-content: space-between;
   align-items: center;
   height: 100%;
-  padding: var(--common-padding);
+  padding: var(--common-padding-top) var(--common-padding-left);
   font-size: .75rem;
   white-space: nowrap;
 }
@@ -758,14 +694,14 @@ background-color: green;
 }
 #show-settings-button > svg,
 #visit-home-button > svg {
-  width: 1rem;
-  height: 1rem;
+  width: 50%;
+  height: 50%;
 }
 
 /*-------------------*
- |  SETTINGS SCREEN  |
+ *  SETTINGS SCREEN  *
  *-------------------*/
- #settings-screen {
+#settings-screen {
   display: grid;
   grid-template:
     "... ... ..." 2.5rem 
@@ -792,7 +728,7 @@ background-color: green;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--common-padding);
+  padding: var(--common-padding-top) var(--common-padding-left);
   background-color: var(--sub-background-color);
   color: var(--sub-color);
   font-weight: bold;
@@ -813,7 +749,7 @@ background-color: green;
   background-color: var(--main-background-color);
 }
 #settings-body {
-  padding: var(--common-padding);
+  padding: var(--common-padding-top) var(--common-padding-left);
   font-size: 1rem;
 }
 .setting-category {
@@ -840,7 +776,6 @@ background-color: green;
 }
 .radio-button {
   --radio-button-size: 1rem;
-//  --radio-button-color: var(--radio-button-background-color);
   display: inline-flex;
   align-items: center;
   position: relative;
