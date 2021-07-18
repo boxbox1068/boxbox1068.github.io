@@ -93,7 +93,62 @@
   --drill-body-line-height: 1.75em;
 }
 
-/*  COLOR SCHEME  */
+/*  COLOR SCHEME & ACCENT COLOR  */
+:root[data-accent-color="red"] {
+  --accent-color: #E53935;
+}
+:root[data-accent-color="pink"] {
+  --accent-color: #D81B60;
+}
+:root[data-accent-color="purple"] {
+  --accent-color: #8E24AA;
+}
+:root[data-accent-color="deep-purple"] {
+  --accent-color: #5E35B1;
+}
+:root[data-accent-color="indigo"] {
+  --accent-color: #3949AB;
+}
+:root,
+:root[data-accent-color="blue"] {
+  --accent-color: #1E88E5;
+}
+:root[data-accent-color="light-blue"] {
+  --accent-color: #039BE5;
+}
+:root[data-accent-color="cyan"] {
+  --accent-color: #00ACC1;
+}
+:root[data-accent-color="teal"] {
+  --accent-color: #00897B;
+}
+:root[data-accent-color="green"] {
+  --accent-color: #43A047;
+}
+:root[data-accent-color="light-green"] {
+  --accent-color: #7CB342;
+}
+:root[data-accent-color="lime"] {
+  --accent-color: #C0CA33;
+}
+:root[data-accent-color="yellow"] {
+  --accent-color: #FDD835;
+}
+:root[data-accent-color="amber"] {
+  --accent-color: #FFB300;
+}
+:root[data-accent-color="orange"] {
+  --accent-color: #FB8C00;
+}
+:root[data-accent-color="deep-orange"] {
+  --accent-color: #F4511E;
+}
+:root[data-accent-color="brown"] {
+  --accent-color: #6D4C41;
+}
+:root[data-accent-color="blue-grey"] {
+  --accent-color: #546E7A;
+}
 :root,
 :root[data-color-scheme="light"] {
   --main-background-color: #CFD8DC;
@@ -131,67 +186,10 @@
   --drill-cover-background-color: #263238;
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #202020;
-  --toggle-button-on-color: #732800;
+  --toggle-button-on-color: #FFA726;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
   --radio-button-color: #455A64;
-}
- 
-/*  ACCENT COLOR  */
-:root[data-accent-color="red"] {
-  --accent-color: #E53935;
-}
-:root[data-accent-color="pink"] {
-  --accent-color: #D81B60;
-}
-:root[data-accent-color="purple"] {
-  --accent-color: #8E24AA;
-}
-:root[data-accent-color="deep-purple"] {
-  --accent-color: #5E35B1;
-}
-:root[data-accent-color="indigo"] {
-  --accent-color: #3949AB;
-}
-:root[data-accent-color="blue"] {
-  --accent-color: #1E88E5;
-}
-:root[data-accent-color="light-blue"] {
-  --accent-color: #039BE5;
-}
-:root[data-accent-color="cyan"] {
-  --accent-color: #00ACC1;
-}
-:root[data-accent-color="teal"] {
-  --accent-color: #00897B;
-}
-:root[data-accent-color="green"] {
-  --accent-color: #43A047;
-}
-:root[data-accent-color="light-green"] {
-  --accent-color: #7CB342;
-}
-:root[data-accent-color="lime"] {
-  --accent-color: #C0CA33;
-}
-:root[data-accent-color="yellow"] {
-  --accent-color: #FDD835;
-}
-:root[data-accent-color="amber"] {
-  --accent-color: #FFB300;
-}
-:root[data-accent-color="orange"] {
-  --accent-color: #FB8C00;
-}
-:root[data-accent-color="deep-orange"] {
-  --accent-color: #F4511E;
-}
-:root[data-accent-color="brown"] {
-  --accent-color: #6D4C41;
-}
-:root,
-:root[data-accent-color="blue-grey"] {
-  --accent-color: #546E7A;
 }
 
 /*  BACKGROUND PATTERN  */
@@ -284,7 +282,7 @@
   --common-border-width: 2px;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
-  --hint-balloon-border-width: .2rem;
+  --hint-balloon-border-width: 4px;
   --control-height: 2rem;
   --footer-cell-height: 2.25rem;
 }
@@ -528,6 +526,17 @@ body > * {
 .variable[data-variable-number="0"] {
   background-color: var(--variable-number-0-background-color);
 }
+
+
+
+
+
+
+
+
+
+
+
 .hint-balloon-chip {
   display: var(--hint-balloon-chip-display);
   visibility: var(--hint-balloon-visibility);
@@ -538,15 +547,11 @@ body > * {
   margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
   overflow: visible;
   font-weight: bold;
-
-  background-color: var(--hint-balloon-chip-background-color);
-  border: var(--hint-balloon-border-width) solid var(--hint-balloon-chip-border-color);
-
 }
 .hint-balloon-chip::before {
   display: block;
   position: absolute;
-  top: calc(100% + var(--hint-balloon-border-width));
+  top: calc(100% - 1px);
   left: calc(var(--hint-balloon-border-width) * 2);
   border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
   border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-border-color);
@@ -555,21 +560,65 @@ body > * {
 .hint-balloon-chip::after {
   display: block;
   position: absolute;
-  top: calc(100% - var(--hint-balloon-border-width));
-  left: calc(var(--hint-balloon-border-width) * 2);
-  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-background-color);
+  top: calc(100% - var(--hint-balloon-border-width) - 1px);
+  left: calc(var(--hint-balloon-border-width) * 2.5);
+  border: calc(var(--hint-balloon-border-width) * 1.5) solid transparent;
+  border-top: calc(var(--hint-balloon-border-width) * 3) solid var(--hint-balloon-chip-background-color);
   content: "";
 }
 .hint-balloon-body {
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 calc(var(--hint-balloon-border-width) * 2);
-//  border: var(--hint-balloon-border-width) solid var(--button-border-color);
-//  background-color: var(--hint-balloon-chip-background-color);
+  padding: calc(var(--hint-balloon-border-width) * 2) .5rem;
+  border: var(--hint-balloon-border-width) solid var(--button-border-color);
+  background-color: var(--hint-balloon-chip-background-color);
   white-space: nowrap;
 }
+
+/*
+.hint-balloon-chip {
+  display: var(--hint-balloon-chip-display);
+  visibility: var(--hint-balloon-visibility);
+  opacity: var(--hint-balloon-opacity);
+  position: fixed;
+  z-index: 1;
+  height: var(--hint-balloon-height);
+  margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
+  overflow: visible;
+  font-weight: bold;
+}
+.hint-balloon-chip::before {
+  display: block;
+  position: absolute;
+  top: calc(100% - 1px);
+  left: calc(var(--hint-balloon-border-width) * 2);
+  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-border-color);
+border-top: calc(var(--hint-balloon-border-width) * 4) solid blue;
+  content: "";
+}
+.hint-balloon-chip::after {
+  display: block;
+  position: absolute;
+  top: calc(100% - var(--hint-balloon-border-width) * 2 - 1px);
+  left: calc(var(--hint-balloon-border-width) * 2);
+  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
+  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-background-color);
+border-top: calc(var(--hint-balloon-border-width) * 4) solid red;
+  content: "";
+}
+.hint-balloon-body {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: calc(var(--hint-balloon-border-width) * 2) .5rem;
+  border: var(--hint-balloon-border-width) solid var(--button-border-color);
+  background-color: var(--hint-balloon-chip-background-color);
+background-color: green;
+  white-space: nowrap;
+}
+*/
 
 /* ---------------- *
  |  STATISTIC CELL  |
