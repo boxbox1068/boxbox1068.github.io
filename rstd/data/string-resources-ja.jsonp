@@ -89,7 +89,7 @@ jsonpCallback({
   "--line-height--medium": "標準",
   "--line-height--large": "大きい",
   "--setting-category--decoration": "装飾",
-  "--color-scheme": "カラースキーム",
+  "--color-scheme": "配色",
   "--color-scheme--light": "ライト",
   "--color-scheme--dark": "ダーク",
   "--color-scheme--auto": "自動",

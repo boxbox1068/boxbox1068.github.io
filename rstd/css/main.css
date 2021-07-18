@@ -103,7 +103,6 @@
   --a-color: #0D47A1;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
-  --button-disabled-background-color: #B0BEC5;
   --button-color: #455A64;
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: var(--accent-color);
@@ -127,7 +126,6 @@
   --a-color: #90CAF9;
   --button-border-color: #455A64;
   --button-background-color: #263238;
-  --button-disabled-background-color: #13191C;
   --button-color: #DFDFDF;
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
@@ -301,11 +299,13 @@
 *::after {
   box-sizing: border-box;
   overflow: hidden;
-  outline: none;
-  user-select: none;
-  touch-action: pan-y;
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
+  outline: none;
+  transition-property: visibility, opacity, background-color;
+  transition-duration: var(--common-transition-duration);
+  user-select: none;
+  touch-action: pan-y;
 }
 html {
   height: 100%;
@@ -426,7 +426,6 @@ body > * {
   margin-bottom: var(--fold-lead-button-height);
   padding: var(--common-padding-top) var(--common-padding-left);
   font-size: var(--lead-body-font-size);
-  font-family: var(--drill-panel-font-family);
   line-height: 1.5em;
   overflow-wrap: break-word;
 }
@@ -446,7 +445,7 @@ body > * {
   transform: scale(1, -1);
 }
 #fold-lead-button:disabled {
-  display: none;
+  visibility: hidden;
   opacity: 0;
 }
 #fold-lead-button > svg {
@@ -643,7 +642,7 @@ body > * {
   height: calc(100% - var(--toggle-button-height));
   font-weight: bold;
   font-size: 1rem;
-  transition-duration: calc(var(--common-transition-duration) / 2);
+  transition: top calc(var(--common-transition-duration) / 2);
 }
 #enable-automatic-question-speaking-button::before,
 #enable-automatic-question-speaking-button::after {
@@ -675,7 +674,7 @@ body > * {
   width: 5.5rem;
 }
 :root.disable-control .control-button {
-  background-color: var(--button-disabled-background-color);
+  background-image: linear-gradient(#0002, #0002);
 }
 .control-button > svg {
   width: 50%;
@@ -730,7 +729,6 @@ body > * {
   width: 100%;
   height: 100%;
   background-color: #000C;
-  transition-duration: var(--common-transition-duration);
 }
 :root.show-settings #settings-screen {
   visibility: visible;
