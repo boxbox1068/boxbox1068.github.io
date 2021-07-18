@@ -362,8 +362,11 @@ body {
       "question" 1fr
       "..." var(--common-cell-border-spacing)
       "answer" 1fr
+      "..." var(--common-cell-border-spacing)
       "statistics" min-content
+      "..." var(--common-cell-border-spacing)
       "controls" min-content
+      "..." var(--common-cell-border-spacing)
       "footer" var(--footer-cell-height)
       / 100%;
   }
