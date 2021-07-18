@@ -102,6 +102,7 @@
   --sub-color: #DFDFDF;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
+  --button-disabled-background-color: #B0BEC5;
   --button-color: #455A64;
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: var(--accent-color);
@@ -111,6 +112,7 @@
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #DFDFDF;
   --toggle-button-on-color: #FFA726;
+  --toggle-button-off-color: #B0BEC5;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
   --radio-button-color: #455A64;
@@ -123,6 +125,7 @@
   --sub-color: #DFDFDF;
   --button-border-color: #455A64;
   --button-background-color: #263238;
+  --button-disabled-background-color: #13191C;
   --button-color: #DFDFDF;
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
@@ -131,7 +134,8 @@
   --drill-cover-background-color: #263238;
   --hint-balloon-chip-border-color: #607D8B;
   --hint-balloon-chip-background-color: #202020;
-  --toggle-button-on-color: #FFA726;
+  --toggle-button-on-color: #EF6C00;
+  --toggle-button-off-color: #13191C;
   --setting-category-border-color: #607D8B;
   --radio-button-background-color: #DFDFDF;
   --radio-button-color: #455A64;
@@ -434,6 +438,7 @@ body > * {
   transform: scale(1, -1);
 }
 #fold-lead-button:disabled {
+  display: none;
   opacity: 0;
 }
 #fold-lead-button > svg {
@@ -669,6 +674,7 @@ background-color: green;
   top: 0;
   border-top: calc(var(--toggle-button-height) + var(--common-border-width)) solid transparent;
   border-bottom: var(--common-border-width) solid var(--button-border-color);
+  background-color: var(--toggle-button-off-color);
 }
 .toggle-button::after {
   top: 100%;
@@ -719,7 +725,8 @@ background-color: green;
   width: 5.5rem;
 }
 :root.disable-control .control-button {
-  background-image: linear-gradient(#0002,#0002);
+//  background-image: linear-gradient(#0002,#0002);
+  background-color: var(--button-disabled-background-color);
 }
 .control-button > svg {
   width: 50%;
