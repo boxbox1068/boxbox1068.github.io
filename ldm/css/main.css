@@ -474,17 +474,13 @@ body > * {
 #error-panel {
   display: flex;
   align-items: center;
-  height: 1.75rem;
   background-color: var(--error-panel-background-color);
   color: var(--error-panel-color);
 }
 #error-body {
-  padding: 0 var(--common-padding-left);
+  padding: var(--common-padding-top) var(--common-padding-left);
   font-weight: bold;
   font-size: .75rem;
-}
-#error-body > span:first-child::after {
-  content: ":\0020";
 }
 
 /* ----------------------------- *
