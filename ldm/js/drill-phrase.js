@@ -11,31 +11,26 @@ class DrillPhrase {
       pathIdSeed = Math.random();
     };
     const _replaceVariableTags = (template, replacer) => {
-      template = template.replace(/(?!<\/?v[01-9]>)<.*?>/g, '');
-      template = template.replace(/<v0>([^<]*)<\/v0>/ig, (match, p1, offset, string) => {
-        const options = p1.split('|');
-        const index = Math.floor(options.length * Math.random());
-        return options[index];
-      });
+      template = template.replace(/</g, '&lt;');
+      template = template.replace(/>/g, '&gt;');
       while (true) {
         const lastTemplate = template;
-        template = template.replace(/<v([1-9])>([^<]*)<\/v\1>/i, (match, p1, p2, offset, string) => {
+        template = template.replace(/\[(\d):((?:(?!\[\d:).)*?)\]/, (match, p1, p2, offset, string) => {
           const variableNumber = Number(p1);
-          const optionTexts  = p2.split('|');
-          for (let i = 1; i < optionTexts.length; i++) {
-            if (optionTexts[i] == '-') {
-              optionTexts[i] = optionTexts[i - 1];
+          const options  = p2.split(',');
+          for (let i = 1; i < options.length; i++) {
+            if (options[i] == '-') {
+              options[i] = options[i - 1];
             }
           }
-          const firstVariablePartOffset = string.match(/^.*?(?=<v[1-9]>)/i)[0].length;
+          const firstVariablePartOffset = string.match(/^.*?(?=\[\d:)/)[0].length;
           const isTopLevelVariable = firstVariablePartOffset == offset;
-          return replacer(variableNumber, optionTexts, isTopLevelVariable) || '';
+          return replacer(variableNumber, options, isTopLevelVariable) || '';
         });
         if (template == lastTemplate) {
           break;
         }
       }
-      template = template.replace(/<\/?v[01-9]>/ig, '');
       return template;
     };
     const optionCounts = [];
