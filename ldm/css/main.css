@@ -97,16 +97,16 @@
 :root,
 :root[data-color-scheme="light"] {
   --main-background-color: #CFD8DC;
-  --main-color: #202020;
+  --main-color: #101010;
   --sub-background-color: #455A64;
-  --sub-color: #DFDFDF;
+  --sub-color: #EFEFEF;
   --a-color: #0D47A1;
   --button-border-color: #607D8B;
   --button-background-color: #CFD8DC;
   --button-color: #455A64;
   --lead-panel-background-color: #B0BEC5;
   --fold-lead-button-background-color: var(--accent-color);
-  --fold-lead-button-color: #DFDFDF;
+  --fold-lead-button-color: #EFEFEF;
   --error-panel-background-color: #FFEB3B;
   --error-panel-color: #B71C1C;
   --drill-panel-background-color: #FFF8;
@@ -116,22 +116,22 @@
   --toggle-button-on-color: #FFA726;
   --toggle-button-off-color: #B0BEC5;
   --setting-category-border-color: #607D8B;
-  --radio-button-background-color: #DFDFDF;
+  --radio-button-background-color: #EFEFEF;
   --radio-button-color: #455A64;
 }
 :root[data-color-scheme="dark"],
 :root[data-color-scheme="auto"].prefers-dark-color-scheme {
   --main-background-color: #13191C;
-  --main-color: #DFDFDF;
+  --main-color: #EFEFEF;
   --sub-background-color: #263238;
-  --sub-color: #DFDFDF;
+  --sub-color: #EFEFEF;
   --a-color: #90CAF9;
   --button-border-color: #455A64;
   --button-background-color: #263238;
-  --button-color: #DFDFDF;
+  --button-color: #EFEFEF;
   --lead-panel-background-color: #1C252A;
   --fold-lead-button-background-color: var(--accent-color);
-  --fold-lead-button-color: #DFDFDF;
+  --fold-lead-button-color: #EFEFEF;
   --error-panel-background-color: #FFEB3B;
   --error-panel-color: #B71C1C;
   --drill-panel-background-color: #0008;
@@ -141,7 +141,7 @@
   --toggle-button-on-color: #EF6C00;
   --toggle-button-off-color: #13191C;
   --setting-category-border-color: #607D8B;
-  --radio-button-background-color: #DFDFDF;
+  --radio-button-background-color: #EFEFEF;
   --radio-button-color: #455A64;
 }
 

@@ -102,6 +102,10 @@ const main = async () => {
     setFlag('show-settings', true);
   });
   qs('#visit-home-button').addEventListener('click', () => {
+    const ret = window.confirm(stringResources['--you-will-be-transferred-to-an-external-website']);
+    if (! ret) {
+      return;
+    }
     window.location.href = homeUrl;
   });
   qs('#hide-settings-button').addEventListener('click', () => {

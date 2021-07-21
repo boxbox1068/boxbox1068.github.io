@@ -6,11 +6,12 @@ jsonpCallback({
   "atemp": "<v5>My|Your|His|Her|Our|Your|Their</v5> <v1>birthday|wedding anniversary|death anniversary</v1> <v3>is|was|will be</v3> <v2>%366-dates-en%</v2>.",
 
 
-// 
+//  "もし私が<v5>鳥|魚|犬|猫|馬a<v1>asdfa|sdajfksj|saa|as</v1>aaa</v5>だったら[2:空を自由に飛べる|海深くまで泳げる|君の匂いを嗅ぎ分けられる|一日中寝ていられる|風より速く走れる]んだけど。",
 
-//  "qtemp": "^[1|2|3]^^[A|B|C]",
+//  "qtemp": "#1[aa#2[bbb, ccc, adaf, dsafdkasj]a, bbb, ccc, ddd]",
 //  "atemp": "^私は<V1>%366-dates-ja%</V1>がん&lt;ばり&gt;ました",
 
+//[1:aaa,bbb,ccc[2:aaa,bbb,ccc],ddd]
 
   "qlang": "ja-JP",
   "alang": "en-GB",
