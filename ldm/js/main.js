@@ -179,13 +179,13 @@ const main = async () => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    switchActiveVariableElement(false);
+    switchActiveOptionPartElement(false);
   });
   addKeyDownListener('ArrowLeft', () => {
     if (! getFlag('fold-lead') || getFlag('show-settings')) {
       return;
     }
-    switchActiveVariableElement(true);
+    switchActiveOptionPartElement(true);
   });
   addKeyDownListener('ArrowDown', () => {
     if (getFlag('show-settings')) {
@@ -352,22 +352,22 @@ const main = async () => {
   }
   resetCard();
 };
-const switchActiveVariableElement = reverse => {
-  let variableElements;
+const switchActiveOptionPartElement = reverse => {
+  let optionPartElements;
   if (getFlag('uncover-answer')) {
-    variableElements = qsa('.option-part');
+    optionPartElements = qsa('.option-part');
   } else {
-    variableElements = qsa('#question-panel .variable');
+    optionPartElements = qsa('#question-panel .option-part');
   }
-  let currentIndex = reverse ? variableElements.length : -1;
-  variableElements.forEach((element, index) => {
+  let currentIndex = reverse ? optionPartElements.length : -1;
+  optionPartElements.forEach((element, index) => {
     if (element.classList.contains('active')) {
       currentIndex = index;
     }
   });
   const nextIndex = currentIndex + (reverse ? -1 : 1);
-  const nextVariableElement = variableElements.item(nextIndex);
-  setActiveElement(nextVariableElement);
+  const nextOptionPartElement = optionPartElements.item(nextIndex);
+  setActiveElement(nextOptionPartElement);
 };
 const setActiveElement = targetElement => {
   qsa('.active').forEach(element => {
@@ -420,33 +420,33 @@ const resetCard = async () => {
   }
   setFlag('disable-control', true);
   const _addHintBalloons = (parentPanelElement, hintTextList) => {
-    const _setHintBalloonPosition = variableElement => {
-      const hintBalloonPanelElement = variableElement.querySelector('.hint-balloon-chip');
-      const variableRect = variableElement.getClientRects()[0];
-      hintBalloonPanelElement.style.top = `${variableRect.top}px`;
-      hintBalloonPanelElement.style.left = `${variableRect.left}px`;
+    const _setHintBalloonPosition = optionPartElement => {
+      const hintBalloonPanelElement = optionPartElement.querySelector('.hint-balloon-chip');
+      const optionPartRect = optionPartElement.getClientRects()[0];
+      hintBalloonPanelElement.style.top = `${optionPartRect.top}px`;
+      hintBalloonPanelElement.style.left = `${optionPartRect.left}px`;
     };
     const _updateHintBalloonPositions = () => {
-      const targetVariableElements = parentPanelElement.querySelectorAll('.option-part');
-      for (const variableElement of targetVariableElements) {
-        _setHintBalloonPosition(variableElement);
+      const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
+      for (const optionPartElement of targetOptionPartElements) {
+        _setHintBalloonPosition(optionPartElement);
       }
     };
-    const targetVariableElements = parentPanelElement.querySelectorAll('.option-part');
-    for (const variableElement of targetVariableElements) {
-      const variableNumber = Number(variableElement.dataset.variableNumber);
-      const hintText = hintTextList[variableNumber];
+    const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
+    for (const optionPartElement of targetOptionPartElements) {
+      const optionPartNumber = Number(optionPartElement.dataset.optionPartNumber);
+      const hintText = hintTextList[optionPartNumber];
       const hintBalloonBodyElement = ce('span');
       hintBalloonBodyElement.className = 'hint-balloon-body';
       hintBalloonBodyElement.innerText = hintText;
       const hintBalloonPanelElement = ce('span');
       hintBalloonPanelElement.className = 'hint-balloon-chip';
       hintBalloonPanelElement.append(hintBalloonBodyElement);
-      variableElement.append(hintBalloonPanelElement);
-      const hintBalloonRight = variableElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
+      optionPartElement.append(hintBalloonPanelElement);
+      const hintBalloonRight = optionPartElement.getClientRects()[0].left + hintBalloonPanelElement.offsetWidth;
       const hintBalloonContentMarginLeft = Math.min(0, document.body.offsetWidth - hintBalloonRight);
       hintBalloonBodyElement.style.marginLeft = `${hintBalloonContentMarginLeft}px`;
-      _setHintBalloonPosition(variableElement);
+      _setHintBalloonPosition(optionPartElement);
     }
     parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
     window.addEventListener('resize', _updateHintBalloonPositions);

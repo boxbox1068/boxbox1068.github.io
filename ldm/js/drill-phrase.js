@@ -1,6 +1,8 @@
 'use strict';
 class DrillPhrase {
   constructor(template, lang) {
+    template = template.replace(/</g, '&lt;');
+    template = template.replace(/>/g, '&gt;');
     this._template = `${template}`;
     this._lang = `${lang}`;
     this._resetCount = 0;
@@ -11,8 +13,6 @@ class DrillPhrase {
       pathIdSeed = Math.random();
     };
     const _replaceOptionTags = (template, replacer) => {
-      template = template.replace(/</g, '&lt;');
-      template = template.replace(/>/g, '&gt;');
       while (true) {
         const lastTemplate = template;
         template = template.replace(/\[(\d):((?:(?!\[\d:).)*?)\]/, (match, p1, p2, offset, string) => {
