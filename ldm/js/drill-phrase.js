@@ -47,32 +47,32 @@ class DrillPhrase {
     }
     const pathId = Math.ceil(possiblePathCount * pathIdSeed);
     let temporaryPathId = pathId;
-    const chosenOptionIds = [];
+    const selectedOptionIds = [];
     for (let optionCount of optionCounts) {
       if (optionCount) {
-        const chosenOptionId = (temporaryPathId - 1) % optionCount;
-        chosenOptionIds.push(chosenOptionId);
+        const selectedOptionId = (temporaryPathId - 1) % optionCount;
+        selectedOptionIds.push(selectedOptionId);
         temporaryPathId = Math.ceil(temporaryPathId / optionCount);
       } else {
-        chosenOptionIds.push(undefined);
+        selectedOptionIds.push(undefined);
       }
     }
-    const chosenOptionTexts = [];
+    const selectedOptionTexts = [];
     const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isTopLevelOptionPart) => {
-      const chosenOptionId = chosenOptionIds[optionPartNumber];
-      const chosenOptionText = optionTexts[chosenOptionId];
-      if (chosenOptionText && isTopLevelOptionPart) {
-        const existingText = chosenOptionTexts[optionPartNumber];
-        chosenOptionTexts[optionPartNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
-        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${chosenOptionText}</span>`;
+      const selectedOptionId = selectedOptionIds[optionPartNumber];
+      const selectedOptionText = optionTexts[selectedOptionId];
+      if (selectedOptionText && isTopLevelOptionPart) {
+        const existingText = selectedOptionTexts[optionPartNumber];
+        selectedOptionTexts[optionPartNumber] = (existingText ? existingText + ' ~ ' : '') + selectedOptionText;
+        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
       } else {
-        return chosenOptionText;
+        return selectedOptionText;
       }
     });
     this._optionCounts = optionCounts;
     this._possiblePathCount = possiblePathCount;
     this._pathId = pathId;
-    this._chosenOptionTexts = chosenOptionTexts;
+    this._selectedOptionTexts = selectedOptionTexts;
     this._html = phraseHtml;
     this._resetCount = this._resetCount + 1 || 0;
   }
@@ -85,8 +85,8 @@ class DrillPhrase {
   get pathId() {
     return this._pathId;
   }
-  get chosenOptionTexts() {
-    return this._chosenOptionTexts;
+  get selectedOptionTexts() {
+    return this._selectedOptionTexts;
   }
   get text() {
     return this._html.replace(/<.*?>/g, '');

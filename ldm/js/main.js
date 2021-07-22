@@ -101,6 +101,9 @@ const main = async () => {
   qs('#show-settings-button').addEventListener('click', () => {
     setFlag('show-settings', true);
   });
+  qs('#show-help-button').addEventListener('click', () => {
+    setFlag('show-help', true);
+  });
   qs('#visit-home-button').addEventListener('click', () => {
     const ret = window.confirm(stringResources['--you-will-be-transferred-to-an-external-website']);
     if (! ret) {
@@ -473,10 +476,10 @@ const resetCard = async () => {
   qs('#statistics-body').innerHTML = statisticsOutput;
   qs('#question-panel').scrollTop = 0;
   qs('#question-body').innerHTML = questionPhrase.html;
-  _addHintBalloons(qs('#question-panel'), answerPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#question-panel'), answerPhrase.selectedOptionTexts);
   qs('#answer-panel').scrollTop = 0;
   qs('#answer-body').innerHTML = answerPhrase.html;
-  _addHintBalloons(qs('#answer-panel'), questionPhrase.chosenOptionTexts);
+  _addHintBalloons(qs('#answer-panel'), questionPhrase.selectedOptionTexts);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay / 2);
   } else {
