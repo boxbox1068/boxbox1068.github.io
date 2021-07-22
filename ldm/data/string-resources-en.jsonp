@@ -1,10 +1,10 @@
 jsonpCallback({
   "app-title": "Language Drill Maker",
   "copyright-notice-html": "<b>Language Drill Maker</b> &copy; 2021 shikaku1068",
+  "--the-source-of-this-drill": "The source of this drill",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% pattern / Question %question-number%",
   "--you-will-be-transferred-to-an-external-website": "You will be transferred to an external website.",
   "--error": "Error",
-  "--error--the-source-of-this-drill": "The source of this drill",
   "--error--the-template-of-question-is-undefined": "The template of question is undefined.",
   "--error--the-template-of-answer-is-undefined": "The template of answer is undefined.",
   "--the-templates-of-question-and-answer-do-not-match-in-structure": "The templates of question and answer do not match in structure.",
@@ -135,4 +135,5 @@ jsonpCallback({
   "--background-pattern--medium-dots": "Medium dots",
   "--background-pattern--large-dots": "Large dots",
   "--background-pattern--extra-large-dots": "Extra-large dots",
+  "--help": "Help",
 });

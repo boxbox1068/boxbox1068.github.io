@@ -306,10 +306,12 @@
   text-size-adjust: none;
   -webkit-text-size-adjust: none;
   outline: none;
-  transition-property: visibility, opacity, background-color;
-  transition-duration: var(--common-transition-duration);
   user-select: none;
   touch-action: pan-y;
+}
+html, body, div, span, button {
+  transition-property: visibility, opacity, background-color;
+  transition-duration: var(--common-transition-duration);
 }
 html {
   height: 100%;

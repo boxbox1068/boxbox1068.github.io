@@ -135,4 +135,5 @@ jsonpCallback({
   "--background-pattern--medium-dots": "水玉（標準）",
   "--background-pattern--large-dots": "水玉（大きい）",
   "--background-pattern--extra-large-dots": "水玉（とても大きい）",
+  "--help": "ヘルプ",
 });

@@ -120,6 +120,15 @@ const main = async () => {
     }
     setFlag('show-settings', false);
   });
+  qs('#hide-help-button').addEventListener('click', () => {
+    setFlag('show-help', false);
+  });
+  qs('#help-screen').addEventListener('click', event => {
+    if (event.currentTarget != event.target) {
+      return;
+    }
+    setFlag('show-help', false);
+  });
   qsa('[data-setting-key]').forEach(element => {
     element.addEventListener('click', () => {
       const key = element.getAttribute('data-setting-key');
@@ -130,24 +139,26 @@ const main = async () => {
   addKeyDownListener('Escape', () => {
     if (getFlag('show-settings')) {
       setFlag('show-settings', false);
+    } else if (getFlag('show-help')) {
+      setFlag('show-help', false);
     } else {
       toggleFlag('fold-lead');
     }
   });
   addKeyDownListener('q', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     toggleSetting('enable-automatic-question-speaking');
   });
   addKeyDownListener('a', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
       toggleSetting('enable-automatic-answer-speaking');
   });
   addKeyDownListener('Enter', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (getFlag('uncover-answer')) {
@@ -157,7 +168,7 @@ const main = async () => {
     }
   });
   addKeyDownListener(' ', () => {
-    if (getFlag('show-settings')) {
+    if (getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (! getFlag('fold-lead')) {
@@ -169,7 +180,7 @@ const main = async () => {
     }
   });
   addKeyDownListener('Tab', () => {
-    if (getFlag('show-settings')) {
+    if (getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (! getFlag('fold-lead')) {
@@ -179,13 +190,13 @@ const main = async () => {
     }
   });
   addKeyDownListener('ArrowRight', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     switchActiveOptionPartElement(false);
   });
   addKeyDownListener('ArrowLeft', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings' || getFlag('show-help'))) {
       return;
     }
     switchActiveOptionPartElement(true);
@@ -193,6 +204,8 @@ const main = async () => {
   addKeyDownListener('ArrowDown', () => {
     if (getFlag('show-settings')) {
       qs('#settings-panel').scrollBy(0, 50);
+    } else if (getFlag('show-help')) {
+      qs('#help-panel').scrollBy(0, 50);
     } else if (! getFlag('fold-lead')) {
       qs('#lead-panel').scrollBy(0, 50);
     } else if (getFlag('uncover-answer')) {
@@ -204,6 +217,8 @@ const main = async () => {
   addKeyDownListener('ArrowUp', () => {
     if (getFlag('show-settings')) {
       qs('#settings-panel').scrollBy(0, -50);
+    } else if (getFlag('show-help')) {
+      qs('#help-panel').scrollBy(0, -50);
     } else if (! getFlag('fold-lead')) {
       qs('#lead-panel').scrollBy(0, -50);
     } else if (getFlag('uncover-answer')) {
@@ -213,7 +228,16 @@ const main = async () => {
     }
   });
   addKeyDownListener('/', () => {
+    if (getFlag('show-help')) {
+      return;
+    }
     toggleFlag('show-settings');
+  });
+  addKeyDownListener('?', () => {
+    if (getFlag('show-settings')) {
+      return;
+    }
+    toggleFlag('show-help');
   });
   for (const key in settingControlChars) {
     const settingControlChar = settingControlChars[key];
@@ -231,7 +255,7 @@ const main = async () => {
     });
   }
   addSwipeListener(-25, () => {
-    if (getFlag('show-settings')) {
+    if (getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (! getFlag('fold-lead')) {
@@ -246,7 +270,7 @@ const main = async () => {
     if (! getSetting('enable-swipe-to-right', 'boolean')) {
       return;
     }
-    if (getFlag('show-settings')) {
+    if (getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (! getFlag('fold-lead')) {
@@ -256,7 +280,7 @@ const main = async () => {
     }
   });
   addDoubleTapListener(250, () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings')) {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (getFlag('uncover-answer')) {

@@ -102,20 +102,15 @@ const requestJsonp = (jsonpSrc, callback) => {
   jsonpDataScriptElement.src = jsonpSrc;
   document.head.append(jsonpDataScriptElement);
 };
-const addKeyDownListener = (targetKeys, listener) => {
-  if (! Array.isArray(targetKeys)) {
-    targetKeys = [targetKeys];
-  }
+const addKeyDownListener = (targetKey, listener) => {
   qs('body').addEventListener('keydown', event => {
     if (event.ctrlKey || event.altKey || event.metaKey || /^F\d+$/.test(event.key)) {
       return;
     }
     event.preventDefault();
-    targetKeys.forEach(targetKey => {
-      if (event.key == targetKey) {
-        listener(targetKey);
-      }
-    });
+    if (event.key == targetKey) {
+      listener();
+    }
   }, {passive: false});
 };
 const addSwipeListener = (minValidMoveX, listener) => {
