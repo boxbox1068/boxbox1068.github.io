@@ -1,1 +1,41 @@
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M80 320L200 320L200 640L80 640L80 320Z" id="cHXVIPghk"></path><path d="M480 160L640 320L319.99 320L0 320L159.98 160L319.99 0L480 160Z" id="d81C5Rygfu"></path><path d="M440 320L560 320L560 640L440 640L440 320Z" id="b1Aad8ev0E"></path><path d="M80 520L560 520L560 640L80 640L80 520Z" id="c3xVgDzle1"></path><path d="M80 320L560 320L560 400L80 400L80 320Z" id="a75axORsHy"></path></defs><g><g><use xlink:href="#cHXVIPghk" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#d81C5Rygfu" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#b1Aad8ev0E" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#c3xVgDzle1" opacity="1" fill-opacity="1"></use></g><g><use xlink:href="#a75axORsHy" opacity="1" fill-opacity="1"></use></g></g></svg>
+
+
+
+<div class="help-category" data-string-resource-key="--help-category--how-to-control-by-touch"></div>
+<span data-string-resource-key="--how-to-control-by-touch--swipe-left"></span>
+<span data-string-resource-key="--how-to-control-by-touch--continue-the-drill-or-fold-the-lead-screen"></span>
+<span data-string-resource-key="--how-to-control-by-touch--swipe-right"></span>
+<span data-string-resource-key="--how-to-control-by-touch--skip-the-current-question-or-fold-the-lead-screen-only-if-enabled"></span>
+<span data-string-resource-key="--how-to-control-by-touch--double-tap"></span>
+<span data-string-resource-key="--how-to-control-by-touch--speak-the-question-or-the-answer"></span>
+<span data-string-resource-key="--how-to-control-by-touch--tap-the-option-part"></span>
+<span data-string-resource-key="--how-to-control-by-touch--show-the-hint-balloon-only-if-enabled"></span>
+<div class="help-category" data-string-resource-key="--help-category--how-to-control-by-keyboard"></div>
+<span data-string-resource-key="--how-to-control-by-keyboard--space"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--continue-the-drill-or-fold-the-lead-screen"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--tab"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--skip-the-current-question-or-fold-the-lead-screen"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--enter"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--speak-the-question-or-the-answer"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--q"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--toggle-automatic-question-speaking"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--a"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--toggle-automatic-answer-speaking"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--arrow-right"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--show-the-next-hint-balloon"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--arrow-left"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--show-the-previous-hint-balloon"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--arrow-down"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--scroll-down-the-current-panel"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--arrow-up"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--scroll-up-the-current-panel"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--escape"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--fold-or-spread-the-lead-screen-or-return-to-the-drill-screen"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--slash"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--show-or-hide-the-settings-screen"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--question"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--show-or-hide-the-help-screen"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--a-to-r"></span>
+<span data-string-resource-key="--how-to-control-by-keyboard--switch-each-applicable-setting-item-in-the-settings-screen"></span>
+<div class="help-cateogry" data-string-resource-key="--help-category--how-to-make-an-original-drill"></div>
+<span data-string-resource-key="--how-to-make-an-original-drill--please-refer-to-this-document"></span>

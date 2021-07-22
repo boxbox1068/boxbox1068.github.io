@@ -97,6 +97,7 @@
 :root,
 :root[data-color-scheme="light"] {
   --main-background-color: #CFD8DC;
+  --main-border-color: #607D8B;
   --main-color: #101010;
   --sub-background-color: #455A64;
   --sub-color: #EFEFEF;
@@ -115,13 +116,13 @@
   --hint-balloon-chip-background-color: #EFEFEF;
   --toggle-button-on-color: #FFA726;
   --toggle-button-off-color: #B0BEC5;
-  --setting-category-border-color: #607D8B;
   --radio-button-background-color: #EFEFEF;
   --radio-button-color: #455A64;
 }
 :root[data-color-scheme="dark"],
 :root[data-color-scheme="auto"].prefers-dark-color-scheme {
   --main-background-color: #13191C;
+  --main-border-color: #607D8B;
   --main-color: #EFEFEF;
   --sub-background-color: #263238;
   --sub-color: #EFEFEF;
@@ -140,7 +141,6 @@
   --hint-balloon-chip-background-color: #101010;
   --toggle-button-on-color: #EF6C00;
   --toggle-button-off-color: #13191C;
-  --setting-category-border-color: #607D8B;
   --radio-button-background-color: #EFEFEF;
   --radio-button-color: #455A64;
 }
@@ -354,7 +354,7 @@ button > svg {
 }
 
 /* ------------- *
- *  MAIN SCREEN  *
+ *  MAIN MODAL  *
  * ------------- */
 body {
   display: grid;
@@ -750,10 +750,10 @@ body > * {
   height: 50%;
 }
 
-/*-------------------*
- *  SETTINGS SCREEN  *
- *-------------------*/
-#settings-screen {
+/*------------------*
+ *  SETTINGS MODAL  *
+ *------------------*/
+#settings-modal {
   display: grid;
   grid-template:
     "... ... ..." 2.5rem 
@@ -770,7 +770,7 @@ body > * {
   height: 100%;
   background-color: #000C;
 }
-:root.show-settings #settings-screen {
+:root.show-settings #settings-modal {
   visibility: visible;
   opacity: 1;
 }
@@ -804,25 +804,25 @@ body > * {
   font-size: 1rem;
 }
 .setting-category {
-  border-bottom: .2rem dashed var(--setting-category-border-color);
+  border-bottom: .2rem dashed var(--main-border-color);
   font-weight: bold;
 }
 .setting-category:not(:first-child) {
   margin-top: 1rem;
 }
 .setting-item {
+  margin-top: .5rem;
   padding-left: 2rem;
-  font-weight: bold;
   text-indent: -2rem;
   counter-increment: setting-item;
 }
-.setting-item {
-  margin-top: .5rem;
+.setting-item > span:first-child {
+  font-weight: bold;
 }
-.setting-item > span::before {
+.setting-item > span:first-child::before {
   content: counter(setting-item, lower-latin) ")\0020";
 }
-.setting-item > span::after {
+.setting-item > span:first-child::after {
   content: ":\0020";
 }
 .radio-button {
@@ -904,13 +904,10 @@ body > * {
   text-decoration-color: #607D8B;
 }
 
-/* ---
- *
- * --- */
-/*-------------------*
- *  SETTINGS SCREEN  *
- *-------------------*/
- #help-screen {
+/*--------------*
+ *  HELP MODAL  *
+ *--------------*/
+#help-modal {
   display: grid;
   grid-template:
     "... ... ..." 2.5rem 
@@ -927,7 +924,7 @@ body > * {
   height: 100%;
   background-color: #000C;
 }
-:root.show-help #help-screen {
+:root.show-help #help-modal {
   visibility: visible;
   opacity: 1;
 }
@@ -959,4 +956,23 @@ body > * {
 #help-body {
   padding: var(--common-padding-top) var(--common-padding-left);
   font-size: 1rem;
+}
+.help-category {
+  border-bottom: .2rem dashed var(--main-border-color);
+  font-weight: bold;
+}
+.help-category:not(:first-child) {
+  margin-top: 1rem;
+}
+.help-item {
+  margin-top: .5rem;
+  padding-left: 2rem;
+  text-indent: -2rem;
+  counter-increment: setting-item;
+}
+.help-item > span:first-child {
+  font-weight: bold;
+}
+.help-item > span:first-child::after {
+  content: ":\0020";
 }

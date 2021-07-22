@@ -18,7 +18,7 @@ const settingDefaultValues = {
   "line-height": "medium", // small|medium|large => CSS
   "color-scheme": "light", // light|dark|auto => JS + CSS
   "accent-color": "indigo", // red|pink|purple|deep-purple|indigo|blue|light-blue|cyan|teal|green|light-green|lime|yellow|amber|orange|deep-orange|brown|blue-grey => CSS
-  "background-pattern": "horizontal-thin-stripe" // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
+  "background-pattern": "none" // none|(horizontal|vertical)-(thin|medium|thick)-stripe|(small|medium|large)-(checks|dots) => CSS
 };
 const settingControlChars = {
   "enable-swipe-to-right": "a",
@@ -57,6 +57,7 @@ const main = async () => {
   qsa('[data-string-resource-key]').forEach(element => {
     const key = element.getAttribute('data-string-resource-key');
     element.innerHTML = stringResources[key];
+    element.removeAttribute('data-string-resource-key');
   });
   const mql = window.matchMedia('(prefers-color-scheme: dark)');
   mql.addEventListener('change', event => {
@@ -114,7 +115,7 @@ const main = async () => {
   qs('#hide-settings-button').addEventListener('click', () => {
     setFlag('show-settings', false);
   });
-  qs('#settings-screen').addEventListener('click', event => {
+  qs('#settings-modal').addEventListener('click', event => {
     if (event.currentTarget != event.target) {
       return;
     }
@@ -123,7 +124,7 @@ const main = async () => {
   qs('#hide-help-button').addEventListener('click', () => {
     setFlag('show-help', false);
   });
-  qs('#help-screen').addEventListener('click', event => {
+  qs('#help-modal').addEventListener('click', event => {
     if (event.currentTarget != event.target) {
       return;
     }
@@ -461,7 +462,7 @@ const resetCard = async () => {
     };
     const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
     for (const optionPartElement of targetOptionPartElements) {
-      const optionPartNumber = Number(optionPartElement.dataset.optionPartNumber);
+      const optionPartNumber = Number(optionPartElement.getAttribute('option-part-number'));
       const hintText = hintTextList[optionPartNumber];
       const hintBalloonBodyElement = ce('span');
       hintBalloonBodyElement.className = 'hint-balloon-body';
