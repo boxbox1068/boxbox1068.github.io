@@ -947,7 +947,7 @@ body > * {
   height: 60%;
 }
 #help-panel {
-  grid-area: settings-panel;
+  grid-area: help-panel;
   overflow-y: auto;
   background-color: var(--main-background-color);
 }
