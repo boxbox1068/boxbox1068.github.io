@@ -467,7 +467,7 @@ const resetCard = async () => {
     {
       '%pattern-count%': questionPhrase.possiblePathCount.toLocaleString(),
       '%pattern-id%': questionPhrase.pathId.toLocaleString(),
-      '%refill-count%': (questionPhrase.resetCount - 1).toLocaleString()
+      '%question-number%': questionPhrase.resetCount.toLocaleString()
     }
   );
   qs('#statistics-body').innerHTML = statisticsOutput;

@@ -5,7 +5,6 @@ class DrillPhrase {
     template = template.replace(/>/g, '&gt;');
     this._template = `${template}`;
     this._lang = `${lang}`;
-    this._resetCount = 0;
     this.reset();
   }
   reset(pathIdSeed) {
@@ -75,7 +74,7 @@ class DrillPhrase {
     this._pathId = pathId;
     this._chosenOptionTexts = chosenOptionTexts;
     this._html = phraseHtml;
-    this._resetCount++;
+    this._resetCount = this._resetCount + 1 || 0;
   }
   get optionCounts() {
     return this._optionCounts;

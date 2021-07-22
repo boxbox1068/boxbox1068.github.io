@@ -1,7 +1,7 @@
 jsonpCallback({
   "app-title": "語学ドリルメーカー",
   "copyright-notice-html": "<b>語学ドリルメーカー</b> &copy; 2021 shikaku1068",
-  "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / おかわり%refill-count%回目",
+  "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / %question-number%問目",
   "--the-source-of-this-drill": "このドリルのソース",
   "--you-will-be-transferred-to-an-external-website": "外部サイトに遷移します。",
   "--error": "エラー",

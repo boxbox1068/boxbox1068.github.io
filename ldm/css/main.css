@@ -41,7 +41,7 @@
 
 /*  ANIMATION DURATION  */
 :root[data-animation-duration="none"] {
-  --animation-duration: 0;
+  --animation-duration: 0s;
 }
 :root[data-animation-duration="short"] {
   --animation-duration: .25s;
@@ -284,7 +284,7 @@
 /* --------- *
  *  GENERAL  *
  * --------- */
- :root {
+:root {
   --common-cell-border-spacing: .5rem;
   --common-padding-top: .5rem;
   --common-padding-left: 1rem;
@@ -566,6 +566,9 @@ body > * {
 }
 .option-part[data-option-part-number="0"] {
   background-color: var(--option-part-number-0-background-color);
+}
+.option-part * {
+  transition-duration: 0s;
 }
 .hint-balloon-chip {
   display: var(--hint-balloon-chip-display);
