@@ -357,24 +357,24 @@ const main = async () => {
       resolve();
     });
   });
-  let errorMessage = '';
+  let errorMessages = [];
   if (! questionTemplate) {
     questionTemplate = 'undefined';
-    errorMessage += stringResources['--error--the-template-of-question-is-undefined'];
+    errorMessages.push(stringResources['--error--the-template-of-question-is-undefined']);
   }
   if (! answerTemplate) {
     answerTemplate = 'undefined';
-    errorMessage += stringResources['--error--the-template-of-answer-is-undefined'];
+    errorMessages.push(stringResources['--error--the-template-of-answer-is-undefined']);
   }
   const processedQuestionTemplate = replaceAll(questionTemplate, templateReplacements);
   questionPhrase = new DrillPhrase(processedQuestionTemplate, questionLang);
   const processedAnswerTemplate = replaceAll(answerTemplate, templateReplacements);
   answerPhrase = new DrillPhrase(processedAnswerTemplate, answerLang);
   if (questionPhrase.optionCounts.toString() != answerPhrase.optionCounts.toString()) {
-    errorMessage += stringResources['--error--the-templates-of-question-and-answer-do-not-match-in-structure'];
+    errorMessages.push(stringResources['--error--the-templates-of-question-and-answer-do-not-match-in-structure']);
   }
-  if (errorMessage) {
-    qs('#error-body').innerHTML = `${stringResources['--error']}: ${errorMessage}`;
+  if (errorMessages.length) {
+    qs('#error-body').innerHTML = `${stringResources['--error']}: ${errorMessages.join(' ')}`;
     setFlag('hasError', true);
   }
   resetCard();
