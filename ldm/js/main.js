@@ -145,6 +145,56 @@ const main = async () => {
       toggleFlag('fold-lead');
     }
   });
+  addKeyDownListener('/', () => {
+    if (getFlag('show-help')) {
+      return;
+    }
+    toggleFlag('show-settings');
+  });
+  addKeyDownListener('?', () => {
+    if (getFlag('show-settings')) {
+      return;
+    }
+    toggleFlag('show-help');
+  });
+  addKeyDownListener('ArrowDown', () => {
+    if (getFlag('show-settings')) {
+      qs('#settings-panel').scrollBy(0, 50);
+    } else if (getFlag('show-help')) {
+      qs('#help-panel').scrollBy(0, 50);
+    } else if (! getFlag('fold-lead')) {
+      qs('#lead-panel').scrollBy(0, 50);
+    } else if (getFlag('uncover-answer')) {
+      qs('#answer-panel').scrollBy(0, 50);
+    } else {
+      qs('#question-panel').scrollBy(0, 50);
+    }
+  });
+  addKeyDownListener('ArrowUp', () => {
+    if (getFlag('show-settings')) {
+      qs('#settings-panel').scrollBy(0, -50);
+    } else if (getFlag('show-help')) {
+      qs('#help-panel').scrollBy(0, -50);
+    } else if (! getFlag('fold-lead')) {
+      qs('#lead-panel').scrollBy(0, -50);
+    } else if (getFlag('uncover-answer')) {
+      qs('#answer-panel').scrollBy(0, -50);
+    } else {
+      qs('#question-panel').scrollBy(0, -50);
+    }
+  });
+  addKeyDownListener('ArrowRight', () => {
+    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
+      return;
+    }
+    switchActiveOptionPartElement(false);
+  });
+  addKeyDownListener('ArrowLeft', () => {
+    if (! getFlag('fold-lead') || getFlag('show-settings' || getFlag('show-help'))) {
+      return;
+    }
+    switchActiveOptionPartElement(true);
+  });
   addKeyDownListener('q', () => {
     if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
@@ -188,56 +238,6 @@ const main = async () => {
     } else {
       resetCard();
     }
-  });
-  addKeyDownListener('ArrowRight', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
-      return;
-    }
-    switchActiveOptionPartElement(false);
-  });
-  addKeyDownListener('ArrowLeft', () => {
-    if (! getFlag('fold-lead') || getFlag('show-settings' || getFlag('show-help'))) {
-      return;
-    }
-    switchActiveOptionPartElement(true);
-  });
-  addKeyDownListener('ArrowDown', () => {
-    if (getFlag('show-settings')) {
-      qs('#settings-panel').scrollBy(0, 50);
-    } else if (getFlag('show-help')) {
-      qs('#help-panel').scrollBy(0, 50);
-    } else if (! getFlag('fold-lead')) {
-      qs('#lead-panel').scrollBy(0, 50);
-    } else if (getFlag('uncover-answer')) {
-      qs('#answer-panel').scrollBy(0, 50);
-    } else {
-      qs('#question-panel').scrollBy(0, 50);
-    }
-  });
-  addKeyDownListener('ArrowUp', () => {
-    if (getFlag('show-settings')) {
-      qs('#settings-panel').scrollBy(0, -50);
-    } else if (getFlag('show-help')) {
-      qs('#help-panel').scrollBy(0, -50);
-    } else if (! getFlag('fold-lead')) {
-      qs('#lead-panel').scrollBy(0, -50);
-    } else if (getFlag('uncover-answer')) {
-      qs('#answer-panel').scrollBy(0, -50);
-    } else {
-      qs('#question-panel').scrollBy(0, -50);
-    }
-  });
-  addKeyDownListener('/', () => {
-    if (getFlag('show-help')) {
-      return;
-    }
-    toggleFlag('show-settings');
-  });
-  addKeyDownListener('?', () => {
-    if (getFlag('show-settings')) {
-      return;
-    }
-    toggleFlag('show-help');
   });
   for (const key in settingControlChars) {
     const settingControlChar = settingControlChars[key];

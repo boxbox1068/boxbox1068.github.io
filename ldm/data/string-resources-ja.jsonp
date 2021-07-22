@@ -10,7 +10,7 @@ jsonpCallback({
   "--error--the-templates-of-question-and-answer-do-not-match-in-structure": "問題と答えのテンプレートの構造が一致していません。",
   "--settings": "設定",
   "--setting-category--control": "操作",
-  "--enable-swipe-to-right": "右方向のスワイプ（現在の問題のスキップ等）",
+  "--enable-swipe-to-right": "右方向のスワイプ（現在の問題をスキップ）",
   "--enable-swipe-to-right--true": "有効",
   "--enable-swipe-to-right--false": "無効",
   "--setting-category--behavior": "挙動",
@@ -136,6 +136,24 @@ jsonpCallback({
   "--background-pattern--large-dots": "水玉（大きい）",
   "--background-pattern--extra-large-dots": "水玉（とても大きい）",
   "--help": "ヘルプ",
+  "--control--fold-or-unfold-the-lead-screen": "リード画面を折り畳む／展開する",
+  "--control--show-or-hide-the-settings-screen", "設定画面を表示する／隠す",
+  "--control--show-or-hide-the-help-screen", "ヘルプ画面を表示する／隠す",
+
+
+
+  "--control--continue-the-drill": "ドリルを進める",
+  "--control--skip-the-current-question": "現在の問題をスキップ",
+  "--control--speak-the-question-or-the-answer": "問題又は答えを読み上げる",
+  "--control--toggle-automatic-question-speaking": "問題の自動読み上げを有効化／無効化",
+  "--control--toggle-automatic-answer-speaking": "答えの自動読み上げを有効化／無効化",
+  "--control--switch-each-applicable-setting-item": "それぞれ該当する設定項目の値を切り替える",
+  "--control--scroll-down-the-current-panel": "現在のパネルを下にスクロール",
+  "--control--scroll-up-the-current-panel": "現在のパネルを上にスクロール",
+  "--control--show-the-next-hint-balloon": "次のヒントの吹き出しを表示",
+  "--control--show-the-previous-hint-balloon": "前のヒントの吹き出しを表示",
+
+
   "--help-category--control-by-keyboard": "キーボードによる操作",
-  "contorol-by-keyboard-help-html": "<div><b>Spaceキー</b>: 進む</div>",
+  "--contorol-by-keyboard--space-key": "Spaceキー",
 });
