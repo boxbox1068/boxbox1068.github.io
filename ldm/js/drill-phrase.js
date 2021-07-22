@@ -10,22 +10,24 @@ class DrillPhrase {
     if (pathIdSeed < 0 || 1 <= pathIdSeed) {
       pathIdSeed = Math.random();
     };
-    const _replaceVariableTags = (template, replacer) => {
+    const _replaceOptionTags = (template, replacer) => {
       template = template.replace(/</g, '&lt;');
       template = template.replace(/>/g, '&gt;');
       while (true) {
         const lastTemplate = template;
         template = template.replace(/\[(\d):((?:(?!\[\d:).)*?)\]/, (match, p1, p2, offset, string) => {
-          const variableNumber = Number(p1);
-          const options  = p2.split(',');
+          const optionPartNumber = Number(p1);
+          const options  = p2.split(',').map(element => {
+            return element.trim();
+          });
           for (let i = 1; i < options.length; i++) {
             if (options[i] == '-') {
               options[i] = options[i - 1];
             }
           }
-          const firstVariablePartOffset = string.match(/^.*?(?=\[\d:)/)[0].length;
-          const isTopLevelVariable = firstVariablePartOffset == offset;
-          return replacer(variableNumber, options, isTopLevelVariable) || '';
+          const firstOptionPartOffset = string.match(/^.*?(?=\[\d:)/)[0].length;
+          const isTopLevelOptionPart = firstOptionPartOffset == offset;
+          return replacer(optionPartNumber, options, isTopLevelOptionPart) || '';
         });
         if (template == lastTemplate) {
           break;
@@ -34,10 +36,10 @@ class DrillPhrase {
       return template;
     };
     const optionCounts = [];
-    _replaceVariableTags(this._template, (variableNumber, optionTexts) => {
+    _replaceOptionTags(this._template, (optionPartNumber, optionTexts) => {
       const optionCount = optionTexts.length;
-      if (optionCount < (optionCounts[variableNumber] || Infinity)) {
-        optionCounts[variableNumber] = optionCount;
+      if (optionCount < (optionCounts[optionPartNumber] || Infinity)) {
+        optionCounts[optionPartNumber] = optionCount;
       }
     });
     let possiblePathCount = 1;
@@ -57,13 +59,13 @@ class DrillPhrase {
       }
     }
     const chosenOptionTexts = [];
-    const phraseHtml = _replaceVariableTags(this._template, (variableNumber, optionTexts, isTopLevelVariable) => {
-      const chosenOptionId = chosenOptionIds[variableNumber];
+    const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isTopLevelOptionPart) => {
+      const chosenOptionId = chosenOptionIds[optionPartNumber];
       const chosenOptionText = optionTexts[chosenOptionId];
-      if (chosenOptionText && isTopLevelVariable) {
-        const existingText = chosenOptionTexts[variableNumber];
-        chosenOptionTexts[variableNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
-        return `<span class="variable" data-variable-number="${variableNumber}">${chosenOptionText}</span>`;
+      if (chosenOptionText && isTopLevelOptionPart) {
+        const existingText = chosenOptionTexts[optionPartNumber];
+        chosenOptionTexts[optionPartNumber] = (existingText ? existingText + ' ~ ' : '') + chosenOptionText;
+        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${chosenOptionText}</span>`;
       } else {
         return chosenOptionText;
       }

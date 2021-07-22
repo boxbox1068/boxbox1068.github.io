@@ -3,7 +3,7 @@ const homeUrl = 'https://twitter.com/shikaku1068/';
 const settingDefaultValues = {
   "enable-swipe-to-right": "true", // true|false => JS
   "enable-automatic-drill-starting": "false", // true|false => JS
-  "enable-variable-highlight": "true", // true|false => CSS
+  "enable-option-part-highlight": "true", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
   "voice-volume": "medium", // extra-small|small|medium => JS
@@ -23,7 +23,7 @@ const settingDefaultValues = {
 const settingControlChars = {
   "enable-swipe-to-right": "a",
   "enable-automatic-drill-starting": "b",
-  "enable-variable-highlight": "c",
+  "enable-option-part-highlight": "c",
   "enable-hint-balloon": "d",
   "animation-duration": "e",
   "voice-volume": "f",
@@ -355,7 +355,7 @@ const main = async () => {
 const switchActiveVariableElement = reverse => {
   let variableElements;
   if (getFlag('uncover-answer')) {
-    variableElements = qsa('.variable');
+    variableElements = qsa('.option-part');
   } else {
     variableElements = qsa('#question-panel .variable');
   }
@@ -427,12 +427,12 @@ const resetCard = async () => {
       hintBalloonPanelElement.style.left = `${variableRect.left}px`;
     };
     const _updateHintBalloonPositions = () => {
-      const targetVariableElements = parentPanelElement.querySelectorAll('.variable');
+      const targetVariableElements = parentPanelElement.querySelectorAll('.option-part');
       for (const variableElement of targetVariableElements) {
         _setHintBalloonPosition(variableElement);
       }
     };
-    const targetVariableElements = parentPanelElement.querySelectorAll('.variable');
+    const targetVariableElements = parentPanelElement.querySelectorAll('.option-part');
     for (const variableElement of targetVariableElements) {
       const variableNumber = Number(variableElement.dataset.variableNumber);
       const hintText = hintTextList[variableNumber];

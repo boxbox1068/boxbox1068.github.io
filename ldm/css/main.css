@@ -3,39 +3,39 @@
  *------------*/
 /*  ENABLE VARIABLE HIGHLIGHT  */
 :root,
-:root[data-enable-variable-highlight="true"] {
-  --variable-number-1-background-color: #F4433666;
-  --variable-number-2-background-color: #2196F366;
-  --variable-number-3-background-color: #4CAF5066;
-  --variable-number-4-background-color: #FF980066;
-  --variable-number-5-background-color: #9C27B066;
-  --variable-number-6-background-color: #FFEB3B66;
-  --variable-number-7-background-color: #3F51B566;
-  --variable-number-8-background-color: #8BC34A66;
-  --variable-number-9-background-color: #79554866;
-  --variable-number-0-background-color: #607D8B66;
+:root[data-enable-option-part-highlight="true"] {
+  --option-part-number-1-background-color: #F4433666;
+  --option-part-number-2-background-color: #2196F366;
+  --option-part-number-3-background-color: #4CAF5066;
+  --option-part-number-4-background-color: #FF980066;
+  --option-part-number-5-background-color: #9C27B066;
+  --option-part-number-6-background-color: #FFEB3B66;
+  --option-part-number-7-background-color: #3F51B566;
+  --option-part-number-8-background-color: #8BC34A66;
+  --option-part-number-9-background-color: #79554866;
+  --option-part-number-0-background-color: #607D8B66;
 }
-:root[data-enable-variable-highlight="false"] {
-  --variable-number-1-background-color: unset;
-  --variable-number-2-background-color: unset;
-  --variable-number-3-background-color: unset;
-  --variable-number-4-background-color: unset;
-  --variable-number-5-background-color: unset;
-  --variable-number-6-background-color: unset;
-  --variable-number-7-background-color: unset;
-  --variable-number-8-background-color: unset;
-  --variable-number-9-background-color: unset;
-  --variable-number-0-background-color: unset;
+:root[data-enable-option-part-highlight="false"] {
+  --option-part-number-1-background-color: unset;
+  --option-part-number-2-background-color: unset;
+  --option-part-number-3-background-color: unset;
+  --option-part-number-4-background-color: unset;
+  --option-part-number-5-background-color: unset;
+  --option-part-number-6-background-color: unset;
+  --option-part-number-7-background-color: unset;
+  --option-part-number-8-background-color: unset;
+  --option-part-number-9-background-color: unset;
+  --option-part-number-0-background-color: unset;
 }
 
 /*  ENABLE HINT BALLOON  */
 :root,
 :root[data-enable-hint-balloon="true"] {
-  --variable-underline-color: var(--hint-balloon-chip-border-color);
+  --option-part-underline-color: var(--hint-balloon-chip-border-color);
   --hint-balloon-chip-display: block;
 }
 :root[data-enable-hint-balloon="false"] {
-  --variable-underline-color: unset;
+  --option-part-underline-color: unset;
   --hint-balloon-chip-display: none;
 }
 
@@ -525,47 +525,47 @@ body > * {
   left: 100%;
 }
 
-/*  VARIABLE & HINT BALLOON  */
-.variable {
+/*  OPTION PART & HINT BALLOON  */
+.option-part {
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
   font-weight: bold;
 }
-:root.fold-lead:not(.show-settings) .variable.active,
-:root.fold-lead:not(.show-settings):not(.has-active-element) .variable:hover {
+:root.fold-lead:not(.show-settings) .option-part.active,
+:root.fold-lead:not(.show-settings):not(.has-active-element) .option-part:hover {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
-  text-decoration: underline dashed var(--variable-underline-color);
+  text-decoration: underline dashed var(--option-part-underline-color);
 }
-.variable[data-variable-number="1"] {
-  background-color: var(--variable-number-1-background-color);
+.option-part[data-option-part-number="1"] {
+  background-color: var(--option-part-number-1-background-color);
 }
-.variable[data-variable-number="2"] {
-  background-color: var(--variable-number-2-background-color);
+.option-part[data-option-part-number="2"] {
+  background-color: var(--option-part-number-2-background-color);
 }
-.variable[data-variable-number="3"] {
-  background-color: var(--variable-number-3-background-color);
+.option-part[data-option-part-number="3"] {
+  background-color: var(--option-part-number-3-background-color);
 }
-.variable[data-variable-number="4"] {
-  background-color: var(--variable-number-4-background-color);
+.option-part[data-option-part-number="4"] {
+  background-color: var(--option-part-number-4-background-color);
 }
-.variable[data-variable-number="5"] {
-  background-color: var(--variable-number-5-background-color);
+.option-part[data-option-part-number="5"] {
+  background-color: var(--option-part-number-5-background-color);
 }
-.variable[data-variable-number="6"] {
-  background-color: var(--variable-number-6-background-color);
+.option-part[data-option-part-number="6"] {
+  background-color: var(--option-part-number-6-background-color);
 }
-.variable[data-variable-number="7"] {
-  background-color: var(--variable-number-7-background-color);
+.option-part[data-option-part-number="7"] {
+  background-color: var(--option-part-number-7-background-color);
 }
-.variable[data-variable-number="8"] {
-  background-color: var(--variable-number-8-background-color);
+.option-part[data-option-part-number="8"] {
+  background-color: var(--option-part-number-8-background-color);
 }
-.variable[data-variable-number="9"] {
-  background-color: var(--variable-number-9-background-color);
+.option-part[data-option-part-number="9"] {
+  background-color: var(--option-part-number-9-background-color);
 }
-.variable[data-variable-number="0"] {
-  background-color: var(--variable-number-0-background-color);
+.option-part[data-option-part-number="0"] {
+  background-color: var(--option-part-number-0-background-color);
 }
 .hint-balloon-chip {
   display: var(--hint-balloon-chip-display);
