@@ -327,6 +327,9 @@ a:hover,
 a:active {
   color: var(--a-color);
 }
+b {
+  font-weight: bold;
+}
 button {
   display: inline-flex;
   justify-content: center;

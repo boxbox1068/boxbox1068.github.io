@@ -136,4 +136,6 @@ jsonpCallback({
   "--background-pattern--large-dots": "水玉（大きい）",
   "--background-pattern--extra-large-dots": "水玉（とても大きい）",
   "--help": "ヘルプ",
+  "--help-category--control-by-keyboard": "キーボードによる操作",
+  "contorol-by-keyboard-help-html": "<div><b>Spaceキー</b>: 進む</div>",
 });
