@@ -4,6 +4,12 @@ const main = () => {
   addHeader();
   addFooter();
   showBody();
+  if (! document.querySelector('h1')) {
+    const h1Element = document.createElement('h1');
+    h1Element.innerHTML = document.title;
+    const headerElement = document.querySelector('header');
+    headerElement.after(h1Element);
+  }
   document.title += ` - ${website.name}`;
 };
 const addFormatDetectionMeta = () => {
