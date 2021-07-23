@@ -445,8 +445,12 @@ body > * {
 }
 #fold-lead-button {
   position: fixed;
-  right: 1rem;
-  bottom: var(--footer-cell-height);
+//  right: 1rem;
+//  bottom: var(--footer-cell-height);
+
+left: 100px;
+top: 100px;
+
   width: 2rem;
   height: var(--fold-lead-button-height);
   background-color: var(--fold-lead-button-background-color);
