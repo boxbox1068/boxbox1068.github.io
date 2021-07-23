@@ -14,7 +14,7 @@ jsonpCallback({
 //[1:aaa,bbb,ccc[2:aaa,bbb,ccc],ddd]
 
 
-  "qtemp": "[1:   私 , あ   なた, 彼 ]の[2: 友達 , 同僚 , 家族  ]は[3:  親切 ,   ハンサム, 貧乏]です。",
+  "qtemp": "[1:私,あなた,彼]の[2:友達,同僚,家族]は[3:親切,ハンサム,貧乏]です。",
 
   "qlang": "ja-JP",
   "alang": "en-GB",

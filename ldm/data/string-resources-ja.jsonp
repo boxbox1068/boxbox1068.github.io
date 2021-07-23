@@ -172,6 +172,6 @@ jsonpCallback({
   "--how-to-control-by-keyboard--show-or-hide-the-help-modal": "ヘルプモーダルを表示する／隠す",
   "--how-to-control-by-keyboard--a-to-r": "a〜r",
   "--how-to-control-by-keyboard--switch-the-value-of-each-applicable-setting-item-in-the-settings-modal": "設定でそれぞれ該当する設定項目の値を切り替える",
-  "--help-category--how-to-make-an-original-drill": "オリジナルドリルの作成方法",
-  "--how-to-make-an-original-drill--please-refer-to-this-document": "<a href=\"/web-app/ldm/\">このドキュメント</a>を参照してください。",
+  "--help-category--how-to-make-an-original-drill": "ドリルの作成方法",
+  "--how-to-make-an-original-drill--please-refer-to-this-document": "<a href=\"/web-app/ldm.html\">このドキュメント</a>を参照してください。",
 });
