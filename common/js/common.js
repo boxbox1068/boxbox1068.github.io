@@ -7,7 +7,8 @@ const main = () => {
   if (! document.querySelector('h1')) {
     const h1Element = document.createElement('h1');
     h1Element.innerHTML = document.title;
-    document.body.prepend(h1Element);
+    const headerElement = document.querySelector('header');
+    headerElement.after(h1Element);
   }
   document.title += ` - ${website.name}`;
 };
