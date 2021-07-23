@@ -1,7 +1,7 @@
 jsonpCallback({
   "app-title": "語学ドリルメーカー",
   "copyright-notice-html": "<b>語学ドリルメーカー</b> &copy; 2021 shikaku1068",
-  "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / %question-number%問目",
+  "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / 問題%question-number%",
   "--the-source-of-this-drill": "このドリルのソース",
   "--you-will-be-transferred-to-an-external-website": "外部サイトに遷移します。",
   "--error": "エラー",
@@ -145,6 +145,9 @@ jsonpCallback({
   "--how-to-control-by-touch--speak-the-question-or-the-answer": "問題又は答えを読み上げる",
   "--how-to-control-by-touch--tap-the-option-part": "可変部をタップ",
   "--how-to-control-by-touch--show-the-hint-balloon-only-if-enabled": "ヒントの吹き出しを表示（有効化されている場合のみ）",
+  "--help-category--how-to-control-by-mouse": "マウスによる操作方法",
+  "--how-to-control-by-mouse--hover-over-the-option-part": "可変部にマウスカーソルを乗せる",
+  "--how-to-control-by-mouse--show-the-hint-balloon-only-if-enabled": "ヒントの吹き出しを表示（有効化されている場合のみ）",
   "--help-category--how-to-control-by-keyboard": "キーボードによる操作方法",
   "--how-to-control-by-keyboard--space": "Space",
   "--how-to-control-by-keyboard--continue-the-drill-or-fold-the-lead-panel": "ドリルを進める／リード文パネルを折り畳む",
