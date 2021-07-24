@@ -91,16 +91,20 @@ const toggleSetting = (key) => {
   setSetting(key, newValue);
 }
 const requestJsonp = (jsonpSrc, callback) => {
+  requestJsonp.count = requestJsonp.count + 1 || 1;
+  const jsonpScriptElementId = `jsonp-${requestJsonp.count}`;
   const jsonpCallbackName = 'jsonpCallback';
   window[jsonpCallbackName] = data => {
     delete window[jsonpCallbackName];
-    qs('#jsonp-data').remove();
+    window.setTimeout(() => {
+      qs(`#${jsonpScriptElementId}`).remove();
+    }, 100);
     callback(data);
   };
-  const jsonpDataScriptElement = ce('script');
-  jsonpDataScriptElement.id = 'jsonp-data';
-  jsonpDataScriptElement.src = jsonpSrc;
-  document.head.append(jsonpDataScriptElement);
+  const jsonpScriptElement = ce('script');
+  jsonpScriptElement.id = jsonpScriptElementId;
+  jsonpScriptElement.src = jsonpSrc;
+  document.head.append(jsonpScriptElement);
 };
 const addKeyDownListener = (targetKey, listener) => {
   qs('body').addEventListener('keydown', event => {
