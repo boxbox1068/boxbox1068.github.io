@@ -50,8 +50,11 @@ const main = async () => {
   await new Promise(resolve => {
     const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
     requestJsonp(urlOfStringResourcesJsonp, data => {
+qs('#lead-body').innerHTML += 'A';
       stringResources = data;
+qs('#lead-body').innerHTML += 'B';
       resolve();
+qs('#lead-body').innerHTML += 'C';
     });
   });
   document.title = stringResources['app-title'];
