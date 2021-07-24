@@ -46,8 +46,9 @@ let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
-  const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
+  qs('#lead-body').innerHTML = 'Now downloading a file of string resouces...';
   await new Promise(resolve => {
+    const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
     requestJsonp(urlOfStringResourcesJsonp, data => {
       stringResources = data;
       resolve();
@@ -310,6 +311,7 @@ const main = async () => {
     answerTemplate = usp.get('atemp') || '';
     answerLang = usp.get('alang') || '';
   } else if (usp.get('iframe') == 'true') {
+    qs('#lead-body').innerHTML = 'Now waiting messages from the parent window...';
     await new Promise(resolve => {
       window.addEventListener('message', event => {
         leadText = event.data['ltext'] || '';
@@ -321,8 +323,9 @@ const main = async () => {
       }, {once: true});
     });
   } else {
-    drillTemplateJsonpUrl = usp.get('jsonp') || `./data/sample-drill-template-${appLang}.jsonp`;
+    qs('#lead-body').innerHTML = 'Now downloading a file of drill template...';
     await new Promise(resolve => {
+      drillTemplateJsonpUrl = usp.get('jsonp') || `./data/sample-drill-template-${appLang}.jsonp`;
       requestJsonp(drillTemplateJsonpUrl, data => {
         leadText = data['ltext'] || '';
         questionTemplate = data['qtemp'] || '';
@@ -333,6 +336,14 @@ const main = async () => {
       });
     });
   }
+  let templateReplacements;
+  qs('#lead-body').innerHTML = 'Now downloading a file of template replacements...';
+  await new Promise(resolve => {
+    requestJsonp('./data/template-replacements.jsonp', data => {
+      templateReplacements = data;
+      resolve();
+    });
+  });
   leadText = leadText.replace(/</g, '&lt;');
   leadText = leadText.replace(/>/g, '&gt;');
   leadText = leadText.replace(/\*\*([^\n]*)\*\*/g, '<b>$1</b>');
@@ -356,13 +367,6 @@ const main = async () => {
     if (getSetting('enable-automatic-drill-starting', 'boolean')) {
       qs('#fold-lead-button').click();
     }
-  });
-  let templateReplacements;
-  await new Promise(resolve => {
-    requestJsonp('./data/template-replacements.jsonp', data => {
-      templateReplacements = data;
-      resolve();
-    });
   });
   let errorMessages = [];
   if (! questionTemplate) {

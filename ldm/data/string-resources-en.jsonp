@@ -144,7 +144,7 @@ jsonpCallback({
   "--operation-with-touchscreen--double-tap": "Double tap",
   "--operation-with-touchscreen--speak-the-question-or-the-answer": "Speak the question or the answer",
   "--operation-with-touchscreen--tap-an-option-part": "Tap an option part",
-  "--operation-with-touchscreen--show-the-hint-balloon-only-if-enabled": "Show the hint balloon, only if enabled",
+  "--operation-with-touchscreen--show-the-hint-balloon-only-if-enabled": "Show the hint balloon only if enabled",
   "--help-category--operation-with-mouse": "Operation with mouse",
   "--operation-with-mouse--hover-over-an-option-part": "Hover over an option part",
   "--operation-with-mouse--show-the-hint-balloon-only-if-enabled": "Show the hint balloon only if enabled",
