@@ -52,17 +52,19 @@ const main = async () => {
     requestJsonp(urlOfStringResourcesJsonp, data => {
       stringResources = data;
       resolve();
-qs('#lead-body').innerHTML += data.toString();
     });
   });
 qs('#lead-body').innerHTML += 'D';
   document.title = stringResources['app-title'];
+qs('#lead-body').innerHTML += 'E';
   qsa('[data-string-resource-key]').forEach(element => {
     const key = element.getAttribute('data-string-resource-key');
     element.innerHTML = stringResources[key];
     element.removeAttribute('data-string-resource-key');
   });
+qs('#lead-body').innerHTML += 'F';
   const mql = window.matchMedia('(prefers-color-scheme: dark)');
+qs('#lead-body').innerHTML += 'G';
   mql.addEventListener('change', event => {
     if (event.matches) {
       setFlag('prefers-dark-color-scheme', true);
@@ -70,10 +72,14 @@ qs('#lead-body').innerHTML += 'D';
       setFlag('prefers-dark-color-scheme', false);
     }
   });
+qs('#lead-body').innerHTML += 'H';
   setFlag('prefers-dark-color-scheme', mql.matches);
+qs('#lead-body').innerHTML += 'I';
   for (const key in settingDefaultValues) {
     loadSetting(key, settingDefaultValues[key]);
   }
+qs('#lead-body').innerHTML += 'J';
+
   setSetting('enable-automatic-question-speaking', 'false');
   setSetting('enable-automatic-answer-speaking', 'false');
   qs('#fold-lead-button').addEventListener('click', () => {
