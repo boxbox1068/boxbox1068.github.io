@@ -46,7 +46,7 @@ let questionPhrase;
 let answerPhrase;
 const main = async () => {
   appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
-  qs('#lead-body').innerHTML = 'Now downloading a file of string resouces...';
+  qs('#lead-body').innerHTML = 'Loading the data of string resouces...';
   await new Promise(resolve => {
     const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
     requestJsonp(urlOfStringResourcesJsonp, data => {
@@ -313,7 +313,7 @@ const main = async () => {
     answerTemplate = usp.get('atemp') || '';
     answerLang = usp.get('alang') || '';
   } else if (usp.get('iframe') == 'true') {
-    qs('#lead-body').innerHTML = 'Now waiting messages from the parent window...';
+    qs('#lead-body').innerHTML = 'Waiting the messages from the parent window...';
     await new Promise(resolve => {
       window.addEventListener('message', event => {
         leadText = event.data['ltext'] || '';
@@ -325,7 +325,7 @@ const main = async () => {
       }, {once: true});
     });
   } else {
-    qs('#lead-body').innerHTML = 'Now downloading a file of drill template...';
+    qs('#lead-body').innerHTML = 'Loading the data of drill template...';
     await new Promise(resolve => {
       drillTemplateJsonpUrl = usp.get('jsonp') || `./data/sample-drill-template-${appLang}.jsonp`;
       requestJsonp(drillTemplateJsonpUrl, data => {
@@ -339,7 +339,7 @@ const main = async () => {
     });
   }
   let templateReplacements;
-  qs('#lead-body').innerHTML = 'Now downloading a file of template replacements...';
+  qs('#lead-body').innerHTML = 'Loading the data of template replacements...';
   await new Promise(resolve => {
     requestJsonp('./data/template-replacements.jsonp', data => {
       templateReplacements = data;
