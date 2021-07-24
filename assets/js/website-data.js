@@ -4,6 +4,6 @@ const map = {
   '/anytime-mirror/': 'いつでもミラー',
   '/bookmarklet/': 'ブックマークレット'
 };
-const author = 'しかく<a href="https://twitter.com/shikaku1068">@shikaku1068</a>';
+const author = 'shikaku1068';
 const mark = '/assets/img/shikaku1068-circle.png';
 export {name, map, author, mark};

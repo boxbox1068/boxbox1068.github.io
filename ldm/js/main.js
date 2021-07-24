@@ -304,7 +304,7 @@ const main = async () => {
   let questionLang;
   let answerTemplate;
   let answerLang;
-  let drillTemplateJsonpUrl;
+  let drillDataJsonpUrl;
   const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
   if (usp.has('qtemp')) {
     leadText = usp.get('ltext') || '';
@@ -325,10 +325,10 @@ const main = async () => {
       }, {once: true});
     });
   } else {
-    qs('#lead-body').innerHTML = 'Loading the data of drill template...';
+    qs('#lead-body').innerHTML = 'Loading the drill data...';
     await new Promise(resolve => {
-      drillTemplateJsonpUrl = usp.get('jsonp') || `./data/sample-drill-template-${appLang}.jsonp`;
-      requestJsonp(drillTemplateJsonpUrl, data => {
+      drillDataJsonpUrl = usp.get('jsonp') || `./data/sample-drill-data-${appLang}.jsonp`;
+      requestJsonp(drillDataJsonpUrl, data => {
         leadText = data['ltext'] || '';
         questionTemplate = data['qtemp'] || '';
         questionLang = data['qlang'] || '';
@@ -350,9 +350,9 @@ const main = async () => {
   leadText = leadText.replace(/>/g, '&gt;');
   leadText = leadText.replace(/\*\*([^\n]*)\*\*/g, '<b>$1</b>');
   leadText = leadText.replace(/\n/g, '<br>');
-  if (drillTemplateJsonpUrl) {
+  if (drillDataJsonpUrl) {
     leadText += leadText ? '<br>____<br>' : '';
-    leadText += `${stringResources['--the-template-of-this-drill']}: <a href="${drillTemplateJsonpUrl}">${drillTemplateJsonpUrl}</a>`;
+    leadText += `${stringResources['--the-data-of-this-drill']}: <a href="${drillDataJsonpUrl}">${drillDataJsonpUrl}</a>`;
   }
   qs('#lead-body').innerHTML = leadText;
   await new Promise(resolve => {

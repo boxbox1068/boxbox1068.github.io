@@ -82,6 +82,14 @@ const addHeader = () => {
   document.body.prepend(header);
 };
 const addFooter = () => {
+  const twitterLink = (() => {
+    const a = document.createElement('a');
+    a.href = 'https://twitter.com/shikaku1068/';
+    a.innerHTML = 'Twitter';
+    const small = document.createElement('small');
+    small.append(a);
+    return small;
+  })();
   const copyright = (() => {
     const fullYear = new Date().getFullYear();
     const small = document.createElement('small');
@@ -89,7 +97,9 @@ const addFooter = () => {
     return small;
   })();
   const footer = document.createElement('footer');
-  footer.style.textAlign = 'right';
+  footer.style.display = 'flex';
+  footer.style.justifyContent = 'space-between';
+  footer.append(twitterLink);
   footer.append(copyright);
   document.body.append(footer);
 };

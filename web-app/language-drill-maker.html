@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/assets/css/common.css">
+<script type="module" src="/assets/js/common.js"></script>
+<script type="module" src="/assets/js/copy-code-buttons.js"></script>
+<title>語学ドリルメーカー</title>
+<p>語学ドリルメーカー: <a href="https://shikaku1068.github.io/ldm/">https://shikaku1068.github.io/ldm/</a></p>
+<h2>概要</h2>
+<p><b>語学ドリルメーカー</b>は、語学学習のための自作ドリルを再生するためのウェブアプリです。単一のドリルテンプレートから、可変部の掛け合わせにより、ねずみ算式に大量の類似問題を生成できる点が大きな特徴です。苦手な構文の集中トレーニングなどにご利用ください。</p>
+<h2>ドリルの作成方法</h2>
+<h3>テンプレートの要素</h3>
+<dl>
+  <dt>問題テンプレート（qtemp）</dt>
+  <dd>
+    <textarea id="qtemp"></textarea>
+  </dd>
+  <dt>問題の言語（qlang）</dt>
+  <dd><input id="qlang"></dd>
+  <dt>答えテンプレート（atemp）</dt>
+  <dd>
+    <textarea id="atemp"></textarea>
+  </dd>
+  <dt>答えの言語（alang）</dt>
+  <dd><input id="alang"></dd>
+  <dt>リード文</dt>
+  <dt>
+    <textarea id="ltext"></textarea>
+  </dt>
+</dl>
+<pre><code id="url">https://shikaku1068.github.io/ldm/</code></pre>
+<script>
+  const baseUrl = document.querySelector('#url').innerText;
+  const updateUrl = () => {
+    const qtemp = document.querySelector('#qtemp').value.trim();
+    const qlang = document.querySelector('#qlang').value.trim();
+    const atemp = document.querySelector('#atemp').value.trim();
+    const alang = document.querySelector('#alang').value.trim();
+    const ltext = document.querySelector('#ltext').value.trim();
+    const url = `${baseUrl}?qtemp=${encodeURIComponent(qtemp)}&qlang=${encodeURIComponent(qlang)}&atemp=${encodeURIComponent(atemp)}&alang=${encodeURIComponent(alang)}&ltext=${encodeURIComponent(ltext)}`;
+    document.querySelector('#url').innerText = url;
+  };
+  document.querySelectorAll('textarea').forEach(element => {
+    element.addEventListener('input', updateUrl);
+  });
+</script>
