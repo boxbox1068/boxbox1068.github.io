@@ -61,13 +61,15 @@ const main = async () => {
     element.removeAttribute('data-string-resource-key');
   });
   const mql = window.matchMedia('(prefers-color-scheme: dark)');
-  (mql.addEventListener || mql.addListener)('change', event => {
-    if (event.matches) {
-      setFlag('prefers-dark-color-scheme', true);
-    } else {
-      setFlag('prefers-dark-color-scheme', false);
-    }
-  });
+  if (mql.addEventListener) {
+    mql.addEventListener('change', event => {
+      if (event.matches) {
+        setFlag('prefers-dark-color-scheme', true);
+      } else {
+        setFlag('prefers-dark-color-scheme', false);
+      }
+    });
+  }
   setFlag('prefers-dark-color-scheme', mql.matches);
   for (const key in settingDefaultValues) {
     loadSetting(key, settingDefaultValues[key]);
