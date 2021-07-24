@@ -293,7 +293,7 @@ const main = async () => {
       speakQuestion();
     }
   });
-  qs('body').addEventListener('click', event => {
+  qs('body').addEventListener('touchstart', event => {
     setActiveElement(event.target);
   });
   qs('body').addEventListener('mousemove', () => {

@@ -75,10 +75,10 @@
 /*  FONT FAMILY  */
 :root,
 :root[data-font-family="sans-serif"] {
-  --drill-panel-font-family: var(--common-font-family);
+  --drill-panel-font-family: var(--sans-serif-font-family);
 }
 :root[data-font-family="serif"] {
-  --drill-panel-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
+  --drill-panel-font-family: var(--serif-font-family);
 }
 
 /*  LINE HEIGHT  */
@@ -290,13 +290,14 @@
   --common-padding-left: 1rem;
   --common-border-width: 2px;
   --common-font-size: 4vmin;
-  --common-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
   --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
   --hint-balloon-border-width: 4px;
   --control-button-height: 2rem;
   --footer-cell-height: 2.25rem;
+  --sans-serif-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  --serif-font-family: "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "ＭＳ Ｐ明朝", "MS PMincho", serif;
 }
 *,
 *::before,
@@ -318,7 +319,7 @@ html {
   background-color: var(--main-background-color);
   color: var(--main-color);
   font-size: var(--common-font-size);
-  font-family: var(--common-font-family);
+  font-family: var(--sans-serif-font-family);
 }
 a,
 a:link,
@@ -346,9 +347,7 @@ button {
 :root:not(.disable-control) button:hover::after {
   background-image: linear-gradient(#FFF2, #FFF2);
 }
-button > svg {
-  width: 75%;
-  height: 75%;
+svg {
   fill: currentColor;
   stroke: currentColor;
 }
@@ -800,8 +799,7 @@ body > * {
   background-color: var(--main-background-color);
 }
 #settings-body {
-  padding: var(--common-padding-top) var(--common-padding-left);
-  padding-bottom: calc(var(--common-padding-top) * 2);
+  padding: calc(var(--common-padding-top) * 2) var(--common-padding-left);
   font-size: 1rem;
 }
 .setting-category {
@@ -955,8 +953,7 @@ body > * {
   background-color: var(--main-background-color);
 }
 #help-body {
-  padding: var(--common-padding-top) var(--common-padding-left);
-  padding-bottom: calc(var(--common-padding-top) * 2);
+  padding: calc(var(--common-padding-top) * 2) var(--common-padding-left);
   font-size: 1rem;
 }
 .help-category {
@@ -977,4 +974,8 @@ body > * {
 }
 .help-item > span:first-child::after {
   content: ":\0020";
+}
+.help-item > span > svg {
+  width: 1em;
+  height: 1em;
 }
