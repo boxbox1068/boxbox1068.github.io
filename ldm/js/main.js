@@ -57,6 +57,7 @@ qs('#lead-body').innerHTML += 'B';
 qs('#lead-body').innerHTML += 'C';
     });
   });
+qs('#lead-body').innerHTML += 'D';
   document.title = stringResources['app-title'];
   qsa('[data-string-resource-key]').forEach(element => {
     const key = element.getAttribute('data-string-resource-key');
