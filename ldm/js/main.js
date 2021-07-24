@@ -468,7 +468,7 @@ const resetCard = async () => {
     };
     const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
     for (const optionPartElement of targetOptionPartElements) {
-      const optionPartNumber = Number(optionPartElement.getAttribute('option-part-number'));
+      const optionPartNumber = Number(optionPartElement.getAttribute('data-option-part-number'));
       const hintText = hintTextList[optionPartNumber];
       const hintBalloonBodyElement = ce('span');
       hintBalloonBodyElement.className = 'hint-balloon-body';

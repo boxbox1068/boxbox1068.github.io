@@ -8,7 +8,7 @@ class DrillPhrase {
     this.reset();
   }
   reset(pathIdSeed) {
-    if (pathIdSeed < 0 || 1 <= pathIdSeed) {
+    if (! (0 <= pathIdSeed && pathIdSeed < 1)) {
       pathIdSeed = Math.random();
     };
     const _replaceOptionTags = (template, replacer) => {
