@@ -353,9 +353,9 @@ button > svg {
   stroke: currentColor;
 }
 
-/* ------------- *
+/* ------------ *
  *  MAIN MODAL  *
- * ------------- */
+ * ------------ */
 body {
   display: grid;
   grid-template:
@@ -801,6 +801,7 @@ body > * {
 }
 #settings-body {
   padding: var(--common-padding-top) var(--common-padding-left);
+  padding-bottom: calc(var(--common-padding-top) * 2);
   font-size: 1rem;
 }
 .setting-category {
@@ -955,6 +956,7 @@ body > * {
 }
 #help-body {
   padding: var(--common-padding-top) var(--common-padding-left);
+  padding-bottom: calc(var(--common-padding-top) * 2);
   font-size: 1rem;
 }
 .help-category {
