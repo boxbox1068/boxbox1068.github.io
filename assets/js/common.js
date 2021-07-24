@@ -1,4 +1,4 @@
-import * as website from '/common/js/website-data.js';
+import * as website from '/assets/js/website-data.js';
 const main = () => {
   addFormatDetectionMeta();
   addHeader();
