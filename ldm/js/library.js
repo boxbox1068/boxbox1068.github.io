@@ -94,11 +94,16 @@ const requestJsonp = (jsonpSrc, callback) => {
   requestJsonp.count = requestJsonp.count + 1 || 1;
   const jsonpScriptElementId = `jsonp-${requestJsonp.count}`;
   const jsonpCallbackName = 'jsonpCallback';
+qs('#lead-body').innerHTML += '1';
   window[jsonpCallbackName] = data => {
+qs('#lead-body').innerHTML += '2';
     delete window[jsonpCallbackName];
+qs('#lead-body').innerHTML += '3';
     window.setTimeout(() => {
+qs('#lead-body').innerHTML += '5';
       qs(`#${jsonpScriptElementId}`).remove();
     }, 100);
+qs('#lead-body').innerHTML += '4';
     callback(data);
   };
   const jsonpScriptElement = ce('script');

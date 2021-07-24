@@ -349,7 +349,7 @@ const main = async () => {
   leadText = leadText.replace(/\*\*([^\n]*)\*\*/g, '<b>$1</b>');
   leadText = leadText.replace(/\n/g, '<br>');
   if (drillTemplateJsonpUrl) {
-    leadText += leadText ? '<br>__<br>' : '';
+    leadText += leadText ? '<br>____<br>' : '';
     leadText += `${stringResources['--the-template-of-this-drill']}: <a href="${drillTemplateJsonpUrl}">${drillTemplateJsonpUrl}</a>`;
   }
   qs('#lead-body').innerHTML = leadText;
