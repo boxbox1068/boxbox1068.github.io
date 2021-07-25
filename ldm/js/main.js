@@ -81,9 +81,19 @@ const main = async () => {
   });
   qs('#enable-automatic-question-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-question-speaking');
+    if (getSetting('enable-automatic-question-speaking', 'boolean')) {
+      speakNotice(stringResources['--each-question-will-be-automatically-spoken'], true);
+    } else {
+      speak(null);
+    }
   });
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-answer-speaking');
+    if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
+      speakNotice(stringResources['--each-answer-will-be-automatically-spoken'], true);
+    } else {
+      speak(null);
+    }
   });
   qs('#speak-button').addEventListener('click', () => {
     if (getFlag('uncover-answer')) {
@@ -362,11 +372,7 @@ const main = async () => {
         resolve();
       }
     }
-    if (! leadText) {
-      qs('#fold-lead-button').click();
-      qs('#fold-lead-button').disabled = true;
-    }
-    if (getSetting('enable-automatic-drill-starting', 'boolean')) {
+    if (! leadText || getSetting('enable-automatic-drill-starting', 'boolean')) {
       qs('#fold-lead-button').click();
     }
   });
@@ -432,6 +438,9 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
   settingRadioElements.item(nextIndex).click();
 }
+const speakNotice = (notice, interrupt) => {
+  speak(notice, appLang, getSetting('voice-volume'), 1, 1, 1, interrupt);
+};
 const speakQuestion = interrupt => {
   speak(
     questionPhrase.text,

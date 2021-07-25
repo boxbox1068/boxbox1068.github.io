@@ -3,6 +3,8 @@ jsonpCallback({
   "copyright-notice-html": "<b>語学ドリルメーカー</b> &copy; 2021 shikaku1068",
   "statistics-output-template": "全%pattern-count%通り中第%pattern-id%番 / 問題%question-number%",
   "--the-data-of-this-drill": "このドリルのデータ",
+  "--each-question-will-be-automatically-spoken": "問題を自動的に読み上げます。",
+  "--each-answer-will-be-automatically-spoken": "答えを自動的に読み上げます。",
   "--you-will-be-transferred-to-an-external-website": "外部サイトに遷移します。",
   "--error": "エラー",
   "--error--the-template-of-question-is-undefined": "問題のテンプレートが定義されていません。",

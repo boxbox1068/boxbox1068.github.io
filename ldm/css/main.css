@@ -457,10 +457,6 @@ body > * {
   bottom: calc(100% - var(--lead-cell-height));
   transform: scale(1, -1);
 }
-#fold-lead-button:disabled {
-  visibility: hidden;
-  opacity: 0;
-}
 #fold-lead-button > svg {
   width: 60%;
   height: 60%;
@@ -539,7 +535,7 @@ body > * {
 :root.fold-lead:not(.show-settings):not(.has-active-element) .option-part:hover {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
-  text-decoration: underline dashed var(--option-part-underline-color);
+  border-bottom: var(--hint-balloon-border-width) dashed var(--option-part-underline-color);
 }
 .option-part[data-option-part-number="1"] {
   background-color: var(--option-part-number-1-background-color);

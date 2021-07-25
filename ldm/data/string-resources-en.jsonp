@@ -1,8 +1,10 @@
 jsonpCallback({
   "app-title": "Language Drill Maker",
   "copyright-notice-html": "<b>Language Drill Maker</b> &copy; 2021 shikaku1068",
-  "--the-data-of-this-drill": "The data of this drill",
   "statistics-output-template": "No. %pattern-id% out of %pattern-count% pattern / Question %question-number%",
+  "--the-data-of-this-drill": "The data of this drill",
+  "--each-question-will-be-automatically-spoken": "Each question will be automatically spoken.",
+  "--each-answer-will-be-automatically-spoken": "Each answer will be automatically spoken.",
   "--you-will-be-transferred-to-an-external-website": "You will be transferred to an external website.",
   "--error": "Error",
   "--error--the-template-of-question-is-undefined": "The template of question is undefined.",
