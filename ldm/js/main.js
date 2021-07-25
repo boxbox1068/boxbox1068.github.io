@@ -439,7 +439,7 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   settingRadioElements.item(nextIndex).click();
 }
 const speakNotice = (notice, interrupt) => {
-  speak(notice, appLang, getSetting('voice-volume'), 1, 1, 1, interrupt);
+  speak(notice, appLang, getSetting('voice-volume'), 'fast', 'medium', 1, interrupt);
 };
 const speakQuestion = interrupt => {
   speak(
@@ -448,7 +448,7 @@ const speakQuestion = interrupt => {
     getSetting('voice-volume'),
     getSetting('question-voice-rate'),
     getSetting('question-voice-pitch'),
-    getSetting('question-voice-number'),
+    getSetting('question-voice-number', 'integer'),
     interrupt
   );
 };
@@ -459,7 +459,7 @@ const speakAnswer = interrupt => {
     getSetting('voice-volume'),
     getSetting('answer-voice-rate'),
     getSetting('answer-voice-pitch'),
-    getSetting('answer-voice-number'),
+    getSetting('answer-voice-number', 'integer'),
     interrupt
   );
 }

@@ -9,37 +9,67 @@
 <p><b>語学ドリルメーカー</b>は、語学学習のための自作ドリルを再生するためのウェブアプリです。単一のドリルテンプレートから、可変部の掛け合わせにより、ねずみ算式に大量の類似問題を生成できる点が大きな特徴です。苦手な構文の集中トレーニングなどにご利用ください。</p>
 <h2>ドリルの作成方法</h2>
 <h3>テンプレートの要素</h3>
-<dl>
-  <dt>問題テンプレート（qtemp）</dt>
-  <dd>
-    <textarea id="qtemp"></textarea>
-  </dd>
-  <dt>問題の言語（qlang）</dt>
-  <dd><input id="qlang"></dd>
-  <dt>答えテンプレート（atemp）</dt>
-  <dd>
-    <textarea id="atemp"></textarea>
-  </dd>
-  <dt>答えの言語（alang）</dt>
-  <dd><input id="alang"></dd>
-  <dt>リード文</dt>
-  <dt>
-    <textarea id="ltext"></textarea>
-  </dt>
-</dl>
-<pre><code id="url">https://shikaku1068.github.io/ldm/</code></pre>
+<form>
+  <div>
+    <label for="qlang">問題の言語（qlang）</label>
+    <input id="qlang" autocomplete="on" list="langs" placeholder="ja" required>
+    <datalist id="langs">
+      <option value="de">de: ドイツ語</option>
+      <option value="en">en: 英語</option>
+      <option value="en-US">en-US: 英語（アメリカ）</option>
+      <option value="en-GB">en-GB: 英語（イギリス）</option>
+      <option value="es">es: スペイン語</option>
+      <option value="fr">fr: フランス語</option>
+      <option value="it">it: イタリア語</option>
+      <option value="ja">ja: 日本語</option>
+      <option value="ko">ko: 韓国語</option>
+      <option value="ru">ru: ロシア語</option>
+      <option value="zh">zh: 中国語</option>
+    </datalist>
+  </div>
+  <div>
+    <label for="qtemp">問題のテンプレート（qtemp）</label>
+    <textarea id="qtemp" placeholder="[1:太郎,花子,ジョン,ジェーン]は[2:寿司,ラーメン,ピザ,ハンバーガー]が[3:大好き,好き,嫌い,大嫌い]。" required></textarea>
+  </div>
+  <div>
+    <label for="alang">答えの言語（alang）</label>
+    <input id="alang" autocomplete="on" list="langs" placeholder="en" required>
+  </div>
+  <div>
+    <label for="atemp">答えのテンプレート（atemp）</label>
+    <textarea id="atemp" placeholder="[1:Taro,Hanako,John,Jane] [3:loves,likes,dislikes,hates] [2:sushi,noodles,pizza,hamburger]." required></textarea>
+  </div>
+  <div>
+    <label for="ltext">リード文（ltext）</label>
+    <textarea id="ltext" placeholder="太郎くんたちの食べ物の好みを表現してみましょう。"></textarea>
+  </div>
+</form>
+<button id="input-sample-data-button">サンプルデータを入力</button>
+<pre><code id="url"></code></pre>
 <script>
-  const baseUrl = document.querySelector('#url').innerText;
   const updateUrl = () => {
-    const qtemp = document.querySelector('#qtemp').value.trim();
-    const qlang = document.querySelector('#qlang').value.trim();
-    const atemp = document.querySelector('#atemp').value.trim();
-    const alang = document.querySelector('#alang').value.trim();
-    const ltext = document.querySelector('#ltext').value.trim();
-    const url = `${baseUrl}?qtemp=${encodeURIComponent(qtemp)}&qlang=${encodeURIComponent(qlang)}&atemp=${encodeURIComponent(atemp)}&alang=${encodeURIComponent(alang)}&ltext=${encodeURIComponent(ltext)}`;
+    const baseUrl = 'https://shikaku1068.github.io/ldm/';
+    const qlang = encodeURIComponent(document.querySelector('#qlang').value.trim());
+    const qtemp = encodeURIComponent(document.querySelector('#qtemp').value.trim());
+    const alang = encodeURIComponent(document.querySelector('#alang').value.trim());
+    const atemp = encodeURIComponent(document.querySelector('#atemp').value.trim());
+    const ltext = encodeURIComponent(document.querySelector('#ltext').value.trim());
+    const url = `${baseUrl}?qlang=${qlang}&qtemp=${qtemp}&alang=${alang}&atemp=${atemp}&ltext=${ltext}`;
     document.querySelector('#url').innerText = url;
   };
-  document.querySelectorAll('textarea').forEach(element => {
+  document.querySelectorAll('#qlang, #qtemp, #alang, #atemp, #ltext').forEach(element => {
     element.addEventListener('input', updateUrl);
+    element.addEventListener('change', updateUrl);
   });
+  document.querySelector('#input-sample-data-button').addEventListener('click', event => {
+    const ret = window.confirm('現在の入力内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    document.querySelectorAll('#qlang, #qtemp, #alang, #atemp, #ltext').forEach(element => {
+      element.value = element.placeholder;
+    });
+    updateUrl();
+  });
+  updateUrl();
 </script>
