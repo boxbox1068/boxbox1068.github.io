@@ -14,8 +14,8 @@ class DrillPhrase {
     const _replaceOptionTags = (template, replacer) => {
       while (true) {
         const lastTemplate = template;
-        template = template.replace(/\[(\d):((?:(?!\[\d:).)*?)\]/, (match, p1, p2, offset, string) => {
-          const optionPartNumber = Number(p1);
+        template = template.replace(/\[(?:(\d):)?([^\[]*?)\]/, (match, p1, p2, offset, string) => {
+          const optionPartNumber = Number(p1) || 0;
           const options  = p2.split(',').map(element => {
             return element.trim();
           });
@@ -24,9 +24,9 @@ class DrillPhrase {
               options[i] = options[i - 1];
             }
           }
-          const firstOptionPartOffset = string.match(/^.*?(?=\[\d:)/)[0].length;
-          const isTopLevelOptionPart = firstOptionPartOffset == offset;
-          return replacer(optionPartNumber, options, isTopLevelOptionPart) || '';
+          const firstOptionPartOffset = string.match(/^[^\[]*/)[0].length;
+          const isMainOptionPart = firstOptionPartOffset == offset;
+          return replacer(optionPartNumber, options, isMainOptionPart) || '';
         });
         if (template == lastTemplate) {
           break;
@@ -36,6 +36,9 @@ class DrillPhrase {
     };
     const optionCounts = [];
     _replaceOptionTags(this._template, (optionPartNumber, optionTexts) => {
+      if (optionPartNumber == 0) {
+        return;
+      }
       const optionCount = optionTexts.length;
       if (optionCount < (optionCounts[optionPartNumber] || Infinity)) {
         optionCounts[optionPartNumber] = optionCount;
@@ -58,13 +61,21 @@ class DrillPhrase {
       }
     }
     const selectedOptionTexts = [];
-    const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isTopLevelOptionPart) => {
+    const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isMainOptionPart) => {
+      if (optionPartNumber == 0) {
+        const selectedOptionId = Math.floor(optionTexts.length * Math.random());
+        return optionTexts[selectedOptionId];
+      }
       const selectedOptionId = selectedOptionIds[optionPartNumber];
       const selectedOptionText = optionTexts[selectedOptionId];
-      if (selectedOptionText && isTopLevelOptionPart) {
-        const existingText = selectedOptionTexts[optionPartNumber];
-        selectedOptionTexts[optionPartNumber] = (existingText ? existingText + ' ~ ' : '') + selectedOptionText;
-        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
+      if (selectedOptionText) {
+        if (selectedOptionTexts[optionPartNumber]) {
+          selectedOptionTexts[optionPartNumber] += '~';
+        } else {
+          selectedOptionTexts[optionPartNumber] = '';
+        }
+        selectedOptionTexts[optionPartNumber] += isMainOptionPart ? selectedOptionText : `(${selectedOptionText})`;
+        return `<span class="option-part ${isMainOptionPart ? 'main' : 'sub'}" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
       } else {
         return selectedOptionText;
       }
