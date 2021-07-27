@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>語学ドリルメーカー・ドリル作成フォーム</title>
+<style>
+  .frame {
+    padding: 1.5rem;
+    border: 1px solid gray;
+  }
+</style>
+<script>
+  window.addEventListener('load', event => {
+    document.querySelector('#automatic-input-button').addEventListener('click', event => {
+      const ret = window.confirm('現在の入力は消去されます。');
+      if (! ret) {
+        return;
+      }
+      const hoge = document.querySelector('#automatic-input-type').value;
+      alert(hoge)
+    });
+  });
+</script>
+<div>
+  <select id="automatic-input-type">
+    <option value="input-sample-data">サンプルデータを入力</option>
+    <option value="input-data-extracted-from-url">ドリルのURLから抽出したデータを入力</option>
+  </select>
+  <input type="button" id="automatic-input-button" value="自動入力">
+</div>
+<div class="frame">
+  <div>
+    <label for="qlang">問題の言語（qlang）</label>
+    <input id="qlang" autocomplete="on" list="langs" placeholder="ja" required>
+    <datalist id="langs">
+      <option value="de">de: ドイツ語</option>
+      <option value="en">en: 英語</option>
+      <option value="en-US">en-US: 英語（アメリカ）</option>
+      <option value="en-GB">en-GB: 英語（イギリス）</option>
+      <option value="es">es: スペイン語</option>
+      <option value="fr">fr: フランス語</option>
+      <option value="it">it: イタリア語</option>
+      <option value="ja">ja: 日本語</option>
+      <option value="ko">ko: 韓国語</option>
+      <option value="ru">ru: ロシア語</option>
+      <option value="zh">zh: 中国語</option>
+    </datalist>
+  </div>
+  <div>
+    <label for="qtemp">問題のテンプレート（qtemp）</label>
+    <textarea id="qtemp" placeholder="[1:太郎,花子,ジョン,ジェーン]は[2:寿司,ラーメン,ピザ,ハンバーガー]が[3:大好き,好き,嫌い,大嫌い]。" required></textarea>
+  </div>
+  <div>
+    <label for="alang">答えの言語（alang）</label>
+    <input id="alang" autocomplete="on" list="langs" placeholder="en" required>
+  </div>
+  <div>
+    <label for="atemp">答えのテンプレート（atemp）</label>
+    <textarea id="atemp" placeholder="[1:Taro,Hanako,John,Jane] [3:loves,likes,dislikes,hates] [2:sushi,noodles,pizza,hamburger]." required></textarea>
+  </div>
+  <div>
+    <label for="ltext">リード文（ltext）</label>
+    <textarea id="ltext" placeholder="太郎くんたちの食べ物の好みを表現してみましょう。"></textarea>
+  </div>
+  <button id="input-sample-data-button">サンプルデータを入力</button>
+</div>
+<h3>データの再生方法</h3>
+<p>語学ドリルメーカーに自作データを入力するには、①URLクエリを用いる、②JSONPファイルを用いる、の2つの方法があります。①の方が簡単ですが、再利用しにくい、データの大きさに上限があるというデメリットもあります。</p>
+<pre><code id="url"></code></pre>
+<div>現在<input id="url-length">文字</div>
+<script>
+  const updateUrl = () => {
+    const baseUrl = 'https://shikaku1068.github.io/ldm/';
+    const qlang = encodeURIComponent(document.querySelector('#qlang').value.trim());
+    const qtemp = encodeURIComponent(document.querySelector('#qtemp').value.trim());
+    const alang = encodeURIComponent(document.querySelector('#alang').value.trim());
+    const atemp = encodeURIComponent(document.querySelector('#atemp').value.trim());
+    const ltext = encodeURIComponent(document.querySelector('#ltext').value.trim());
+    const url = `${baseUrl}?qlang=${qlang}&qtemp=${qtemp}&alang=${alang}&atemp=${atemp}&ltext=${ltext}`;
+    document.querySelector('#url').innerText = url;
+    document.querySelector('#url-length').value = url.length;
+  };
+  document.querySelectorAll('#qlang, #qtemp, #alang, #atemp, #ltext').forEach(element => {
+    element.addEventListener('input', updateUrl);
+    element.addEventListener('change', updateUrl);
+  });
+  document.querySelector('#input-sample-data-button').addEventListener('click', event => {
+    const ret = window.confirm('現在の入力内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    document.querySelectorAll('#qlang, #qtemp, #alang, #atemp, #ltext').forEach(element => {
+      element.value = element.placeholder;
+    });
+    updateUrl();
+  });
+  updateUrl();
+</script>

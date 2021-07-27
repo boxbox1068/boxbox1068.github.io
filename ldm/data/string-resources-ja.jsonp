@@ -184,6 +184,6 @@ jsonpCallback({
   "--control-with-touchscreen--speak-the-question-or-the-answer": "問題又は答えを読み上げる",
   "--control-with-touchscreen--tap-an-option-part": "可変部をタップ",
   "--control-with-touchscreen--show-the-hint-balloon-only-if-enabled": "ヒントの吹き出しを表示（有効化されている場合のみ）",
-  "--help-category--how-to-make-a-drill": "ドリルの作成方法",
-  "--how-to-make-a-drill--please-refer-to-this-document": "<a href=\"/web-app/language-drill-maker.html\">このドキュメント</a>を参照してください。",
+  "--help-category--how-to-create-an-original-drill": "オリジナルドリルの作り方",
+  "--how-to-create-an-original-drill--please-refer-to-this-document": "<a href=\"/web-app/about-ldm.html\">このドキュメント</a>を参照してください。",
 });
