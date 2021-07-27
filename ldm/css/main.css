@@ -5,23 +5,23 @@
 :root,
 :root[data-enable-option-part-highlight="true"] {
   --option-part-number-1-border-color: #F44336;
-  --option-part-number-1-background-color: #F4433640;
+  --option-part-number-1-background-color: #F4433660;
   --option-part-number-2-border-color: #2196F3;
-  --option-part-number-2-background-color: #2196F340;
+  --option-part-number-2-background-color: #2196F360;
   --option-part-number-3-border-color: #4CAF50;
-  --option-part-number-3-background-color: #4CAF5040;
+  --option-part-number-3-background-color: #4CAF5060;
   --option-part-number-4-border-color: #FF9800;
-  --option-part-number-4-background-color: #FF980040;
+  --option-part-number-4-background-color: #FF980060;
   --option-part-number-5-border-color: #9C27B0;
-  --option-part-number-5-background-color: #9C27B040;
+  --option-part-number-5-background-color: #9C27B060;
   --option-part-number-6-border-color: #FFEB3B;
-  --option-part-number-6-background-color: #FFEB3B40;
+  --option-part-number-6-background-color: #FFEB3B60;
   --option-part-number-7-border-color: #3F51B5;
-  --option-part-number-7-background-color: #3F51B540;
+  --option-part-number-7-background-color: #3F51B560;
   --option-part-number-8-border-color: #8BC34A;
-  --option-part-number-8-background-color: #8BC34A40;
+  --option-part-number-8-background-color: #8BC34A60;
   --option-part-number-9-border-color: #795548;
-  --option-part-number-9-background-color: #79554840;
+  --option-part-number-9-background-color: #79554860;
 }
 :root[data-enable-option-part-highlight="false"] {
   --option-part-number-1-border-color: unset;
