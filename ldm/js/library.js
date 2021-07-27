@@ -195,15 +195,16 @@ const addDoubleTapListener = (maxValidInterval, listener) => {
     }
   }, {passive: false});
 };
-const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber, interrupt) => {
+const speak = (text, lang, voiceVolume, voiceRate, voicePitch, voiceNumber) => {
   const isSpeaking = window.speechSynthesis.speaking;
   window.speechSynthesis.cancel();
   if (! text) {
     return;
   }
-  if (isSpeaking && ! interrupt) {
+  if (isSpeaking && text == speak.lastText) {
     return;
   }
+  speak.lastText = text;
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text || '';
   utterance.lang = lang || 'en';

@@ -82,7 +82,7 @@ const main = async () => {
   qs('#enable-automatic-question-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-question-speaking');
     if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-      speakNotice(stringResources['--each-question-will-be-automatically-spoken'], true);
+      speakNotice(stringResources['--each-question-will-be-automatically-spoken']);
     } else {
       speak(null);
     }
@@ -90,7 +90,7 @@ const main = async () => {
   qs('#enable-automatic-answer-speaking-button').addEventListener('click', () => {
     toggleSetting('enable-automatic-answer-speaking');
     if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-      speakNotice(stringResources['--each-answer-will-be-automatically-spoken'], true);
+      speakNotice(stringResources['--each-answer-will-be-automatically-spoken']);
     } else {
       speak(null);
     }
@@ -438,10 +438,10 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
   settingRadioElements.item(nextIndex).click();
 }
-const speakNotice = (notice, interrupt) => {
-  speak(notice, appLang, getSetting('voice-volume'), 'fast', 'medium', 1, interrupt);
+const speakNotice = notice => {
+  speak(notice, appLang, getSetting('voice-volume'), 'fast', 'medium', 1);
 };
-const speakQuestion = interrupt => {
+const speakQuestion = () => {
   speak(
     questionPhrase.text,
     questionPhrase.lang,
@@ -449,10 +449,9 @@ const speakQuestion = interrupt => {
     getSetting('question-voice-rate'),
     getSetting('question-voice-pitch'),
     getSetting('question-voice-number', 'integer'),
-    interrupt
   );
 };
-const speakAnswer = interrupt => {
+const speakAnswer = () => {
   speak(
     answerPhrase.text,
     answerPhrase.lang,
@@ -460,7 +459,6 @@ const speakAnswer = interrupt => {
     getSetting('answer-voice-rate'),
     getSetting('answer-voice-pitch'),
     getSetting('answer-voice-number', 'integer'),
-    interrupt
   );
 }
 const resetCard = async () => {
@@ -536,7 +534,7 @@ const resetCard = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-    speakQuestion(true);
+    speakQuestion();
   }
   setFlag('disable-control', false);
 };
@@ -553,7 +551,7 @@ const uncoverAnswer = async () => {
     await setTimeout(commonTimeoutDelay);
   }
   if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-    speakAnswer(true);
+    speakAnswer();
   }
   setFlag('disable-control', false);
 };
