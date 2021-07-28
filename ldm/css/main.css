@@ -4,26 +4,12 @@
 /*  ENABLE VARIABLE HIGHLIGHT  */
 :root,
 :root[data-enable-option-part-highlight="true"] {
-  --option-part-number-1-border-color: #F44336;
-  --option-part-number-2-border-color: #2196F3;
-  --option-part-number-3-border-color: #4CAF50;
-  --option-part-number-4-border-color: #FF9800;
-  --option-part-number-5-border-color: #9C27B0;
-  --option-part-number-6-border-color: #FFEB3B;
-  --option-part-number-7-border-color: #3F51B5;
-  --option-part-number-8-border-color: #8BC34A;
-  --option-part-number-9-border-color: #795548;
+  --option-part-main-border-bottom-style: solid;
+  --option-part-sub-border-bottom-style: dotted;
 }
 :root[data-enable-option-part-highlight="false"] {
-  --option-part-number-1-border-color: transparent;
-  --option-part-number-2-border-color: transparent;
-  --option-part-number-3-border-color: transparent;
-  --option-part-number-4-border-color: transparent;
-  --option-part-number-5-border-color: transparent;
-  --option-part-number-6-border-color: transparent;
-  --option-part-number-7-border-color: transparent;
-  --option-part-number-8-border-color: transparent;
-  --option-part-number-9-border-color: transparent;
+  --option-part-main-border-bottom-style: none;
+  --option-part-sub-border-bottom-style: none;
 }
 /*  ENABLE HINT BALLOON  */
 :root,
@@ -282,7 +268,7 @@
   --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
-  --hint-balloon-border-width: 4px;
+  --hint-balloon-border-width: .1em;
   --control-button-height: 2rem;
   --footer-cell-height: 2.25rem;
   --sans-serif-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
@@ -517,7 +503,7 @@ body > * {
 .option-part.main {
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
-  border-bottom-style: solid;
+  border-bottom: var(--hint-balloon-border-width) var(--option-part-main-border-bottom-style) var(--hint-balloon-chip-border-color);
   font-weight: bold;
 }
 :root.fold-lead:not(.show-settings) .option-part.main.active,
@@ -525,37 +511,36 @@ body > * {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
   border-bottom-style: dashed;
-  border-bottom-style: var(--hint-balloon-border-width);
 }
 .option-part.sub {
-  border-bottom-style: dotted;
+  border-bottom: var(--hint-balloon-border-width) var(--option-part-sub-border-bottom-style) var(--hint-balloon-chip-border-color);
 }
 .option-part[data-option-part-number="1"] {
-  border-bottom-color: var(--option-part-number-1-border-color);
+  --hint-balloon-chip-border-color: #F44336;
 }
 .option-part[data-option-part-number="2"] {
-  border-bottom-color: var(--option-part-number-2-border-color);
+  --hint-balloon-chip-border-color: #2196F3;
 }
 .option-part[data-option-part-number="3"] {
-  border-bottom-color: var(--option-part-number-3-border-color);
+  --hint-balloon-chip-border-color: #4CAF50;
 }
 .option-part[data-option-part-number="4"] {
-  border-bottom-color: var(--option-part-number-4-border-color);
+  --hint-balloon-chip-border-color: #FF9800;
 }
 .option-part[data-option-part-number="5"] {
-  border-bottom-color: var(--option-part-number-5-border-color);
+  --hint-balloon-chip-border-color: #9C27B0;
 }
 .option-part[data-option-part-number="6"] {
-  border-bottom-color: var(--option-part-number-6-border-color);
+  --hint-balloon-chip-border-color: #FFEB3B;
 }
 .option-part[data-option-part-number="7"] {
-  border-bottom-color: var(--option-part-number-7-border-color);
+  --hint-balloon-chip-border-color: #3F51B5;
 }
 .option-part[data-option-part-number="8"] {
-  border-bottom-color: var(--option-part-number-8-border-color);
+  --hint-balloon-chip-border-color: #8BC34A;
 }
 .option-part[data-option-part-number="9"] {
-  border-bottom-color: var(--option-part-number-9-border-color);
+  --hint-balloon-chip-border-color: #795548;
 }
 .option-part * {
   transition-duration: 0s;
@@ -594,7 +579,7 @@ body > * {
   align-items: center;
   height: 100%;
   padding: calc(var(--hint-balloon-border-width) * 2) .5rem;
-  border: var(--hint-balloon-border-width) solid var(--button-border-color);
+  border: var(--hint-balloon-border-width) solid var(--hint-balloon-chip-border-color);
   background-color: var(--hint-balloon-chip-background-color);
   white-space: nowrap;
 }
