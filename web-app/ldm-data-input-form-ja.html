@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>語学ドリルメーカー・ドリル作成フォーム</title>
+<link rel="stylesheet" href="/assets/css/common.css">
+<script type="module" src="/assets/js/common.js"></script>
+<script type="module" src="/assets/js/copy-code-buttons.js"></script>
+<title>語学ドリルメーカー用データ入力フォーム</title>
 <style>
   .frame {
     padding: 1.5rem;
@@ -14,8 +17,8 @@
       if (! ret) {
         return;
       }
-      const hoge = document.querySelector('#automatic-input-type').value;
-      alert(hoge)
+      const automaticInputType = document.querySelector('#automatic-input-type').value;
+      alert(automaticInputType)
     });
   });
 </script>
