@@ -393,7 +393,7 @@ const main = async () => {
     errorMessages.push(stringResources['--error--the-templates-of-question-and-answer-do-not-match-in-structure']);
   }
   if (errorMessages.length) {
-    qs('#error-body').innerHTML = `${stringResources['--error']}: ${errorMessages.join(' ')}`;
+    qs('#error-body').innerHTML = `${stringResources['--error']}: ${errorMessages.join(' / ')}`;
     setFlag('hasError', true);
   }
   resetCard();

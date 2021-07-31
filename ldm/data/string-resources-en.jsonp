@@ -9,7 +9,7 @@ jsonpCallback({
   "--error": "Error",
   "--error--the-template-of-question-is-undefined": "The template of question is undefined.",
   "--error--the-template-of-answer-is-undefined": "The template of answer is undefined.",
-  "--the-templates-of-question-and-answer-do-not-match-in-structure": "The templates of question and answer do not match in structure.",
+  "--error--the-templates-of-question-and-answer-do-not-match-in-structure": "The template of question and answer do not match in structure.",
   "--settings": "Settings",
   "--setting-category--control": "Control",
   "--enable-swipe-to-right": "Enable swipe to right (to skip the current question etc.)",
