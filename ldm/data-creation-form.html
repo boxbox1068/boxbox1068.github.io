@@ -1,21 +1,52 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>語学ドリルメーカー用データ作成フォーム</title>
-<h1>語学ドリルメーカー用データ作成フォーム</h1>
 <style>
-  :root {
-    --input-padding-top: .25rem;
-    --input-padding-left: .5rem;
-  }
   * {
+    margin: 0;
     box-sizing: border-box;
   }
   body {
-    padding: .5rem 1rem;
+    padding: 1rem;
+    background-color: #ECEFF1;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
   }
   h1 {
-    margin: 0 0 .5rem 0;
+    margin: 0 0 1rem 0;
+    font-size: 1.5rem;
+  }
+  [id$="-frame"] {
+    margin-top: 1rem;
+    color: #EFEFEF;
+  }
+  [id$="-frame"] > h2 {
+    padding: .25rem 1rem;
+    background-color: var(--background-color);
+    font-size: 1.25rem;
+  }
+  [id$="-frame"] > div {
+    padding: .5rem 1rem;
+  }
+  #import-frame {
+    --background-color: #C62828;
+  }
+  #url-text-wrapper,
+  #jsonp-text-wrapper,
+  #import-button-wrapper {
+    display: none;
+  }
+  #edit-frame {
+    --background-color: #1565C0;
+  }
+  #export-frame {
+    --background-color: #2E7D32;
+  }
+
+
+/*
+  :root {
+    --input-padding-top: .25rem;
+    --input-padding-left: .5rem;
   }
   input,
   textarea,
@@ -24,6 +55,7 @@
     font-size: 1rem;
   }
   textarea {
+    width: 100%;
     line-height: 1.25em;
   }
   select {
@@ -39,35 +71,39 @@
     margin-top: .25rem;
     margin-left: 0;
   }
+  body > * + * {
+    margin-top: 1rem;
+  }
   .framed {
     position: relative;
-    border: 1px solid gray;
+    border: 2px solid var(--frame-color);
   }
-  .framed > div {
-    padding: .5rem 1rem;
-  }
-
-  #input-frame {
-    --frame-color: red;
-  }
-  #output-frame {
-    --frame-color: blue;
-  }
-
-
-  .framed::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: .5rem;
-    height: 100%;
-    background-color: var(--frame-color);
-    content: "";
-  }
-  .framed > div:first-child {
+  .framed > h2 {
+    margin: 0;
     background-color: var(--frame-color);
     color: white;
   }
+  .framed > * + * {
+    margin-top: .5rem;
+  }
+  .framed + .framed {
+    margin-top: .5rem;
+  }
+  #auto-input > h2 {
+    background-color: blue;
+  }
+
+  #auto-input-frame {
+    --frame-color: #C62828;
+  }
+  #input-frame {
+    --frame-color: #1565C0;
+  }
+  #output-frame {
+    --frame-color: #2E7D32;
+  }
+
+
   .small {
     font-size: .8em;
   }
@@ -77,25 +113,38 @@
   .gray {
     color: #888;
   }
-  #qtemp,
-  #atemp,
-  #ltext,
-  #output-body {
-    width: 100%;
-  }
   #output-length {
     width: 5rem;
   }
+*/
 </style>
-<div id="input-frame" class="framed">
-  <div>入力</div>
+<h1>語学ドリルメーカー用データ作成フォーム</h1>
+<div id="import-frame">
+  <h2>インポート</h2>
   <div>
-    <select id="automatic-input-type">
-      <option value="data-extracted-from-url">ドリルURLからの抽出データ</option>
+    <select id="import-source-type">
+      <option value="none">なし</option>
+      <option value="data-from-url">URLからの抽出データ</option>
+      <option value="data-from-jsonp">JSONPからの抽出データ</option>
       <option value="sample-data">サンプルデータ</option>
     </select>
-    <button id="automatic-input-button">自動入力</button>
   </div>
+  <div id="url-text-wrapper">
+    <textarea id="url-text" rows="4" placeholder="hogehogehoge"></textarea>
+  </div>
+  <div id="jsonp-text-wrapper">
+    <textarea id="jsonp-text" rows="4" placeholder="fuga&#13;fuga&#13;fuga"></textarea>
+  </div>
+  <div id="import-button-wrapper">
+    <button id="import-button">インポート</button>
+  </div>
+</div>
+
+
+
+
+<div id="edit-frame">
+  <h2>編集</h2>
   <div>
     <dl>
       <dt>問題の言語（qlang） <span class="small red">[必須]</span></dt>
@@ -129,13 +178,13 @@
       </dd>
       <dt>リード文（ltext） <span class="small gray">[任意]</span></dt>
       <dd>
-        <textarea id="ltext" rows="4" placeholder="太郎くんたちの食べ物の好みを表現してみましょう。"></textarea>
+        <textarea id="ltext" rows="4" placeholder="太郎くんたちの食べ物の好みについて話してみましょう。"></textarea>
       </dd>
     </dl>
   </div>
 </div>
 <div id="output-frame" class="framed">
-  <div>出力</div>
+  <h2>出力</h2>
   <div>
     <span>出力タイプ: </span>
     <select value="output-type">
@@ -160,20 +209,52 @@
 <pre><code id="url"></code></pre>
 <div>現在<input id="url-length">文字</div>
 <script>
+  const sampleData = {
+    "qlang": "ja",
+    "qtemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[食べる,飲む,読む,書くための,遊ぶための]もの[2:が欲しい,が必要だ,を見つける,を手に入れる,を用意する]。",
+    "alang": "en",
+    "atemp": "[1:I,You,He,She,We,You,They] [2:want,need,find,get,prepare][[1:,,s,s,,,]] something to [3:eat,drink,read,write with,play with]",
+    "ltext": "\"something to do\"の表現を使った英文を練習するドリルです。"
+  };
+  const urlTextPlaceholder = `https://shikaku1068.github.io/ldm/?qlang=${encodeURIComponent(sampleData.qlang)}&qtemp=${encodeURIComponent(sampleData.qtemp)}&alang=${encodeURIComponent(sampleData.alang)}&atemp=${encodeURIComponent(sampleData.atemp)}&ltext=${encodeURIComponent(sampleData.ltext)}`;
+  document.querySelector('#url-text').placeholder = urlTextPlaceholder;
+  const jsonpTextPlaceholder = `jsonpCallback {\n  "qlang": "${qlang}",\n  "qtemp": "${qtemp}",\n  "alang": "${alang}",\n  "atemp": "${atemp}",\n  "ltext": "${ltext}"\n}`;
+  document.querySelector('#jsonp-text').placeholder = jsonpTextPlaceholder;
+  document.querySelector('#import-source-type').addEventListener('change', event => {
+    const importSourceText = document.querySelector('#import-source-text');
+    const urlTextWrapper = document.querySelector('#url-text-wrapper');
+    const jsonpTextWrapper = document.querySelector('#jsonp-text-wrapper');
+    const importButtonWrapper = document.querySelector('#import-button-wrapper');
+    switch (event.target.selectedIndex) {
+      case 0:
+        urlTextWrapper.style.display = 'none';
+        jsonpTextWrapper.style.display = 'none';
+        importButtonWrapper.style.display = 'none';
+        break;
+      case 1:
+        urlTextWrapper.style.display = 'block';
+        jsonpTextWrapper.style.display = 'none';
+        importButtonWrapper.style.display = 'block';
+        break;
+      case 2:
+        urlTextWrapper.style.display = 'none';
+        jsonpTextWrapper.style.display = 'block';
+        importButtonWrapper.style.display = 'block';
+        break;
+      case 3:
+        urlTextWrapper.style.display = 'none';
+        jsonpTextWrapper.style.display = 'none';
+        importButtonWrapper.style.display = 'block';
+        break;
+    }
+  });
 
 
 /*
-  window.addEventListener('load', event => {
-    document.querySelector('#automatic-input-button').addEventListener('click', event => {
-      const ret = window.confirm('現在の入力は消去されます。');
-      if (! ret) {
-        return;
-      }
-      const automaticInputType = document.querySelector('#automatic-input-type').value;
-      alert(automaticInputType)
-    });
+  document.querySelector('#auto-input-type').addEventListener('change', event => {
+    const display = event.target.selectedIndex == '0' ? 'block' : 'none';
+    document.querySelector('#drill-url').style.display = display;
   });
-*/
   const output = () => {
     const baseUrl = 'https://shikaku1068.github.io/ldm/';
     const qlang = encodeURIComponent(document.querySelector('#qlang').value.trim());
@@ -200,4 +281,5 @@
     output();
   });
   output();
+*/
 </script>
