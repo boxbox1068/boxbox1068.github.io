@@ -95,13 +95,13 @@
     font-size: .75em;
   }
   #import-frame {
-    --frame-color: #2E7D32;
+    --frame-color: #1565C0;
   }
   #edit-frame {
     --frame-color: #D84315;
   }
   #export-frame {
-    --frame-color: #1565C0;
+    --frame-color: #2E7D32;
   }
 </style>
 <h1>語学ドリルメーカー用データ作成フォーム</h1>
@@ -193,12 +193,12 @@
   </div>
   <div id="export-url-wrapper">
     <div>
-      <label for="export-url-length-input">文字数</label>
-      <input id="export-url-length-input" readonly>
-    </div>
-    <div>
       <label for="export-url-input">URL</label>
       <textarea id="export-url-input" rows="4" readonly></textarea>
+    </div>
+    <div>
+      <label for="export-url-length-input">文字数</label>
+      <input id="export-url-length-input" readonly>
     </div>
     <div>
       <button id="copy-export-url-button">クリップボードにコピー</button>
@@ -229,6 +229,10 @@
   'use strict';
   const qs = document.querySelector.bind(document);
   const qsa = document.querySelectorAll.bind(document);
+  const getJsonp = (qlang, qtemp, alang, atemp, ltext) => {
+    const f = s => s.replace(/"/g, '\\"');
+    return `jsonpCallback({\n  "qlang": "${f(qlang)}",\n  "qtemp": "${f(qtemp)}",\n  "alang": "${f(alang)}",\n  "atemp": "${f(atemp)}",\n  "ltext": "${f(ltext)}"\n});\n`;
+  };
   const sampleData = {
     "qlang": "ja",
 //    "qtemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[2:食べる,飲む,読む,書くための,遊ぶための]もの[3:が欲しい,が必要だ,を見つける,を手に入れる,を用意する]。",
@@ -243,20 +247,14 @@
     const f = encodeURIComponent;
     return `https://shikaku1068.github.io/ldm/?qlang=${f(sampleData.qlang)}&qtemp=${f(sampleData.qtemp)}&alang=${f(sampleData.alang)}&atemp=${f(sampleData.atemp)}&ltext=${f(sampleData.ltext)}`;
   })();
-  qs('#import-jsonp-input').placeholder = (() => {
-    const f = s => s.replace(/"/g, '\\"');
-    return `jsonpCallback {\n  "qlang": "${f(sampleData.qlang)}",\n  "qtemp": "${f(sampleData.qtemp)}",\n  "alang": "${f(sampleData.alang)}",\n  "atemp": "${f(sampleData.atemp)}",\n  "ltext": "${f(sampleData.ltext)}"\n}\n`;
-  })();
+  qs('#import-jsonp-input').placeholder = getJsonp(
+    sampleData.qlang, sampleData.qtemp, sampleData.alang, sampleData.atemp, sampleData.ltext
+  );
   qs('#qlang-input').placeholder = sampleData.qlang;
   qs('#qtemp-input').placeholder = sampleData.qtemp;
   qs('#alang-input').placeholder = sampleData.alang;
   qs('#atemp-input').placeholder = sampleData.atemp;
   qs('#ltext-input').placeholder = sampleData.ltext;
-
-
-
-
-
   qs('#import-data-type').addEventListener('change', () => {
     const importDataType = qs('#import-data-type').value;
     qs('#import-url-wrapper').style.display = importDataType == 'url' ? 'block' : 'none';
@@ -264,6 +262,112 @@
     qs('#import-sample-data-wrapper').style.display = importDataType == 'sample-data' ? 'block' : 'none';
   });
   qs('#import-data-type').dispatchEvent(new Event('change', {bubbles: true}));
+  const importData = (qlang, qtemp, alang, atemp, ltext) => {
+    qs('#qlang-input').value = qlang;
+    qs('#qtemp-input').value = qtemp;
+    qs('#alang-input').value = alang;
+    qs('#atemp-input').value = atemp;
+    qs('#ltext-input').value = ltext;
+    exportData();
+  };
+  qs('#import-url-button').addEventListener('click', () => {
+    const importUrl = qs('#import-url-input').value.trim();
+    if (! importUrl) {
+      alert('URLが入力されていません。');
+      return;
+    }
+    const ret = window.confirm('現在の編集内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    const usp = new URLSearchParams(importUrl.replace(/^[^?]*/, ''));
+    importData(
+      decodeURIComponent(usp.get('qlang') || ''),
+      decodeURIComponent(usp.get('qtemp') || ''),
+      decodeURIComponent(usp.get('alang') || ''),
+      decodeURIComponent(usp.get('atemp') || ''),
+      decodeURIComponent(usp.get('ltext') || '')
+    );
+  });
+
+  qs('#import-jsonp-button').addEventListener('click', () => {
+    const importJsonp = qs('#import-jsonp-input').value.trim();
+    if (! importJsonp) {
+      alert('JSONPが入力されていません。');
+      return;
+    }
+    const ret = window.confirm('現在の編集内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    const data = JSON.parse(importJsonp.replace(/^\s*jsonpCallback\s*\(|\)\s*;?\s*$/g, ''));
+    importData(
+      data.qlang || '',
+      data.qtemp || '',
+      data.alang || '',
+      data.atemp || '',
+      data.ltemp || ''
+    );
+/*
+    const data = {qlang: '', qtemp: '', alang: '', atemp: '', ltext: ''};
+    for (const key in data) {
+      importJsonp.replace(new RegExp(`"\\s*${key}\\s*"\\s*:\\s*"((?:\\\\"|.)*?)"`), (match, p1) => {
+        alert(p1);
+      });
+    }
+
+    importData(data.qlang, data.qtemp, data.alang, data.atemp, data.ltext);
+
+
+jsonpCallback({
+  "alang": "en",
+  "atemp": "[1:I,You,He,She,We,You,They] [3:want[4:,ed],need[4:,ed],[4:find,found],[4:get,god],prepare[4:,d]][[4:[1:,,s,s,,,],]] something to [2:eat,drink,read,write with,play with].",
+  "qlang": "ja",
+  "atemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[2:食べる,飲む,読む,書くための,遊ぶための]もの[3:が欲し[4:い,かった],が必要だ[4:,った],を見つけ[4:る,た],を手に入れ[4:る,た],を用意[4:する,した]]。",
+  "ltext": "“something to do”（何か〜するもの）の表現を使った英文を練習してみましょう。"
+});
+
+
+    */
+  });
+
+
+
+
+  qs('#import-sample-data-button').addEventListener('click', () => {
+    const ret = window.confirm('現在の入力内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    importData(
+      sampleData.qlang,
+      sampleData.qtemp,
+      sampleData.alang,
+      sampleData.atemp,
+      sampleData.ltext
+    );
+  });
+  const exportData = () => {
+    const baseUrl = 'https://shikaku1068.github.io/ldm/';
+    const qlang = qs('#qlang-input').value.trim();
+    const qtemp = qs('#qtemp-input').value.trim();
+    const alang = qs('#alang-input').value.trim();
+    const atemp = qs('#atemp-input').value.trim();
+    const ltext = qs('#ltext-input').value.trim();
+    const exportUrl = (() => {
+      const f = encodeURIComponent;
+      return `${baseUrl}?qlang=${f(qlang)}&qtemp=${f(qtemp)}&alang=${f(alang)}&atemp=${f(atemp)}&ltext=${f(ltext)}`;
+    })();
+    qs('#export-url-input').value = exportUrl;
+    qs('#export-url-length-input').value = exportUrl.length;
+    const exportJsonp = (() => {
+      const f = s => s.replace(/"/g, '\\"');
+      return `jsonpCallback({\n  "qlang": "${f(qlang)}",\n  "qtemp": "${f(qtemp)}",\n  "alang": "${f(alang)}",\n  "atemp": "${f(atemp)}",\n  "ltext": "${f(ltext)}"\n});\n`;
+    })();
+    qs('#export-jsonp-input').value = exportJsonp;
+  };
+
+
   qs('#export-data-type').addEventListener('change', () => {
     const exportDataType = qs('#export-data-type').value;
     qs('#export-url-wrapper').style.display = exportDataType == 'url' ? 'block' : 'none';
@@ -292,40 +396,9 @@
   };
   qs('#export-data-type').addEventListener('change', exportDataTypeOnChange);
   exportDataTypeOnChange();
-  const exportData = () => {
-    const baseUrl = 'https://shikaku1068.github.io/ldm/';
-    const qlang = qs('#qlang-input').value.trim();
-    const qtemp = qs('#qtemp-input').value.trim();
-    const alang = qs('#alang-input').value.trim();
-    const atemp = qs('#atemp-input').value.trim();
-    const ltext = qs('#ltext-input').value.trim();
-    const exportUrl = (() => {
-      const f = encodeURIComponent;
-      return `${baseUrl}?qlang=${f(qlang)}&qtemp=${f(qtemp)}&alang=${f(alang)}&atemp=${f(atemp)}&ltext=${f(ltext)}`;
-    })();
-    qs('#export-url-input').value = exportUrl;
-    qs('#export-url-length').value = exportUrl.length;
-    const exportJsonp = (() => {
-      const f = s => s.replace(/"/g, '\\"');
-      return `jsonpCallback {\n  "alang": "${f(alang)}",\n  "atemp": "${f(atemp)}",\n  "qlang": "${f(qlang)}",\n  "atemp": "${f(qtemp)}",\n  "ltext": "${f(ltext)}"\n}\n`;
-    })();
-    qs('#export-jsonp-input').value = exportJsonp;
-  };
   qsa('#qlang-input, #qtemp-input, #alang-input, #atemp-input, #ltext-input').forEach(element => {
     element.addEventListener('input', exportData);
     element.addEventListener('change', exportData);
-  });
-  qs('#import-data-button').addEventListener('click', event => {
-    const ret = window.confirm('現在の入力内容を消去します。');
-    if (! ret) {
-      return;
-    }
-    qs('#alang-input').value = sampleData.alang;
-    qs('#atemp-input').value = sampleData.atemp;
-    qs('#qlang-input').value = sampleData.qlang;
-    qs('#qtemp-input').value = sampleData.qtemp;
-    qs('#ltext-input').value = sampleData.ltext;
-    exportData();
   });
   exportData();
 */

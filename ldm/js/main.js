@@ -315,7 +315,7 @@ const main = async () => {
   let answerTemplate;
   let answerLang;
   let drillDataJsonpUrl;
-  const usp = new URLSearchParams(window.location.search.replace(/^\?/, ''));
+  const usp = new URLSearchParams(window.location.search);
   if (usp.has('qtemp')) {
     leadText = usp.get('ltext') || '';
     questionTemplate = usp.get('qtemp') || '';
