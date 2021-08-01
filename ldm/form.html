@@ -5,7 +5,6 @@
   * {
     margin: 0;
     box-sizing: border-box;
-    font-size: 1rem;
     -webkit-input-size-adjust: none;
     text-size-adjust: none;
   }
@@ -13,12 +12,13 @@
     font-size: 4vmin;
   }
   body {
-    padding: 1rem;
+    padding: .5rem 1rem;
     background-color: #ECEFF1;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
   }
   h1 {
     margin: 0 0 .5rem 0;
+    font-size: 1rem;
   }
   label {
     font-weight: bold;
@@ -30,6 +30,10 @@
   textarea,
   select {
     border: 1px solid gray;
+    font-size: 1rem;
+  }
+  button {
+    font-size: 1rem;
   }
   textarea {
     display: block;
@@ -43,6 +47,10 @@
   }
   button:hover {
     background-image: linear-gradient(#FFF2, #FFF2);
+  }
+  ul,
+  ol {
+    padding-left: 1rem;
   }
   .tag {
     font-size: .75rem;
@@ -71,6 +79,7 @@
     padding: .25rem 1rem;
     background-color: var(--frame-color);
     color: #EFEFEF;
+    font-size: 1rem;
   }
   .frame div {
     margin-top: .5rem;
@@ -79,6 +88,11 @@
     border-width: 0;
     background-color: var(--frame-color);
     color: #EFEFEF;
+  }
+  .frame .note {
+    padding: .5rem 1rem;
+    border: 2px dashed var(--frame-color);
+    font-size: .75em;
   }
   #import-frame {
     --frame-color: #2E7D32;
@@ -129,7 +143,7 @@
 <div id="edit-frame" class="frame">
   <h2>ソースコードの編集</h2>
   <div>
-    <label for="qlang-input">問題の言語（qlang）<span class="tag red">必須</span></label>
+    <label for="qlang-input">問題の言語（qlang）<span class="tag gray">任意</span></label>
     <input id="qlang-input" autocomplete="on" list="langs" required>
     <datalist id="langs">
       <option value="ja">ja: 日本語</option>
@@ -150,7 +164,7 @@
     <textarea id="qtemp-input" rows="4" required></textarea>
   </div>
   <div>
-    <label for="alang-input">答えの言語（alang）<span class="tag red">必須</span></label>
+    <label for="alang-input">答えの言語（alang）<span class="tag gray">任意</span></label>
     <input id="alang-input" autocomplete="on" list="langs" required>
   </div>
   <div>
@@ -160,6 +174,12 @@
   <div>
     <label for="ltext">リード文（ltext）<span class="tag gray">任意</span></label>
     <textarea id="ltext-input" rows="4" required></textarea>
+  </div>
+  <div class="note">
+    <ul>
+      <li>テンプレートの構造（可変部の数、可変部内の要素数）は問題と答えで一致している必要があります。</li>
+      <li>言語を指定すると正しく読み上げされる可能性が高まります。</li>  
+    </ul>
   </div>
 </div>
 <div id="export-frame" class="frame">
@@ -173,15 +193,18 @@
   </div>
   <div id="export-url-wrapper">
     <div>
-      <label for="export-url-input">URL</label>
-      <textarea id="export-url-input" rows="4" readonly></textarea>
-    </div>
-    <div>
       <label for="export-url-length-input">文字数</label>
       <input id="export-url-length-input" readonly>
     </div>
     <div>
+      <label for="export-url-input">URL</label>
+      <textarea id="export-url-input" rows="4" readonly></textarea>
+    </div>
+    <div>
       <button id="copy-export-url-button">クリップボードにコピー</button>
+    </div>
+    <div class="note">
+      <span>URLの文字数が長くなると、ブラウザやサーバなどの環境によって利用できないことがあります。</span>
     </div>
   </div>
   <div id="export-jsonp-wrapper">
@@ -191,6 +214,14 @@
     </div>
     <div>
       <button id="copy-export-jsonp-button">クリップボードにコピー</button>
+    </div>
+    <div class="note">
+      <span>JSONPデータの利用方法は次のとおりです。</span>
+      <ol>
+        <li>テキストエディタに貼り付けてUTF-8で保存する。</li>
+        <li>インターネットの任意の場所（アクセス制限なし）にアップロードする。</li>
+        <li>https://shikaku1068.github.io/ldm/?jsonp=JSONPのURL にアクセスする。</li>
+      </ol>
     </div>
   </div>
 </div>
@@ -206,7 +237,7 @@
     "alang": "en",
 //    "atemp": "[1:I,You,He,She,We,You,They] [3:want,need,find,get,prepare][[1:,,s,s,,,]] something to [2:eat,drink,read,write with,play with].",
     "atemp": "[1:I,You,He,She,We,You,They] [3:want[4:,ed],need[4:,ed],[4:find,found],[4:get,god],prepare[4:,d]][[4:[1:,,s,s,,,],]] something to [2:eat,drink,read,write with,play with].",
-    "ltext": "\"something to do\"の表現を使った英文を練習してみましょう。"
+    "ltext": "“something to do”（何か〜するもの）の表現を使った英文を練習してみましょう。"
   };
   qs('#import-url-input').placeholder = (() => {
     const f = encodeURIComponent;
@@ -216,6 +247,16 @@
     const f = s => s.replace(/"/g, '\\"');
     return `jsonpCallback {\n  "qlang": "${f(sampleData.qlang)}",\n  "qtemp": "${f(sampleData.qtemp)}",\n  "alang": "${f(sampleData.alang)}",\n  "atemp": "${f(sampleData.atemp)}",\n  "ltext": "${f(sampleData.ltext)}"\n}\n`;
   })();
+  qs('#qlang-input').placeholder = sampleData.qlang;
+  qs('#qtemp-input').placeholder = sampleData.qtemp;
+  qs('#alang-input').placeholder = sampleData.alang;
+  qs('#atemp-input').placeholder = sampleData.atemp;
+  qs('#ltext-input').placeholder = sampleData.ltext;
+
+
+
+
+
   qs('#import-data-type').addEventListener('change', () => {
     const importDataType = qs('#import-data-type').value;
     qs('#import-url-wrapper').style.display = importDataType == 'url' ? 'block' : 'none';
@@ -249,11 +290,6 @@
         break;
     }
   };
-  qs('#qlang-input').placeholder = sampleData.qlang;
-  qs('#qtemp-input').placeholder = sampleData.qtemp;
-  qs('#alang-input').placeholder = sampleData.alang;
-  qs('#atemp-input').placeholder = sampleData.atemp;
-  qs('#ltext-input').placeholder = sampleData.ltext;
   qs('#export-data-type').addEventListener('change', exportDataTypeOnChange);
   exportDataTypeOnChange();
   const exportData = () => {
