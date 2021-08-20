@@ -45,7 +45,7 @@ let stringResources;
 let questionPhrase;
 let answerPhrase;
 const main = async () => {
-  appLang = {'en': 'en', 'ja': 'ja'}[window.navigator.language] || 'en';
+  appLang = {'ja': 'ja', 'ja-jp': 'ja'}[window.navigator.language.toLowerCase()] || 'en';
   qs('#lead-body').innerHTML = 'Loading the data of string resouces...';
   await new Promise(resolve => {
     const urlOfStringResourcesJsonp = `./data/string-resources-${appLang}.jsonp`;
