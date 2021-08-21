@@ -1,7 +1,7 @@
 jsonpCallback({
   "app-title": "Language Drill Maker",
   "copyright-notice-html": "<b>Language Drill Maker</b> &copy; 2021 shikaku1068",
-  "statistics-output-template": "No. %pattern-id% out of %pattern-count% pattern / Question %question-number%",
+  "statistics-output-template": "No. %pattern-id% out of %pattern-count% patterns / Question %question-number%",
   "--the-data-of-this-drill": "The data of this drill",
   "--each-question-will-be-automatically-spoken": "Each question will be automatically spoken.",
   "--each-answer-will-be-automatically-spoken": "Each answer will be automatically spoken.",
