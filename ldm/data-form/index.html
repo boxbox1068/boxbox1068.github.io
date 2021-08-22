@@ -1,8 +1,499 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title></title>
+<title>語学ドリルメーカー用データフォーム</title>
+<style>
+  :root {
+    --header-height: 2.25rem;
+  }
+  * {
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-input-size-adjust: none;
+    text-size-adjust: none;
+  }
+  html {
+    font-size: 3vmin;
+  }
+  body {
+    background-color: #ECEFF1;
+    color: #101010;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  }
+  body > * {
+    padding: .5rem 1rem;
+  }
+  h1 {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: var(--header-height);
+    background-color: #455A64;
+    color: #EFEFEF;
+    font-size: 1rem;
+    counter-reset: h2-number;
+  }
+  h2 {
+    position: sticky;
+    top: var(--header-height);
+    height: var(--header-height);
+    background-color: var(--background-color);
+    font-size: 1rem;
+  }
+  h2::before {
+    counter-increment: h2-number;
+    content: counter(h2-number) ". ";
+  }
+  h2:nth-of-type(1) {
+    --background-color: #A5D6A7;
+  }
+  h2:nth-of-type(2) {
+    --background-color: #90CAF9;
+  }
+  h2:nth-of-type(3) {
+    --background-color: #EF9A9A;
+  }
+  div + div {
+    margin-top: 1rem;
+  }
+  body > div {
+    margin-bottom: 1rem;
+  }
+  label {
+    font-weight: bold;
+  }
+  label::after {
+    content: ":\00A0";
+  }
+  input {
+    border: 1px solid #607D8B;
+    padding: .25rem .5rem;
+    font-size: 1rem;
+  }
+  input[readonly] {
+    background-color:#ECEFF1;
+  }
+  textarea {
+    display: block;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    padding: .25rem .5rem;
+    border: 1px solid #607D8B;
+    font-size: 1rem;
+  }
+  textarea[readonly] {
+    background-color:#ECEFF1;
+  }
+  select {
+    border: 1px solid #607D8B;
+    padding: .25rem .5rem;
+    font-size: 1rem;
+  }
+  button {
+    padding: .25rem .5rem;
+    border-style: none;
+    background-color: var(--background-color);
+    color: #EFEFEF;
+    font-size: 1rem;
+  }
+  h2:nth-of-type(1) ~ * button {
+    --background-color: #388E3C;
+  }
+  h2:nth-of-type(2) ~ * button {
+    --background-color: #1976D2;
+  }
+  h2:nth-of-type(3) ~ * button {
+    --background-color: #D32F2F;
+  }
+  button:hover {
+    background-image: linear-gradient(#FFF2, #FFF2);
+  }
+  .tag {
+    font-size: .75rem;
+  }
+  .tag::before {
+    content: "[";
+  }
+  .tag::after {
+    content: "]";
+  }
+  .red {
+    color: #C62828;
+  }
+  .gray {
+    color: #757575;
+  }
+  .note {
+    padding: .5rem 1rem;
+    border: 2px dashed #607D8B;
+  }
+</style>
+<h1>
+  <span lang="en">Data Form For Language Drill Maker</span><span lang="ja">語学ドリルメーカー用データフォーム</span>
+</h1>
+<div>
+  <p lang="en">You can create an original drill for <a href="/ldm/">Language Drill Maker</a> with this data form.</p>
+  <p lang="ja">このデータフォームを使って<a href="/ldm/">語学ドリルメーカー</a>用のオリジナルのドリルを作成できます。</p>
+</div>
+<h2>
+  <span lang="en">Import Existing Data</span><span lang="ja">既存データの取り込み</span>
+</h2>
+<div>
+  <div>
+    <label for="import-source">
+      <span lang="en">Import source</span><span lang="ja">取り込み元</span>
+    </label>
+    <select id="import-source">
+      <option value="none">なし</option>
+      <option value="url">URL</option>
+      <option value="jsonp">JSONP</option>
+      <option value="sample-data">サンプルデータ</option>
+    </select>
+  </div>
+  <div id="import-url-block">
+    <div>
+      <label for="url-input">URL</label>
+      <textarea id="url-input" rows="4"></textarea>
+    </div>
+    <div>
+      <button id="import-url-button">
+        <span lang="en">Import</span><span lang="ja">取り込み</span>
+      </button>
+    </div>
+  </div>
+  <div id="import-jsonp-block">
+    <div>
+      <label for="jsonp-input">JSONP</label>
+      <textarea id="jsonp-input" rows="4"></textarea>
+    </div>
+    <div>
+      <button id="import-jsonp-button">
+        <span lang="en">Import</span><span lang="ja">取り込み</span>
+      </button>
+    </div>
+  </div>
+  <div id="import-sample-data-block">
+    <div>
+      <button id="import-sample-data-button">
+        <span lang="en">Import</span><span lang="ja">取り込み</span>
+      </button>
+    </div>
+  </div>
+</div>
+<h2>
+  <span lang="en">Edit Data</span><span lang="ja">データの編集</span>
+</h2>
+<div>
+  <div>
+    <label for="qlang-input">
+      <span lang="en">Question language (qlang) <span class="tag gray">optional</span></span><span lang="ja">問題の言語（qlang） <span class="tag gray">任意</span></span>
+    </label>
+    <input id="qlang-input" autocomplete="on" list="langs" required>
+    <datalist id="langs">
+      <option value="ja" lang="ja">ja: 日本語</option>
+      <option value="ja" lang="en">ja: Japanese</option>
+      <option value="en" lang="ja">en: 英語</option>
+      <option value="en" lang="en">en: English</option>
+      <option value="en-US" lang="ja">en-US: 英語（アメリカ）</option>
+      <option value="en-US" lang="en">en-US: English（United States）</option>
+      <option value="en-GB" lang="ja">en-GB: 英語（イギリス）</option>
+      <option value="en-GB" lang="en">en-GB: English（United Kingdom）</option>
+      <option value="zh" lang="ja">zh: 中国語</option>
+      <option value="zh" lang="en">zh: Chinese</option>
+      <option value="fr" lang="ja">fr: フランス語</option>
+      <option value="fr" lang="en">fr: French</option>
+      <option value="de" lang="ja">de: ドイツ語</option>
+      <option value="de" lang="en">de: German</option>
+      <option value="it" lang="ja">it: イタリア語</option>
+      <option value="it" lang="en">it: Italian</option>
+      <option value="ko" lang="ja">ko: 韓国語</option>
+      <option value="ko" lang="en">ko: Korean</option>
+      <option value="ru" lang="ja">ru: ロシア語</option>
+      <option value="ru" lang="en">ru: Russian</option>
+      <option value="es" lang="ja">es: スペイン語</option>
+      <option value="es" lang="en">es: Spanish</option>
+    </datalist>
+  </div>
+  <div>
+    <label for="qtemp-input">
+      <span lang="en">Question template (qtemp) <span class="tag red">required</span></span><span lang="ja">問題のテンプレート（qtemp） <span class="tag red">必須</span></span>
+    </label>
+    <textarea id="qtemp-input" rows="4" required></textarea>
+  </div>
+  <div>
+    <label for="alang-input">
+      <span lang="en">Answer language (alang) <span class="tag gray">optional</span></span><span lang="ja">答えの言語（alang） <span class="tag gray">任意</span></span>
+    </label>
+    <input id="alang-input" autocomplete="on" list="langs" required>
+  </div>
+  <div>
+    <label for="atemp-input">
+      <span lang="en">Answer template (atemp) <span class="tag red">required</span></span><span lang="ja">答えのテンプレート（atemp） <span class="tag red">必須</span></span>
+    </label>
+    <textarea id="atemp-input" rows="4" required></textarea>
+  </div>
+  <div>
+    <label for="ltext-input">
+      <span lang="en">Lead text (ltext) <span class="tag gray">optional</span></span><span lang="ja">リード文（ltext） <span class="tag gray">任意</span></span>
+    </label>
+    <textarea id="ltext-input" rows="4" required></textarea>
+  </div>
+  <div class="note">
+    <ul>
+      <li>テンプレートの構造（可変部の数、可変部内の要素数）は問題と答えで一致している必要があります。</li>
+      <li>言語を指定すると正しく読み上げされる可能性が高まります。</li>  
+    </ul>
+  </div>
+</div>
+<h2>データの書き出し</h2>
+<div>
+  <div>
+    <label for="export-type">出力タイプ</label>
+    <select id="export-type">
+      <option value="url">URL</option>
+      <option value="jsonp">JSONP</option>
+    </select>
+  </div>
+  <div id="export-url-block">
+    <div>
+      <label for="url-output">URL</label>
+      <textarea id="url-output" rows="4" readonly></textarea>
+    </div>
+    <div>
+      <label for="url-length-output">文字数</label>
+      <input id="url-length-output" readonly>
+    </div>
+    <div>
+      <button id="copy-url-button">クリップボードにコピー</button>
+    </div>
+    <div class="note">
+      <ul>
+        <li>URLにドリルのデータを含めてアプリに受け渡す方式です。</li>
+        <li>URLの文字数が多くなると、ブラウザやサーバなどの環境によって利用できないことがあります。問題が起きた場合はJSONPをお試しください。</li>
+      </ul>
+    </div>
+  </div>
+  <div id="export-jsonp-block">
+    <div>
+      <label for="jsonp-output">JSONP</label>
+      <textarea id="jsonp-output" rows="4" readonly></textarea>
+    </div>
+    <div>
+      <button id="copy-jsonp-button">クリップボードにコピー</button>
+    </div>
+    <div class="note">
+      <span>JSONPデータの利用方法は次のとおりです。</span>
+      <ol>
+        <li>テキストエディタに貼り付けてUTF-8で保存する。</li>
+        <li>インターネットの任意の場所（アクセス制限なし）にアップロードする。</li>
+        <li>https://shikaku1068.github.io/ldm/?jsonp=JSONPのURL にアクセスする。</li>
+      </ol>
+    </div>
+  </div>
+</div>
 <script>
+  'use strict';
+  const qs = document.querySelector.bind(document);
+  const qsa = document.querySelectorAll.bind(document);
   const lang = {'ja': 'ja', 'ja-jp': 'ja'}[window.navigator.language.toLowerCase()] || 'en';
-  const redirectUrl = `./index-${lang}.html`;
-  window.location = redirectUrl;
+  qsa(`[lang]`).forEach(element => {
+    if (element.lang == lang) {
+      return;
+    }
+    element.remove();
+  });
+
+
+
+
+
+
+
+  const getJsonp = (qlang, qtemp, alang, atemp, ltext) => {
+    const f = s => s.replace(/"/g, '\\"');
+    return `jsonpCallback({\n  "qlang": "${f(qlang)}",\n  "qtemp": "${f(qtemp)}",\n  "alang": "${f(alang)}",\n  "atemp": "${f(atemp)}",\n  "ltext": "${f(ltext)}"\n});\n`;
+  };
+  const sampleData = {
+    "qlang": "ja",
+//    "qtemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[2:食べる,飲む,読む,書くための,遊ぶための]もの[3:が欲しい,が必要だ,を見つける,を手に入れる,を用意する]。",
+"qtemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[2:食べる,飲む,読む,書くための,遊ぶための]もの[3:が欲し[4:い,かった],が必要だ[4:,った],を見つけ[4:る,た],を手に入れ[4:る,た],を用意[4:する,した]]。",
+
+    "alang": "en",
+//    "atemp": "[1:I,You,He,She,We,You,They] [3:want,need,find,get,prepare][[1:,,s,s,,,]] something to [2:eat,drink,read,write with,play with].",
+    "atemp": "[1:I,You,He,She,We,You,They] [3:want[4:,ed],need[4:,ed],[4:find,found],[4:get,god],prepare[4:,d]][[4:[1:,,s,s,,,],]] something to [2:eat,drink,read,write with,play with].",
+    "ltext": "“something to do”（何か〜するもの）の表現を使った英文を練習してみましょう。"
+  };
+  qs('#url-input').placeholder = (() => {
+    const f = encodeURIComponent;
+    return `https://shikaku1068.github.io/ldm/?qlang=${f(sampleData.qlang)}&qtemp=${f(sampleData.qtemp)}&alang=${f(sampleData.alang)}&atemp=${f(sampleData.atemp)}&ltext=${f(sampleData.ltext)}`;
+  })();
+  qs('#jsonp-input').placeholder = getJsonp(
+    sampleData.qlang, sampleData.qtemp, sampleData.alang, sampleData.atemp, sampleData.ltext
+  );
+  qs('#qlang-input').placeholder = sampleData.qlang;
+  qs('#qtemp-input').placeholder = sampleData.qtemp;
+  qs('#alang-input').placeholder = sampleData.alang;
+  qs('#atemp-input').placeholder = sampleData.atemp;
+  qs('#ltext-input').placeholder = sampleData.ltext;
+  qs('#import-source').addEventListener('change', () => {
+    const importDataType = qs('#import-source').value;
+    qs('#import-url-block').style.display = importDataType == 'url' ? 'block' : 'none';
+    qs('#import-jsonp-block').style.display = importDataType == 'jsonp' ? 'block' : 'none';
+    qs('#import-sample-data-block').style.display = importDataType == 'sample-data' ? 'block' : 'none';
+  });
+  qs('#import-source').dispatchEvent(new Event('change', {bubbles: true}));
+  const importData = (qlang, qtemp, alang, atemp, ltext) => {
+    qs('#qlang-input').value = qlang;
+    qs('#qtemp-input').value = qtemp;
+    qs('#alang-input').value = alang;
+    qs('#atemp-input').value = atemp;
+    qs('#ltext-input').value = ltext;
+    exportData();
+  };
+  qs('#import-url-button').addEventListener('click', () => {
+    const importUrl = qs('#url-input').value.trim();
+    if (! importUrl) {
+      alert('URLが入力されていません。');
+      return;
+    }
+    const ret = window.confirm('現在の編集内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    const usp = new URLSearchParams(importUrl.replace(/^[^?]*/, ''));
+    importData(
+      decodeURIComponent(usp.get('qlang') || ''),
+      decodeURIComponent(usp.get('qtemp') || ''),
+      decodeURIComponent(usp.get('alang') || ''),
+      decodeURIComponent(usp.get('atemp') || ''),
+      decodeURIComponent(usp.get('ltext') || '')
+    );
+  });
+
+  qs('#import-jsonp-button').addEventListener('click', () => {
+    const importJsonp = qs('#jsonp-input').value.trim();
+    if (! importJsonp) {
+      alert('JSONPが入力されていません。');
+      return;
+    }
+    const ret = window.confirm('現在の編集内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    const data = JSON.parse(importJsonp.replace(/^\s*jsonpCallback\s*\(|\)\s*;?\s*$/g, ''));
+    importData(
+      data.qlang || '',
+      data.qtemp || '',
+      data.alang || '',
+      data.atemp || '',
+      data.ltemp || ''
+    );
+/*
+    const data = {qlang: '', qtemp: '', alang: '', atemp: '', ltext: ''};
+    for (const key in data) {
+      importJsonp.replace(new RegExp(`"\\s*${key}\\s*"\\s*:\\s*"((?:\\\\"|.)*?)"`), (match, p1) => {
+        alert(p1);
+      });
+    }
+
+    importData(data.qlang, data.qtemp, data.alang, data.atemp, data.ltext);
+
+
+jsonpCallback({
+  "alang": "en",
+  "atemp": "[1:I,You,He,She,We,You,They] [3:want[4:,ed],need[4:,ed],[4:find,found],[4:get,god],prepare[4:,d]][[4:[1:,,s,s,,,],]] something to [2:eat,drink,read,write with,play with].",
+  "qlang": "ja",
+  "atemp": "[1:私,あなた,彼,彼女,私たち,あなたたち,[彼ら,彼女ら]]は何か[2:食べる,飲む,読む,書くための,遊ぶための]もの[3:が欲し[4:い,かった],が必要だ[4:,った],を見つけ[4:る,た],を手に入れ[4:る,た],を用意[4:する,した]]。",
+  "ltext": "“something to do”（何か〜するもの）の表現を使った英文を練習してみましょう。"
+});
+
+
+    */
+  });
+
+
+
+
+  qs('#import-sample-data-button').addEventListener('click', () => {
+    const ret = window.confirm('現在の入力内容を消去します。');
+    if (! ret) {
+      return;
+    }
+    importData(
+      sampleData.qlang,
+      sampleData.qtemp,
+      sampleData.alang,
+      sampleData.atemp,
+      sampleData.ltext
+    );
+  });
+  const exportData = () => {
+    const baseUrl = 'https://shikaku1068.github.io/ldm/';
+    const qlang = qs('#qlang-input').value.trim();
+    const qtemp = qs('#qtemp-input').value.trim();
+    const alang = qs('#alang-input').value.trim();
+    const atemp = qs('#atemp-input').value.trim();
+    const ltext = qs('#ltext-input').value.trim();
+    const exportUrl = (() => {
+      const f = encodeURIComponent;
+      return `${baseUrl}?qlang=${f(qlang)}&qtemp=${f(qtemp)}&alang=${f(alang)}&atemp=${f(atemp)}&ltext=${f(ltext)}`;
+    })();
+    qs('#url-output').value = exportUrl;
+    qs('#url-length-output').value = exportUrl.length;
+    const exportJsonp = (() => {
+      const f = s => s.replace(/"/g, '\\"');
+      return `jsonpCallback({\n  "qlang": "${f(qlang)}",\n  "qtemp": "${f(qtemp)}",\n  "alang": "${f(alang)}",\n  "atemp": "${f(atemp)}",\n  "ltext": "${f(ltext)}"\n});\n`;
+    })();
+    qs('#jsonp-output').value = exportJsonp;
+  };
+
+
+  qs('#export-type').addEventListener('change', () => {
+    const exportDataType = qs('#export-type').value;
+    qs('#export-url-block').style.display = exportDataType == 'url' ? 'block' : 'none';
+    qs('#export-jsonp-block').style.display = exportDataType == 'jsonp' ? 'block' : 'none';
+  });
+  qs('#export-type').dispatchEvent(new Event('change', {bubbles: true}));
+
+  window.addEventListener('beforeunload', event => {
+    const qlang = qs('#qlang-input').value.trim();
+    const qtemp = qs('#qtemp-input').value.trim();
+    const alang = qs('#alang-input').value.trim();
+    const atemp = qs('#atemp-input').value.trim();
+    const ltext = qs('#ltext-input').value.trim();
+    if (qlang || qtemp || alang || atemp || ltext) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+
+
+  /*
+  const exportDataTypeOnChange = () => {
+    const exportDataType = qs('#export-type');
+    const exportUrlInputWrapper = qs('#url-output-block');
+    const exportJsonpInputWrapper = qs('#jsonp-output-block');
+    const copyButtonWrapper = qs('#copy-button-block');
+    switch (exportDataType.selectedIndex) {
+      case 0:
+        exportUrlInputWrapper.style.display = 'block';
+        exportJsonpInputWrapper.style.display = 'none';
+        copyButtonWrapper.style.display = 'block';
+        break;
+      case 1:
+        exportUrlInputWrapper.style.display = 'none';
+        exportJsonpInputWrapper.style.display = 'block';
+        copyButtonWrapper.style.display = 'block';
+        break;
+    }
+  };
+  qs('#export-type').addEventListener('change', exportDataTypeOnChange);
+  exportDataTypeOnChange();
+  qsa('#qlang-input, #qtemp-input, #alang-input, #atemp-input, #ltext-input').forEach(element => {
+    element.addEventListener('input', exportData);
+    element.addEventListener('change', exportData);
+  });
+  exportData();
+*/
 </script>
