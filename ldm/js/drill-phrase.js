@@ -15,7 +15,7 @@ class DrillPhrase {
       while (true) {
         const lastTemplate = template;
         template = template.replace(/\[(?:(\d):)?([^\[]*?)\]/, (match, p1, p2, offset, string) => {
-          const optionPartNumber = Number(p1) || 0;
+          const optionPartNumber = Math.max(0, Math.min(9, parseInt(p1) || 0));
           const options  = p2.split(',').map(element => {
             return element.trim();
           });
@@ -40,7 +40,8 @@ class DrillPhrase {
         return;
       }
       const optionCount = optionTexts.length;
-      if (optionCount < (optionCounts[optionPartNumber] || Infinity)) {
+      const existingOptionCount = optionCounts[optionPartNumber];
+      if (isNaN(existingOptionCount) || optionCount < existingOptionCount) {
         optionCounts[optionPartNumber] = optionCount;
       }
     });
@@ -68,14 +69,17 @@ class DrillPhrase {
       }
       const selectedOptionId = selectedOptionIds[optionPartNumber];
       const selectedOptionText = optionTexts[selectedOptionId];
-      if (selectedOptionText) {
+      if (! selectedOptionText) {
+        return '';
+      }
+      if (isMainOptionPart) {
         if (selectedOptionTexts[optionPartNumber]) {
           selectedOptionTexts[optionPartNumber] += '~';
         } else {
           selectedOptionTexts[optionPartNumber] = '';
         }
         selectedOptionTexts[optionPartNumber] += isMainOptionPart ? selectedOptionText : `(${selectedOptionText})`;
-        return `<span class="option-part ${isMainOptionPart ? 'main' : 'sub'}" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
+        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
       } else {
         return selectedOptionText;
       }

@@ -474,12 +474,12 @@ const resetCard = async () => {
       hintBalloonPanelElement.style.left = `${optionPartRect.left}px`;
     };
     const _updateHintBalloonPositions = () => {
-      const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part.main');
+      const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
       for (const optionPartElement of targetOptionPartElements) {
         _setHintBalloonPosition(optionPartElement);
       }
     };
-    const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part.main');
+    const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
     for (const optionPartElement of targetOptionPartElements) {
       const optionPartNumber = Number(optionPartElement.getAttribute('data-option-part-number'));
       const hintText = hintTextList[optionPartNumber];

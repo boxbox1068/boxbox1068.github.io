@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>語学ドリルメーカー用データフォーム</title>
+<title>Data Form for Language Drill Maker</title>
 <style>
   :root {
     --header-height: 2.25rem;
@@ -141,14 +141,16 @@
 </h2>
 <div>
   <div>
-    <label for="import-source">
-      <span lang="en">Import source</span><span lang="ja">取り込み元</span>
+    <label for="importing-data-type">
+      <span lang="en">Importing data type</span><span lang="ja">取り込みデータ種別</span>
     </label>
-    <select id="import-source">
-      <option value="none">なし</option>
+    <select id="importing-data-type">
+      <option lang="en" value="none">None</option>
+      <option lang="ja" value="none">なし</option>
       <option value="url">URL</option>
       <option value="jsonp">JSONP</option>
-      <option value="sample-data">サンプルデータ</option>
+      <option lang="en" value="sample-data">Sample data</option>
+      <option lang="ja" value="sample-data">サンプルデータ</option>
     </select>
   </div>
   <div id="import-url-block">
@@ -254,8 +256,10 @@
 </h2>
 <div>
   <div>
-    <label for="export-type">出力タイプ</label>
-    <select id="export-type">
+    <label for="exporting-data-type">
+      <span lang="en">Exporting data type</span><span lang="ja">書き出しデータ種別</span>
+    </label>
+    <select id="exporting-data-type">
       <option value="url">URL</option>
       <option value="jsonp">JSONP</option>
     </select>
@@ -266,15 +270,19 @@
       <textarea id="url-output" rows="4" readonly></textarea>
     </div>
     <div>
-      <label for="url-length-output">文字数</label>
+      <label for="url-length-output">
+        <span lang="en">URL length</span><span lang="ja">文字数</span>
+      </label>
       <input id="url-length-output" readonly>
     </div>
     <div>
-      <button id="copy-url-button">クリップボードにコピー</button>
+      <button id="copy-url-button">
+        <span lang="en">Copy to clipboard</span><span lang="ja">クリップボードにコピー</span>
+      </button>
     </div>
     <div class="note">
       <ul>
-        <li>URLにドリルのデータを含めてアプリに受け渡す方式です。</li>
+        <li>アプリのURLにドリルのデータを含めてアプリに受け渡す方式です。</li>
         <li>URLの文字数が多くなると、ブラウザやサーバなどの環境によって利用できないことがあります。問題が起きた場合はJSONPをお試しください。</li>
       </ul>
     </div>
@@ -341,13 +349,13 @@
   qs('#alang-input').placeholder = sampleData.alang;
   qs('#atemp-input').placeholder = sampleData.atemp;
   qs('#ltext-input').placeholder = sampleData.ltext;
-  qs('#import-source').addEventListener('change', () => {
-    const importDataType = qs('#import-source').value;
+  qs('#importing-data-type').addEventListener('change', () => {
+    const importDataType = qs('#importing-data-type').value;
     qs('#import-url-block').style.display = importDataType == 'url' ? 'block' : 'none';
     qs('#import-jsonp-block').style.display = importDataType == 'jsonp' ? 'block' : 'none';
     qs('#import-sample-data-block').style.display = importDataType == 'sample-data' ? 'block' : 'none';
   });
-  qs('#import-source').dispatchEvent(new Event('change', {bubbles: true}));
+  qs('#importing-data-type').dispatchEvent(new Event('change', {bubbles: true}));
   const importData = (qlang, qtemp, alang, atemp, ltext) => {
     qs('#qlang-input').value = qlang;
     qs('#qtemp-input').value = qtemp;
@@ -454,12 +462,12 @@ jsonpCallback({
   };
 
 
-  qs('#export-type').addEventListener('change', () => {
-    const exportDataType = qs('#export-type').value;
+  qs('#exporting-data-type').addEventListener('change', () => {
+    const exportDataType = qs('#exporting-data-type').value;
     qs('#export-url-block').style.display = exportDataType == 'url' ? 'block' : 'none';
     qs('#export-jsonp-block').style.display = exportDataType == 'jsonp' ? 'block' : 'none';
   });
-  qs('#export-type').dispatchEvent(new Event('change', {bubbles: true}));
+  qs('#exporting-data-type').dispatchEvent(new Event('change', {bubbles: true}));
 
   window.addEventListener('beforeunload', event => {
     const qlang = qs('#qlang-input').value.trim();
@@ -476,7 +484,7 @@ jsonpCallback({
 
   /*
   const exportDataTypeOnChange = () => {
-    const exportDataType = qs('#export-type');
+    const exportDataType = qs('#exporting-data-type');
     const exportUrlInputWrapper = qs('#url-output-block');
     const exportJsonpInputWrapper = qs('#jsonp-output-block');
     const copyButtonWrapper = qs('#copy-button-block');
@@ -493,7 +501,7 @@ jsonpCallback({
         break;
     }
   };
-  qs('#export-type').addEventListener('change', exportDataTypeOnChange);
+  qs('#exporting-data-type').addEventListener('change', exportDataTypeOnChange);
   exportDataTypeOnChange();
   qsa('#qlang-input, #qtemp-input, #alang-input, #atemp-input, #ltext-input').forEach(element => {
     element.addEventListener('input', exportData);
