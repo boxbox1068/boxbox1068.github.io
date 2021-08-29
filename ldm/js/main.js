@@ -4,6 +4,7 @@ const settingDefaultValues = {
   "enable-swipe-to-right": "true", // true|false => JS
   "enable-automatic-drill-starting": "false", // true|false => JS
   "enable-option-part-highlight": "true", // true|false => CSS
+  "enable-option-part-emphasis": "false", // true|false => CSS
   "enable-hint-balloon": "true", // true|false => CSS
   "animation-duration": "medium", // none|short|medium|long => CSS
   "voice-volume": "medium", // extra-small|small|medium => JS
@@ -24,21 +25,22 @@ const settingControlChars = {
   "enable-swipe-to-right": "a",
   "enable-automatic-drill-starting": "b",
   "enable-option-part-highlight": "c",
-  "enable-hint-balloon": "d",
-  "animation-duration": "e",
-  "voice-volume": "f",
-  "question-voice-rate": "g",
-  "question-voice-pitch": "h",
-  "question-voice-number": "i",
-  "answer-voice-rate": "j",
-  "answer-voice-pitch": "k",
-  "answer-voice-number": "l",
-  "font-size": "m",
-  "font-family": "n",
-  "line-height": "o",
-  "color-scheme": "p",
-  "accent-color": "q",
-  "background-pattern": "r"
+  "enable-option-part-emphasis": "d",
+  "enable-hint-balloon": "e",
+  "animation-duration": "f",
+  "voice-volume": "g",
+  "question-voice-rate": "h",
+  "question-voice-pitch": "i",
+  "question-voice-number": "j",
+  "answer-voice-rate": "k",
+  "answer-voice-pitch": "l",
+  "answer-voice-number": "m",
+  "font-size": "n",
+  "font-family": "o",
+  "line-height": "p",
+  "color-scheme": "q",
+  "accent-color": "r",
+  "background-pattern": "s"
 };
 let appLang;
 let stringResources;
@@ -401,9 +403,9 @@ const main = async () => {
 const switchActiveOptionPartElement = reverse => {
   let optionPartElements;
   if (getFlag('uncover-answer')) {
-    optionPartElements = qsa('.option-part');
+    optionPartElements = qsa('.option-part.main');
   } else {
-    optionPartElements = qsa('#question-panel .option-part');
+    optionPartElements = qsa('#question-panel .option-part.main');
   }
   let currentIndex = reverse ? optionPartElements.length : -1;
   optionPartElements.forEach((element, index) => {
@@ -474,12 +476,12 @@ const resetCard = async () => {
       hintBalloonPanelElement.style.left = `${optionPartRect.left}px`;
     };
     const _updateHintBalloonPositions = () => {
-      const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
+      const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part.main');
       for (const optionPartElement of targetOptionPartElements) {
         _setHintBalloonPosition(optionPartElement);
       }
     };
-    const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part');
+    const targetOptionPartElements = parentPanelElement.querySelectorAll('.option-part.main');
     for (const optionPartElement of targetOptionPartElements) {
       const optionPartNumber = Number(optionPartElement.getAttribute('data-option-part-number'));
       const hintText = hintTextList[optionPartNumber];

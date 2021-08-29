@@ -1,8 +1,8 @@
 jsonpCallback({
   "ltext": "**語学ドリルメーカー**のデモへようこそ！",
-  "qtemp": "[1:私,君,あなた,彼,彼女,我々,君たち,あなたたち,彼ら]は[2:1週間前に,数日前に,昨日,今日,今朝,先ほど]、[3:自宅で,庭で,公園で,動物園で,牧場で,草むらで,山で,ジャングルで,川岸で,浜辺で][4:イヌ,ネコ,ライオン,トラ,クマ,ワニ,サル]に[5:襲わ,飛びかから,噛ま,ひっかか,つつか,蹴ら,追いかけら,吠えら,舐めら,おしっこをかけら]れた。",
+  "qtemp": "[1:私,君,あなた,彼,彼女,我々,君たち,あなたたち,彼ら]は[2:1週間前に,数日前に,昨日,今日,今朝,先ほど]、[3:自宅で,庭で,公園で,動物園で,牧場で,草むらで,山で,ジャングルで,川岸で,浜辺で][4:イヌ,ネコ,ライオン,トラ,クマ,ワニ,サル]に[5:襲われ,飛びかかられ,噛まれ,ひっかかれ,つつかれ,蹴られ,追いかけられ,吠えられ,舐められ,おしっこをかけられ]た。",
   "qlang": "ja-JP",
-  "atemp": "[1:Ich,Du,Sie,Er,Sie,Wir,Ihr,Sie,Sie] [1:bin,bist,sind,ist,-,sind,seid,sind,-] [2:vor einer Woche,vor ein paar Tagen,gestern,heute,heute morgen,vorhin] [3:zu Hause,im Garten,im Park,im Zoo,in der Weide,im Gras,im Berg,im Dschungel,am Flußufer,am Strand] von [4:einem Hund,einer Katze,einem Löwen,einem Tiger,einem Bären,einem Krokodil,einem Affen] [5:überfallen,gesprungen,gebissen,gekratzt,angestoßen,getreten,gejagt,gebellt,geleckt,angepinkelt] worden.",
+  "atemp": "[1:Ich,Du,Sie,Er,Sie,Wir,Ihr,Sie,Sie] [-1:bin,bist,sind,ist,-,sind,seid,sind,-] [2:vor einer Woche,vor ein paar Tagen,gestern,heute,heute morgen,vorhin] [3:zu Hause,im Garten,im Park,im Zoo,in der Weide,im Gras,im Berg,im Dschungel,am Flußufer,am Strand] von [4:einem Hund,einer Katze,einem Löwen,einem Tiger,einem Bären,einem Krokodil,einem Affen] [5:überfallen,gesprungen,gebissen,gekratzt,angestoßen,getreten,gejagt,gebellt,geleckt,angepinkelt] worden.",
   "alang": "de-DE",
 });
 

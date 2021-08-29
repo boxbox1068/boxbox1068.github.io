@@ -1,7 +1,7 @@
 /*------------*
  *  SETTINGS  *
  *------------*/
-/*  ENABLE VARIABLE HIGHLIGHT  */
+/*  ENABLE OPTION PART HIGHLIGHT  */
 :root,
 :root[data-enable-option-part-highlight="true"] {
   --option-part-main-border-bottom-style: solid;
@@ -10,6 +10,14 @@
 :root[data-enable-option-part-highlight="false"] {
   --option-part-main-border-bottom-style: none;
   --option-part-sub-border-bottom-style: none;
+}
+/*  ENABLE OPTION PART EMPHASIS  */
+:root,
+:root[data-enable-option-part-emphasis="true"] {
+  --option-part-font-weight: bold;
+}
+:root[data-enable-option-part-emphasis="false"] {
+  --option-part-font-weight: normal;
 }
 /*  ENABLE HINT BALLOON  */
 :root,
@@ -268,7 +276,7 @@
   --common-transition-duration: .5s;
   --lead-cell-height: 2.25rem;
   --hint-balloon-height: 1.5em;
-  --hint-balloon-border-width: .1em;
+  --hint-balloon-chip-border-width: .1em;
   --control-button-height: 2rem;
   --footer-cell-height: 2.25rem;
   --sans-serif-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', YuGothic, 'Yu Gothic Medium', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
@@ -500,16 +508,21 @@ body > * {
 /*  OPTION PART & HINT BALLOON  */
 .option-part {
   margin: 0 2px;
-  border-bottom-width: var(--hint-balloon-border-width);
+  border-bottom-width: var(--hint-balloon-chip-border-width);
+  border-bottom-color: var(--hint-balloon-chip-border-color);
 }
-.option-part {
+.option-part.main {
   --hint-balloon-visibility: hidden;
   --hint-balloon-opacity: 0;
-  border-bottom: var(--hint-balloon-border-width) var(--option-part-main-border-bottom-style) var(--hint-balloon-chip-border-color);
-  font-weight: bold;
+  border-bottom-style: var(--option-part-main-border-bottom-style);
+  font-weight: var(--option-part-font-weight);
 }
-:root.fold-lead:not(.show-settings) .option-part.active,
-:root.fold-lead:not(.show-settings):not(.has-active-element) .option-part:hover {
+.option-part.sub {
+  border-bottom-style: var(--option-part-sub-border-bottom-style);
+  font-weight: normal;
+}
+:root.fold-lead:not(.show-settings) .option-part.main.active,
+:root.fold-lead:not(.show-settings):not(.has-active-element) .option-part.main:hover {
   --hint-balloon-visibility: visible;
   --hint-balloon-opacity: 1;
   border-bottom-style: dashed;
@@ -551,26 +564,26 @@ body > * {
   position: fixed;
   z-index: 1;
   height: var(--hint-balloon-height);
-  margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-border-width));
+  margin-top: calc(var(--hint-balloon-height) * -1 - var(--hint-balloon-chip-border-width));
   overflow: visible;
-  font-weight: bold;
+  font-weight: normal;
 }
 .hint-balloon-chip::before {
   display: block;
   position: absolute;
   top: calc(100% - 1px);
-  left: calc(var(--hint-balloon-border-width) * 2);
-  border: calc(var(--hint-balloon-border-width) * 2) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 4) solid var(--hint-balloon-chip-border-color);
+  left: calc(var(--hint-balloon-chip-border-width) * 2);
+  border: calc(var(--hint-balloon-chip-border-width) * 2) solid transparent;
+  border-top: calc(var(--hint-balloon-chip-border-width) * 4) solid var(--hint-balloon-chip-border-color);
   content: "";
 }
 .hint-balloon-chip::after {
   display: block;
   position: absolute;
-  top: calc(100% - var(--hint-balloon-border-width) - 1px);
-  left: calc(var(--hint-balloon-border-width) * 2.5);
-  border: calc(var(--hint-balloon-border-width) * 1.5) solid transparent;
-  border-top: calc(var(--hint-balloon-border-width) * 3) solid var(--hint-balloon-chip-background-color);
+  top: calc(100% - var(--hint-balloon-chip-border-width) - 1px);
+  left: calc(var(--hint-balloon-chip-border-width) * 2.5);
+  border: calc(var(--hint-balloon-chip-border-width) * 1.5) solid transparent;
+  border-top: calc(var(--hint-balloon-chip-border-width) * 3) solid var(--hint-balloon-chip-background-color);
   content: "";
 }
 .hint-balloon-body {
@@ -578,7 +591,7 @@ body > * {
   align-items: center;
   height: 100%;
   padding: .25rem .5rem .5rem .5rem;
-  border: var(--hint-balloon-border-width) solid var(--hint-balloon-chip-border-color);
+  border: var(--hint-balloon-chip-border-width) solid var(--hint-balloon-chip-border-color);
   background-color: var(--hint-balloon-chip-background-color);
   white-space: nowrap;
 }

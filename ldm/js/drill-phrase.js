@@ -14,9 +14,10 @@ class DrillPhrase {
     const _replaceOptionTags = (template, replacer) => {
       while (true) {
         const lastTemplate = template;
-        template = template.replace(/\[(?:(\d):)?([^\[]*?)\]/, (match, p1, p2, offset, string) => {
-          const optionPartNumber = Math.max(0, Math.min(9, parseInt(p1) || 0));
-          const options  = p2.split(',').map(element => {
+        template = template.replace(/\[(?:(-?)(\d):)?([^\[]*?)\]/, (match, p1, p2, p3, offset, string) => {
+          const isMainOptionPart = ! p1;
+          const optionPartNumber = Math.max(0, Math.min(9, parseInt(p2) || 0));
+          const options  = p3.split(',').map(element => {
             return element.trim();
           });
           for (let i = 1; i < options.length; i++) {
@@ -25,8 +26,8 @@ class DrillPhrase {
             }
           }
           const firstOptionPartOffset = string.match(/^[^\[]*/)[0].length;
-          const isMainOptionPart = firstOptionPartOffset == offset;
-          return replacer(optionPartNumber, options, isMainOptionPart) || '';
+          const isTopLevelOptionPart = firstOptionPartOffset == offset;
+          return replacer(optionPartNumber, options, isTopLevelOptionPart, isMainOptionPart) || '';
         });
         if (template == lastTemplate) {
           break;
@@ -62,7 +63,7 @@ class DrillPhrase {
       }
     }
     const selectedOptionTexts = [];
-    const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isMainOptionPart) => {
+    const phraseHtml = _replaceOptionTags(this._template, (optionPartNumber, optionTexts, isTopLevelOptionPart, isMainOptionPart) => {
       if (optionPartNumber == 0) {
         const selectedOptionId = Math.floor(optionTexts.length * Math.random());
         return optionTexts[selectedOptionId];
@@ -72,14 +73,14 @@ class DrillPhrase {
       if (! selectedOptionText) {
         return '';
       }
-      if (isMainOptionPart) {
+      if (isTopLevelOptionPart) {
         if (selectedOptionTexts[optionPartNumber]) {
-          selectedOptionTexts[optionPartNumber] += '~';
+          selectedOptionTexts[optionPartNumber] += ' ~ ';
         } else {
           selectedOptionTexts[optionPartNumber] = '';
         }
         selectedOptionTexts[optionPartNumber] += isMainOptionPart ? selectedOptionText : `(${selectedOptionText})`;
-        return `<span class="option-part" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
+        return `<span class="option-part ${isMainOptionPart ? 'main' : 'sub'}" data-option-part-number="${optionPartNumber}">${selectedOptionText}</span>`;
       } else {
         return selectedOptionText;
       }
