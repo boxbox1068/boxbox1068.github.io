@@ -649,20 +649,20 @@ body > * {
   font-size: 1rem;
   transition: top calc(var(--common-transition-duration) / 2);
 }
-#enable-automatic-question-speaking-button::before,
-#enable-automatic-question-speaking-button::after {
+#enable-automatic-question-reading-aloud-button::before,
+#enable-automatic-question-reading-aloud-button::after {
   content: "Q";
 }
-#enable-automatic-answer-speaking-button::before,
-#enable-automatic-answer-speaking-button::after {
+#enable-automatic-answer-reading-aloud-button::before,
+#enable-automatic-answer-reading-aloud-button::after {
   content: "A";
 }
-:root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::before,
-:root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::before {
+:root[data-enable-automatic-question-reading-aloud="true"] #enable-automatic-question-reading-aloud-button::before,
+:root[data-enable-automatic-answer-reading-aloud="true"] #enable-automatic-answer-reading-aloud-button::before {
   top: calc(var(--toggle-button-height) - 100%);
 }
-:root[data-enable-automatic-question-speaking="true"] #enable-automatic-question-speaking-button::after,
-:root[data-enable-automatic-answer-speaking="true"] #enable-automatic-answer-speaking-button::after {
+:root[data-enable-automatic-question-reading-aloud="true"] #enable-automatic-question-reading-aloud-button::after,
+:root[data-enable-automatic-answer-reading-aloud="true"] #enable-automatic-answer-reading-aloud-button::after {
   top: var(--toggle-button-height);
 }
 .control-button {

@@ -74,32 +74,32 @@ const main = async () => {
   for (const key in settingDefaultValues) {
     loadSetting(key, settingDefaultValues[key]);
   }
-  setSetting('enable-automatic-question-speaking', 'false');
-  setSetting('enable-automatic-answer-speaking', 'false');
+  setSetting('enable-automatic-question-reading-aloud', 'false');
+  setSetting('enable-automatic-answer-reading-aloud', 'false');
   qs('#fold-lead-button').addEventListener('click', () => {
     toggleFlag('fold-lead');
   });
-  qs('#enable-automatic-question-speaking-button').addEventListener('click', () => {
-    toggleSetting('enable-automatic-question-speaking');
-    if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-      speakNotice(stringResources['--each-question-will-be-automatically-spoken']);
+  qs('#enable-automatic-question-reading-aloud-button').addEventListener('click', () => {
+    toggleSetting('enable-automatic-question-reading-aloud');
+    if (getSetting('enable-automatic-question-reading-aloud', 'boolean')) {
+      readNotice(stringResources['--each-question-will-be-automatically-read-aloud']);
     } else {
-      speak(null);
+      read(null);
     }
   });
-  qs('#enable-automatic-answer-speaking-button').addEventListener('click', () => {
-    toggleSetting('enable-automatic-answer-speaking');
-    if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-      speakNotice(stringResources['--each-answer-will-be-automatically-spoken']);
+  qs('#enable-automatic-answer-reading-aloud-button').addEventListener('click', () => {
+    toggleSetting('enable-automatic-answer-reading-aloud');
+    if (getSetting('enable-automatic-answer-reading-aloud', 'boolean')) {
+      readNotice(stringResources['--each-answer-will-be-automatically-read-aloud']);
     } else {
-      speak(null);
+      read(null);
     }
   });
-  qs('#speak-button').addEventListener('click', () => {
+  qs('#read-aloud-button').addEventListener('click', () => {
     if (getFlag('uncover-answer')) {
-      speakAnswer();
+      readAnswer();
     } else {
-      speakQuestion();
+      readQuestion();
     }
   });
   qs('#play-button').addEventListener('click', () => {
@@ -213,22 +213,22 @@ const main = async () => {
     if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
-    toggleSetting('enable-automatic-question-speaking');
+    toggleSetting('enable-automatic-question-reading-aloud');
   });
   addKeyDownListener('a', () => {
     if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
-      toggleSetting('enable-automatic-answer-speaking');
+      toggleSetting('enable-automatic-answer-reading-aloud');
   });
   addKeyDownListener('Enter', () => {
     if (! getFlag('fold-lead') || getFlag('show-settings') || getFlag('show-help')) {
       return;
     }
     if (getFlag('uncover-answer')) {
-      speakAnswer();
+      readAnswer();
     } else {
-      speakQuestion();
+      readQuestion();
     }
   });
   addKeyDownListener(' ', () => {
@@ -298,9 +298,9 @@ const main = async () => {
       return;
     }
     if (getFlag('uncover-answer')) {
-      speakAnswer();
+      readAnswer();
     } else {
-      speakQuestion();
+      readQuestion();
     }
   });
   qs('body').addEventListener('touchstart', event => {
@@ -438,11 +438,11 @@ const switchSettingRadio = (targetSettingKey, reverse) => {
   const nextIndex = (settingRadioElements.length + currentIndex + (reverse ? -1 : 1)) % settingRadioElements.length;
   settingRadioElements.item(nextIndex).click();
 }
-const speakNotice = notice => {
-  speak(notice, appLang, getSetting('voice-volume'), 'fast', 'medium', 1);
+const readNotice = notice => {
+  read(notice, appLang, getSetting('voice-volume'), 'fast', 'medium', 1);
 };
-const speakQuestion = () => {
-  speak(
+const readQuestion = () => {
+  read(
     questionPhrase.text,
     questionPhrase.lang,
     getSetting('voice-volume'),
@@ -451,8 +451,8 @@ const speakQuestion = () => {
     getSetting('question-voice-number', 'integer'),
   );
 };
-const speakAnswer = () => {
-  speak(
+const readAnswer = () => {
+  read(
     answerPhrase.text,
     answerPhrase.lang,
     getSetting('voice-volume'),
@@ -498,7 +498,7 @@ const resetCard = async () => {
     parentPanelElement.addEventListener('scroll', _updateHintBalloonPositions);
     window.addEventListener('resize', _updateHintBalloonPositions);
   }
-  speak(null);
+  read(null);
   setFlag('uncover-question', false);
   setFlag('uncover-answer', false);
   const transitionDuration = window.getComputedStyle(qs('#question-cover')).transitionDuration;
@@ -533,8 +533,8 @@ const resetCard = async () => {
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  if (getSetting('enable-automatic-question-speaking', 'boolean')) {
-    speakQuestion();
+  if (getSetting('enable-automatic-question-reading-aloud', 'boolean')) {
+    readQuestion();
   }
   setFlag('disable-control', false);
 };
@@ -543,15 +543,15 @@ const uncoverAnswer = async () => {
     return;
   }
   setFlag('disable-control', true);
-  speak(null);
+  read(null);
   setFlag('uncover-answer', true);
   const transitionDuration = window.getComputedStyle(qs('#answer-cover')).transitionDuration;
   const commonTimeoutDelay = Number.parseFloat(transitionDuration) * (/ms$/.test(transitionDuration) ? 1 : 1000);
   if (commonTimeoutDelay) {
     await setTimeout(commonTimeoutDelay);
   }
-  if (getSetting('enable-automatic-answer-speaking', 'boolean')) {
-    speakAnswer();
+  if (getSetting('enable-automatic-answer-reading-aloud', 'boolean')) {
+    readAnswer();
   }
   setFlag('disable-control', false);
 };
