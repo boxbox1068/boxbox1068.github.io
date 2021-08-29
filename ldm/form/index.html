@@ -244,9 +244,13 @@
   <div class="note">
     <ul>
       <li>
-        <span lang="en">The template structures (the number of option parts and the number of elements of each option part) of both question and answer do need to match with each other.</span><span lang="ja">問題と答えの両テンプレートの構造（可変部の数、可変部内の要素数）は必ず一致させる必要があります。</span></li>
-      <li>
         <span lang="en">By specifying the languages of question and answer, reading them aloud by using TTS engine is more likely to be successful.</span><span lang="ja">問題や答えの言語を指定した方が、合成音声による読み上げが成功する可能性が高まります。</span>
+      </li>
+      <li>
+        <span lang="en">An option part is to be expressed like "<i>[1:foo,bar,baz]</i>". The number in the beginning must be a positive integer less than 10. Option parts that have the same number will be synchronized each other to take the corresponding value each time. An option part can have other ones in it.</span><span lang="ja">可変部は“[1:hoge,fuga,piyo]”のように記述します。冒頭の番号は9以下の正の整数でなければなりません。同じ番号を持つ可変部同士は、毎回、対応する値を取るように同期します。可変部内に別の可変部を含めることができます。</span>
+      </li>
+      <li>
+        <span lang="en">The template structures (the number of option parts and the number of elements of each option part) of both question and answer do need to match with each other.</span><span lang="ja">問題と答えの両テンプレートの構造（可変部の数、可変部内の要素数）は必ず一致させる必要があります。</span>
       </li>
     </ul>
   </div>
@@ -283,7 +287,7 @@
     <div class="note">
       <ul>
         <li>ドリルの全データをURLに含めてアプリに引き渡す方式です。</li>
-        <li>URLが長くなる（一般的な上限の目安は約2000字）と、ブラウザやサーバなどの環境によって利用できないことがあります。問題が起きた場合はJSONPをお試しください。</li>
+        <li>URLが長くなると、ブラウザやサーバなどの環境によって利用できないことがあります（一般的な上限の目安は約2000字）。問題が起きた場合はJSONPをお試しください。</li>
       </ul>
     </div>
   </div>
