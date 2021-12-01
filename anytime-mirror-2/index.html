@@ -135,24 +135,23 @@
       const o = new Menu();
       o.addItem('&#x24d8;', () => aboutTheAppDialog.show());
       o.addItem('?', () => helpDialog.show());
-      o.addItem('&#2193;', e => {
-        camera.snapshot().then(blob => {
-          const d = new Date();
-          const time = (
-            d.getFullYear().toString() + (d.getMonth() + 1).toString().padStart(2, '0') +
-            d.getDate().toString().padStart(2, '0') + d.getHours().toString().padStart(2, '0') +
-            d.getMinutes().toString().padStart(2, '0') + d.getSeconds().toString().padStart(2, '0')
-          );
-          const a = document.createElement('a');
-          a.href = URL.createObjectURL(blob);
-          a.download = `am-snapshot_${time}.jpg`;
-          a.dispatchEvent(e);
-        });
-      });
-o.addItem(`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M140 480L0 640L0 319.99L0 0L140 159.98L280 319.99L140 480Z" id="a1WnWOqn3H"></path><path d="M420 480L280 640L280 319.99L280 0L420 159.98L560 319.99L420 480Z" id="a1hFKY8Zg2"></path><path d="M560 0L640 0L640 640L560 640L560 0Z" id="aH4LC3Ry"></path></defs><g><g><g><use xlink:href="#a1WnWOqn3H" opacity="1" fill="#000000" fill-opacity="1"></use></g><g><use xlink:href="#a1hFKY8Zg2" opacity="1" fill="#000000" fill-opacity="1"></use></g><g><use xlink:href="#aH4LC3Ry" opacity="1" fill="#000000" fill-opacity="1"></use></g></g></g></svg >`, () => alert(1));
-
-
-
+      o.addItem(
+        '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M0 640L640 640L640 540L0 540L0 640Z" id="c8wLdTkqs"></path><clipPath id="clipb3cVksCLK6"><use xlink:href="#c8wLdTkqs" opacity="1"></use></clipPath><path d="M240 340L120 340L320 500L520 340L400 340L400 0L240 0L240 340Z" id="c6XmzS432"></path><clipPath id="clipb8dP03byuj"><use xlink:href="#c6XmzS432" opacity="1"></use></clipPath></defs><g><g><use xlink:href="#c8wLdTkqs" opacity="1" fill="#ffffff" fill-opacity="1"></use><g clip-path="url(#clipb3cVksCLK6)"><use xlink:href="#c8wLdTkqs" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="40" stroke-opacity="1"></use></g></g><g><use xlink:href="#c6XmzS432" opacity="1" fill="#ffffff" fill-opacity="1"></use><g clip-path="url(#clipb8dP03byuj)"><use xlink:href="#c6XmzS432" opacity="1" fill-opacity="0" stroke="#000000" stroke-width="40" stroke-opacity="1"></use></g></g></g></svg >',
+        e => {
+          camera.snapshot().then(blob => {
+            const d = new Date();
+            const time = (
+              d.getFullYear().toString() + (d.getMonth() + 1).toString().padStart(2, '0') +
+              d.getDate().toString().padStart(2, '0') + d.getHours().toString().padStart(2, '0') +
+              d.getMinutes().toString().padStart(2, '0') + d.getSeconds().toString().padStart(2, '0')
+            );
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `am-snapshot_${time}.jpg`;
+            a.dispatchEvent(e);
+          });
+        }
+      );
       if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
         o.addItem('&#x21bb;', () => {
           if (! navigator.onLine) return;
@@ -904,6 +903,7 @@ o.addItem(`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="ht
           box-sizing: border-box;
           color: ${color};
           font-size: 1.5rem;
+          line-height: 100%;
           pointer-events: none;
         `;
         return o;
@@ -1192,6 +1192,10 @@ o.addItem(`<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="ht
 <style>
   body {
     overflow-wrap: break-word;
+  }
+  svg {
+    height: 1em;
+    width: 1em;
   }
 </style>
 <div>
