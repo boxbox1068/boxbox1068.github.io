@@ -1162,7 +1162,7 @@ window.setInterval(() => {
   window.setTimeout(() => {
     o.setAttribute('playsinline', null);
   }, 200);
-
+//hoge
 }, 500);
 
 
@@ -1198,13 +1198,11 @@ window.setInterval(() => {
       const canvas = document.createElement('canvas');
       canvas.width = this._video.videoWidth;
       canvas.height = this._video.videoHeight;
-alert(this._video);
-alert(this._video.srcObject);
       canvas.getContext('2d').drawImage(this._video, 0, 0);
-alert(canvas);
-alert(canvas.getContext('2d'));
-    return new Promise(resolve => {
+this.stop();
+      return new Promise(resolve => {
         canvas.toBlob(resolve, 'image/jpeg', 1);
+this.restart();
       });
     }
   }
