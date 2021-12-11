@@ -1158,7 +1158,10 @@ window.setInterval(() => {
   if (! this._video.srcObject) {
     alert(2);
   }
-  o.setAttribute('playsinline', null);
+  o.removeAttribute('playsinline');
+  window.setTimeout(() => {
+    o.setAttribute('playsinline', null);
+  }, 200);
 
 }, 500);
 
@@ -1197,10 +1200,9 @@ window.setInterval(() => {
       canvas.height = this._video.videoHeight;
 alert(this._video);
 alert(this._video.srcObject);
-let hoge =      canvas.getContext('2d').drawImage(this._video, 0, 0);
+      canvas.getContext('2d').drawImage(this._video, 0, 0);
 alert(canvas);
 alert(canvas.getContext('2d'));
-alert(hoge);
     return new Promise(resolve => {
         canvas.toBlob(resolve, 'image/jpeg', 1);
       });
