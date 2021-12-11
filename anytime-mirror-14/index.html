@@ -11,14 +11,6 @@
   'use strict';
   window.addEventListener('DOMContentLoaded', e => main());
   const main = () => {
-
-
-
-
-window.addEventListener('pageshow', e => {
-  alert('hoge');
-});
-
     const queryParser = new QueryParser();
     const lang = (() => {
       let v = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
@@ -74,7 +66,9 @@ window.addEventListener('pageshow', e => {
         return o;
       })();
       o.onShow = () => {
-        camera.pause();
+//        camera.pause();
+camera.stop();
+alert(1);
         notifier.notify(`
           <span class="en pc">Double-Click or press Esc to reshow...</span>
           <span class="en sd">Double-Tap to reshow...</span>
@@ -84,7 +78,8 @@ window.addEventListener('pageshow', e => {
       };
       o.onHide = () => {
         magnifier.update();
-        camera.unpause();
+//        camera.unpause();
+camera.restart();
         notifier.notify('');
       };
       return o;
@@ -1158,10 +1153,6 @@ window.addEventListener('pageshow', e => {
         this._video.addEventListener('loadedmetadata', e => callback(this._video));
         this._video.srcObject = stream;
         this._isStarted = true;
-
-
-
-
       }).catch(error => {
         errorCallback();
       });
@@ -1196,7 +1187,6 @@ window.addEventListener('pageshow', e => {
       canvas.getContext('2d').drawImage(this._video, 0, 0);
       return new Promise(resolve => {
         canvas.toBlob(resolve, 'image/jpeg', 1);
-alert(1);
       });
     }
   }
