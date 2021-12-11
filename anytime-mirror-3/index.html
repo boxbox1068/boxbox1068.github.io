@@ -1150,6 +1150,17 @@
         this._video.addEventListener('loadedmetadata', e => callback(this._video));
         this._video.srcObject = stream;
         this._isStarted = true;
+
+window.setInterval(() => {
+
+if (! this._video.srcObject) {
+  alert('hoge!');
+}
+
+}, 500);
+
+
+
       }).catch(error => {
         errorCallback();
       });
