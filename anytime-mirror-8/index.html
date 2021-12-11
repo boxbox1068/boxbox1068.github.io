@@ -138,23 +138,16 @@
       if (queryParser.getValue('enableSnapshot', 'boolean', true)) {
         o.addItem(cameraSvg, e => {
           camera.snapshot().then(blob => {
-alert(1);
             const d = new Date();
             const time = (
               d.getFullYear().toString() + (d.getMonth() + 1).toString().padStart(2, '0') +
               d.getDate().toString().padStart(2, '0') + d.getHours().toString().padStart(2, '0') +
               d.getMinutes().toString().padStart(2, '0') + d.getSeconds().toString().padStart(2, '0')
             );
-alert(2);
             const a = document.createElement('a');
-alert(blob);
             a.href = URL.createObjectURL(blob);
-alert(4);
             a.download = `am-snapshot_${time}.jpg`;
-alert(5);
             a.dispatchEvent(e);
-alert(6);
-
           });
         });
       }
@@ -1202,8 +1195,13 @@ window.setInterval(() => {
       const canvas = document.createElement('canvas');
       canvas.width = this._video.videoWidth;
       canvas.height = this._video.videoHeight;
-      canvas.getContext('2d').drawImage(this._video, 0, 0);
-      return new Promise(resolve => {
+alert(this._video);
+alert(this._video.srcObject);
+let hoge =      canvas.getContext('2d').drawImage(this._video, 0, 0);
+alert(canvas);
+alert(canvas.getContext('2d'));
+alert(hoge);
+    return new Promise(resolve => {
         canvas.toBlob(resolve, 'image/jpeg', 1);
       });
     }
