@@ -1192,12 +1192,18 @@ window.setInterval(() => {
     }
     snapshot() {
       if (! this._isStarted) return false;
+alert(1);
       const canvas = document.createElement('canvas');
+alert(2);
       canvas.width = this._video.videoWidth;
       canvas.height = this._video.videoHeight;
+alert(3);
       canvas.getContext('2d').drawImage(this._video, 0, 0);
+alert(4);
       return new Promise(resolve => {
+alert(5);
         canvas.toBlob(resolve, 'image/jpeg', 1);
+alert(6);
       });
     }
   }
