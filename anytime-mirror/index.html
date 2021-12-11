@@ -1137,6 +1137,7 @@
       this._video = video;
     }
     start(callback, errorCallback) {
+      if (this._isStarted) return false;
       if (typeof callback != 'function') return false;
       errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
       if (! navigator.mediaDevices) {

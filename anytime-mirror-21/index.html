@@ -66,9 +66,7 @@
         return o;
       })();
       o.onShow = () => {
-//        camera.pause();
-camera.stop();
-alert(1);
+        camera.pause();
         notifier.notify(`
           <span class="en pc">Double-Click or press Esc to reshow...</span>
           <span class="en sd">Double-Tap to reshow...</span>
@@ -78,8 +76,7 @@ alert(1);
       };
       o.onHide = () => {
         magnifier.update();
-//        camera.unpause();
-camera.restart();
+        camera.unpause();
         notifier.notify('');
       };
       return o;
@@ -230,6 +227,11 @@ camera.restart();
         <span class="en">Error: Cannot use camera.</span>
         <span class="ja">エラー：カメラを使用できません。</span>
       `);
+    });
+    window.addEventListener('pagehide' e => {
+      window.addEventListener('pageshow', e => {
+        alert('hogefugafoo');
+      });
     });
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js');
@@ -1140,6 +1142,7 @@ camera.restart();
       this._video = video;
     }
     start(callback, errorCallback) {
+      if (this._isStarted) return false;
       if (typeof callback != 'function') return false;
       errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
       if (! navigator.mediaDevices) {
