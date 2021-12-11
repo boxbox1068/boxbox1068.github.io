@@ -11,6 +11,14 @@
   'use strict';
   window.addEventListener('DOMContentLoaded', e => main());
   const main = () => {
+
+
+
+
+window.addEventListener('pageshow', e => {
+  alert('hoge');
+});
+
     const queryParser = new QueryParser();
     const lang = (() => {
       let v = queryParser.getValue('lang', 'string', navigator.language).split('-')[0];
@@ -1151,19 +1159,6 @@
         this._video.srcObject = stream;
         this._isStarted = true;
 
-window.setInterval(() => {
-  if (! this._video) {
-    alert(1);
-  }
-  if (! this._video.srcObject) {
-    alert(2);
-  }
-  o.removeAttribute('playsinline');
-  window.setTimeout(() => {
-    o.setAttribute('playsinline', null);
-  }, 200);
-//hoge
-}, 500);
 
 
 
