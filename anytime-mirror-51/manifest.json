@@ -1,0 +1,19 @@
+{
+  "name": "Anytime Mirror",
+  "short_name": "AnytimeMirror",
+  "description": "A virtual mirror app for personal maintenance.",
+  "categories": ["utilities"],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "rgb(53,54,58)",
+  "lang": "en",
+  "icons": [{
+    "src": "./icons/icon-192x192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }, {
+    "src": "./icons/icon-512x512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }]
+}
