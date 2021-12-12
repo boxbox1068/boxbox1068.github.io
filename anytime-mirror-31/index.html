@@ -228,11 +228,6 @@
         <span class="ja">エラー：カメラを使用できません。</span>
       `);
     });
-    window.addEventListener('pagehide', e => {
-      window.addEventListener('pageshow', e => {
-        alert('hogefugafoo');
-      });
-    });
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js');
       document.head.insertAdjacentHTML('beforeend', {
@@ -241,6 +236,13 @@
       }[lang]);
       document.head.insertAdjacentHTML('beforeend', '<link rel="apple-touch-icon" href="./icons/icon-180x180.png">');
     }
+    window.addEventListener('pageshow', (() => {
+      let isFirstCall = true;
+      return e => {
+        if (! isFirstCall) window.location.reload();
+        isFirstCall = false;
+      };
+    }));
   };
   class QueryParser {
     constructor({} = {}) {
