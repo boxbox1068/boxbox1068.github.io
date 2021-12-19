@@ -45,6 +45,8 @@
       scaleUnit: queryParser.getValue('scaleUnit', 'integer', 10)
     });
     const shutter = (() => {
+      let hiddenVideoMode = queryParser.getValue('hiddenVideoMode', 'string', null);
+      hiddenVideoMode = ['stop', 'pause', 'continue'].includes(hiddenVideoMode) ? hiddenVideoMode : 'stop';
       const o = new Shutter({
         showWait: queryParser.getValue('hideWait', 'integer', 60) * 1000,
         startVisible: true,
@@ -65,8 +67,7 @@
         `;
         return o;
       })();
-      o.onShow = () => {
-        camera.pause();
+      o.onBeforeShow = () => {
         notifier.notify(`
           <span class="en pc">Double-Click or press Esc to reshow...</span>
           <span class="en sd">Double-Tap to reshow...</span>
@@ -74,7 +75,17 @@
           <span class="ja sd">ダブルタップで再表示...</span>
         `);
       };
-      o.onHide = () => {
+      o.onShow = () => {
+        if (/^stop$/i.test(hiddenVideoMode)) {
+          camera.stop();
+        } else if (/^pause$/i.test(hiddenVideoMode)) {
+          camera.pause();
+        }
+      }
+      o.onBeforeHide = () => {
+        if (! camera.isWorking) {
+          location.reload();
+        }
         magnifier.update();
         camera.unpause();
         notifier.notify('');
@@ -148,6 +159,8 @@
             a.href = URL.createObjectURL(blob);
             a.download = `am-snapshot_${time}.jpg`;
             a.dispatchEvent(e);
+          }).catch(error => {
+            location.reload();
           });
         });
       }
@@ -228,16 +241,9 @@
         <span class="ja">エラー：カメラを使用できません。</span>
       `);
     });
-    window.addEventListener('blur', e => {
-      shutter.show();
+    document.addEventListener('visibilitychange', e => {
+      if (document.hidden) shutter.show();
     });
-    window.addEventListener('pageshow', (() => {
-      let isSecondCall = false;
-      return e => {
-        if (isSecondCall) window.location.reload();
-        isSecondCall = true;
-      };
-    })());
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js');
       document.head.insertAdjacentHTML('beforeend', {
@@ -363,7 +369,7 @@
   }
   class Magnifier {
     constructor({fitMode, maxScale, scaleUnit, backgroundColor} = {}) {
-      fitMode = typeof fitMode == 'string' ? fitMode.toLowerCase().trim() : 'none';
+      fitMode = typeof fitMode == 'string' ? fitMode : 'none';
       maxScale = Number.isInteger(maxScale) ? Math.max(1, Math.min(10, maxScale)) : 5;
       scaleUnit = Number.isInteger(scaleUnit) ? Math.max(1, Math.min(100, scaleUnit)) : 10;
       backgroundColor = typeof backgroundColor == 'string' ? backgroundColor : '';
@@ -431,27 +437,27 @@
         const bodyWidth = this._body.offsetWidth;
         const bodyHeight = this._body.offsetHeight;
         const bodyWidthToHeight = bodyWidth / Math.max(1, bodyHeight);
-        if (this._fitMode == 'contain') {
+        if (/^contain$/i.test(this._fitMode)) {
           if (contentWidthToHeight > bodyWidthToHeight) {
             this._content.style.width = `${bodyWidth}px`;
           } else {
             this._content.style.height = `${bodyHeight}px`;
           }
           this._content.style.objectFit = 'contain';
-        } else if (this._fitMode == 'cover') {
+        } else if (/^cover$/i.test(this._fitMode)) {
           if (contentWidthToHeight < bodyWidthToHeight) {
             this._content.style.width = `${bodyWidth}px`;
           } else {
             this._content.style.height = `${bodyHeight}px`;
           }
           this._content.style.objectFit = 'cover';
-        } else if (this._fitMode == 'fittowidth') {
+        } else if (/^fitToWidth$/i.test(this._fitMode.test)) {
           this._content.style.width = `${bodyWidth}px`;
           this._content.style.objectFit = 'cover';
-        } else if (this._fitMode == 'fittoheight') {
+        } else if (/^fitToHeight$/i.test(this._fitMode)) {
           this._content.style.height = `${bodyHeight}px`;
           this._content.style.objectFit = 'cover';
-        } else if (this._fitMode == 'scaledown') {
+        } else if (/^scaleDown$/i.test(this._fitMode)) {
           if (contentWidthToHeight > bodyWidthToHeight && contentWidth > bodyWidth) {
             this._content.style.width = `${bodyWidth}px`;
             this._content.style.objectFit = 'cover';
@@ -461,7 +467,7 @@
           } else {
             this._content.style.objectFit = 'none';
           }
-        } else if (this._fitMode == 'fill') {
+        } else if (/^fill$/i.test(this._fitMode)) {
           this._content.style.width = `${bodyWidth}px`;
           this._content.style.height = `${bodyHeight}px`;
           this._content.style.objectFit = 'fill';
@@ -551,7 +557,10 @@
       this._contentWrapper = contentWrapper;
       this._showWait = showWait;
       this._showTimeoutId = null;
+      this._transition = transition;
+      this._onBeforeShow = () => {};
       this._onShow = () => {};
+      this._onBeforeHide = () => {};
       this._onHide = () => {};
       this.resetShowTimer();
     }
@@ -568,9 +577,17 @@
       }
       this._contentWrapper.appendChild(content);
     }
+    set onBeforeShow(handler) {
+      if (typeof handler != 'function') return;
+      this._onBeforeShow = handler;
+    }
     set onShow(handler) {
       if (typeof handler != 'function') return;
       this._onShow = handler;
+    }
+    set onBeforeHide(handler) {
+      if (typeof handler != 'function') return;
+      this._onBeforeHide = handler;
     }
     set onHide(handler) {
       if (typeof handler != 'function') return;
@@ -588,12 +605,14 @@
     show() {
       this._body.style.visibility = 'visible';
       this._body.style.opacity = '1';
-      this._onShow();
+      this._onBeforeShow();
+      window.setTimeout(() => this._onShow(), this._transition);
     }
     hide() {
       this._body.style.opacity = '0';
       this._body.style.visibility = 'hidden';
-      this._onHide();
+      this._onBeforeHide();
+      window.setTimeout(() => this._onHide(), this._transition);
       this.resetShowTimer();
     }
     toggleHide() {
@@ -1146,8 +1165,11 @@
       })();
       this._video = video;
     }
+    get isWorking() {
+      return this._video.srcObject != null;
+    }
     start(callback, errorCallback) {
-      if (this._isStarted) return false;
+      if (this.isWorking) return false;
       if (typeof callback != 'function') return false;
       errorCallback = typeof errorCallback == 'function' ? errorCallback : () => {};
       if (! navigator.mediaDevices) {
@@ -1160,35 +1182,33 @@
       }).then(stream => {
         this._video.addEventListener('loadedmetadata', e => callback(this._video));
         this._video.srcObject = stream;
-        this._isStarted = true;
       }).catch(error => {
         errorCallback();
       });
     }
     stop() {
-      if (! this._isStarted) return false;
-      this._video.pause();
-      this._video.srcObject.getTracks().forEach(track => track.enabled = false);
-    }
-    restart() {
-      if (! this._isStarted) return false;
-      this._video.play();
-      this._video.srcObject.getTracks().forEach(track => track.enabled = true);
+      if (! this.isWorking) return false;
+      this._video.srcObject.getTracks().forEach(track => track.stop());
+      this._video.srcObject = null;
     }
     pause() {
-      if (! this._isStarted) return false;
+      if (! this.isWorking) return false;
       this._video.pause()
     }
     unpause() {
-      if (! this._isStarted) return false;
+      if (! this.isWorking) return false;
       this._video.play();
     }
     togglePause() {
-      if (! this._isStarted) return false;
+      if (! this.isWorking) return false;
       this._video.paused ? this._video.play() : this._video.pause();
     }
     snapshot() {
-      if (! this._isStarted) return false;
+      if (! this.isWorking) {
+        return new Promise((resolve, reject) => {
+          reject(new Error());
+        });
+      }
       const canvas = document.createElement('canvas');
       canvas.width = this._video.videoWidth;
       canvas.height = this._video.videoHeight;
@@ -1240,7 +1260,7 @@
     <span class="en">Anytime Mirror</span>
     <span class="ja">いつでもミラー</span>
   </h1>
-  <p>Version 2.0.1</p>
+  <p>Version 2.1.0</p>
   <p><a href="https://shikaku1068.github.io/anytime-mirror/">https://shikaku1068.github.io/anytime-mirror/</a></p>
   <p>Copyright 2020 shikaku1068</p>
   <p>Released under <a href="https://opensource.org/licenses/mit-license.php">the MIT license</a>.</p>
@@ -1249,6 +1269,15 @@
     <span class="ja">バージョン履歴</span>
   </h2>
   <dl>
+    <dt>2.1.0</dt>
+    <dd>
+      <span class="en">Dec 20, 2021</span>
+      <span class="ja">2021年12月20日</span>
+    </dd>
+    <dd>
+      <span class="en">Added an option to specify how the video behaves when it is hidden.</span>
+      <span class="ja">非表示になったときの映像の挙動を指定するオプションを追加。</span>
+    </dd>
     <dt>2.0.1</dt>
     <dd>
       <span class="en">Dec 12, 2021</span>
@@ -1320,7 +1349,7 @@
   </h2>
   <p>
     <span class="en"><strong>Anytime Mirror</strong> is a mirror app for personal maintenance. It is a web based app which works on various devices, so you can use it anytime when necessary. It can also be installed on your device and used offline.</span>
-    <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用の鏡アプリです。様々な端末で動くウェブアプリなので、必要な時にいつでも利用できます。端末にインストールしてオフライン利用することも可能です。</span>
+    <span class="ja"><strong>いつでもミラー</strong>は、身だしなみチェック用の鏡アプリです。様々な端末で動くウェブアプリなので、必要なときにいつでも利用できます。端末にインストールしてオフライン利用することも可能です。</span>
   </p>
   <p>
     <span class="en">As a side note, although the app makes use of a camera on your device, the video from it will never be sent out to the internet.</span>
@@ -1353,7 +1382,7 @@
     </dt>
     <dd>
       <span class="en">Hide or reshow the video.</span>
-      <span class="ja">映像を隠す／再表示する。</span>
+      <span class="ja">映像を非表示にする／再表示する。</span>
     </dd>
     <dt>
       <span class="en"><strong>Double Tap and Swipe Up/Down</strong></span>
@@ -1400,7 +1429,7 @@
     </dt>
     <dd>
       <span class="en">Hide or reshow the video.</span>
-      <span class="ja">映像を隠す／再表示する。</span>
+      <span class="ja">映像を非表示にする／再表示する。</span>
     </dd>
     <dt>
       <span class="en"><strong>Wheel Up/Down</strong></span>
@@ -1447,7 +1476,7 @@
     </dt>
     <dd>
       <span class="en">Hide the video.</span>
-      <span class="ja">映像を隠す。</span>
+      <span class="ja">映像を非表示にする。</span>
     </dd>
     <dt>
       <span class="en"><strong>Esc Key</strong></span>
@@ -1529,7 +1558,12 @@
     <dt><strong>hideWait</strong>=0-3600</dt>
     <dd>
       <span class="en">Specify the wait time (seconds) until the video is hidden. The value "0" means the video will not automatically be hidden. The default value is "60".</span>
-      <span class="ja">映像を隠すまでの待ち時間を指定します。値が"0"のときは自動的には映像を隠しません。既定値は"60"です。</span>
+      <span class="ja">映像を非表示にするまでの待ち時間を指定します。値が"0"のときは自動的には映像を非表示にしません。既定値は"60"です。</span>
+    </dd>
+    <dt><strong>hiddenVideoMode</strong>=stop/pause/continue</dt>
+    <dd>
+      <span class="en">Specify how the video behaves when it is hidden. The default value is "stop".</span>
+      <span class="ja">非表示になったときの映像の挙動を指定します。既定値は"stop"です。</span>
     </dd>
     <dt><strong>enableSnapshot</strong>=true/false</dt>
     <dd>
