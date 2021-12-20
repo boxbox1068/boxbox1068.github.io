@@ -244,6 +244,13 @@
     document.addEventListener('visibilitychange', e => {
       if (document.hidden) shutter.show();
     });
+    window.addEventListener('pageshow', (() => {
+      let isSecondCall = false;
+      return e => {
+        if (isSecondCall) location.reload();
+        isSecondCall = true;
+      };
+    })());
     if (location.protocol == 'https:' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js');
       document.head.insertAdjacentHTML('beforeend', {
@@ -1226,18 +1233,6 @@
 <style>
   body {
     overflow-wrap: break-word;
-  }
-  h1 {
-    font-size: 2rem;
-  }
-  h2 {
-    font-size: 1.5rem;
-  }
-  h3 {
-    font-size: 1.25rem;
-  }
-  h4 {
-    font-size: 1.125rem;
   }
   svg {
     height: 1em;
