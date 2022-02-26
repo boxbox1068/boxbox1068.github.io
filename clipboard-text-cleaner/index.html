@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<title>Clipboard Text Unformatter</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    background-color: #CFD8DC;
+    color: #263238;
+    font-size: 1.5vmax;
+    font-family: sans-serif;
+  }
+  body {
+    display: grid;
+    grid-template-rows: max-content max-content 1fr;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: .5rem;
+  }
+  body > * {
+    margin: .25rem;
+  }
+  #exec-button {
+    border-width: 0;
+    border-radius: 5vmin;
+    background-color: #00796B;
+    color: #4DB6AC;
+    font-size: 2.5rem;
+  }
+  span:lang(en),
+  span:lang(ja) {
+    display: none;
+  }
+  html:lang(en) span:lang(en),
+  html:lang(ja) span:lang(ja) {
+    display: inline;
+  }
+</style>
+<h1>Clipboard Text Unformatter</h1>
+<div>
+  <div>
+    <span lang="en">You can remove Rich Text Format (RTF) from your clipboard text by clicking the button below.</span>
+    <span lang="ja">以下のボタンを押すと、クリップボードのテキストからリッチテキストフォーマット（RTF）を除去できます。</span>
+  </div>
+  <div>
+    <span lang="en">(If asked for permission to "paste" after clicking the button, please allow it.)</span>
+    <span lang="ja">（ボタンをクリックした後、「貼り付け」の許可を求められた場合は、許可してください。）</span>
+  </div>
+</div>
+<button id="exec-button">
+  <span>Unformat your clipboard text</span>
+</button>
+<script>
+  'use strict';
+  const lang = `${navigator.language}`.replace(/^(en|ja)?.*$/, '$1') || 'en';
+  document.documentElement.lang = lang;
+  const main = () => {
+    document.querySelector('#exec-button').addEventListener('click', event => {
+      navigator.clipboard.readText().then(
+        clipboardText => {
+          navigator.clipboard.writeText(clipboardText).then(
+            () => {
+              alert('Succeeded!');
+            },
+            () => {
+              alert('Error: Unable to write text to clipboard.')
+            }
+          );
+        },
+        () => {
+          alert('Error: Unable to read text from clipboard.');
+        }
+      );
+    }, false);
+  };
+  window.addEventListener('DOMContentLoaded', main);
+</script>
