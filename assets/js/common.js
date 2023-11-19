@@ -84,7 +84,7 @@ const addHeader = () => {
 const addFooter = () => {
   const twitterLink = (() => {
     const a = document.createElement('a');
-    a.href = 'https://twitter.com/shikaku1068/';
+    a.href = 'https://twitter.com/boxbox1068/';
     a.innerHTML = 'Twitter';
     const small = document.createElement('small');
     small.append(a);
